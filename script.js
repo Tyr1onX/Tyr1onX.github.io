@@ -49,32 +49,12 @@ if ("IntersectionObserver" in window) {
   revealElements.forEach((element) => element.classList.add("is-visible"));
 }
 
-function updateDayFlow() {
-  const flow = document.querySelector(".day-flow");
+function updateClock() {
   const time = document.querySelector("#current-time");
-  const path = document.querySelector(".day-flow-path-base");
-  const progressPath = document.querySelector(".day-flow-path-progress");
-  const markerHalo = document.querySelector(".day-flow-marker-halo");
-  const markerCore = document.querySelector(".day-flow-marker-core");
-
-  if (!flow || !time || !(path instanceof SVGPathElement) || !(progressPath instanceof SVGPathElement)) return;
+  if (!(time instanceof HTMLTimeElement)) return;
 
   const now = new Date();
-  const totalMinutes = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
-  const progress = Math.max(0, Math.min(1, totalMinutes / 1440));
-  const length = path.getTotalLength();
-  const travelled = length * progress;
-  const point = path.getPointAtLength(travelled);
-
-  progressPath.style.strokeDasharray = `${length}`;
-  progressPath.style.strokeDashoffset = `${length - travelled}`;
-
-  [markerHalo, markerCore].forEach((marker) => {
-    if (!(marker instanceof SVGCircleElement)) return;
-    marker.setAttribute("cx", String(point.x));
-    marker.setAttribute("cy", String(point.y));
-  });
-
+  time.dateTime = now.toISOString();
   time.textContent = now.toLocaleTimeString("zh-CN", {
     hour: "2-digit",
     minute: "2-digit",
@@ -82,9 +62,20 @@ function updateDayFlow() {
   });
 }
 
-updateDayFlow();
-window.setInterval(updateDayFlow, 30000);
-window.addEventListener("resize", updateDayFlow, { passive: true });
+function setOrbitPhase() {
+  const project = document.querySelector(".orbit-project");
+  if (!(project instanceof HTMLElement)) return;
+
+  const now = new Date();
+  const elapsedSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+  const dayProgress = elapsedSeconds / 86400;
+  const orbitDuration = 34;
+  project.style.setProperty("--orbit-delay", `${-(dayProgress * orbitDuration)}s`);
+}
+
+updateClock();
+setOrbitPhase();
+window.setInterval(updateClock, 1000);
 
 function noteTimestamp(note) {
   if (note?.datetime) {
