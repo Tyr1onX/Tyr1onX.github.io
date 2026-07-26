@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Tyr1onX 的个人入口：项目、记录，以及正在被做出来的想法。"
+    />
+    <meta name="theme-color" content="#f5f5f1" />
+    <title>Tyr1onX — Ideas, built into reality.</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <div class="page-shell">
+      <header class="site-header" aria-label="主导航">
+        <a class="brand" href="#top" aria-label="返回首页">
+          <span class="brand-mark" aria-hidden="true">T</span>
+          <span>Tyr1onX</span>
+        </a>
+
+        <nav class="nav-links" aria-label="页面导航">
+          <a href="#now">现在</a>
+          <a href="#works">作品</a>
+          <a href="#notes">记录</a>
+        </nav>
+
+        <button class="theme-toggle" type="button" aria-label="切换深浅色主题">
+          <span class="theme-icon" aria-hidden="true">◐</span>
+        </button>
+      </header>
+
+      <main id="main">
+        <section class="hero" id="top">
+          <div class="hero-copy reveal">
+            <p class="eyebrow"><span class="status-dot"></span> Personal space · 2026</p>
+            <h1>
+              这里记录一个人，<br />
+              如何把<span class="accent-text">想法</span>变成真实的东西。
+            </h1>
+            <p class="hero-description">
+              我是 Tyr1onX，一名通信工程学生，也是一名正在成长的开发者。
+              这里汇集我的项目、学习与仍在发生的探索。
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#works">
+                看看我在做什么
+                <span aria-hidden="true">↘</span>
+              </a>
+              <a
+                class="button button-ghost"
+                href="https://github.com/Tyr1onX"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="hero-visual reveal" aria-label="Tyr1onX 项目轨迹视觉图">
+            <div class="visual-grid" aria-hidden="true"></div>
+            <div class="orbit orbit-one" aria-hidden="true"></div>
+            <div class="orbit orbit-two" aria-hidden="true"></div>
+            <div class="core-card">
+              <span class="core-label">CURRENT MODE</span>
+              <strong>Building<br />in public.</strong>
+              <span class="core-meta">Ideas → Code → Reality</span>
+            </div>
+            <span class="floating-tag tag-one">DESIGN</span>
+            <span class="floating-tag tag-two">SYSTEM</span>
+            <span class="floating-tag tag-three">EMBEDDED</span>
+          </div>
+        </section>
+
+        <section class="section now-section" id="now">
+          <div class="section-heading reveal">
+            <p class="eyebrow">01 · NOW</p>
+            <h2>正在发生</h2>
+            <p>比起一份固定简历，我更愿意展示自己此刻正在投入的事情。</p>
+          </div>
+
+          <div class="now-grid">
+            <article class="now-card now-card-featured reveal">
+              <div class="card-topline">
+                <span class="card-index">CURRENT FOCUS</span>
+                <span class="live-badge"><span></span> Active</span>
+              </div>
+              <h3>让桌面上的一天缓慢流动</h3>
+              <p>
+                正在完善一款桌面课表工具：先把底层功能与稳定性做好，再围绕“流动的时间”统一视觉、动效与交互。
+              </p>
+              <div class="progress-track" aria-label="项目进度">
+                <span style="width: 72%"></span>
+              </div>
+              <div class="card-footer">
+                <span>Desktop Course Widget</span>
+                <span>v0.4.0</span>
+              </div>
+            </article>
+
+            <article class="now-card reveal">
+              <span class="card-index">LEARNING</span>
+              <h3>从 Linux 走向嵌入式系统</h3>
+              <p>沿着 C/C++、Linux、MCU、RTOS 与通信接口逐步建立完整的底层能力。</p>
+              <div class="mini-tags" aria-label="学习方向">
+                <span>C++</span><span>Linux</span><span>MCU</span>
+              </div>
+            </article>
+
+            <article class="now-card reveal">
+              <span class="card-index">EXPLORING</span>
+              <h3>让消息变成可行动的信息</h3>
+              <p>SignalInbox 正在探索对选定会话进行分类、提醒与行动提取的可能性。</p>
+              <div class="mini-tags" aria-label="探索方向">
+                <span>Agent</span><span>Workflow</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section works-section" id="works">
+          <div class="section-heading section-heading-row reveal">
+            <div>
+              <p class="eyebrow">02 · SELECTED WORKS</p>
+              <h2>精选作品</h2>
+            </div>
+            <a
+              class="text-link"
+              href="https://github.com/Tyr1onX?tab=repositories"
+              target="_blank"
+              rel="noreferrer"
+            >全部仓库 <span aria-hidden="true">↗</span></a>
+          </div>
+
+          <div class="works-grid">
+            <a
+              class="work-card work-card-large reveal"
+              href="https://github.com/Tyr1onX/desktop-course-widget"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div class="work-visual course-visual" aria-hidden="true">
+                <div class="course-window">
+                  <div class="window-bar"><span></span><span></span><span></span></div>
+                  <div class="time-line"><i></i></div>
+                  <div class="course-row course-row-active">
+                    <small>10:00</small><strong>通信原理</strong><span>逸夫楼</span>
+                  </div>
+                  <div class="course-row">
+                    <small>14:00</small><strong>数字信号处理</strong><span>经信楼</span>
+                  </div>
+                  <div class="course-row faded">
+                    <small>19:00</small><strong>项目时间</strong><span>Desktop</span>
+                  </div>
+                </div>
+              </div>
+              <div class="work-copy">
+                <div class="work-meta"><span>01</span><span>Tauri · React · Rust</span></div>
+                <h3>桌面课表</h3>
+                <p>不是固定表格，而是一天在桌面上缓慢流动的时间。</p>
+                <span class="work-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+
+            <a
+              class="work-card reveal"
+              href="https://github.com/Tyr1onX/SignalInbox"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div class="work-visual signal-visual" aria-hidden="true">
+                <div class="signal-stack">
+                  <div class="signal-message"><span></span><p>新的课程通知需要确认</p></div>
+                  <div class="signal-message"><span></span><p>提取：周三前提交材料</p></div>
+                  <div class="signal-action">ACTION FOUND</div>
+                </div>
+              </div>
+              <div class="work-copy">
+                <div class="work-meta"><span>02</span><span>Message Intelligence</span></div>
+                <h3>SignalInbox</h3>
+                <p>从被消息淹没，到只看真正需要行动的内容。</p>
+                <span class="work-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+
+            <a
+              class="work-card reveal"
+              href="https://github.com/Tyr1onX"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div class="work-visual open-source-visual" aria-hidden="true">
+                <div class="contribution-map">
+                  <span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="merge-chip">4 PRs merged</div>
+              </div>
+              <div class="work-copy">
+                <div class="work-meta"><span>03</span><span>Open Source</span></div>
+                <h3>开源贡献</h3>
+                <p>从修复真实问题开始，学习如何与代码、规范和社区协作。</p>
+                <span class="work-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <section class="section notes-section" id="notes">
+          <div class="section-heading section-heading-row reveal">
+            <div>
+              <p class="eyebrow">03 · NOTES</p>
+              <h2>最近记录</h2>
+            </div>
+            <span class="muted-label">更多内容正在生长</span>
+          </div>
+
+          <div class="notes-list">
+            <article class="note-row reveal">
+              <time datetime="2026-07-26">2026.07.26</time>
+              <div>
+                <span class="note-category">项目思考</span>
+                <h3>Tyr1onX：为所有项目建立一个长期入口</h3>
+              </div>
+              <span class="note-arrow" aria-hidden="true">→</span>
+            </article>
+            <article class="note-row reveal">
+              <time datetime="2026-07-25">2026.07.25</time>
+              <div>
+                <span class="note-category">设计</span>
+                <h3>先写出一句有张力的概念，再让视觉与交互围绕它生长</h3>
+              </div>
+              <span class="note-arrow" aria-hidden="true">→</span>
+            </article>
+            <article class="note-row reveal">
+              <time datetime="2026-07-22">2026.07.22</time>
+              <div>
+                <span class="note-category">学习路径</span>
+                <h3>从通信工程出发，建立 C++、Linux 与嵌入式主线</h3>
+              </div>
+              <span class="note-arrow" aria-hidden="true">→</span>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer reveal">
+        <div>
+          <span class="footer-mark">T</span>
+          <p>Ideas, built into reality.</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="#top">Back to top ↑</a>
+        </div>
+        <p class="copyright">© <span id="current-year">2026</span> Tyr1onX</p>
+      </footer>
+    </div>
+  </body>
+</html>
