@@ -23,7 +23,7 @@
         </a>
 
         <nav class="nav-links" aria-label="主导航">
-          <a href="#work">课刻</a>
+          <a href="#orbit">课刻</a>
           <a href="#writing">文字</a>
         </nav>
 
@@ -36,7 +36,7 @@
             aria-label="打开 Tyr1onX 的 GitHub"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2.7a9.5 9.5 0 0 0-3 18.52c.48.1.65-.2.65-.46v-1.83c-2.65.58-3.2-1.12-3.2-1.12-.43-1.1-1.06-1.4-1.06-1.4-.87-.6.07-.59.07-.59.96.07 1.46.99 1.46.99.85 1.46 2.24 1.04 2.79.8.08-.62.33-1.04.6-1.28-2.12-.24-4.35-1.06-4.35-4.7 0-1.04.37-1.89.98-2.56-.1-.24-.43-1.21.09-2.52 0 0 .8-.26 2.61.98A9.1 9.1 0 0 1 12 7.22a9 9 0 0 1 2.38.32c1.81-1.23 2.61-.98 2.61-.98.52 1.31.19 2.28.09 2.52.61.67.98 1.52.98 2.56 0 3.65-2.24 4.46-4.37 4.7.34.3.65.88.65 1.78v2.64c0 .26.17.57.66.46A9.5 9.5 0 0 0 12 2.7Z" />
+              <path d="M12 2.7a9.5 9.5 0 0 0-3 18.52c.48.1.65-.2.65-.46v-1.83c-2.65.58-3.2-1.12-3.2-1.12-.43-1.1-1.06-1.4-.1.06-.87-.6.07-.59.07-.59.96.07 1.46.99 1.46.99.85 1.46 2.24 1.04 2.79.8.08-.62.33-1.04.6-1.28-2.12-.24-4.35-1.06-4.35-4.7 0-1.04.37-1.89.98-2.56-.1-.24-.43-1.21.09-2.52 0 0 .8-.26 2.61.98A9.1 9.1 0 0 1 12 7.22a9 9 0 0 1 2.38.32c1.81-1.23 2.61-.98 2.61-.98.52 1.31.19 2.28.09 2.52.61.67.98 1.52.98 2.56 0 3.65-2.24 4.46-4.37 4.7.34.3.65.88.65 1.78v2.64c0 .26.17.57.66.46A9.5 9.5 0 0 0 12 2.7Z" />
             </svg>
           </a>
           <button class="icon-button theme-toggle" type="button" aria-label="切换到深色模式">
@@ -53,117 +53,33 @@
     </header>
 
     <main id="main">
-      <section class="hero page-width">
-        <div class="hero-copy reveal">
-          <h1>Tyr1onX</h1>
-          <div class="hero-links">
-            <a href="#work">课刻 <span aria-hidden="true">↓</span></a>
-            <a href="./notes.html">文字 <span aria-hidden="true">→</span></a>
-          </div>
-        </div>
+      <section class="orbit-hero page-width" id="orbit" aria-labelledby="orbit-title">
+        <div class="orbit-scene reveal">
+          <div class="orbit-track orbit-track-main" aria-hidden="true"></div>
+          <div class="orbit-track orbit-track-inner" aria-hidden="true"></div>
+          <div class="orbit-ticks" aria-hidden="true"></div>
 
-        <div class="day-flow reveal" aria-label="今天的时间进度">
-          <div class="day-flow-meta">
-            <span>今天</span>
-            <time id="current-time">--:--</time>
-          </div>
-          <div class="day-flow-curve">
-            <svg viewBox="0 0 1000 160" role="img" aria-label="从午夜到午夜的弯曲时间路径">
-              <defs>
-                <linearGradient id="day-flow-gradient" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0" stop-color="#655cff" />
-                  <stop offset="1" stop-color="#9874ff" />
-                </linearGradient>
-              </defs>
-              <path
-                class="day-flow-path-base"
-                d="M 8 126 C 150 42, 280 28, 430 76 S 710 150, 992 34"
-              />
-              <path
-                class="day-flow-path-progress"
-                d="M 8 126 C 150 42, 280 28, 430 76 S 710 150, 992 34"
-              />
-              <circle class="day-flow-marker-halo" cx="8" cy="126" r="13" />
-              <circle class="day-flow-marker-core" cx="8" cy="126" r="7" />
-              <text class="day-flow-tick" x="8" y="151">00:00</text>
-              <text class="day-flow-tick" x="226" y="34">06:00</text>
-              <text class="day-flow-tick" x="474" y="98">12:00</text>
-              <text class="day-flow-tick" x="727" y="151">18:00</text>
-              <text class="day-flow-tick" x="930" y="25">24:00</text>
-            </svg>
-          </div>
-        </div>
-      </section>
+          <span class="orbit-time orbit-time-midnight" aria-hidden="true">00</span>
+          <span class="orbit-time orbit-time-morning" aria-hidden="true">06</span>
+          <span class="orbit-time orbit-time-noon" aria-hidden="true">12</span>
+          <span class="orbit-time orbit-time-evening" aria-hidden="true">18</span>
 
-      <section class="section page-width" id="work">
-        <a class="keke-entry reveal" href="./keke.html">
-          <div class="keke-entry-copy">
-            <div class="keke-title-row">
+          <div class="orbit-center">
+            <img src="./avatar.svg" alt="" />
+            <h1 id="orbit-title">Tyr1onX</h1>
+            <time id="current-time" aria-label="当前时间">--:--</time>
+          </div>
+
+          <a class="orbit-project" href="./keke.html" aria-label="打开课刻项目记录">
+            <span class="orbit-icon-shell">
               <img
                 src="https://raw.githubusercontent.com/Tyr1onX/desktop-course-widget/main/src-tauri/icons/icon.png"
-                alt="课刻图标"
+                alt="课刻"
               />
-              <div>
-                <span>桌面课表</span>
-                <h2>课刻</h2>
-              </div>
-            </div>
-            <p class="keke-thesis">课表不是固定表格，而是一天在桌面上缓慢流动的时间。</p>
-            <span class="read-more">项目记录 <b aria-hidden="true">→</b></span>
-          </div>
-
-          <div class="keke-component-stage" aria-label="课刻组件预览">
-            <article class="keke-preview-widget" aria-hidden="true">
-              <header class="keke-widget-header">
-                <div class="keke-widget-drag">
-                  <div class="keke-widget-heading">
-                    <div class="keke-title-row-preview">
-                      <p class="keke-widget-title">9月21日课表</p>
-                      <span class="keke-today-badge">今日</span>
-                    </div>
-                    <p class="keke-date-line">星期一 · 第3教学周</p>
-                  </div>
-                  <div class="keke-header-right">
-                    <time class="keke-now-time">08:48</time>
-                    <div class="keke-date-nav">
-                      <span>‹</span><span>今</span><span>›</span>
-                    </div>
-                  </div>
-                </div>
-              </header>
-
-              <section class="keke-focus-course">
-                <p class="keke-focus-kicker">正在上课</p>
-                <h3>计算机网络</h3>
-                <p class="keke-course-time">08:00–09:40</p>
-                <p class="keke-course-location">教学楼 A101</p>
-                <p class="keke-countdown">还剩 52 分钟</p>
-                <div class="keke-course-flow">
-                  <div class="keke-course-flow-meta"><span>时间进度</span><span>48%</span></div>
-                  <div class="keke-course-flow-track"><span></span></div>
-                </div>
-              </section>
-
-              <section class="keke-following">
-                <p class="keke-following-label">后续课程</p>
-                <ol class="keke-timeline">
-                  <li>
-                    <time>10:00</time>
-                    <span><strong>概率论</strong><small>教学楼 A101</small></span>
-                  </li>
-                  <li>
-                    <time>13:30</time>
-                    <span><strong>程序设计基础</strong><small>教学楼 B203</small></span>
-                  </li>
-                  <li>
-                    <time>15:30</time>
-                    <span><strong>软件工程</strong><small>教学楼 A101</small></span>
-                  </li>
-                </ol>
-              </section>
-            </article>
-          </div>
-        </a>
+            </span>
+            <span class="orbit-tooltip" aria-hidden="true">课刻</span>
+          </a>
+        </div>
       </section>
 
       <section class="section page-width writing-section" id="writing">
