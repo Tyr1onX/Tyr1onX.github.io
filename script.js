@@ -52,13 +52,29 @@ if ("IntersectionObserver" in window) {
 function updateDayFlow() {
   const flow = document.querySelector(".day-flow");
   const time = document.querySelector("#current-time");
-  if (!flow || !time) return;
+  const path = document.querySelector(".day-flow-path-base");
+  const progressPath = document.querySelector(".day-flow-path-progress");
+  const markerHalo = document.querySelector(".day-flow-marker-halo");
+  const markerCore = document.querySelector(".day-flow-marker-core");
+
+  if (!flow || !time || !(path instanceof SVGPathElement) || !(progressPath instanceof SVGPathElement)) return;
 
   const now = new Date();
-  const totalMinutes = now.getHours() * 60 + now.getMinutes();
-  const progress = Math.max(0, Math.min(100, (totalMinutes / 1440) * 100));
+  const totalMinutes = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+  const progress = Math.max(0, Math.min(1, totalMinutes / 1440));
+  const length = path.getTotalLength();
+  const travelled = length * progress;
+  const point = path.getPointAtLength(travelled);
 
-  flow.style.setProperty("--day-progress", `${progress}%`);
+  progressPath.style.strokeDasharray = `${length}`;
+  progressPath.style.strokeDashoffset = `${length - travelled}`;
+
+  [markerHalo, markerCore].forEach((marker) => {
+    if (!(marker instanceof SVGCircleElement)) return;
+    marker.setAttribute("cx", String(point.x));
+    marker.setAttribute("cy", String(point.y));
+  });
+
   time.textContent = now.toLocaleTimeString("zh-CN", {
     hour: "2-digit",
     minute: "2-digit",
@@ -68,8 +84,22 @@ function updateDayFlow() {
 
 updateDayFlow();
 window.setInterval(updateDayFlow, 30000);
+window.addEventListener("resize", updateDayFlow, { passive: true });
 
-const notes = Array.isArray(window.TYR1ONX_NOTES) ? window.TYR1ONX_NOTES : [];
+function noteTimestamp(note) {
+  if (note?.datetime) {
+    const direct = Date.parse(note.datetime);
+    if (Number.isFinite(direct)) return direct;
+  }
+
+  const date = String(note?.date || "").replaceAll(".", "-");
+  const clock = note?.time || "00:00";
+  const fallback = Date.parse(`${date}T${clock}:00+08:00`);
+  return Number.isFinite(fallback) ? fallback : 0;
+}
+
+const rawNotes = Array.isArray(window.TYR1ONX_NOTES) ? window.TYR1ONX_NOTES : [];
+const notes = [...rawNotes].sort((left, right) => noteTimestamp(right) - noteTimestamp(left));
 
 function noteUrl(note) {
   return `./note.html?id=${encodeURIComponent(note.id)}`;
@@ -84,7 +114,7 @@ function renderHomeNotes() {
     .map(
       (note) => `
         <a class="writing-row" href="${noteUrl(note)}">
-          <time datetime="${note.datetime || ""}">${note.date}</time>
+          <time datetime="${note.datetime || ""}">${note.date}${note.time ? ` · ${note.time}` : ""}</time>
           <h3>${note.title}</h3>
           <span aria-hidden="true">→</span>
         </a>
