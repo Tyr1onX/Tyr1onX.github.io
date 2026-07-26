@@ -1,18 +1,19 @@
 const root = document.documentElement;
 const themeToggle = document.querySelector('.theme-toggle');
-const themeIcon = document.querySelector('.theme-icon');
 const year = document.querySelector('#current-year');
+const header = document.querySelector('.site-header');
+const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
 const storedTheme = localStorage.getItem('tyr1onx-theme');
-const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-const initialTheme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+const initialTheme = storedTheme || (mediaQuery.matches ? 'dark' : 'light');
 
 function applyTheme(theme) {
+  const isDark = theme === 'dark';
   root.dataset.theme = theme;
-  themeIcon.textContent = theme === 'dark' ? '☀' : '◐';
+  themeToggle?.setAttribute('aria-label', isDark ? '切换到浅色模式' : '切换到深色模式');
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute('content', theme === 'dark' ? '#10110f' : '#f5f5f1');
+    ?.setAttribute('content', isDark ? '#0a0a0b' : '#f5f5f7');
 }
 
 applyTheme(initialTheme);
@@ -23,9 +24,21 @@ themeToggle?.addEventListener('click', () => {
   applyTheme(nextTheme);
 });
 
+mediaQuery.addEventListener?.('change', (event) => {
+  if (localStorage.getItem('tyr1onx-theme')) return;
+  applyTheme(event.matches ? 'dark' : 'light');
+});
+
 if (year) {
   year.textContent = String(new Date().getFullYear());
 }
+
+function updateHeader() {
+  header?.setAttribute('data-scrolled', String(window.scrollY > 8));
+}
+
+updateHeader();
+window.addEventListener('scroll', updateHeader, { passive: true });
 
 const revealElements = document.querySelectorAll('.reveal');
 
@@ -38,7 +51,7 @@ if ('IntersectionObserver' in window) {
         observer.unobserve(entry.target);
       });
     },
-    { threshold: 0.12 }
+    { threshold: 0.1, rootMargin: '0px 0px -32px' }
   );
 
   revealElements.forEach((element) => observer.observe(element));
