@@ -104,9 +104,10 @@
     line.setAttribute("y2", String(body.y - starTipOffsets[index]));
   }
 
-  function rebuild() {
+  function rebuild({ preservePosition = false } = {}) {
     const width = field.clientWidth;
     const height = field.clientHeight;
+    const previousBodies = bodies;
     threads.setAttribute("viewBox", `0 0 ${Math.max(1, width)} ${Math.max(1, height)}`);
     bodies = notes.map((_, index) => {
       const [anchorRatio, ropeRatio, angle] = layouts[index];
@@ -115,6 +116,21 @@
       const length = Math.max(140, height * ropeRatio);
       const restX = ax + Math.sin(angle) * length;
       const restY = ay + Math.cos(angle) * length;
+      const previous = previousBodies[index];
+      if (preservePosition && previous) {
+        const oldWidth = Math.max(1, previous.viewportWidth || width);
+        const xRatio = previous.x / oldWidth;
+        return {
+          ax, ay, length, restX, restY,
+          x: Math.max(0, Math.min(width, xRatio * width)),
+          y: Math.min(restY + 20, previous.y),
+          vx: previous.vx,
+          vy: previous.vy,
+          born: true,
+          delay: 0,
+          viewportWidth: width,
+        };
+      }
       return {
         ax, ay, length, restX, restY,
         x: reduced ? restX : ax + (index % 2 ? 28 : -28),
@@ -123,10 +139,11 @@
         vy: 0,
         born: reduced,
         delay: index * 130,
+        viewportWidth: width,
       };
     });
     bodies.forEach((body, index) => {
-      if (reduced) elements[index]?.classList.add("is-born");
+      if (reduced || preservePosition) elements[index]?.classList.add("is-born");
       draw(index, body);
     });
   }
@@ -183,10 +200,10 @@
     ensurePhysicsFrame();
   }
 
-  function scheduleWind() {
+  function scheduleWind({ soon = false } = {}) {
     clearTimeout(windScheduleTimer);
     if (reduced || !pageVisible) return;
-    const delay = 18000 + Math.random() * 24000;
+    const delay = soon ? 900 + Math.random() * 900 : 18000 + Math.random() * 24000;
     windScheduleTimer = setTimeout(() => {
       triggerWind(30 + Math.random() * 16);
       scheduleWind();
@@ -243,6 +260,38 @@
     else frame = 0;
   }
 
+  function pauseMotion() {
+    pageVisible = false;
+    document.body.classList.add("is-page-hidden");
+    cancelAnimationFrame(frame);
+    frame = 0;
+    clearTimeout(windScheduleTimer);
+    clearTimeout(gustTimer);
+    document.body.classList.remove("windy");
+    delete field.dataset.windDirection;
+  }
+
+  function resumeMotion() {
+    if (document.hidden) return;
+    pageVisible = true;
+    document.body.classList.remove("is-page-hidden");
+    updateClock();
+    last = 0;
+    started = performance.now();
+
+    bodies.forEach((body, index) => {
+      const direction = index % 2 === 0 ? -1 : 1;
+      body.vx += direction * (5 + index * 0.35);
+      body.vy -= 1.5 + (index % 3);
+      body.born = true;
+      body.delay = 0;
+      elements[index]?.classList.add("is-born");
+    });
+
+    ensurePhysicsFrame();
+    scheduleWind({ soon: true });
+  }
+
   elements.forEach((element, index) => {
     const line = lines[index];
     const on = () => line?.classList.add("is-active");
@@ -280,23 +329,15 @@
   }
 
   document.addEventListener("visibilitychange", () => {
-    pageVisible = !document.hidden;
-    document.body.classList.toggle("is-page-hidden", !pageVisible);
-    if (!pageVisible) {
-      cancelAnimationFrame(frame);
-      frame = 0;
-      clearTimeout(windScheduleTimer);
-      clearTimeout(gustTimer);
-      document.body.classList.remove("windy");
-      delete field.dataset.windDirection;
-      return;
-    }
-    updateClock();
-    last = 0;
-    started = performance.now();
-    ensurePhysicsFrame();
-    scheduleWind();
+    if (document.hidden) pauseMotion();
+    else resumeMotion();
   });
+
+  addEventListener("pageshow", (event) => {
+    if (event.persisted) resumeMotion();
+  });
+
+  addEventListener("pagehide", pauseMotion);
 
   rebuild();
   ensurePhysicsFrame();
@@ -311,15 +352,8 @@
       last = 0;
       started = performance.now();
       closeTouchStar();
-      rebuild();
+      rebuild({ preservePosition: true });
       ensurePhysicsFrame();
     }, 120);
   }, { passive: true });
-
-  addEventListener("pagehide", () => {
-    clearInterval(clockTimer);
-    clearTimeout(windScheduleTimer);
-    clearTimeout(gustTimer);
-    cancelAnimationFrame(frame);
-  }, { once: true });
 })();
