@@ -70,6 +70,10 @@
   const elements = [...starsLayer.querySelectorAll(".note-star")];
   const lines = [...threads.querySelectorAll(".star-thread")];
   const decorativeStars = [...document.querySelectorAll(".decorative-star")];
+  const starTipOffsets = elements.map((element) => {
+    const size = Number.parseFloat(getComputedStyle(element).getPropertyValue("--note-star-size"));
+    return Number.isFinite(size) ? size / 2 : 6;
+  });
 
   let bodies = [];
   let frame = 0;
@@ -85,7 +89,7 @@
     line.setAttribute("x1", String(body.ax));
     line.setAttribute("y1", String(body.ay));
     line.setAttribute("x2", String(body.x));
-    line.setAttribute("y2", String(body.y));
+    line.setAttribute("y2", String(body.y - starTipOffsets[index]));
   }
 
   function rebuild() {
