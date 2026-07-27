@@ -1,0 +1,115 @@
+/* Mobile interaction, orbit depth and lifecycle refinements. */
+
+.orbit-project {
+  animation:
+    project-orbit var(--orbit-duration) linear infinite,
+    project-orbit-depth var(--orbit-duration) linear infinite;
+  transform-origin: center;
+  will-change: offset-distance, scale, opacity;
+}
+
+@keyframes project-orbit-depth {
+  0%,
+  100% {
+    z-index: 2;
+    opacity: 0.74;
+    scale: 0.9;
+    filter: saturate(0.88) brightness(0.92);
+  }
+
+  22% {
+    z-index: 3;
+    opacity: 0.9;
+    scale: 0.98;
+    filter: saturate(0.96) brightness(0.98);
+  }
+
+  46%,
+  54% {
+    z-index: 5;
+    opacity: 1;
+    scale: 1.08;
+    filter: saturate(1.04) brightness(1.04);
+  }
+
+  78% {
+    z-index: 3;
+    opacity: 0.9;
+    scale: 0.98;
+    filter: saturate(0.96) brightness(0.98);
+  }
+}
+
+.note-star {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.note-star.is-touch-active {
+  z-index: 8;
+}
+
+.note-star.is-touch-active .note-star-label {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.note-star.is-touch-active::before {
+  opacity: 0.96;
+}
+
+.note-star.is-touch-active .note-star-core {
+  scale: 1.18;
+}
+
+body.is-page-hidden .orbit-project,
+body.is-page-hidden .decorative-star,
+body.is-page-hidden .note-star-core,
+body.is-page-hidden .note-star::before,
+body.is-page-hidden .cosmos-field::before {
+  animation-play-state: paused !important;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .note-star-label {
+    min-width: min(168px, calc(100vw - 36px));
+    max-width: min(210px, calc(100vw - 36px));
+    padding: 9px 11px;
+  }
+
+  .note-star:focus-visible .note-star-label {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+
+  .note-star.is-touch-active:focus-visible .note-star-label {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .orbit-project:hover {
+    animation-play-state: running;
+  }
+}
+
+@media (max-width: 560px) {
+  .orbit-project {
+    --orbit-duration: 60s;
+  }
+
+  .note-star-label {
+    backdrop-filter: blur(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-project {
+    animation: none;
+    offset-distance: 18%;
+    opacity: 1;
+    scale: 1;
+    filter: none;
+    z-index: 5;
+  }
+}
