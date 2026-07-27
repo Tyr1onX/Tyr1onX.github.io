@@ -7,6 +7,10 @@
   const timeEl = document.querySelector("#current-time");
   if (!(field instanceof HTMLElement) || !(starsLayer instanceof HTMLElement) || !(threads instanceof SVGSVGElement)) return;
 
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const coarsePointer = matchMedia("(hover: none), (pointer: coarse)").matches;
+  let pageVisible = !document.hidden;
+
   if (currentYear) currentYear.textContent = String(new Date().getFullYear());
   const updateClock = () => {
     if (!(timeEl instanceof HTMLTimeElement)) return;
@@ -15,7 +19,7 @@
     timeEl.textContent = now.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false });
   };
   updateClock();
-  setInterval(updateClock, 1000);
+  const clockTimer = setInterval(updateClock, 30000);
 
   const rawNotes = Array.isArray(window.TYR1ONX_NOTES) ? window.TYR1ONX_NOTES : [];
   const timestamp = (note) => {
@@ -27,7 +31,6 @@
   };
   const notes = [...rawNotes].sort((a, b) => timestamp(b) - timestamp(a)).slice(0, 8);
   const noteUrl = (note) => `./note.html?id=${encodeURIComponent(note.id)}`;
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const BASE_AGE = 20;
   const BASE_YEAR = 2026;
   const DECORATIVE_COUNT = BASE_AGE + Math.max(0, new Date().getFullYear() - BASE_YEAR);
@@ -66,7 +69,7 @@
     const size = 11.5 + (notes.length - index) * 0.9;
     const date = `${note.date}${note.time ? ` · ${note.time}` : ""}`;
     return `
-      <a class="note-star" href="${noteUrl(note)}" aria-label="${note.title}，${date}" style="--note-star-size:${size.toFixed(1)}px;--twinkle-duration:${(3.1 + (index % 4) * 0.8).toFixed(1)}s;--twinkle-delay:${(-index * 0.38).toFixed(2)}s">
+      <a class="note-star" href="${noteUrl(note)}" aria-label="${note.title}，${date}" aria-expanded="false" style="--note-star-size:${size.toFixed(1)}px;--twinkle-duration:${(3.1 + (index % 4) * 0.8).toFixed(1)}s;--twinkle-delay:${(-index * 0.38).toFixed(2)}s">
         <span class="note-star-label"><time datetime="${note.datetime || ""}">${date}</time><span>${note.title}</span></span>
         <span class="note-star-core" aria-hidden="true"></span>
       </a>`;
@@ -86,7 +89,9 @@
   let last = 0;
   let started = performance.now();
   let gustTimer = 0;
+  let windScheduleTimer = 0;
   let lastWindSign = 0;
+  let activeTouchStar = null;
 
   function draw(index, body) {
     const el = elements[index];
@@ -126,7 +131,31 @@
     });
   }
 
+  function closeTouchStar() {
+    if (!(activeTouchStar instanceof HTMLElement)) return;
+    const index = elements.indexOf(activeTouchStar);
+    activeTouchStar.classList.remove("is-touch-active");
+    activeTouchStar.setAttribute("aria-expanded", "false");
+    lines[index]?.classList.remove("is-active");
+    activeTouchStar = null;
+  }
+
+  function openTouchStar(element, index) {
+    closeTouchStar();
+    activeTouchStar = element;
+    element.classList.add("is-touch-active");
+    element.setAttribute("aria-expanded", "true");
+    lines[index]?.classList.add("is-active");
+  }
+
+  function ensurePhysicsFrame() {
+    if (reduced || !pageVisible || frame) return;
+    last = 0;
+    frame = requestAnimationFrame(animate);
+  }
+
   function triggerWind(force) {
+    if (!pageVisible) return;
     document.body.classList.add("windy");
     let sign = Math.random() < 0.5 ? -1 : 1;
     if (sign === lastWindSign && Math.random() < 0.55) sign *= -1;
@@ -151,23 +180,24 @@
       document.body.classList.remove("windy");
       delete field.dataset.windDirection;
     }, 2400);
-    if (!frame) {
-      last = 0;
-      frame = requestAnimationFrame(animate);
-    }
+    ensurePhysicsFrame();
   }
 
   function scheduleWind() {
-    if (reduced) return;
+    clearTimeout(windScheduleTimer);
+    if (reduced || !pageVisible) return;
     const delay = 18000 + Math.random() * 24000;
-    setTimeout(() => {
+    windScheduleTimer = setTimeout(() => {
       triggerWind(30 + Math.random() * 16);
       scheduleWind();
     }, delay);
   }
 
   function animate(now) {
-    if (reduced) return;
+    if (reduced || !pageVisible) {
+      frame = 0;
+      return;
+    }
     const dt = Math.min(0.032, Math.max(0.001, (now - (last || now)) / 1000));
     last = now;
     const elapsed = now - started;
@@ -216,15 +246,60 @@
   elements.forEach((element, index) => {
     const line = lines[index];
     const on = () => line?.classList.add("is-active");
-    const off = () => line?.classList.remove("is-active");
+    const off = () => {
+      if (element !== activeTouchStar) line?.classList.remove("is-active");
+    };
+
     element.addEventListener("mouseenter", on);
     element.addEventListener("mouseleave", off);
     element.addEventListener("focus", on);
     element.addEventListener("blur", off);
+
+    if (coarsePointer) {
+      element.addEventListener("click", (event) => {
+        if (activeTouchStar === element) {
+          closeTouchStar();
+          return;
+        }
+        event.preventDefault();
+        openTouchStar(element, index);
+      });
+    }
+  });
+
+  if (coarsePointer) {
+    document.addEventListener("pointerdown", (event) => {
+      if (!(activeTouchStar instanceof HTMLElement)) return;
+      if (event.target instanceof Node && activeTouchStar.contains(event.target)) return;
+      closeTouchStar();
+    }, { passive: true });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeTouchStar();
+    });
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    pageVisible = !document.hidden;
+    document.body.classList.toggle("is-page-hidden", !pageVisible);
+    if (!pageVisible) {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      clearTimeout(windScheduleTimer);
+      clearTimeout(gustTimer);
+      document.body.classList.remove("windy");
+      delete field.dataset.windDirection;
+      return;
+    }
+    updateClock();
+    last = 0;
+    started = performance.now();
+    ensurePhysicsFrame();
+    scheduleWind();
   });
 
   rebuild();
-  if (!reduced) frame = requestAnimationFrame(animate);
+  ensurePhysicsFrame();
   scheduleWind();
 
   let resizeTimer = 0;
@@ -232,10 +307,19 @@
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       cancelAnimationFrame(frame);
+      frame = 0;
       last = 0;
       started = performance.now();
+      closeTouchStar();
       rebuild();
-      if (!reduced) frame = requestAnimationFrame(animate);
+      ensurePhysicsFrame();
     }, 120);
   }, { passive: true });
+
+  addEventListener("pagehide", () => {
+    clearInterval(clockTimer);
+    clearTimeout(windScheduleTimer);
+    clearTimeout(gustTimer);
+    cancelAnimationFrame(frame);
+  }, { once: true });
 })();
