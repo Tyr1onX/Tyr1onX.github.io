@@ -1,0 +1,82 @@
+/* Background atmosphere loaded after the core and star-light styles. */
+
+body[data-page="home"] {
+  --nebula-cool-a: rgba(74, 104, 140, 0.13);
+  --nebula-cool-b: rgba(42, 68, 96, 0.10);
+  --nebula-warm: rgba(194, 145, 62, 0.055);
+  --cosmos-grain-opacity: 0.038;
+  --cosmos-grain-blend: soft-light;
+}
+
+html[data-theme="light"] body[data-page="home"] {
+  --nebula-cool-a: rgba(126, 151, 177, 0.13);
+  --nebula-cool-b: rgba(165, 179, 192, 0.11);
+  --nebula-warm: rgba(187, 145, 77, 0.035);
+  --cosmos-grain-opacity: 0.026;
+  --cosmos-grain-blend: multiply;
+}
+
+.cosmos-field::before,
+.cosmos-field::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.cosmos-field::before {
+  inset: -22%;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 46% 36% at 23% 28%, var(--nebula-cool-a), transparent 72%),
+    radial-gradient(ellipse 42% 34% at 78% 66%, var(--nebula-cool-b), transparent 74%),
+    radial-gradient(ellipse 30% 25% at 66% 20%, var(--nebula-warm), transparent 76%);
+  opacity: 0.92;
+  transform: translate3d(-1.8%, -1.2%, 0) scale(1.03);
+  transform-origin: 50% 50%;
+  will-change: transform;
+  animation: cosmos-atmosphere-drift 82s ease-in-out infinite alternate;
+}
+
+.cosmos-field::after {
+  inset: 0;
+  z-index: -1;
+  opacity: var(--cosmos-grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+  background-size: 176px 176px;
+  background-repeat: repeat;
+  mix-blend-mode: var(--cosmos-grain-blend);
+}
+
+@keyframes cosmos-atmosphere-drift {
+  0% {
+    transform: translate3d(-1.8%, -1.2%, 0) scale(1.03) rotate(-0.2deg);
+  }
+  38% {
+    transform: translate3d(1.4%, -0.4%, 0) scale(1.055) rotate(0.15deg);
+  }
+  72% {
+    transform: translate3d(0.4%, 1.5%, 0) scale(1.04) rotate(0.3deg);
+  }
+  100% {
+    transform: translate3d(-1.1%, 0.8%, 0) scale(1.06) rotate(-0.1deg);
+  }
+}
+
+@media (max-width: 720px) {
+  .cosmos-field::before {
+    inset: -28%;
+    opacity: 0.82;
+    animation-duration: 96s;
+  }
+
+  .cosmos-field::after {
+    background-size: 148px 148px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cosmos-field::before {
+    animation: none;
+    transform: translate3d(0, 0, 0) scale(1.03);
+  }
+}
