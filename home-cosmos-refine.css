@@ -1,0 +1,107 @@
+/* Star-light refinements loaded after home-cosmos.css. */
+
+.decorative-star {
+  width: calc(var(--star-size, 5px) * 0.62);
+  height: calc(var(--star-size, 5px) * 0.62);
+  opacity: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255, 249, 224, 0.96) 0 16%,
+    var(--cosmos-dot) 34%,
+    color-mix(in srgb, var(--cosmos-dot) 42%, transparent) 62%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 2px color-mix(in srgb, var(--cosmos-dot) 46%, transparent),
+    0 0 5px color-mix(in srgb, var(--cosmos-dot) 18%, transparent);
+  filter: blur(0.18px);
+  scale: 0.72;
+}
+
+html[data-theme="light"] .decorative-star {
+  background: radial-gradient(
+    circle,
+    rgba(255, 246, 214, 0.94) 0 14%,
+    var(--cosmos-dot) 34%,
+    color-mix(in srgb, var(--cosmos-dot) 36%, transparent) 60%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 1.5px color-mix(in srgb, var(--cosmos-dot) 40%, transparent),
+    0 0 4px color-mix(in srgb, var(--cosmos-dot) 14%, transparent);
+}
+
+.note-star::before {
+  display: none;
+}
+
+.note-star-core {
+  filter:
+    drop-shadow(0 0 1px var(--cosmos-glow-strong))
+    drop-shadow(0 0 3px var(--cosmos-glow))
+    drop-shadow(0 0 5px color-mix(in srgb, var(--cosmos-glow) 62%, transparent));
+}
+
+.note-star:hover .note-star-core,
+.note-star:focus-visible .note-star-core {
+  filter:
+    drop-shadow(0 0 1.5px var(--cosmos-glow-strong))
+    drop-shadow(0 0 4px var(--cosmos-glow))
+    drop-shadow(0 0 7px color-mix(in srgb, var(--cosmos-glow) 68%, transparent));
+}
+
+body[data-page="home"].windy .note-star-core {
+  filter:
+    drop-shadow(0 0 1.5px var(--cosmos-glow-strong))
+    drop-shadow(0 0 4px var(--cosmos-glow))
+    drop-shadow(0 0 7px color-mix(in srgb, var(--cosmos-glow) 64%, transparent));
+}
+
+@keyframes ambient-twinkle {
+  0%, 64%, 100% {
+    opacity: 0;
+    scale: 0.58;
+  }
+  70% {
+    opacity: calc(var(--star-opacity, 0.72) * 0.14);
+    scale: 0.72;
+  }
+  76% {
+    opacity: var(--star-opacity, 0.72);
+    scale: 1;
+  }
+  82% {
+    opacity: calc(var(--star-opacity, 0.72) * 0.22);
+    scale: 0.78;
+  }
+  88% {
+    opacity: 0;
+    scale: 0.62;
+  }
+}
+
+@keyframes note-star-twinkle {
+  0%, 100% {
+    opacity: 0.88;
+    scale: 0.97;
+    filter:
+      drop-shadow(0 0 1px var(--cosmos-glow-strong))
+      drop-shadow(0 0 2.5px var(--cosmos-glow))
+      drop-shadow(0 0 4px color-mix(in srgb, var(--cosmos-glow) 56%, transparent));
+  }
+  50% {
+    opacity: 1;
+    scale: 1.06;
+    filter:
+      drop-shadow(0 0 1.5px var(--cosmos-glow-strong))
+      drop-shadow(0 0 3.5px var(--cosmos-glow))
+      drop-shadow(0 0 6px color-mix(in srgb, var(--cosmos-glow) 64%, transparent));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decorative-star {
+    opacity: calc(var(--star-opacity, 0.72) * 0.46);
+    scale: 0.78;
+  }
+}
