@@ -7,6 +7,8 @@
     <meta name="theme-color" content="#0b1015" />
     <title>Tyr1onX</title>
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin />
+    <link rel="preload" as="image" href="https://raw.githubusercontent.com/Tyr1onX/desktop-course-widget/main/src-tauri/icons/icon.png" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./home-cosmos.css" />
     <link rel="stylesheet" href="./home-cosmos-refine.css" />
@@ -42,28 +44,32 @@
 
     <main id="main">
       <section class="cosmos-hero" aria-labelledby="cosmos-title">
-        <div class="cosmos-field" id="cosmos-field">
-          <div class="decorative-stars" id="decorative-stars" aria-hidden="true"></div>
-          <svg class="star-threads" id="star-threads" aria-hidden="true"></svg>
-          <div class="note-stars" id="note-stars" aria-label="最近文字"></div>
+        <div class="cosmos-shell">
+          <div class="cosmos-field" id="cosmos-field">
+            <div class="decorative-stars" id="decorative-stars" aria-hidden="true"></div>
+            <svg class="star-threads" id="star-threads" aria-hidden="true"></svg>
+            <div class="note-stars" id="note-stars" aria-label="最近文字"></div>
 
-          <div class="project-orbit" aria-hidden="true">
-            <span class="project-orbit-line"></span>
-            <span class="project-orbit-line project-orbit-line-inner"></span>
+            <div class="project-orbit" aria-hidden="true">
+              <span class="project-orbit-line"></span>
+              <span class="project-orbit-line project-orbit-line-inner"></span>
+            </div>
+
+            <div class="cosmos-center">
+              <img src="./avatar.svg" width="104" height="104" decoding="async" alt="" />
+              <h1 id="cosmos-title">Tyr1onX</h1>
+              <time id="current-time" aria-label="当前时间">--:--</time>
+            </div>
+
+            <a class="orbit-project" href="./keke.html" aria-label="打开课刻项目记录">
+              <span class="orbit-icon-shell">
+                <img src="https://raw.githubusercontent.com/Tyr1onX/desktop-course-widget/main/src-tauri/icons/icon.png" width="512" height="512" decoding="async" draggable="false" alt="课刻" />
+              </span>
+              <span class="orbit-tooltip" aria-hidden="true">课刻</span>
+            </a>
+
+            <a class="all-writing-link" href="./notes.html">全部文字 <span aria-hidden="true">↗</span></a>
           </div>
-
-          <div class="cosmos-center">
-            <img src="./avatar.svg" alt="" />
-            <h1 id="cosmos-title">Tyr1onX</h1>
-            <time id="current-time" aria-label="当前时间">--:--</time>
-          </div>
-
-          <a class="orbit-project" href="./keke.html" aria-label="打开课刻项目记录">
-            <span class="orbit-icon-shell"><img src="./assets/keke-icon.svg" width="32" height="32" decoding="async" alt="课刻" /></span>
-            <span class="orbit-tooltip" aria-hidden="true">课刻</span>
-          </a>
-
-          <a class="all-writing-link" href="./notes.html">全部文字 <span aria-hidden="true">↗</span></a>
         </div>
       </section>
     </main>
