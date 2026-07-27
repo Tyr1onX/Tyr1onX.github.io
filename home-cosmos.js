@@ -32,6 +32,12 @@
   const BASE_YEAR = 2026;
   const DECORATIVE_COUNT = BASE_AGE + Math.max(0, new Date().getFullYear() - BASE_YEAR);
 
+  const windLayer = document.createElement("div");
+  windLayer.className = "wind-streams";
+  windLayer.setAttribute("aria-hidden", "true");
+  windLayer.innerHTML = '<span class="wind-stream"></span><span class="wind-stream"></span><span class="wind-stream"></span>';
+  field.prepend(windLayer);
+
   const layouts = [
     [0.10, 0.24, -0.19], [0.22, 0.39, 0.12], [0.35, 0.22, -0.13], [0.50, 0.31, 0.16],
     [0.66, 0.20, -0.12], [0.82, 0.35, 0.11], [0.18, 0.57, 0.08], [0.76, 0.56, -0.08],
@@ -48,8 +54,8 @@
     decoration.innerHTML = Array.from({ length: DECORATIVE_COUNT }, (_, index) => {
       const x = (rand() * 100).toFixed(2);
       const y = (rand() * 100).toFixed(2);
-      const size = (1.8 + rand() * 3.1).toFixed(2);
-      const opacity = (0.34 + rand() * 0.38).toFixed(2);
+      const size = (2.2 + rand() * 3.2).toFixed(2);
+      const opacity = (0.40 + rand() * 0.34).toFixed(2);
       const duration = (2.8 + rand() * 5.4).toFixed(2);
       const delay = (-rand() * 7).toFixed(2);
       return `<span class="decorative-star" data-star="${index}" style="left:${x}%;top:${y}%;--star-size:${size}px;--star-opacity:${opacity};--twinkle-duration:${duration}s;--twinkle-delay:${delay}s"></span>`;
@@ -57,7 +63,7 @@
   }
 
   starsLayer.innerHTML = notes.map((note, index) => {
-    const size = 10 + (notes.length - index) * 0.8;
+    const size = 11.5 + (notes.length - index) * 0.9;
     const date = `${note.date}${note.time ? ` · ${note.time}` : ""}`;
     return `
       <a class="note-star" href="${noteUrl(note)}" aria-label="${note.title}，${date}" style="--note-star-size:${size.toFixed(1)}px;--twinkle-duration:${(3.1 + (index % 4) * 0.8).toFixed(1)}s;--twinkle-delay:${(-index * 0.38).toFixed(2)}s">
@@ -80,6 +86,7 @@
   let last = 0;
   let started = performance.now();
   let gustTimer = 0;
+  let lastWindSign = 0;
 
   function draw(index, body) {
     const el = elements[index];
@@ -121,7 +128,13 @@
 
   function triggerWind(force) {
     document.body.classList.add("windy");
-    const sign = Math.random() > 0.5 ? 1 : -1;
+    let sign = Math.random() < 0.5 ? -1 : 1;
+    if (sign === lastWindSign && Math.random() < 0.55) sign *= -1;
+    lastWindSign = sign;
+
+    field.dataset.windDirection = sign > 0 ? "right" : "left";
+    field.style.setProperty("--wind-duration", `${(1.9 + Math.random() * 0.7).toFixed(2)}s`);
+
     bodies.forEach((body, index) => {
       const depth = 1 - index / Math.max(1, bodies.length - 1);
       body.vx += sign * force * (0.5 + depth * 0.8) * (0.7 + Math.random() * 0.6);
@@ -134,7 +147,10 @@
       setTimeout(() => { star.style.transform = ""; }, 1800);
     });
     clearTimeout(gustTimer);
-    gustTimer = setTimeout(() => document.body.classList.remove("windy"), 1800);
+    gustTimer = setTimeout(() => {
+      document.body.classList.remove("windy");
+      delete field.dataset.windDirection;
+    }, 2400);
     if (!frame) {
       last = 0;
       frame = requestAnimationFrame(animate);
