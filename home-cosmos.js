@@ -5,19 +5,31 @@
   const decoration = document.querySelector("#decorative-stars");
   const currentYear = document.querySelector("#current-year");
   const timeEl = document.querySelector("#current-time");
+
   if (!(field instanceof HTMLElement) || !(starsLayer instanceof HTMLElement) || !(threads instanceof SVGSVGElement)) return;
 
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const coarsePointer = matchMedia("(hover: none), (pointer: coarse)").matches;
+
   let pageVisible = !document.hidden;
+  let initialized = false;
+  let initTimer = 0;
+  let startupWatchdog = 0;
+  let resizeTimer = 0;
 
   if (currentYear) currentYear.textContent = String(new Date().getFullYear());
+
   const updateClock = () => {
-    if (!(timeEl instanceof HTMLTimeElement)) return;
+    if (!timeEl) return;
     const now = new Date();
     timeEl.dateTime = now.toISOString();
-    timeEl.textContent = now.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false });
+    timeEl.textContent = now.toLocaleTimeString("zh-CN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
   };
+
   updateClock();
   setInterval(updateClock, 30000);
 
@@ -29,6 +41,7 @@
     const fallback = Date.parse(`${date}T${note?.time || "00:00"}:00+08:00`);
     return Number.isFinite(fallback) ? fallback : 0;
   };
+
   const notes = [...rawNotes].sort((a, b) => timestamp(b) - timestamp(a)).slice(0, 8);
   const noteUrl = (note) => `./note.html?id=${encodeURIComponent(note.id)}`;
   const BASE_AGE = 20;
@@ -74,6 +87,7 @@
         <span class="note-star-core" aria-hidden="true"></span>
       </a>`;
   }).join("");
+
   threads.innerHTML = notes.map((_, index) => `<line class="star-thread" data-thread="${index}" />`).join("");
 
   const elements = [...starsLayer.querySelectorAll(".note-star")];
@@ -94,22 +108,30 @@
   let lastWindSign = 0;
   let activeTouchStar = null;
 
+  function stageHasSize() {
+    return field.clientWidth >= 120 && field.clientHeight >= 240;
+  }
+
   function draw(index, body) {
-    const el = elements[index];
+    const element = elements[index];
     const line = lines[index];
-    if (!(el instanceof HTMLElement) || !(line instanceof SVGLineElement)) return;
-    el.style.transform = `translate(${body.x - 22}px, ${body.y - 22}px)`;
+    if (!(element instanceof HTMLElement) || !(line instanceof SVGElement)) return;
+
+    element.style.transform = `translate(${body.x - 22}px, ${body.y - 22}px)`;
     line.setAttribute("x1", String(body.ax));
     line.setAttribute("y1", String(body.ay));
     line.setAttribute("x2", String(body.x));
     line.setAttribute("y2", String(body.y - starTipOffsets[index]));
   }
 
-  function rebuild({ preservePosition = false } = {}) {
+  function rebuild({ preservePosition = false, settle = false } = {}) {
     const width = field.clientWidth;
     const height = field.clientHeight;
+    if (width < 120 || height < 240) return false;
+
     const previousBodies = bodies;
-    threads.setAttribute("viewBox", `0 0 ${Math.max(1, width)} ${Math.max(1, height)}`);
+    threads.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
     bodies = notes.map((_, index) => {
       const [anchorRatio, ropeRatio, angle] = layouts[index];
       const ax = width * anchorRatio;
@@ -118,6 +140,7 @@
       const restX = ax + Math.sin(angle) * length;
       const restY = ay + Math.cos(angle) * length;
       const previous = previousBodies[index];
+
       if (preservePosition && previous) {
         const oldWidth = Math.max(1, previous.viewportWidth || width);
         const xRatio = previous.x / oldWidth;
@@ -132,21 +155,25 @@
           viewportWidth: width,
         };
       }
+
       return {
         ax, ay, length, restX, restY,
-        x: reduced ? restX : ax + (index % 2 ? 28 : -28),
-        y: reduced ? restY : -80 - index * 34,
-        vx: reduced ? 0 : (index % 2 ? 18 : -18),
+        x: reduced || settle ? restX : ax + (index % 2 ? 28 : -28),
+        y: reduced || settle ? restY : -80 - index * 34,
+        vx: reduced || settle ? 0 : (index % 2 ? 18 : -18),
         vy: 0,
-        born: reduced,
-        delay: index * 130,
+        born: reduced || settle,
+        delay: settle ? 0 : index * 130,
         viewportWidth: width,
       };
     });
+
     bodies.forEach((body, index) => {
-      if (reduced || preservePosition) elements[index]?.classList.add("is-born");
+      elements[index]?.classList.toggle("is-born", reduced || settle || preservePosition);
       draw(index, body);
     });
+
+    return true;
   }
 
   function closeTouchStar() {
@@ -167,13 +194,14 @@
   }
 
   function ensurePhysicsFrame() {
-    if (reduced || !pageVisible || frame) return;
+    if (reduced || !initialized || !pageVisible || frame || !bodies.length) return;
     last = performance.now();
     frame = requestAnimationFrame(animate);
   }
 
   function triggerWind(force) {
-    if (!pageVisible) return;
+    if (!initialized || !pageVisible) return;
+
     document.body.classList.add("windy");
     let sign = Math.random() < 0.5 ? -1 : 1;
     if (sign === lastWindSign && Math.random() < 0.55) sign *= -1;
@@ -187,42 +215,50 @@
       body.vx += sign * force * (0.5 + depth * 0.8) * (0.7 + Math.random() * 0.6);
       body.vy -= force * 0.08 * Math.random();
     });
+
     decorativeStars.forEach((star, index) => {
       const drift = sign * (6 + Math.random() * 9);
       star.style.transform = `translateX(${drift}px) scale(${0.96 + (index % 3) * 0.04})`;
       star.style.transition = `transform ${1.6 + Math.random() * 1.6}s cubic-bezier(.22,1,.36,1)`;
       setTimeout(() => { star.style.transform = ""; }, 1800);
     });
+
     clearTimeout(gustTimer);
     gustTimer = setTimeout(() => {
       document.body.classList.remove("windy");
       delete field.dataset.windDirection;
     }, 2400);
+
     ensurePhysicsFrame();
   }
 
   function scheduleWind() {
     clearTimeout(windScheduleTimer);
-    if (reduced || !pageVisible) return;
-    const delay = 18000 + Math.random() * 24000;
+    if (reduced || !initialized || !pageVisible) return;
+
     windScheduleTimer = setTimeout(() => {
       triggerWind(30 + Math.random() * 16);
       scheduleWind();
-    }, delay);
+    }, 18000 + Math.random() * 24000);
   }
 
   function animate(now) {
-    if (reduced || !pageVisible) {
+    if (reduced || !initialized || !pageVisible) {
       frame = 0;
       return;
     }
+
     const dt = Math.min(0.032, Math.max(0.001, (now - last) / 1000));
     last = now;
     const elapsed = now - started;
     let moving = false;
 
     bodies.forEach((body, index) => {
-      if (elapsed < body.delay) return;
+      if (elapsed < body.delay) {
+        moving = true;
+        return;
+      }
+
       if (!body.born) {
         body.born = true;
         elements[index]?.classList.add("is-born");
@@ -238,6 +274,7 @@
       const dx = body.x - body.ax;
       const dy = body.y - body.ay;
       const distance = Math.hypot(dx, dy) || 1;
+
       if (distance > body.length) {
         const nx = dx / distance;
         const ny = dy / distance;
@@ -254,15 +291,47 @@
       body.vx += (body.restX - body.x) * 0.18 * settle * dt;
       body.vy += (body.restY - body.y) * 0.18 * settle * dt;
       draw(index, body);
+
       if (elapsed < body.delay + 7600 || Math.abs(body.vx) + Math.abs(body.vy) > 0.45) moving = true;
     });
 
-    if (moving) frame = requestAnimationFrame(animate);
-    else frame = 0;
+    frame = moving ? requestAnimationFrame(animate) : 0;
+  }
+
+  function hasVisibleWritingStar() {
+    if (!elements.length) return true;
+    const fieldRect = field.getBoundingClientRect();
+
+    return elements.some((element) => {
+      const rect = element.getBoundingClientRect();
+      return rect.right > fieldRect.left
+        && rect.left < fieldRect.right
+        && rect.bottom > fieldRect.top
+        && rect.top < fieldRect.bottom;
+    });
+  }
+
+  function revealStarsFallback() {
+    if (!initialized || !pageVisible || hasVisibleWritingStar()) return;
+
+    cancelAnimationFrame(frame);
+    frame = 0;
+    started = performance.now() - 8000;
+
+    if (!rebuild({ settle: true })) return;
+    elements.forEach((element) => element.classList.add("is-born"));
+  }
+
+  function armStartupWatchdog() {
+    clearTimeout(startupWatchdog);
+    startupWatchdog = setTimeout(() => {
+      if (!hasVisibleWritingStar()) revealStarsFallback();
+    }, 2600);
   }
 
   function pauseMotion() {
-    if (!pageVisible) return;
+    if (!initialized || !pageVisible) return;
+
     pageVisible = false;
     pausedAt = performance.now();
     document.body.classList.add("is-page-hidden");
@@ -275,18 +344,64 @@
   }
 
   function resumeMotion() {
-    if (document.hidden || pageVisible) return;
-    const now = performance.now();
-    pageVisible = true;
-    document.body.classList.remove("is-page-hidden");
-    updateClock();
+    if (!initialized || document.hidden) return;
 
-    if (pausedAt) started += now - pausedAt;
+    const now = performance.now();
+    if (!pageVisible && pausedAt) started += now - pausedAt;
+
+    pageVisible = true;
     pausedAt = 0;
     last = now;
-
+    document.body.classList.remove("is-page-hidden");
+    updateClock();
     ensurePhysicsFrame();
     scheduleWind();
+    armStartupWatchdog();
+  }
+
+  function initializeScene(attempt = 0) {
+    clearTimeout(initTimer);
+    if (initialized) return;
+
+    if (!stageHasSize()) {
+      if (attempt < 40) initTimer = setTimeout(() => initializeScene(attempt + 1), 50);
+      return;
+    }
+
+    started = performance.now();
+    if (!rebuild()) return;
+    initialized = true;
+
+    if (document.hidden) {
+      pageVisible = false;
+      pausedAt = performance.now();
+      document.body.classList.add("is-page-hidden");
+    } else {
+      pageVisible = true;
+      document.body.classList.remove("is-page-hidden");
+      ensurePhysicsFrame();
+      scheduleWind();
+      armStartupWatchdog();
+    }
+  }
+
+  function scheduleRebuild() {
+    if (!initialized) {
+      initializeScene();
+      return;
+    }
+
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (!stageHasSize()) return;
+      cancelAnimationFrame(frame);
+      frame = 0;
+      last = performance.now();
+      closeTouchStar();
+      rebuild({ preservePosition: true });
+      ensurePhysicsFrame();
+      armStartupWatchdog();
+    }, 120);
   }
 
   elements.forEach((element, index) => {
@@ -331,26 +446,24 @@
   });
 
   addEventListener("pageshow", (event) => {
+    if (!initialized) {
+      initializeScene();
+      return;
+    }
     if (event.persisted) resumeMotion();
   });
 
   addEventListener("pagehide", pauseMotion);
+  addEventListener("resize", scheduleRebuild, { passive: true });
+  addEventListener("load", () => {
+    if (!initialized) initializeScene();
+    else scheduleRebuild();
+  }, { once: true });
 
-  rebuild();
-  ensurePhysicsFrame();
-  scheduleWind();
+  if ("ResizeObserver" in window) {
+    const resizeObserver = new ResizeObserver(() => scheduleRebuild());
+    resizeObserver.observe(field);
+  }
 
-  let resizeTimer = 0;
-  addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      cancelAnimationFrame(frame);
-      frame = 0;
-      last = 0;
-      started = performance.now();
-      closeTouchStar();
-      rebuild({ preservePosition: true });
-      ensurePhysicsFrame();
-    }, 120);
-  }, { passive: true });
+  requestAnimationFrame(() => requestAnimationFrame(() => initializeScene()));
 })();
