@@ -1,10 +1,10 @@
 body[data-page="home"] {
   --cosmos-bg: #0b1015;
-  --cosmos-glow: rgba(195, 223, 255, 0.18);
-  --cosmos-line: rgba(205, 220, 234, 0.18);
-  --cosmos-line-strong: rgba(220, 232, 242, 0.34);
-  --cosmos-star: #edf5ff;
-  --cosmos-star-soft: #aabfd5;
+  --cosmos-glow: rgba(255, 198, 82, 0.24);
+  --cosmos-line: rgba(255, 223, 157, 0.16);
+  --cosmos-line-strong: rgba(255, 229, 174, 0.34);
+  --cosmos-star: #ffe3a3;
+  --cosmos-star-soft: #e4b85f;
   --cosmos-label-bg: rgba(11, 16, 21, 0.74);
   background:
     radial-gradient(circle at 50% 42%, rgba(63, 93, 126, 0.12), transparent 30%),
@@ -14,11 +14,11 @@ body[data-page="home"] {
 
 html[data-theme="light"] body[data-page="home"] {
   --cosmos-bg: #eef2f5;
-  --cosmos-glow: rgba(98, 130, 160, 0.16);
-  --cosmos-line: rgba(70, 86, 102, 0.12);
-  --cosmos-line-strong: rgba(70, 86, 102, 0.24);
-  --cosmos-star: #44566a;
-  --cosmos-star-soft: #708397;
+  --cosmos-glow: rgba(172, 116, 16, 0.18);
+  --cosmos-line: rgba(139, 96, 23, 0.12);
+  --cosmos-line-strong: rgba(139, 96, 23, 0.26);
+  --cosmos-star: #9a6815;
+  --cosmos-star-soft: #b9852d;
   --cosmos-label-bg: rgba(255, 255, 255, 0.92);
   background:
     radial-gradient(circle at 50% 42%, rgba(144, 169, 196, 0.12), transparent 30%),
@@ -70,7 +70,7 @@ body[data-page="home"] .cosmos-hero {
   opacity: var(--star-opacity, 0.54);
   background: var(--cosmos-star);
   filter: drop-shadow(0 0 6px var(--cosmos-glow));
-  transform: scale(0.92);
+  scale: 0.92;
   animation: twinkle var(--twinkle-duration, 4s) ease-in-out infinite;
   animation-delay: var(--twinkle-delay, 0s);
 }
@@ -290,8 +290,8 @@ body[data-page="home"].windy .note-star-core {
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: calc(var(--star-opacity, 0.78) * 0.86); transform: scale(0.92); }
-  50% { opacity: calc(var(--star-opacity, 0.78) * 1.16); transform: scale(1.08); }
+  0%, 100% { opacity: calc(var(--star-opacity, 0.78) * 0.86); scale: 0.92; }
+  50% { opacity: calc(var(--star-opacity, 0.78) * 1.16); scale: 1.08; }
 }
 
 @keyframes project-orbit {
