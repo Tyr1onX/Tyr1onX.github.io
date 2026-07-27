@@ -37,24 +37,24 @@ html[data-theme="light"] .decorative-star {
 
 .note-star-core {
   filter:
-    drop-shadow(0 0 1.8px var(--cosmos-glow-strong))
-    drop-shadow(0 0 5.2px var(--cosmos-glow))
-    drop-shadow(0 0 9px color-mix(in srgb, var(--cosmos-glow) 78%, transparent));
+    drop-shadow(0 0 2.4px var(--cosmos-glow-strong))
+    drop-shadow(0 0 7px var(--cosmos-glow))
+    drop-shadow(0 0 12px color-mix(in srgb, var(--cosmos-glow) 88%, transparent));
 }
 
 .note-star:hover .note-star-core,
 .note-star:focus-visible .note-star-core {
   filter:
-    drop-shadow(0 0 2.6px var(--cosmos-glow-strong))
-    drop-shadow(0 0 7px var(--cosmos-glow))
-    drop-shadow(0 0 12px color-mix(in srgb, var(--cosmos-glow) 86%, transparent));
+    drop-shadow(0 0 3.4px var(--cosmos-glow-strong))
+    drop-shadow(0 0 9px var(--cosmos-glow))
+    drop-shadow(0 0 15px color-mix(in srgb, var(--cosmos-glow) 94%, transparent));
 }
 
 body[data-page="home"].windy .note-star-core {
   filter:
-    drop-shadow(0 0 2.4px var(--cosmos-glow-strong))
-    drop-shadow(0 0 6.5px var(--cosmos-glow))
-    drop-shadow(0 0 11px color-mix(in srgb, var(--cosmos-glow) 82%, transparent));
+    drop-shadow(0 0 3.1px var(--cosmos-glow-strong))
+    drop-shadow(0 0 8.5px var(--cosmos-glow))
+    drop-shadow(0 0 14px color-mix(in srgb, var(--cosmos-glow) 92%, transparent));
 }
 
 @keyframes ambient-twinkle {
@@ -82,20 +82,20 @@ body[data-page="home"].windy .note-star-core {
 
 @keyframes note-star-twinkle {
   0%, 100% {
-    opacity: 0.96;
-    scale: 0.985;
+    opacity: 1;
+    scale: 0.995;
     filter:
-      drop-shadow(0 0 1.7px var(--cosmos-glow-strong))
-      drop-shadow(0 0 4.8px var(--cosmos-glow))
-      drop-shadow(0 0 8px color-mix(in srgb, var(--cosmos-glow) 74%, transparent));
+      drop-shadow(0 0 2.4px var(--cosmos-glow-strong))
+      drop-shadow(0 0 7px var(--cosmos-glow))
+      drop-shadow(0 0 12px color-mix(in srgb, var(--cosmos-glow) 88%, transparent));
   }
   50% {
     opacity: 1;
-    scale: 1.09;
+    scale: 1.11;
     filter:
-      drop-shadow(0 0 2.8px var(--cosmos-glow-strong))
-      drop-shadow(0 0 7.5px var(--cosmos-glow))
-      drop-shadow(0 0 13px color-mix(in srgb, var(--cosmos-glow) 90%, transparent));
+      drop-shadow(0 0 3.8px var(--cosmos-glow-strong))
+      drop-shadow(0 0 11px var(--cosmos-glow))
+      drop-shadow(0 0 18px color-mix(in srgb, var(--cosmos-glow) 100%, transparent));
   }
 }
 
@@ -108,8 +108,8 @@ body[data-page="home"].windy .note-star-core {
   .note-star-core {
     opacity: 1;
     filter:
-      drop-shadow(0 0 1.8px var(--cosmos-glow-strong))
-      drop-shadow(0 0 5.2px var(--cosmos-glow))
-      drop-shadow(0 0 9px color-mix(in srgb, var(--cosmos-glow) 78%, transparent));
+      drop-shadow(0 0 2.4px var(--cosmos-glow-strong))
+      drop-shadow(0 0 7px var(--cosmos-glow))
+      drop-shadow(0 0 12px color-mix(in srgb, var(--cosmos-glow) 88%, transparent));
   }
 }
