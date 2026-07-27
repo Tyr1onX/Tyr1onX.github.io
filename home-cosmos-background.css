@@ -1,18 +1,18 @@
 /* Background atmosphere loaded after the core and star-light styles. */
 
 body[data-page="home"] {
-  --nebula-cool-a: rgba(74, 104, 140, 0.13);
-  --nebula-cool-b: rgba(42, 68, 96, 0.10);
-  --nebula-warm: rgba(194, 145, 62, 0.055);
-  --cosmos-grain-opacity: 0.038;
+  --nebula-cool-a: rgba(74, 110, 150, 0.19);
+  --nebula-cool-b: rgba(45, 76, 108, 0.15);
+  --nebula-warm: rgba(205, 154, 67, 0.085);
+  --cosmos-grain-opacity: 0.042;
   --cosmos-grain-blend: soft-light;
 }
 
 html[data-theme="light"] body[data-page="home"] {
-  --nebula-cool-a: rgba(126, 151, 177, 0.13);
-  --nebula-cool-b: rgba(165, 179, 192, 0.11);
-  --nebula-warm: rgba(187, 145, 77, 0.035);
-  --cosmos-grain-opacity: 0.026;
+  --nebula-cool-a: rgba(118, 149, 181, 0.17);
+  --nebula-cool-b: rgba(156, 176, 195, 0.14);
+  --nebula-warm: rgba(187, 145, 77, 0.048);
+  --cosmos-grain-opacity: 0.029;
   --cosmos-grain-blend: multiply;
 }
 
@@ -23,23 +23,24 @@ html[data-theme="light"] body[data-page="home"] {
   pointer-events: none;
 }
 
+/* Keep the atmosphere inside the field stacking context, but behind all content. */
 .cosmos-field::before {
-  inset: -22%;
-  z-index: -2;
+  inset: -24%;
+  z-index: 0;
   background:
-    radial-gradient(ellipse 46% 36% at 23% 28%, var(--nebula-cool-a), transparent 72%),
-    radial-gradient(ellipse 42% 34% at 78% 66%, var(--nebula-cool-b), transparent 74%),
-    radial-gradient(ellipse 30% 25% at 66% 20%, var(--nebula-warm), transparent 76%);
-  opacity: 0.92;
-  transform: translate3d(-1.8%, -1.2%, 0) scale(1.03);
+    radial-gradient(ellipse 48% 38% at 21% 27%, var(--nebula-cool-a), transparent 70%),
+    radial-gradient(ellipse 44% 36% at 79% 68%, var(--nebula-cool-b), transparent 72%),
+    radial-gradient(ellipse 32% 27% at 67% 18%, var(--nebula-warm), transparent 74%);
+  opacity: 0.94;
+  transform: translate3d(-2.4%, -1.6%, 0) scale(1.025) rotate(-0.25deg);
   transform-origin: 50% 50%;
-  will-change: transform;
-  animation: cosmos-atmosphere-drift 82s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+  animation: cosmos-atmosphere-drift 54s ease-in-out infinite alternate;
 }
 
 .cosmos-field::after {
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   opacity: var(--cosmos-grain-opacity);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
   background-size: 176px 176px;
@@ -47,26 +48,40 @@ html[data-theme="light"] body[data-page="home"] {
   mix-blend-mode: var(--cosmos-grain-blend);
 }
 
+.decorative-stars,
+.star-threads,
+.project-orbit {
+  z-index: 1;
+}
+
 @keyframes cosmos-atmosphere-drift {
   0% {
-    transform: translate3d(-1.8%, -1.2%, 0) scale(1.03) rotate(-0.2deg);
+    opacity: 0.82;
+    transform: translate3d(-2.4%, -1.6%, 0) scale(1.025) rotate(-0.25deg);
   }
-  38% {
-    transform: translate3d(1.4%, -0.4%, 0) scale(1.055) rotate(0.15deg);
+  28% {
+    opacity: 0.98;
+    transform: translate3d(1.9%, -0.8%, 0) scale(1.075) rotate(0.18deg);
   }
-  72% {
-    transform: translate3d(0.4%, 1.5%, 0) scale(1.04) rotate(0.3deg);
+  56% {
+    opacity: 0.88;
+    transform: translate3d(1.1%, 1.9%, 0) scale(1.045) rotate(0.35deg);
+  }
+  78% {
+    opacity: 1;
+    transform: translate3d(-0.6%, 1.2%, 0) scale(1.09) rotate(0.08deg);
   }
   100% {
-    transform: translate3d(-1.1%, 0.8%, 0) scale(1.06) rotate(-0.1deg);
+    opacity: 0.9;
+    transform: translate3d(-1.7%, 0.5%, 0) scale(1.055) rotate(-0.18deg);
   }
 }
 
 @media (max-width: 720px) {
   .cosmos-field::before {
-    inset: -28%;
-    opacity: 0.82;
-    animation-duration: 96s;
+    inset: -30%;
+    opacity: 0.98;
+    animation-duration: 58s;
   }
 
   .cosmos-field::after {
@@ -77,6 +92,7 @@ html[data-theme="light"] body[data-page="home"] {
 @media (prefers-reduced-motion: reduce) {
   .cosmos-field::before {
     animation: none;
-    transform: translate3d(0, 0, 0) scale(1.03);
+    opacity: 0.92;
+    transform: translate3d(0, 0, 0) scale(1.045);
   }
 }
