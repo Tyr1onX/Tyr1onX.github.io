@@ -1,44 +1,62 @@
-/* Background atmosphere loaded after the core and star-light styles. */
+/* Full-bleed atmospheric background for the homepage. */
 
 body[data-page="home"] {
-  --nebula-cool-a: rgba(74, 110, 150, 0.19);
-  --nebula-cool-b: rgba(45, 76, 108, 0.15);
-  --nebula-warm: rgba(205, 154, 67, 0.085);
-  --cosmos-grain-opacity: 0.042;
+  --nebula-cool-a: rgba(74, 110, 150, 0.11);
+  --nebula-cool-b: rgba(45, 76, 108, 0.08);
+  --nebula-warm: rgba(205, 154, 67, 0.035);
+  --cosmos-grain-opacity: 0.025;
   --cosmos-grain-blend: soft-light;
 }
 
 html[data-theme="light"] body[data-page="home"] {
-  --nebula-cool-a: rgba(118, 149, 181, 0.17);
-  --nebula-cool-b: rgba(156, 176, 195, 0.14);
-  --nebula-warm: rgba(187, 145, 77, 0.048);
-  --cosmos-grain-opacity: 0.029;
+  --nebula-cool-a: rgba(118, 149, 181, 0.075);
+  --nebula-cool-b: rgba(156, 176, 195, 0.06);
+  --nebula-warm: rgba(187, 145, 77, 0.022);
+  --cosmos-grain-opacity: 0.014;
   --cosmos-grain-blend: multiply;
 }
 
-.cosmos-field::before,
-.cosmos-field::after {
+body[data-page="home"] .cosmos-hero {
+  position: relative;
+  width: 100%;
+  min-height: calc(100svh - 66px);
+  padding: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+body[data-page="home"] .cosmos-field {
+  width: 100%;
+  max-width: none;
+  min-height: calc(100svh - 66px);
+  margin: 0;
+  border-radius: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+body[data-page="home"] .cosmos-hero::before,
+body[data-page="home"] .cosmos-hero::after {
   position: absolute;
   content: "";
   pointer-events: none;
 }
 
-/* Keep the atmosphere inside the field stacking context, but behind all content. */
-.cosmos-field::before {
-  inset: -24%;
+body[data-page="home"] .cosmos-hero::before {
+  inset: -12%;
   z-index: 0;
   background:
-    radial-gradient(ellipse 48% 38% at 21% 27%, var(--nebula-cool-a), transparent 70%),
-    radial-gradient(ellipse 44% 36% at 79% 68%, var(--nebula-cool-b), transparent 72%),
-    radial-gradient(ellipse 32% 27% at 67% 18%, var(--nebula-warm), transparent 74%);
-  opacity: 0.94;
-  transform: translate3d(-2.4%, -1.6%, 0) scale(1.025) rotate(-0.25deg);
+    radial-gradient(ellipse 66% 58% at 14% 28%, var(--nebula-cool-a), transparent 74%),
+    radial-gradient(ellipse 62% 54% at 88% 70%, var(--nebula-cool-b), transparent 76%),
+    radial-gradient(ellipse 44% 36% at 66% 12%, var(--nebula-warm), transparent 78%);
+  opacity: 0.72;
+  transform: translate3d(-1.2%, -0.8%, 0) scale(1.015);
   transform-origin: 50% 50%;
   will-change: transform, opacity;
-  animation: cosmos-atmosphere-drift 54s ease-in-out infinite alternate;
+  animation: cosmos-atmosphere-drift 76s ease-in-out infinite alternate;
 }
 
-.cosmos-field::after {
+body[data-page="home"] .cosmos-hero::after {
   inset: 0;
   z-index: 0;
   opacity: var(--cosmos-grain-opacity);
@@ -54,45 +72,50 @@ html[data-theme="light"] body[data-page="home"] {
   z-index: 1;
 }
 
+body.is-page-hidden .cosmos-hero::before {
+  animation-play-state: paused !important;
+}
+
 @keyframes cosmos-atmosphere-drift {
   0% {
-    opacity: 0.82;
-    transform: translate3d(-2.4%, -1.6%, 0) scale(1.025) rotate(-0.25deg);
+    opacity: 0.62;
+    transform: translate3d(-1.2%, -0.8%, 0) scale(1.015) rotate(-0.12deg);
   }
-  28% {
-    opacity: 0.98;
-    transform: translate3d(1.9%, -0.8%, 0) scale(1.075) rotate(0.18deg);
+  32% {
+    opacity: 0.76;
+    transform: translate3d(1.1%, -0.35%, 0) scale(1.035) rotate(0.08deg);
   }
-  56% {
-    opacity: 0.88;
-    transform: translate3d(1.1%, 1.9%, 0) scale(1.045) rotate(0.35deg);
-  }
-  78% {
-    opacity: 1;
-    transform: translate3d(-0.6%, 1.2%, 0) scale(1.09) rotate(0.08deg);
+  64% {
+    opacity: 0.68;
+    transform: translate3d(0.6%, 1.1%, 0) scale(1.022) rotate(0.14deg);
   }
   100% {
-    opacity: 0.9;
-    transform: translate3d(-1.7%, 0.5%, 0) scale(1.055) rotate(-0.18deg);
+    opacity: 0.74;
+    transform: translate3d(-0.8%, 0.45%, 0) scale(1.03) rotate(-0.08deg);
   }
 }
 
 @media (max-width: 720px) {
-  .cosmos-field::before {
-    inset: -30%;
-    opacity: 0.98;
-    animation-duration: 58s;
+  body[data-page="home"] .cosmos-hero,
+  body[data-page="home"] .cosmos-field {
+    min-height: calc(100svh - 62px);
   }
 
-  .cosmos-field::after {
+  body[data-page="home"] .cosmos-hero::before {
+    inset: -18%;
+    opacity: 0.76;
+    animation-duration: 82s;
+  }
+
+  body[data-page="home"] .cosmos-hero::after {
     background-size: 148px 148px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cosmos-field::before {
+  body[data-page="home"] .cosmos-hero::before {
     animation: none;
-    opacity: 0.92;
-    transform: translate3d(0, 0, 0) scale(1.045);
+    opacity: 0.66;
+    transform: translate3d(0, 0, 0) scale(1.02);
   }
 }
