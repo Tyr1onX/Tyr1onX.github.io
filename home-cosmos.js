@@ -19,7 +19,7 @@
     timeEl.textContent = now.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false });
   };
   updateClock();
-  const clockTimer = setInterval(updateClock, 30000);
+  setInterval(updateClock, 30000);
 
   const rawNotes = Array.isArray(window.TYR1ONX_NOTES) ? window.TYR1ONX_NOTES : [];
   const timestamp = (note) => {
@@ -88,6 +88,7 @@
   let frame = 0;
   let last = 0;
   let started = performance.now();
+  let pausedAt = 0;
   let gustTimer = 0;
   let windScheduleTimer = 0;
   let lastWindSign = 0;
@@ -167,7 +168,7 @@
 
   function ensurePhysicsFrame() {
     if (reduced || !pageVisible || frame) return;
-    last = 0;
+    last = performance.now();
     frame = requestAnimationFrame(animate);
   }
 
@@ -200,10 +201,10 @@
     ensurePhysicsFrame();
   }
 
-  function scheduleWind({ soon = false } = {}) {
+  function scheduleWind() {
     clearTimeout(windScheduleTimer);
     if (reduced || !pageVisible) return;
-    const delay = soon ? 900 + Math.random() * 900 : 18000 + Math.random() * 24000;
+    const delay = 18000 + Math.random() * 24000;
     windScheduleTimer = setTimeout(() => {
       triggerWind(30 + Math.random() * 16);
       scheduleWind();
@@ -215,7 +216,7 @@
       frame = 0;
       return;
     }
-    const dt = Math.min(0.032, Math.max(0.001, (now - (last || now)) / 1000));
+    const dt = Math.min(0.032, Math.max(0.001, (now - last) / 1000));
     last = now;
     const elapsed = now - started;
     let moving = false;
@@ -261,7 +262,9 @@
   }
 
   function pauseMotion() {
+    if (!pageVisible) return;
     pageVisible = false;
+    pausedAt = performance.now();
     document.body.classList.add("is-page-hidden");
     cancelAnimationFrame(frame);
     frame = 0;
@@ -272,24 +275,18 @@
   }
 
   function resumeMotion() {
-    if (document.hidden) return;
+    if (document.hidden || pageVisible) return;
+    const now = performance.now();
     pageVisible = true;
     document.body.classList.remove("is-page-hidden");
     updateClock();
-    last = 0;
-    started = performance.now();
 
-    bodies.forEach((body, index) => {
-      const direction = index % 2 === 0 ? -1 : 1;
-      body.vx += direction * (5 + index * 0.35);
-      body.vy -= 1.5 + (index % 3);
-      body.born = true;
-      body.delay = 0;
-      elements[index]?.classList.add("is-born");
-    });
+    if (pausedAt) started += now - pausedAt;
+    pausedAt = 0;
+    last = now;
 
     ensurePhysicsFrame();
-    scheduleWind({ soon: true });
+    scheduleWind();
   }
 
   elements.forEach((element, index) => {
