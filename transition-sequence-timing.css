@@ -73,6 +73,20 @@ body[data-page="note"].is-arriving-writing-note .site-footer {
   animation-delay: 1120ms !important;
 }
 
+/* Keep the atmosphere alive until the footer divider without a separate stylesheet. */
+body[data-page="home"] .cosmos-field {
+  --garden-scene-height: 100%;
+}
+
+body[data-page="home"] .wind-streams {
+  bottom: auto;
+  height: var(--garden-scene-height, 100%);
+}
+
+body[data-page="home"] .garden-traces {
+  height: calc(var(--garden-scene-height, 100%) + 5%);
+}
+
 /* Runtime performance: keep the atmosphere, but avoid full-screen filter repaint on every frame. */
 body[data-page="home"] .garden-current {
   filter: blur(7px);
@@ -97,6 +111,12 @@ body[data-page="home"] .garden-trace:nth-child(2n) {
   body[data-page="home"] .garden-current-c,
   body[data-page="home"] .garden-trace:nth-child(n + 4) {
     display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  body[data-page="home"] .garden-traces {
+    height: calc(var(--garden-scene-height, 100%) + 3%);
   }
 }
 
