@@ -10,8 +10,12 @@
     <script>
       (() => {
         try {
+          const queryMode = new URL(location.href).searchParams.get("__return");
           const raw = sessionStorage.getItem("tyr1onx:return-home-transition");
-          const mode = raw ? JSON.parse(raw)?.mode : "";
+          const storedMode = raw ? JSON.parse(raw)?.mode : "";
+          const mode = queryMode === "keke" ? "keke-return"
+            : queryMode === "writing" ? "writing-archive-return"
+              : storedMode;
           if (mode) document.documentElement.dataset.returnHomePending = mode;
         } catch {}
       })();
@@ -27,8 +31,8 @@
     <link rel="stylesheet" href="./home-garden-refine.css?v=1-visibility" />
     <link rel="stylesheet" href="./home-garden-boundary.css?v=1-footer-line" />
     <link rel="stylesheet" href="./keke-transition.css?v=3-shared-world" />
-    <link rel="stylesheet" href="./writing-transition.css?v=2-smooth-retreat" />
-    <link rel="stylesheet" href="./return-home-transition.css?v=2-responsive-return" />
+    <link rel="stylesheet" href="./writing-transition.css?v=3-thread-cycle" />
+    <link rel="stylesheet" href="./return-home-transition.css?v=3-fresh-route" />
     <script src="./notes-data.js" defer></script>
     <script src="./notes-2026.js?v=2" defer></script>
     <script src="./script.js?v=3-note-kinds" defer></script>
@@ -36,8 +40,8 @@
     <script src="./home-keke-orbit.js?v=3-smooth-transform" defer></script>
     <script src="./home-garden.js?v=3-footer-boundary" defer></script>
     <script src="./keke-transition.js?v=3-shared-world" defer></script>
-    <script src="./writing-transition.js?v=2-smooth-retreat" defer></script>
-    <script src="./return-home-transition.js?v=2-responsive-return" defer></script>
+    <script src="./writing-transition.js?v=3-thread-cycle" defer></script>
+    <script src="./return-home-transition.js?v=3-fresh-route" defer></script>
   </head>
   <body data-page="home">
     <a class="skip-link" href="#main">跳到主要内容</a>
