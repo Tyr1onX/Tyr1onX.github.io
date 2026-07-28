@@ -9,15 +9,19 @@
     || !(orbitProject instanceof HTMLElement)) return;
 
   const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointerQuery = matchMedia("(hover: hover) and (pointer: fine)");
   const duration = 56000;
   const initialPhase = 0.38;
 
   let frame = 0;
+  let resizeFrame = 0;
   let retryTimer = 0;
   let startedAt = performance.now() - duration * initialPhase;
   let pausedAt = 0;
   let geometry = null;
   let interactionPaused = false;
+  let sceneVisible = true;
+  let frontHalf = null;
 
   function clearInlinePosition() {
     orbitProject.style.removeProperty("left");
@@ -26,6 +30,7 @@
     orbitProject.style.removeProperty("z-index");
     orbitProject.style.removeProperty("visibility");
     orbitProject.style.removeProperty("opacity");
+    frontHalf = null;
   }
 
   function useCssFallback() {
@@ -65,26 +70,39 @@
       : ((now - startedAt) % duration) / duration;
   }
 
+  function prepareCarrier() {
+    orbitProject.classList.add("is-pixel-orbit");
+    orbitProject.style.left = "0px";
+    orbitProject.style.top = "0px";
+    orbitProject.style.visibility = "visible";
+    orbitProject.style.opacity = "1";
+  }
+
   function placeAtPhase(phase) {
     if (!geometry && !measure()) return false;
 
     const angle = phase * Math.PI * 2;
     const x = geometry.centerX + Math.cos(angle) * geometry.radiusX - geometry.iconSize / 2;
     const y = geometry.centerY + Math.sin(angle) * geometry.radiusY - geometry.iconSize / 2;
-
-    // Keep the artwork untouched and move only its carrier. Fractional compositor
-    // coordinates avoid the stop-and-jump cadence caused by physical-pixel snapping.
-    orbitProject.style.left = "0px";
-    orbitProject.style.top = "0px";
     orbitProject.style.transform = `translate3d(${x.toFixed(3)}px, ${y.toFixed(3)}px, 0)`;
-    orbitProject.style.zIndex = Math.sin(angle) >= 0 ? "5" : "2";
-    orbitProject.style.visibility = "visible";
-    orbitProject.style.opacity = "1";
+
+    const nextFrontHalf = Math.sin(angle) >= 0;
+    if (nextFrontHalf !== frontHalf) {
+      frontHalf = nextFrontHalf;
+      orbitProject.style.zIndex = nextFrontHalf ? "5" : "2";
+    }
     return true;
   }
 
+  function canAnimate() {
+    return !reducedQuery.matches
+      && !document.hidden
+      && !interactionPaused
+      && sceneVisible;
+  }
+
   function animate(now) {
-    if (reducedQuery.matches || document.hidden || interactionPaused) {
+    if (!canAnimate()) {
       frame = 0;
       return;
     }
@@ -100,19 +118,15 @@
 
   function start() {
     clearTimeout(retryTimer);
-
     if (!measure()) {
       useCssFallback();
       retryTimer = setTimeout(start, 120);
       return;
     }
 
-    orbitProject.classList.add("is-pixel-orbit");
+    prepareCarrier();
     placeAtPhase(currentPhase());
-
-    if (!reducedQuery.matches && !document.hidden && !interactionPaused && !frame) {
-      frame = requestAnimationFrame(animate);
-    }
+    if (canAnimate() && !frame) frame = requestAnimationFrame(animate);
   }
 
   function pauseTimeline() {
@@ -122,7 +136,7 @@
   }
 
   function resumeTimeline() {
-    if (document.hidden || interactionPaused) return;
+    if (!canAnimate()) return;
     if (pausedAt) startedAt += performance.now() - pausedAt;
     pausedAt = 0;
     start();
@@ -133,16 +147,19 @@
     else resumeTimeline();
   }
 
-  function handleResize() {
-    geometry = null;
-    start();
+  function scheduleResize() {
+    if (resizeFrame) return;
+    resizeFrame = requestAnimationFrame(() => {
+      resizeFrame = 0;
+      geometry = null;
+      start();
+    });
   }
 
   orbitProject.addEventListener("pointerenter", () => {
-    if (matchMedia("(hover: hover)").matches) {
-      interactionPaused = true;
-      pauseTimeline();
-    }
+    if (!finePointerQuery.matches) return;
+    interactionPaused = true;
+    pauseTimeline();
   });
 
   orbitProject.addEventListener("pointerleave", () => {
@@ -160,9 +177,9 @@
     resumeTimeline();
   });
 
-  reducedQuery.addEventListener?.("change", handleResize);
+  reducedQuery.addEventListener?.("change", scheduleResize);
   document.addEventListener("visibilitychange", handleVisibility);
-  addEventListener("resize", handleResize, { passive: true });
+  addEventListener("resize", scheduleResize, { passive: true });
   addEventListener("pageshow", resumeTimeline);
   addEventListener("pagehide", pauseTimeline);
 
@@ -171,8 +188,19 @@
     orbitImage.addEventListener("error", useCssFallback, { once: true });
   }
 
+  if ("IntersectionObserver" in window) {
+    const visibilityObserver = new IntersectionObserver((entries) => {
+      const visible = entries.some((entry) => entry.isIntersecting);
+      if (visible === sceneVisible) return;
+      sceneVisible = visible;
+      if (visible) resumeTimeline();
+      else pauseTimeline();
+    }, { rootMargin: "120px" });
+    visibilityObserver.observe(field);
+  }
+
   if ("ResizeObserver" in window) {
-    const observer = new ResizeObserver(handleResize);
+    const observer = new ResizeObserver(scheduleResize);
     observer.observe(field);
     observer.observe(orbitLine);
   }
