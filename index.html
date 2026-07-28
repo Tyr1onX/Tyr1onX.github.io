@@ -10,40 +10,42 @@
     <script>
       (() => {
         try {
-          const queryMode = new URL(location.href).searchParams.get("__return");
+          const url = new URL(location.href);
+          const queryMode = url.searchParams.get("__return");
           const raw = sessionStorage.getItem("tyr1onx:return-home-transition");
           const storedMode = raw ? JSON.parse(raw)?.mode : "";
           const mode = queryMode === "keke" ? "keke-return"
             : queryMode === "writing" ? "writing-archive-return"
               : storedMode;
           if (mode) document.documentElement.dataset.returnHomePending = mode;
+
+          if (url.searchParams.has("__return") || url.searchParams.has("__t")) {
+            url.searchParams.delete("__return");
+            url.searchParams.delete("__t");
+            history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`);
+          }
         } catch {}
       })();
     </script>
     <link rel="preload" as="image" href="./assets/keke-icon-source.png" type="image/png" />
-    <link rel="prefetch" href="./keke.html" />
-    <link rel="prefetch" href="./notes.html" />
-    <link rel="prefetch" href="./note.html" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./home-cosmos-v3.css" />
     <link rel="stylesheet" href="./home-keke-orbit.css?v=4-smooth-carrier" />
     <link rel="stylesheet" href="./home-garden.css?v=1-windfield" />
     <link rel="stylesheet" href="./home-garden-refine.css?v=1-visibility" />
-    <link rel="stylesheet" href="./home-garden-boundary.css?v=1-footer-line" />
     <link rel="stylesheet" href="./keke-transition.css?v=3-shared-world" />
     <link rel="stylesheet" href="./writing-transition.css?v=3-thread-cycle" />
     <link rel="stylesheet" href="./return-home-transition.css?v=3-fresh-route" />
-    <link rel="stylesheet" href="./transition-sequence-timing.css?v=1-strict-phases" />
+    <link rel="stylesheet" href="./transition-sequence-timing.css?v=3-runtime-boundary" />
     <script src="./notes-data.js" defer></script>
     <script src="./notes-2026.js?v=2" defer></script>
-    <script src="./script.js?v=3-note-kinds" defer></script>
-    <script src="./home-cosmos.js" defer></script>
-    <script src="./home-keke-orbit.js?v=3-smooth-transform" defer></script>
-    <script src="./home-garden.js?v=3-footer-boundary" defer></script>
-    <script src="./keke-transition.js?v=4-return-guard" defer></script>
+    <script src="./site-runtime.js?v=1-lightweight" defer></script>
+    <script src="./home-cosmos.js?v=2-coordinated-physics" defer></script>
+    <script src="./home-keke-orbit.js?v=4-frame-cost" defer></script>
+    <script src="./home-garden.js?v=4-shared-notes" defer></script>
+    <script src="./keke-transition.js?v=5-idle-prefetch" defer></script>
     <script src="./writing-transition.js?v=4-sequenced-source" defer></script>
-    <script src="./return-home-transition.js?v=3-fresh-route" defer></script>
-    <script src="./return-route-fix.js?v=2-sequenced-return" defer></script>
+    <script src="./return-home-transition.js?v=5-coordinated-arrival" defer></script>
   </head>
   <body data-page="home">
     <a class="skip-link" href="#main">跳到主要内容</a>

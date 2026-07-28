@@ -11,6 +11,7 @@
 
   let rampFrame = 0;
   let acceleratedAnimations = [];
+  let prefetchedDestination = "";
 
   function setAnimationRate(animation, rate) {
     if (typeof animation.updatePlaybackRate === "function") {
@@ -125,6 +126,30 @@
     });
   }
 
+  function prefetchDestination(link) {
+    if (!(link instanceof HTMLAnchorElement)) return "";
+    const destination = new URL(link.href, location.href).href;
+    if (prefetchedDestination === destination) return destination;
+    prefetchedDestination = destination;
+
+    const preload = document.createElement("link");
+    preload.rel = "prefetch";
+    preload.href = destination;
+    preload.dataset.kekePrefetch = "true";
+    document.head.append(preload);
+
+    const warm = () => {
+      fetch(destination, {
+        cache: "force-cache",
+        credentials: "same-origin",
+        priority: "low",
+      }).catch(() => {});
+    };
+    if ("requestIdleCallback" in window) requestIdleCallback(warm, { timeout: 1600 });
+    else setTimeout(warm, 180);
+    return destination;
+  }
+
   function setArrivalState() {
     if (body.dataset.page !== "keke") return;
 
@@ -153,6 +178,9 @@
     let navigating = false;
     let navigateTimer = 0;
 
+    link.addEventListener("pointerenter", () => prefetchDestination(link), { passive: true });
+    link.addEventListener("focus", () => prefetchDestination(link), { passive: true });
+
     link.addEventListener("click", (event) => {
       const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
       if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
@@ -161,6 +189,7 @@
       if (navigating) return;
       navigating = true;
 
+      const destination = prefetchDestination(link) || new URL(link.href, location.href).href;
       link.focus({ preventScroll: true });
       image.classList.add("keke-transition-source");
       identityAvatar?.classList.add("keke-site-avatar-source");
@@ -179,12 +208,15 @@
         // The transition remains usable without storage; only the destination reveal is skipped.
       }
 
-      const destination = new URL(link.href, location.href).href;
       navigateTimer = window.setTimeout(() => {
         body.classList.add("is-entering-keke");
         location.assign(destination);
       }, PRELUDE_MS);
     });
+
+    const idlePrefetch = () => prefetchDestination(link);
+    if ("requestIdleCallback" in window) requestIdleCallback(idlePrefetch, { timeout: 2600 });
+    else setTimeout(idlePrefetch, 1800);
 
     addEventListener("pageshow", () => {
       clearTimeout(navigateTimer);

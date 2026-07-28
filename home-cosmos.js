@@ -1,4 +1,5 @@
 (() => {
+  const root = document.documentElement;
   const field = document.querySelector("#cosmos-field");
   const starsLayer = document.querySelector("#note-stars");
   const threads = document.querySelector("#star-threads");
@@ -6,21 +7,27 @@
   const currentYear = document.querySelector("#current-year");
   const timeEl = document.querySelector("#current-time");
 
-  if (!(field instanceof HTMLElement) || !(starsLayer instanceof HTMLElement) || !(threads instanceof SVGSVGElement)) return;
+  if (!(field instanceof HTMLElement)
+    || !(starsLayer instanceof HTMLElement)
+    || !(threads instanceof SVGSVGElement)) return;
 
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const coarsePointer = matchMedia("(hover: none), (pointer: coarse)").matches;
+  const physicsInterval = 1000 / (coarsePointer ? 30 : 45);
 
   let pageVisible = !document.hidden;
+  let sceneVisible = true;
+  let returnHold = Boolean(root.dataset.returnHomePending);
   let initialized = false;
   let initTimer = 0;
   let startupWatchdog = 0;
   let resizeTimer = 0;
+  let clockTimer = 0;
 
   if (currentYear) currentYear.textContent = String(new Date().getFullYear());
 
   const updateClock = () => {
-    if (!timeEl) return;
+    if (!(timeEl instanceof HTMLTimeElement)) return;
     const now = new Date();
     timeEl.dateTime = now.toISOString();
     timeEl.textContent = now.toLocaleTimeString("zh-CN", {
@@ -30,10 +37,14 @@
     });
   };
 
-  updateClock();
-  setInterval(updateClock, 30000);
+  const scheduleClock = () => {
+    clearTimeout(clockTimer);
+    updateClock();
+    const delay = 60000 - (Date.now() % 60000) + 40;
+    clockTimer = setTimeout(scheduleClock, delay);
+  };
+  scheduleClock();
 
-  const rawNotes = Array.isArray(window.TYR1ONX_NOTES) ? window.TYR1ONX_NOTES : [];
   const timestamp = (note) => {
     const direct = Date.parse(note?.datetime || "");
     if (Number.isFinite(direct)) return direct;
@@ -42,7 +53,11 @@
     return Number.isFinite(fallback) ? fallback : 0;
   };
 
-  const notes = [...rawNotes].sort((a, b) => timestamp(b) - timestamp(a)).slice(0, 8);
+  const preparedNotes = Array.isArray(window.TYR1ONX_SORTED_NOTES)
+    ? window.TYR1ONX_SORTED_NOTES
+    : [...(Array.isArray(window.TYR1ONX_NOTES) ? window.TYR1ONX_NOTES : [])]
+      .sort((left, right) => timestamp(right) - timestamp(left));
+  const notes = preparedNotes.slice(0, 8);
   const noteUrl = (note) => `./note.html?id=${encodeURIComponent(note.id)}`;
   const BASE_AGE = 20;
   const BASE_YEAR = 2026;
@@ -101,9 +116,11 @@
   let bodies = [];
   let frame = 0;
   let last = 0;
+  let lastPhysicsPaint = 0;
   let started = performance.now();
   let pausedAt = 0;
   let gustTimer = 0;
+  let decorationResetTimer = 0;
   let windScheduleTimer = 0;
   let lastWindSign = 0;
   let activeTouchStar = null;
@@ -112,16 +129,20 @@
     return field.clientWidth >= 120 && field.clientHeight >= 240;
   }
 
+  function canRunPhysics() {
+    return !reduced && initialized && pageVisible && sceneVisible && !returnHold;
+  }
+
   function draw(index, body) {
     const element = elements[index];
     const line = lines[index];
     if (!(element instanceof HTMLElement) || !(line instanceof SVGElement)) return;
 
-    element.style.transform = `translate(${body.x - 22}px, ${body.y - 22}px)`;
-    line.setAttribute("x1", String(body.ax));
-    line.setAttribute("y1", String(body.ay));
-    line.setAttribute("x2", String(body.x));
-    line.setAttribute("y2", String(body.y - starTipOffsets[index]));
+    element.style.transform = `translate3d(${(body.x - 22).toFixed(2)}px, ${(body.y - 22).toFixed(2)}px, 0)`;
+    line.setAttribute("x1", body.ax.toFixed(2));
+    line.setAttribute("y1", body.ay.toFixed(2));
+    line.setAttribute("x2", body.x.toFixed(2));
+    line.setAttribute("y2", (body.y - starTipOffsets[index]).toFixed(2));
   }
 
   function rebuild({ preservePosition = false, settle = false } = {}) {
@@ -172,7 +193,6 @@
       elements[index]?.classList.toggle("is-born", reduced || settle || preservePosition);
       draw(index, body);
     });
-
     return true;
   }
 
@@ -194,13 +214,14 @@
   }
 
   function ensurePhysicsFrame() {
-    if (reduced || !initialized || !pageVisible || frame || !bodies.length) return;
+    if (!canRunPhysics() || frame || !bodies.length) return;
     last = performance.now();
+    lastPhysicsPaint = last;
     frame = requestAnimationFrame(animate);
   }
 
   function triggerWind(force) {
-    if (!initialized || !pageVisible) return;
+    if (!canRunPhysics()) return;
 
     document.body.classList.add("windy");
     let sign = Math.random() < 0.5 ? -1 : 1;
@@ -220,8 +241,12 @@
       const drift = sign * (6 + Math.random() * 9);
       star.style.transform = `translateX(${drift}px) scale(${0.96 + (index % 3) * 0.04})`;
       star.style.transition = `transform ${1.6 + Math.random() * 1.6}s cubic-bezier(.22,1,.36,1)`;
-      setTimeout(() => { star.style.transform = ""; }, 1800);
     });
+
+    clearTimeout(decorationResetTimer);
+    decorationResetTimer = setTimeout(() => {
+      decorativeStars.forEach((star) => { star.style.transform = ""; });
+    }, 1800);
 
     clearTimeout(gustTimer);
     gustTimer = setTimeout(() => {
@@ -234,7 +259,7 @@
 
   function scheduleWind() {
     clearTimeout(windScheduleTimer);
-    if (reduced || !initialized || !pageVisible) return;
+    if (!canRunPhysics()) return;
 
     windScheduleTimer = setTimeout(() => {
       triggerWind(30 + Math.random() * 16);
@@ -243,13 +268,19 @@
   }
 
   function animate(now) {
-    if (reduced || !initialized || !pageVisible) {
+    if (!canRunPhysics()) {
       frame = 0;
       return;
     }
 
-    const dt = Math.min(0.032, Math.max(0.001, (now - last) / 1000));
+    if (now - lastPhysicsPaint < physicsInterval) {
+      frame = requestAnimationFrame(animate);
+      return;
+    }
+
+    const dt = Math.min(0.04, Math.max(0.001, (now - last) / 1000));
     last = now;
+    lastPhysicsPaint = now;
     const elapsed = now - started;
     let moving = false;
 
@@ -301,7 +332,6 @@
   function hasVisibleWritingStar() {
     if (!elements.length) return true;
     const fieldRect = field.getBoundingClientRect();
-
     return elements.some((element) => {
       const rect = element.getBoundingClientRect();
       return rect.right > fieldRect.left
@@ -313,11 +343,9 @@
 
   function revealStarsFallback() {
     if (!initialized || !pageVisible || hasVisibleWritingStar()) return;
-
     cancelAnimationFrame(frame);
     frame = 0;
     started = performance.now() - 8000;
-
     if (!rebuild({ settle: true })) return;
     elements.forEach((element) => element.classList.add("is-born"));
   }
@@ -330,30 +358,22 @@
   }
 
   function pauseMotion() {
-    if (!initialized || !pageVisible) return;
-
-    pageVisible = false;
-    pausedAt = performance.now();
-    document.body.classList.add("is-page-hidden");
+    if (!pausedAt) pausedAt = performance.now();
     cancelAnimationFrame(frame);
     frame = 0;
     clearTimeout(windScheduleTimer);
     clearTimeout(gustTimer);
+    clearTimeout(decorationResetTimer);
     document.body.classList.remove("windy");
     delete field.dataset.windDirection;
   }
 
   function resumeMotion() {
-    if (!initialized || document.hidden) return;
-
+    if (!canRunPhysics()) return;
     const now = performance.now();
-    if (!pageVisible && pausedAt) started += now - pausedAt;
-
-    pageVisible = true;
+    if (pausedAt) started += now - pausedAt;
     pausedAt = 0;
     last = now;
-    document.body.classList.remove("is-page-hidden");
-    updateClock();
     ensurePhysicsFrame();
     scheduleWind();
     armStartupWatchdog();
@@ -369,7 +389,7 @@
     }
 
     started = performance.now();
-    if (!rebuild()) return;
+    if (!rebuild({ settle: returnHold })) return;
     initialized = true;
 
     if (document.hidden) {
@@ -379,9 +399,7 @@
     } else {
       pageVisible = true;
       document.body.classList.remove("is-page-hidden");
-      ensurePhysicsFrame();
-      scheduleWind();
-      armStartupWatchdog();
+      if (!returnHold) resumeMotion();
     }
   }
 
@@ -398,8 +416,8 @@
       frame = 0;
       last = performance.now();
       closeTouchStar();
-      rebuild({ preservePosition: true });
-      ensurePhysicsFrame();
+      rebuild({ preservePosition: !returnHold, settle: returnHold });
+      resumeMotion();
       armStartupWatchdog();
     }, 120);
   }
@@ -441,8 +459,16 @@
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) pauseMotion();
-    else resumeMotion();
+    if (document.hidden) {
+      pageVisible = false;
+      document.body.classList.add("is-page-hidden");
+      pauseMotion();
+    } else {
+      pageVisible = true;
+      document.body.classList.remove("is-page-hidden");
+      updateClock();
+      resumeMotion();
+    }
   });
 
   addEventListener("pageshow", (event) => {
@@ -455,15 +481,33 @@
 
   addEventListener("pagehide", pauseMotion);
   addEventListener("resize", scheduleRebuild, { passive: true });
-  addEventListener("load", () => {
-    if (!initialized) initializeScene();
-    else scheduleRebuild();
-  }, { once: true });
+  addEventListener("tyr1onx:return-home-complete", () => {
+    returnHold = false;
+    started = performance.now() - 8000;
+    bodies.forEach((body) => {
+      body.vx = 0;
+      body.vy = 0;
+      body.born = true;
+    });
+    resumeMotion();
+  });
+
+  if ("IntersectionObserver" in window) {
+    const sceneObserver = new IntersectionObserver((entries) => {
+      const visible = entries.some((entry) => entry.isIntersecting);
+      if (visible === sceneVisible) return;
+      sceneVisible = visible;
+      if (visible) resumeMotion();
+      else pauseMotion();
+    }, { rootMargin: "140px" });
+    sceneObserver.observe(field);
+  }
 
   if ("ResizeObserver" in window) {
-    const resizeObserver = new ResizeObserver(() => scheduleRebuild());
+    const resizeObserver = new ResizeObserver(scheduleRebuild);
     resizeObserver.observe(field);
   }
 
-  requestAnimationFrame(() => requestAnimationFrame(() => initializeScene()));
+  if (returnHold) initializeScene();
+  else requestAnimationFrame(() => requestAnimationFrame(() => initializeScene()));
 })();
