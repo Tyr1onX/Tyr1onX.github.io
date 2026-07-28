@@ -7,15 +7,37 @@
   animation: project-orbit var(--orbit-duration) linear infinite !important;
 }
 
+/*
+ * Keep the carrier transparent in every theme.
+ * The light-theme base rule has higher specificity than the generic shell rule,
+ * so it must be overridden explicitly here as well.
+ */
 .orbit-project .orbit-icon-shell,
-.orbit-project:hover .orbit-icon-shell,
-.orbit-project:focus-visible .orbit-icon-shell {
+html[data-theme="light"] .orbit-project .orbit-icon-shell {
   overflow: visible;
+  border: 0;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
   transform: none;
-  transition: none;
+  transition: border-radius 160ms ease, box-shadow 160ms ease;
+}
+
+/* Interaction belongs to hover or keyboard focus, never to the resting icon. */
+.orbit-project:focus-visible .orbit-icon-shell,
+html[data-theme="light"] .orbit-project:focus-visible .orbit-icon-shell {
+  border-radius: 26%;
+  background: transparent;
+  box-shadow: 0 0 0 1px var(--cosmos-line-strong);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .orbit-project:hover .orbit-icon-shell,
+  html[data-theme="light"] .orbit-project:hover .orbit-icon-shell {
+    border-radius: 26%;
+    background: transparent;
+    box-shadow: 0 0 0 1px var(--cosmos-line-strong);
+  }
 }
 
 .orbit-project .orbit-icon-shell img {
