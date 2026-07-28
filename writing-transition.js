@@ -3,12 +3,14 @@
   const root = document.documentElement;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const storageKey = "tyr1onx:writing-transition";
-  const ARCHIVE_PRELUDE_MS = 500;
-  const NOTE_PRELUDE_MS = 340;
   const WIND_CALM_MS = 420;
   const MIN_WIND_RATE = 0.24;
   const HOME_STAR_STAGGER_MS = 28;
   const DROP_STAGGER_MS = 38;
+  const RETRACT_ANIMATION_NAMES = new Set([
+    "writing-home-star-retract",
+    "writing-home-thread-retract",
+  ]);
 
   let calmFrame = 0;
   let slowedAnimations = [];
@@ -18,6 +20,23 @@
   const prefetched = new Map();
 
   const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
+  const sleep = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
+  const afterStyleCommit = () => new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+
+  const waitForNamedAnimations = async (elements, names, fallbackMs) => {
+    await afterStyleCommit();
+    const animations = [...new Set(elements.flatMap((element) => (
+      element instanceof Element ? element.getAnimations() : []
+    )))].filter((animation) => names.has(animation.animationName));
+
+    if (!animations.length) {
+      await sleep(fallbackMs);
+      return;
+    }
+    await Promise.allSettled(animations.map((animation) => animation.finished));
+  };
 
   const noteIdFromHref = (href) => {
     try {
@@ -94,6 +113,18 @@
     body.style.removeProperty("--writing-flow-spread");
     body.style.removeProperty("--writing-flow-blur");
     body.style.removeProperty("--writing-calm-progress");
+  };
+
+  const releaseForwardWindWithoutClearingReturnState = () => {
+    cancelAnimationFrame(calmFrame);
+    calmFrame = 0;
+    slowedAnimations = [];
+    body.style.removeProperty("--writing-calm-progress");
+  };
+
+  const isWritingReturnArrival = () => {
+    const mode = root.dataset.returnHomePending || "";
+    return mode.startsWith("writing-") || body.classList.contains("is-returning-writing-home");
   };
 
   const calmWind = () => {
@@ -202,6 +233,7 @@
     const stars = [...document.querySelectorAll("#note-stars .note-star")];
     const threads = [...document.querySelectorAll("#star-threads .star-thread")];
     const ids = [];
+    const elements = [];
 
     stars.forEach((star, index) => {
       if (!(star instanceof HTMLAnchorElement)) return;
@@ -224,18 +256,22 @@
       star.style.setProperty("--writing-retract-y", `${targetY.toFixed(2)}px`);
       star.style.setProperty("--writing-retract-delay", `${delay}ms`);
       star.classList.add("writing-retract-source");
+      elements.push(star);
 
       if (line instanceof SVGElement) {
         line.style.setProperty("--writing-retract-delay", `${delay}ms`);
         line.classList.add("writing-retract-thread");
+        elements.push(line);
       }
     });
 
-    return ids;
+    return { ids, elements };
   };
 
   const clearHomeState = () => {
-    restoreWind();
+    if (isWritingReturnArrival()) releaseForwardWindWithoutClearingReturnState();
+    else restoreWind();
+
     clearTimeout(navigateTimer);
     navigateTimer = 0;
     navigating = false;
@@ -272,11 +308,11 @@
     }
   };
 
-  const beginArchiveTransition = (link) => {
+  const beginArchiveTransition = async (link) => {
     if (navigating) return;
     navigating = true;
     const destination = prefetchDestination(link.href, "archive") || link.href;
-    const ids = prepareHomeStarRetraction();
+    const { ids, elements } = prepareHomeStarRetraction();
 
     setIdentitySource();
     const planet = preparePlanetRetreat();
@@ -284,13 +320,12 @@
     body.classList.add("is-preparing-writing-archive");
     calmWind();
 
-    navigateTimer = window.setTimeout(() => {
-      body.classList.add("is-entering-writing-archive");
-      location.assign(destination);
-    }, ARCHIVE_PRELUDE_MS);
+    await waitForNamedAnimations(elements, RETRACT_ANIMATION_NAMES, 760);
+    body.classList.add("is-entering-writing-archive");
+    location.assign(destination);
   };
 
-  const beginNoteTransition = (star, index) => {
+  const beginNoteTransition = async (star, index) => {
     if (navigating) return;
     navigating = true;
 
@@ -301,17 +336,16 @@
     }
 
     const destination = prefetchDestination(star.href, "note") || star.href;
-    prepareHomeStarRetraction({ focusIndex: index });
+    const { elements } = prepareHomeStarRetraction({ focusIndex: index });
     setIdentitySource();
     const planet = preparePlanetRetreat();
     saveTransition({ mode: "note", id, planet });
     body.classList.add("is-preparing-writing-note");
     calmWind();
 
-    navigateTimer = window.setTimeout(() => {
-      body.classList.add("is-entering-writing-note");
-      location.assign(destination);
-    }, NOTE_PRELUDE_MS);
+    await waitForNamedAnimations(elements, RETRACT_ANIMATION_NAMES, 520);
+    body.classList.add("is-entering-writing-note");
+    location.assign(destination);
   };
 
   const installHomeTransitions = () => {
@@ -331,7 +365,7 @@
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
         if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
         event.preventDefault();
-        beginArchiveTransition(link);
+        void beginArchiveTransition(link);
       });
     });
 
@@ -346,7 +380,7 @@
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
         if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
         event.preventDefault();
-        beginNoteTransition(star, index);
+        void beginNoteTransition(star, index);
       });
     });
 
@@ -422,7 +456,7 @@
 
     rows.forEach((row, index) => row.style.setProperty("--writing-arrival-delay", `${Math.min(index, 8) * 34}ms`));
     requestAnimationFrame(() => body.classList.add("is-arriving-writing-archive"));
-    setTimeout(clearArrivalNames, 1450);
+    setTimeout(clearArrivalNames, 2300);
     return true;
   };
 
@@ -440,7 +474,7 @@
     if (marker instanceof HTMLElement) createDropThread(marker, 0);
 
     requestAnimationFrame(() => body.classList.add("is-arriving-writing-note"));
-    setTimeout(clearArrivalNames, 1500);
+    setTimeout(clearArrivalNames, 2100);
     return true;
   };
 

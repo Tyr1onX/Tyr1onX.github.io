@@ -1,0 +1,86 @@
+/* Strict sequencing for writing transitions: finish one physical phase before the next begins. */
+body[data-page="home"].is-preparing-writing-archive .writing-retract-source,
+body[data-page="home"].is-entering-writing-archive .writing-retract-source,
+body[data-page="home"].is-preparing-writing-note .writing-retract-source,
+body[data-page="home"].is-entering-writing-note .writing-retract-source,
+body[data-page="home"].is-preparing-writing-archive .writing-retract-thread,
+body[data-page="home"].is-entering-writing-archive .writing-retract-thread,
+body[data-page="home"].is-preparing-writing-note .writing-retract-thread,
+body[data-page="home"].is-entering-writing-note .writing-retract-thread {
+  animation-duration: 440ms !important;
+}
+
+body.is-arriving-writing-archive .writing-drop-thread,
+body.is-arriving-writing-note .writing-drop-thread,
+body.is-arriving-writing-archive .writing-drop-target,
+body.is-arriving-writing-note .writing-drop-target {
+  animation-duration: 620ms !important;
+}
+
+.return-pull-thread,
+.return-writing-source.is-return-pulled {
+  animation-duration: 420ms !important;
+}
+
+/* Archive content starts only after the last visible coordinate has finished dropping. */
+body[data-page="notes"].is-arriving-writing-archive .archive-list::before {
+  animation-delay: 920ms !important;
+}
+
+body[data-page="notes"].is-arriving-writing-archive .archive-row-v2::before {
+  animation-delay: calc(980ms + var(--writing-arrival-delay, 0ms)) !important;
+}
+
+body[data-page="notes"].is-arriving-writing-archive .archive-row-meta time,
+body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 h2,
+body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 p,
+body[data-page="notes"].is-arriving-writing-archive .archive-row-arrow {
+  animation-delay: calc(1020ms + var(--writing-arrival-delay, 0ms)) !important;
+}
+
+body[data-page="notes"].is-arriving-writing-archive .site-footer {
+  animation-delay: 1320ms !important;
+}
+
+/* A single article coordinate lands first; reading content opens afterward. */
+body[data-page="note"].is-arriving-writing-note .back-link,
+body[data-page="note"].is-arriving-writing-note .article-meta-line time,
+body[data-page="note"].is-arriving-writing-note .article-meta-line::after {
+  animation-delay: 660ms !important;
+}
+
+body[data-page="note"].is-arriving-writing-note .note-article header h1 {
+  animation-delay: 700ms !important;
+}
+
+body[data-page="note"].is-arriving-writing-note .article-source {
+  animation-delay: 780ms !important;
+}
+
+body[data-page="note"].is-arriving-writing-note .article-body {
+  animation-delay: 860ms !important;
+}
+
+body[data-page="note"].is-arriving-writing-note .reading-path {
+  animation-delay: 900ms !important;
+}
+
+body[data-page="note"].is-arriving-writing-note .note-navigation {
+  animation-delay: 1040ms !important;
+}
+
+body[data-page="note"].is-arriving-writing-note .site-footer {
+  animation-delay: 1120ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .writing-retract-source,
+  .writing-retract-thread,
+  .writing-drop-thread,
+  .writing-drop-target,
+  .return-pull-thread,
+  .return-writing-source.is-return-pulled {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+  }
+}
