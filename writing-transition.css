@@ -1,0 +1,330 @@
+/* Home -> writing: stars settle into an archive, or one star unfolds into an article. */
+@view-transition {
+  navigation: auto;
+}
+
+.writing-site-avatar-source,
+.writing-site-avatar-target {
+  view-transition-name: writing-site-avatar;
+}
+
+.writing-site-name-source,
+.writing-site-name-target {
+  view-transition-name: writing-site-name;
+}
+
+::view-transition-group(writing-site-avatar),
+::view-transition-group(writing-site-name) {
+  z-index: 998;
+  animation-duration: 720ms;
+  animation-timing-function: cubic-bezier(.2, .74, .18, 1);
+  animation-fill-mode: both;
+}
+
+::view-transition-group(writing-focus-star),
+::view-transition-group(writing-star-0),
+::view-transition-group(writing-star-1),
+::view-transition-group(writing-star-2),
+::view-transition-group(writing-star-3),
+::view-transition-group(writing-star-4),
+::view-transition-group(writing-star-5),
+::view-transition-group(writing-star-6),
+::view-transition-group(writing-star-7) {
+  z-index: 999;
+  animation-duration: 760ms;
+  animation-timing-function: cubic-bezier(.2, .78, .18, 1);
+  animation-fill-mode: both;
+}
+
+::view-transition-group(writing-star-1) { animation-delay: 24ms; }
+::view-transition-group(writing-star-2) { animation-delay: 48ms; }
+::view-transition-group(writing-star-3) { animation-delay: 72ms; }
+::view-transition-group(writing-star-4) { animation-delay: 96ms; }
+::view-transition-group(writing-star-5) { animation-delay: 120ms; }
+::view-transition-group(writing-star-6) { animation-delay: 144ms; }
+::view-transition-group(writing-star-7) { animation-delay: 168ms; }
+
+::view-transition-image-pair(writing-site-avatar),
+::view-transition-image-pair(writing-site-name),
+::view-transition-image-pair(writing-focus-star),
+::view-transition-image-pair(writing-star-0),
+::view-transition-image-pair(writing-star-1),
+::view-transition-image-pair(writing-star-2),
+::view-transition-image-pair(writing-star-3),
+::view-transition-image-pair(writing-star-4),
+::view-transition-image-pair(writing-star-5),
+::view-transition-image-pair(writing-star-6),
+::view-transition-image-pair(writing-star-7) {
+  isolation: auto;
+}
+
+::view-transition-old(writing-site-avatar),
+::view-transition-new(writing-site-avatar),
+::view-transition-old(writing-site-name),
+::view-transition-new(writing-site-name),
+::view-transition-old(writing-focus-star),
+::view-transition-new(writing-focus-star),
+::view-transition-old(writing-star-0),
+::view-transition-new(writing-star-0),
+::view-transition-old(writing-star-1),
+::view-transition-new(writing-star-1),
+::view-transition-old(writing-star-2),
+::view-transition-new(writing-star-2),
+::view-transition-old(writing-star-3),
+::view-transition-new(writing-star-3),
+::view-transition-old(writing-star-4),
+::view-transition-new(writing-star-4),
+::view-transition-old(writing-star-5),
+::view-transition-new(writing-star-5),
+::view-transition-old(writing-star-6),
+::view-transition-new(writing-star-6),
+::view-transition-old(writing-star-7),
+::view-transition-new(writing-star-7) {
+  mix-blend-mode: normal;
+  filter: none;
+}
+
+html:has(body.is-entering-writing-archive)::view-transition-old(root) {
+  animation: writing-world-settle-out 620ms cubic-bezier(.36, 0, .2, 1) both;
+}
+
+html:has(body.is-arriving-writing-archive)::view-transition-new(root) {
+  animation: writing-archive-world-in 660ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+html:has(body.is-entering-writing-note)::view-transition-old(root) {
+  animation: writing-focus-world-out 520ms cubic-bezier(.36, 0, .2, 1) both;
+}
+
+html:has(body.is-arriving-writing-note)::view-transition-new(root) {
+  animation: writing-note-world-in 620ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+body[data-page="home"] .garden-current,
+body[data-page="home"] .garden-trace,
+body[data-page="home"] .project-orbit,
+body[data-page="home"] .orbit-project,
+body[data-page="home"] .decorative-stars,
+body[data-page="home"] .cosmos-center time,
+body[data-page="home"] .all-writing-link,
+body[data-page="home"] .site-header .brand {
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(.22, 1, .36, 1);
+}
+
+body[data-page="home"].is-preparing-writing-archive .garden-current,
+body[data-page="home"].is-entering-writing-archive .garden-current,
+body[data-page="home"].is-preparing-writing-note .garden-current,
+body[data-page="home"].is-entering-writing-note .garden-current {
+  scale: 1 var(--writing-flow-spread, 1);
+  filter: blur(var(--writing-flow-blur, 19px)) saturate(.88) brightness(1.03);
+}
+
+body[data-page="home"].is-preparing-writing-archive .garden-trace,
+body[data-page="home"].is-entering-writing-archive .garden-trace,
+body[data-page="home"].is-preparing-writing-note .garden-trace,
+body[data-page="home"].is-entering-writing-note .garden-trace {
+  opacity: 0.48;
+  filter: none;
+}
+
+body[data-page="home"].is-preparing-writing-archive .project-orbit,
+body[data-page="home"].is-preparing-writing-archive .orbit-project,
+body[data-page="home"].is-entering-writing-archive .project-orbit,
+body[data-page="home"].is-entering-writing-archive .orbit-project,
+body[data-page="home"].is-preparing-writing-note .project-orbit,
+body[data-page="home"].is-preparing-writing-note .orbit-project,
+body[data-page="home"].is-entering-writing-note .project-orbit,
+body[data-page="home"].is-entering-writing-note .orbit-project {
+  opacity: 0.16;
+}
+
+body[data-page="home"].is-preparing-writing-archive .decorative-stars,
+body[data-page="home"].is-entering-writing-archive .decorative-stars,
+body[data-page="home"].is-preparing-writing-note .decorative-stars,
+body[data-page="home"].is-entering-writing-note .decorative-stars {
+  opacity: 0.24;
+}
+
+body[data-page="home"].is-preparing-writing-archive .cosmos-center time,
+body[data-page="home"].is-entering-writing-archive .cosmos-center time,
+body[data-page="home"].is-preparing-writing-note .cosmos-center time,
+body[data-page="home"].is-entering-writing-note .cosmos-center time {
+  opacity: 0;
+}
+
+body[data-page="home"].is-preparing-writing-archive .site-header .brand,
+body[data-page="home"].is-entering-writing-archive .site-header .brand,
+body[data-page="home"].is-preparing-writing-note .site-header .brand,
+body[data-page="home"].is-entering-writing-note .site-header .brand {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+body[data-page="home"].is-preparing-writing-archive .note-star-label,
+body[data-page="home"].is-entering-writing-archive .note-star-label,
+body[data-page="home"].is-preparing-writing-note .note-star-label,
+body[data-page="home"].is-entering-writing-note .note-star-label {
+  opacity: 0 !important;
+}
+
+body[data-page="home"].is-preparing-writing-archive .star-thread,
+body[data-page="home"].is-entering-writing-archive .star-thread {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: writing-thread-release 440ms cubic-bezier(.4, 0, .2, 1) both !important;
+}
+
+body[data-page="home"].is-preparing-writing-note .star-thread,
+body[data-page="home"].is-entering-writing-note .star-thread {
+  opacity: 0.08;
+}
+
+body[data-page="home"].is-preparing-writing-note .writing-focus-thread,
+body[data-page="home"].is-entering-writing-note .writing-focus-thread {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: writing-thread-focus-release 360ms cubic-bezier(.4, 0, .2, 1) both !important;
+}
+
+body[data-page="home"].is-preparing-writing-note .note-star:not(.writing-focus-source),
+body[data-page="home"].is-entering-writing-note .note-star:not(.writing-focus-source) {
+  opacity: 0.1;
+  scale: 0.82;
+  transition: opacity 340ms ease, scale 420ms cubic-bezier(.22, 1, .36, 1);
+}
+
+body[data-page="home"].is-preparing-writing-note .writing-focus-source .note-star-core,
+body[data-page="home"].is-entering-writing-note .writing-focus-source .note-star-core {
+  animation-play-state: paused;
+  scale: 1.12;
+}
+
+body[data-page="home"].is-preparing-writing-archive .all-writing-link,
+body[data-page="home"].is-entering-writing-archive .all-writing-link,
+body[data-page="home"].is-preparing-writing-note .all-writing-link,
+body[data-page="home"].is-entering-writing-note .all-writing-link {
+  opacity: 0;
+}
+
+body[data-page="notes"].is-arriving-writing-archive .archive-list::before {
+  transform-origin: top center;
+  animation: writing-archive-path-grow 720ms 130ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+body[data-page="notes"].is-arriving-writing-archive .archive-row-v2::before {
+  animation: writing-archive-branch-grow 420ms calc(260ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.22, 1, .36, 1) both;
+}
+
+body[data-page="notes"].is-arriving-writing-archive .archive-row-meta time,
+body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 h2,
+body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 p,
+body[data-page="notes"].is-arriving-writing-archive .archive-row-arrow {
+  animation: writing-archive-copy-open 520ms calc(300ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.2, .72, .2, 1) both;
+}
+
+body[data-page="notes"].is-arriving-writing-archive .site-footer {
+  animation: writing-quiet-content-in 520ms 520ms ease both;
+}
+
+body[data-page="note"].is-arriving-writing-note .back-link,
+body[data-page="note"].is-arriving-writing-note .article-meta-line time,
+body[data-page="note"].is-arriving-writing-note .article-meta-line::after,
+body[data-page="note"].is-arriving-writing-note .note-article header h1,
+body[data-page="note"].is-arriving-writing-note .article-source,
+body[data-page="note"].is-arriving-writing-note .article-body,
+body[data-page="note"].is-arriving-writing-note .note-navigation,
+body[data-page="note"].is-arriving-writing-note .site-footer {
+  animation: writing-note-copy-open 620ms var(--writing-note-delay, 220ms) cubic-bezier(.2, .72, .2, 1) both;
+}
+
+body[data-page="note"].is-arriving-writing-note .note-article header h1 { --writing-note-delay: 180ms; }
+body[data-page="note"].is-arriving-writing-note .article-source { --writing-note-delay: 240ms; }
+body[data-page="note"].is-arriving-writing-note .article-body { --writing-note-delay: 340ms; }
+body[data-page="note"].is-arriving-writing-note .note-navigation { --writing-note-delay: 520ms; }
+body[data-page="note"].is-arriving-writing-note .site-footer { --writing-note-delay: 620ms; }
+
+body[data-page="note"].is-arriving-writing-note .reading-path {
+  animation: writing-reading-path-grow 720ms 480ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+@keyframes writing-thread-release {
+  from { opacity: 1; transform: scaleY(1); }
+  to { opacity: 0; transform: scaleY(.03); }
+}
+
+@keyframes writing-thread-focus-release {
+  from { opacity: 1; transform: scaleY(1); }
+  to { opacity: 0; transform: scaleY(.02); }
+}
+
+@keyframes writing-world-settle-out {
+  from { opacity: 1; filter: blur(0) saturate(1); }
+  to { opacity: 0.24; filter: blur(3px) saturate(.78); }
+}
+
+@keyframes writing-archive-world-in {
+  from { opacity: 0.4; filter: blur(4px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+@keyframes writing-focus-world-out {
+  from { opacity: 1; filter: blur(0); }
+  to { opacity: 0.16; filter: blur(4px); }
+}
+
+@keyframes writing-note-world-in {
+  from { opacity: 0.34; filter: blur(5px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+@keyframes writing-archive-path-grow {
+  from { opacity: 0; transform: scaleY(0) skewY(-1.6deg); }
+  to { opacity: .9; transform: scaleY(1) skewY(-1.6deg); }
+}
+
+@keyframes writing-archive-branch-grow {
+  from { opacity: 0; transform: rotate(var(--archive-branch-angle, -2deg)) scaleX(0); }
+  to { opacity: 1; transform: rotate(var(--archive-branch-angle, -2deg)) scaleX(1); }
+}
+
+@keyframes writing-archive-copy-open {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes writing-quiet-content-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes writing-note-copy-open {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes writing-reading-path-grow {
+  from { opacity: 0; clip-path: inset(0 0 100% 0); }
+  to { opacity: 1; clip-path: inset(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(writing-site-avatar),
+  ::view-transition-group(writing-site-name),
+  ::view-transition-group(writing-focus-star),
+  ::view-transition-group(writing-star-0),
+  ::view-transition-group(writing-star-1),
+  ::view-transition-group(writing-star-2),
+  ::view-transition-group(writing-star-3),
+  ::view-transition-group(writing-star-4),
+  ::view-transition-group(writing-star-5),
+  ::view-transition-group(writing-star-6),
+  ::view-transition-group(writing-star-7),
+  html:has(body.is-entering-writing-archive)::view-transition-old(root),
+  html:has(body.is-arriving-writing-archive)::view-transition-new(root),
+  html:has(body.is-entering-writing-note)::view-transition-old(root),
+  html:has(body.is-arriving-writing-note)::view-transition-new(root) {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+}
