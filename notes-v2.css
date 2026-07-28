@@ -97,6 +97,11 @@ html[data-theme="dark"] .note-kind-essay {
   transform: translateX(4px);
 }
 
+.writing-page-direct .archive-row-v2:hover,
+.writing-page-direct .archive-row-v2:focus-visible {
+  padding-left: 0;
+}
+
 .note-article header {
   margin-bottom: 58px;
 }
