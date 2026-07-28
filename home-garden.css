@@ -74,6 +74,7 @@ body[data-page="home"] .cosmos-hero::before {
     );
   opacity: 0.58;
   filter: blur(19px);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
   mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
   transform-origin: 50% 50%;
   will-change: transform, opacity;
@@ -156,7 +157,7 @@ body[data-page="home"] .cosmos-hero::before {
 }
 
 .decorative-star {
-  animation-duration: calc(var(--twinkle-duration, 4s) * 1.8);
+  animation-duration: 8s;
 }
 
 .note-star.note-kind-work {
