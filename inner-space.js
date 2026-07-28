@@ -47,6 +47,11 @@
     body = resolvedBody;
     headings = [...body.querySelectorAll("h2, h3")];
 
+    const header = article.querySelector("header");
+    const kindClass = header?.classList.contains("note-kind-work") ? "note-kind-work" : "note-kind-essay";
+    article.classList.remove("note-kind-work", "note-kind-essay");
+    article.classList.add(kindClass);
+
     if (!(path instanceof HTMLElement)) {
       path = document.createElement("aside");
       path.className = "reading-path";
@@ -58,6 +63,9 @@
       addEventListener("scroll", scheduleReadingPathPaint, { passive: true });
       addEventListener("resize", scheduleReadingPathPaint, { passive: true });
     }
+
+    path.classList.remove("note-kind-work", "note-kind-essay");
+    path.classList.add(kindClass);
 
     const nodeLayer = path.querySelector(".reading-path-nodes");
     if (nodeLayer instanceof HTMLElement) {
