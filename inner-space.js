@@ -1,10 +1,5 @@
 (() => {
-  const page = document.body?.dataset.page;
-  if (!page || !["notes", "note", "keke"].includes(page)) return;
-
-  requestAnimationFrame(() => document.body.classList.add("inner-space-ready"));
-
-  if (page !== "note") return;
+  if (document.body?.dataset.page !== "note") return;
 
   const main = document.querySelector(".article-main");
   const article = document.querySelector("#note-article");
