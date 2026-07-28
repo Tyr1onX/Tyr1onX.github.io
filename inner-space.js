@@ -17,7 +17,7 @@
 
   const normalizeChineseText = (value) => {
     let text = String(value || "")
-      .replace(/—[-一]/g, "——")
+      .replace(/—-/g, "——")
       .replace(/\s+([，。！？；：、”’》）】])/g, "$1")
       .replace(/([“‘《（【])\s+/g, "$1");
 
