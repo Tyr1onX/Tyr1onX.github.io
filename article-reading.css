@@ -53,20 +53,20 @@ body[data-page="note"] .article-meta-line::after {
 body[data-page="note"] .note-article h1 {
   max-width: 820px;
   margin: 0;
-  font-size: clamp(2.08rem, 4.25vw, 3.55rem);
+  font-size: clamp(1.95rem, 3.4vw, 3rem);
   font-weight: 680;
-  letter-spacing: -0.048em;
-  line-height: 1.14;
+  letter-spacing: -0.042em;
+  line-height: 1.17;
   text-wrap: balance;
 }
 
 body[data-page="note"] .note-format-essay h1 {
   max-width: 680px;
   font-family: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
-  font-size: clamp(2rem, 3.7vw, 3.18rem);
+  font-size: clamp(1.9rem, 3.05vw, 2.72rem);
   font-weight: 600;
-  letter-spacing: -0.018em;
-  line-height: 1.22;
+  letter-spacing: -0.012em;
+  line-height: 1.25;
 }
 
 body[data-page="note"] .article-source {
@@ -292,8 +292,8 @@ body[data-page="note"] .reading-path-node.is-read {
 
   body[data-page="note"] .note-article h1,
   body[data-page="note"] .note-format-essay h1 {
-    font-size: clamp(1.9rem, 9vw, 2.65rem);
-    line-height: 1.2;
+    font-size: clamp(1.78rem, 8vw, 2.3rem);
+    line-height: 1.22;
   }
 
   body[data-page="note"] .article-body-essay {
