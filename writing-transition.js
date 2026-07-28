@@ -3,16 +3,19 @@
   const root = document.documentElement;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const storageKey = "tyr1onx:writing-transition";
-  const ARCHIVE_PRELUDE_MS = 390;
-  const NOTE_PRELUDE_MS = 330;
+  const ARCHIVE_PRELUDE_MS = 500;
+  const NOTE_PRELUDE_MS = 340;
   const WIND_CALM_MS = 420;
   const MIN_WIND_RATE = 0.24;
+  const HOME_STAR_STAGGER_MS = 28;
+  const DROP_STAGGER_MS = 38;
 
   let calmFrame = 0;
   let slowedAnimations = [];
   let navigateTimer = 0;
   let navigating = false;
-  const prefetched = new Set();
+  let arrivalActive = false;
+  const prefetched = new Map();
 
   const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 
@@ -24,20 +27,51 @@
     }
   };
 
-  const prefetchDestination = (href) => {
+  const transitionDestination = (href, mode) => {
     let destination;
     try {
-      destination = new URL(href, location.href).href;
+      destination = new URL(href, location.href);
     } catch {
-      return;
+      return null;
     }
-    if (prefetched.has(destination)) return;
-    prefetched.add(destination);
+
+    const key = `${destination.href}|${mode}`;
+    if (!prefetched.has(key)) {
+      destination.searchParams.set("__writing", mode);
+      destination.searchParams.set("__t", Date.now().toString(36));
+      prefetched.set(key, destination.href);
+    }
+    return prefetched.get(key);
+  };
+
+  const prefetchDestination = (href, mode) => {
+    const destination = transitionDestination(href, mode);
+    if (!destination || document.querySelector(`link[data-writing-prefetch="${CSS.escape(destination)}"]`)) return destination;
 
     const link = document.createElement("link");
     link.rel = "prefetch";
     link.href = destination;
+    link.dataset.writingPrefetch = destination;
     document.head.append(link);
+
+    const warm = () => {
+      fetch(destination, {
+        cache: "force-cache",
+        credentials: "same-origin",
+        priority: "low",
+      }).catch(() => {});
+    };
+    if ("requestIdleCallback" in window) requestIdleCallback(warm, { timeout: 700 });
+    else setTimeout(warm, 100);
+    return destination;
+  };
+
+  const cleanTransitionQuery = () => {
+    const url = new URL(location.href);
+    if (!url.searchParams.has("__writing") && !url.searchParams.has("__t")) return;
+    url.searchParams.delete("__writing");
+    url.searchParams.delete("__t");
+    history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`);
   };
 
   const setAnimationRate = (animation, rate) => {
@@ -66,7 +100,7 @@
     restoreWind();
     document.querySelectorAll(".garden-current, .garden-trace").forEach((element) => {
       element.getAnimations().forEach((animation) => {
-        slowedAnimations.push({ animation, rate: animation.playbackRate || 1 });
+        slowedAnimations.push({ animation, rate: 1 });
       });
     });
 
@@ -99,6 +133,11 @@
   const setIdentitySource = () => {
     document.querySelector(".cosmos-center img")?.classList.add("writing-site-avatar-source");
     document.querySelector(".cosmos-center h1")?.classList.add("writing-site-name-source");
+  };
+
+  const setIdentityTarget = () => {
+    document.querySelector(".site-header .brand-avatar")?.classList.add("writing-site-avatar-target");
+    document.querySelector(".site-header .brand > span")?.classList.add("writing-site-name-target");
   };
 
   const preparePlanetRetreat = () => {
@@ -159,12 +198,49 @@
     root.style.removeProperty("--writing-planet-drift-y");
   };
 
+  const prepareHomeStarRetraction = ({ focusIndex = null } = {}) => {
+    const stars = [...document.querySelectorAll("#note-stars .note-star")];
+    const threads = [...document.querySelectorAll("#star-threads .star-thread")];
+    const ids = [];
+
+    stars.forEach((star, index) => {
+      if (!(star instanceof HTMLAnchorElement)) return;
+      const id = noteIdFromHref(star.href);
+      if (id) ids[index] = id;
+
+      if (focusIndex !== null && index !== focusIndex) {
+        star.classList.add("writing-retract-bystander");
+        return;
+      }
+
+      const line = threads[index];
+      const anchorX = Number.parseFloat(line?.getAttribute("x1") || "");
+      const anchorY = Number.parseFloat(line?.getAttribute("y1") || "");
+      const targetX = Number.isFinite(anchorX) ? anchorX - star.offsetWidth / 2 : star.offsetLeft;
+      const targetY = Number.isFinite(anchorY) ? anchorY - star.offsetHeight / 2 : -star.offsetHeight;
+      const delay = focusIndex === null ? index * HOME_STAR_STAGGER_MS : 0;
+
+      star.style.setProperty("--writing-retract-x", `${targetX.toFixed(2)}px`);
+      star.style.setProperty("--writing-retract-y", `${targetY.toFixed(2)}px`);
+      star.style.setProperty("--writing-retract-delay", `${delay}ms`);
+      star.classList.add("writing-retract-source");
+
+      if (line instanceof SVGElement) {
+        line.style.setProperty("--writing-retract-delay", `${delay}ms`);
+        line.classList.add("writing-retract-thread");
+      }
+    });
+
+    return ids;
+  };
+
   const clearHomeState = () => {
     restoreWind();
     clearTimeout(navigateTimer);
     navigateTimer = 0;
     navigating = false;
     body.classList.remove(
+      "is-writing-pressed",
       "is-preparing-writing-archive",
       "is-entering-writing-archive",
       "is-preparing-writing-note",
@@ -174,14 +250,16 @@
     document.querySelectorAll(".writing-site-avatar-source, .writing-site-name-source").forEach((element) => {
       element.classList.remove("writing-site-avatar-source", "writing-site-name-source");
     });
-
-    document.querySelectorAll(".note-star").forEach((star) => {
-      star.classList.remove("writing-focus-source");
+    document.querySelectorAll(".writing-retract-source, .writing-retract-bystander").forEach((star) => {
+      star.classList.remove("writing-retract-source", "writing-retract-bystander");
+      star.style.removeProperty("--writing-retract-x");
+      star.style.removeProperty("--writing-retract-y");
+      star.style.removeProperty("--writing-retract-delay");
     });
-    document.querySelectorAll(".note-star-core").forEach((core) => {
-      core.style.removeProperty("view-transition-name");
+    document.querySelectorAll(".writing-retract-thread").forEach((thread) => {
+      thread.classList.remove("writing-retract-thread");
+      thread.style.removeProperty("--writing-retract-delay");
     });
-    document.querySelectorAll(".star-thread").forEach((thread) => thread.classList.remove("writing-focus-thread"));
     document.querySelector(".writing-planet-source")?.classList.remove("writing-planet-source");
     clearPlanetDrift();
   };
@@ -190,25 +268,15 @@
     try {
       sessionStorage.setItem(storageKey, JSON.stringify(payload));
     } catch {
-      // The navigation remains usable without the destination reveal.
+      // Navigation remains usable without the destination reveal.
     }
   };
 
   const beginArchiveTransition = (link) => {
     if (navigating) return;
     navigating = true;
-    prefetchDestination(link.href);
-
-    const stars = [...document.querySelectorAll("#note-stars .note-star")];
-    const ids = [];
-    stars.forEach((star, index) => {
-      if (!(star instanceof HTMLAnchorElement)) return;
-      const id = noteIdFromHref(star.href);
-      const core = star.querySelector(".note-star-core");
-      if (!id || !(core instanceof HTMLElement)) return;
-      ids[index] = id;
-      core.style.setProperty("view-transition-name", `writing-star-${index}`);
-    });
+    const destination = prefetchDestination(link.href, "archive") || link.href;
+    const ids = prepareHomeStarRetraction();
 
     setIdentitySource();
     const planet = preparePlanetRetreat();
@@ -218,7 +286,7 @@
 
     navigateTimer = window.setTimeout(() => {
       body.classList.add("is-entering-writing-archive");
-      location.assign(link.href);
+      location.assign(destination);
     }, ARCHIVE_PRELUDE_MS);
   };
 
@@ -227,16 +295,13 @@
     navigating = true;
 
     const id = noteIdFromHref(star.href);
-    const core = star.querySelector(".note-star-core");
-    if (!id || !(core instanceof HTMLElement)) {
+    if (!id) {
       location.assign(star.href);
       return;
     }
 
-    prefetchDestination(star.href);
-    star.classList.add("writing-focus-source");
-    core.style.setProperty("view-transition-name", "writing-focus-star");
-    document.querySelectorAll("#star-threads .star-thread")[index]?.classList.add("writing-focus-thread");
+    const destination = prefetchDestination(star.href, "note") || star.href;
+    prepareHomeStarRetraction({ focusIndex: index });
     setIdentitySource();
     const planet = preparePlanetRetreat();
     saveTransition({ mode: "note", id, planet });
@@ -245,7 +310,7 @@
 
     navigateTimer = window.setTimeout(() => {
       body.classList.add("is-entering-writing-note");
-      location.assign(star.href);
+      location.assign(destination);
     }, NOTE_PRELUDE_MS);
   };
 
@@ -257,8 +322,11 @@
     ];
     archiveLinks.forEach((link) => {
       if (!(link instanceof HTMLAnchorElement)) return;
-      link.addEventListener("pointerenter", () => prefetchDestination(link.href), { passive: true });
-      link.addEventListener("focus", () => prefetchDestination(link.href), { passive: true });
+      link.addEventListener("pointerenter", () => prefetchDestination(link.href, "archive"), { passive: true });
+      link.addEventListener("focus", () => prefetchDestination(link.href, "archive"), { passive: true });
+      link.addEventListener("pointerdown", (event) => {
+        if (event.button === 0 && !reducedMotion.matches) body.classList.add("is-writing-pressed");
+      }, { passive: true });
       link.addEventListener("click", (event) => {
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
         if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
@@ -269,8 +337,11 @@
 
     [...document.querySelectorAll("#note-stars .note-star")].forEach((star, index) => {
       if (!(star instanceof HTMLAnchorElement)) return;
-      star.addEventListener("pointerenter", () => prefetchDestination(star.href), { passive: true });
-      star.addEventListener("focus", () => prefetchDestination(star.href), { passive: true });
+      star.addEventListener("pointerenter", () => prefetchDestination(star.href, "note"), { passive: true });
+      star.addEventListener("focus", () => prefetchDestination(star.href, "note"), { passive: true });
+      star.addEventListener("pointerdown", (event) => {
+        if (event.button === 0 && !reducedMotion.matches) body.classList.add("is-writing-pressed");
+      }, { passive: true });
       star.addEventListener("click", (event) => {
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
         if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
@@ -292,26 +363,50 @@
     }
   };
 
-  const setIdentityTarget = () => {
-    document.querySelector(".site-header .brand-avatar")?.classList.add("writing-site-avatar-target");
-    document.querySelector(".site-header .brand > span")?.classList.add("writing-site-name-target");
+  const createDropThread = (marker, index) => {
+    const rect = marker.getBoundingClientRect();
+    const headerBottom = document.querySelector(".site-header")?.getBoundingClientRect().bottom || 28;
+    const anchorY = Math.max(18, Math.min(56, headerBottom));
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const distance = Math.max(38, centerY - anchorY);
+    const delay = index * DROP_STAGGER_MS;
+
+    marker.style.setProperty("--writing-drop-y", `${-distance.toFixed(2)}px`);
+    marker.style.setProperty("--writing-drop-delay", `${delay}ms`);
+    marker.classList.add("writing-drop-target");
+
+    const thread = document.createElement("span");
+    thread.className = "writing-drop-thread";
+    thread.style.setProperty("--writing-thread-x", `${centerX.toFixed(2)}px`);
+    thread.style.setProperty("--writing-thread-top", `${anchorY.toFixed(2)}px`);
+    thread.style.setProperty("--writing-thread-height", `${distance.toFixed(2)}px`);
+    thread.style.setProperty("--writing-drop-delay", `${delay}ms`);
+    document.body.append(thread);
   };
 
   const clearArrivalNames = () => {
+    arrivalActive = false;
     document.querySelectorAll(".writing-site-avatar-target, .writing-site-name-target").forEach((element) => {
       element.classList.remove("writing-site-avatar-target", "writing-site-name-target");
     });
-    document.querySelectorAll(".writing-archive-target, .writing-note-target").forEach((element) => {
-      element.classList.remove("writing-archive-target", "writing-note-target");
-      element.style.removeProperty("view-transition-name");
+    document.querySelectorAll(".writing-drop-target").forEach((marker) => {
+      marker.classList.remove("writing-drop-target");
+      marker.style.removeProperty("--writing-drop-y");
+      marker.style.removeProperty("--writing-drop-delay");
     });
+    document.querySelectorAll(".writing-drop-thread").forEach((thread) => thread.remove());
     document.querySelectorAll(".archive-row-v2").forEach((row) => row.style.removeProperty("--writing-arrival-delay"));
+    body.classList.remove("is-arriving-writing-archive", "is-arriving-writing-note");
+    delete root.dataset.writingArrivalPending;
     clearPlanetDrift();
   };
 
   const installArchiveArrival = (payload) => {
     if (body.dataset.page !== "notes" || payload?.mode !== "archive") return false;
 
+    arrivalActive = true;
+    cleanTransitionQuery();
     applyPlanetDrift(payload);
     setIdentityTarget();
     const rows = [...document.querySelectorAll(".archive-row-v2")];
@@ -322,17 +417,12 @@
       const row = rows.find((candidate) => candidate instanceof HTMLAnchorElement && noteIdFromHref(candidate.href) === id);
       const marker = row?.querySelector(".note-kind-marker");
       if (!(row instanceof HTMLElement) || !(marker instanceof HTMLElement)) return;
-
-      marker.classList.add("writing-archive-target");
-      marker.style.setProperty("view-transition-name", `writing-star-${index}`);
+      createDropThread(marker, index);
     });
 
-    rows.forEach((row, index) => row.style.setProperty("--writing-arrival-delay", `${index * 36}ms`));
-    body.classList.add("is-arriving-writing-archive");
-    setTimeout(() => {
-      body.classList.remove("is-arriving-writing-archive");
-      clearArrivalNames();
-    }, 1500);
+    rows.forEach((row, index) => row.style.setProperty("--writing-arrival-delay", `${Math.min(index, 8) * 34}ms`));
+    requestAnimationFrame(() => body.classList.add("is-arriving-writing-archive"));
+    setTimeout(clearArrivalNames, 1450);
     return true;
   };
 
@@ -342,30 +432,32 @@
     const currentId = new URLSearchParams(location.search).get("id") || "";
     if (!currentId || currentId !== payload.id) return false;
 
+    arrivalActive = true;
+    cleanTransitionQuery();
     applyPlanetDrift(payload);
     setIdentityTarget();
     const marker = document.querySelector(".article-meta-line .note-kind-marker");
-    if (marker instanceof HTMLElement) {
-      marker.classList.add("writing-note-target");
-      marker.style.setProperty("view-transition-name", "writing-focus-star");
-    }
+    if (marker instanceof HTMLElement) createDropThread(marker, 0);
 
-    body.classList.add("is-arriving-writing-note");
-    setTimeout(() => {
-      body.classList.remove("is-arriving-writing-note");
-      clearArrivalNames();
-    }, 1900);
+    requestAnimationFrame(() => body.classList.add("is-arriving-writing-note"));
+    setTimeout(clearArrivalNames, 1500);
     return true;
   };
 
   const installArrival = () => {
-    if (reducedMotion.matches || body.dataset.page === "home") return;
+    if (reducedMotion.matches || body.dataset.page === "home" || arrivalActive) return;
     const payload = readArrival();
-    if (!payload) return;
+    if (!payload) {
+      cleanTransitionQuery();
+      delete root.dataset.writingArrivalPending;
+      return;
+    }
+    root.dataset.writingArrivalPending = payload.mode;
     if (installArchiveArrival(payload)) return;
     installNoteArrival(payload);
   };
 
   installArrival();
+  if (body.dataset.page !== "home") addEventListener("pageshow", installArrival);
   installHomeTransitions();
 })();

@@ -1,4 +1,4 @@
-/* Home -> writing: stars settle into an archive, or one star unfolds into an article. */
+/* Home -> writing: hanging stars retract, then the same coordinates are released from above. */
 @view-transition {
   navigation: auto;
 }
@@ -20,33 +20,10 @@
 ::view-transition-group(writing-site-avatar),
 ::view-transition-group(writing-site-name) {
   z-index: 998;
-  animation-duration: 640ms;
+  animation-duration: 600ms;
   animation-timing-function: cubic-bezier(.2, .74, .18, 1);
   animation-fill-mode: both;
 }
-
-::view-transition-group(writing-focus-star),
-::view-transition-group(writing-star-0),
-::view-transition-group(writing-star-1),
-::view-transition-group(writing-star-2),
-::view-transition-group(writing-star-3),
-::view-transition-group(writing-star-4),
-::view-transition-group(writing-star-5),
-::view-transition-group(writing-star-6),
-::view-transition-group(writing-star-7) {
-  z-index: 999;
-  animation-duration: 640ms;
-  animation-timing-function: cubic-bezier(.2, .78, .18, 1);
-  animation-fill-mode: both;
-}
-
-::view-transition-group(writing-star-1) { animation-delay: 15ms; }
-::view-transition-group(writing-star-2) { animation-delay: 30ms; }
-::view-transition-group(writing-star-3) { animation-delay: 45ms; }
-::view-transition-group(writing-star-4) { animation-delay: 60ms; }
-::view-transition-group(writing-star-5) { animation-delay: 75ms; }
-::view-transition-group(writing-star-6) { animation-delay: 90ms; }
-::view-transition-group(writing-star-7) { animation-delay: 105ms; }
 
 ::view-transition-group(writing-keke-planet) {
   z-index: 997;
@@ -55,15 +32,6 @@
 
 ::view-transition-image-pair(writing-site-avatar),
 ::view-transition-image-pair(writing-site-name),
-::view-transition-image-pair(writing-focus-star),
-::view-transition-image-pair(writing-star-0),
-::view-transition-image-pair(writing-star-1),
-::view-transition-image-pair(writing-star-2),
-::view-transition-image-pair(writing-star-3),
-::view-transition-image-pair(writing-star-4),
-::view-transition-image-pair(writing-star-5),
-::view-transition-image-pair(writing-star-6),
-::view-transition-image-pair(writing-star-7),
 ::view-transition-image-pair(writing-keke-planet) {
   isolation: auto;
 }
@@ -72,48 +40,30 @@
 ::view-transition-new(writing-site-avatar),
 ::view-transition-old(writing-site-name),
 ::view-transition-new(writing-site-name),
-::view-transition-old(writing-focus-star),
-::view-transition-new(writing-focus-star),
-::view-transition-old(writing-star-0),
-::view-transition-new(writing-star-0),
-::view-transition-old(writing-star-1),
-::view-transition-new(writing-star-1),
-::view-transition-old(writing-star-2),
-::view-transition-new(writing-star-2),
-::view-transition-old(writing-star-3),
-::view-transition-new(writing-star-3),
-::view-transition-old(writing-star-4),
-::view-transition-new(writing-star-4),
-::view-transition-old(writing-star-5),
-::view-transition-new(writing-star-5),
-::view-transition-old(writing-star-6),
-::view-transition-new(writing-star-6),
-::view-transition-old(writing-star-7),
-::view-transition-new(writing-star-7),
 ::view-transition-old(writing-keke-planet) {
   mix-blend-mode: normal;
   filter: none;
 }
 
 ::view-transition-old(writing-keke-planet) {
-  animation: writing-planet-recede 620ms cubic-bezier(.18, .66, .2, 1) both;
+  animation: writing-planet-recede 580ms cubic-bezier(.18, .66, .2, 1) both;
   transform-origin: center;
 }
 
 html:has(body.is-entering-writing-archive)::view-transition-old(root) {
-  animation: writing-world-settle-out 500ms cubic-bezier(.36, 0, .2, 1) both;
+  animation: writing-world-settle-out 440ms cubic-bezier(.36, 0, .2, 1) both;
 }
 
 html:has(body.is-arriving-writing-archive)::view-transition-new(root) {
-  animation: writing-archive-world-in 560ms cubic-bezier(.2, .72, .2, 1) both;
+  animation: writing-archive-world-in 520ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
 html:has(body.is-entering-writing-note)::view-transition-old(root) {
-  animation: writing-focus-world-out 460ms cubic-bezier(.36, 0, .2, 1) both;
+  animation: writing-focus-world-out 400ms cubic-bezier(.36, 0, .2, 1) both;
 }
 
 html:has(body.is-arriving-writing-note)::view-transition-new(root) {
-  animation: writing-note-world-in 540ms cubic-bezier(.2, .72, .2, 1) both;
+  animation: writing-note-world-in 500ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
 body[data-page="home"] .garden-current,
@@ -129,6 +79,12 @@ body[data-page="home"] .site-header .brand {
   transition-timing-function: cubic-bezier(.22, 1, .36, 1);
 }
 
+body[data-page="home"].is-writing-pressed .all-writing-link,
+body[data-page="home"].is-writing-pressed .note-star:active {
+  opacity: .76;
+  scale: .985;
+}
+
 body[data-page="home"].is-preparing-writing-archive .garden-current,
 body[data-page="home"].is-entering-writing-archive .garden-current,
 body[data-page="home"].is-preparing-writing-note .garden-current,
@@ -141,7 +97,7 @@ body[data-page="home"].is-preparing-writing-archive .garden-trace,
 body[data-page="home"].is-entering-writing-archive .garden-trace,
 body[data-page="home"].is-preparing-writing-note .garden-trace,
 body[data-page="home"].is-entering-writing-note .garden-trace {
-  opacity: 0.52;
+  opacity: .52;
   filter: none;
 }
 
@@ -149,7 +105,7 @@ body[data-page="home"].is-preparing-writing-archive .project-orbit,
 body[data-page="home"].is-entering-writing-archive .project-orbit,
 body[data-page="home"].is-preparing-writing-note .project-orbit,
 body[data-page="home"].is-entering-writing-note .project-orbit {
-  opacity: 0.12;
+  opacity: .12;
 }
 
 body[data-page="home"].is-preparing-writing-archive .orbit-project,
@@ -179,7 +135,7 @@ body[data-page="home"].is-preparing-writing-archive .decorative-stars,
 body[data-page="home"].is-entering-writing-archive .decorative-stars,
 body[data-page="home"].is-preparing-writing-note .decorative-stars,
 body[data-page="home"].is-entering-writing-note .decorative-stars {
-  opacity: 0.24;
+  opacity: .24;
 }
 
 body[data-page="home"].is-preparing-writing-archive .cosmos-center time,
@@ -204,36 +160,28 @@ body[data-page="home"].is-entering-writing-note .note-star-label {
   opacity: 0 !important;
 }
 
-body[data-page="home"].is-preparing-writing-archive .star-thread,
-body[data-page="home"].is-entering-writing-archive .star-thread {
+body[data-page="home"].is-preparing-writing-archive .writing-retract-source,
+body[data-page="home"].is-entering-writing-archive .writing-retract-source,
+body[data-page="home"].is-preparing-writing-note .writing-retract-source,
+body[data-page="home"].is-entering-writing-note .writing-retract-source {
+  pointer-events: none;
+  animation: writing-home-star-retract 360ms var(--writing-retract-delay, 0ms) cubic-bezier(.52, 0, .48, .16) both !important;
+}
+
+body[data-page="home"].is-preparing-writing-archive .writing-retract-thread,
+body[data-page="home"].is-entering-writing-archive .writing-retract-thread,
+body[data-page="home"].is-preparing-writing-note .writing-retract-thread,
+body[data-page="home"].is-entering-writing-note .writing-retract-thread {
   transform-box: fill-box;
   transform-origin: 50% 0%;
-  animation: writing-thread-release 360ms cubic-bezier(.4, 0, .2, 1) both !important;
+  animation: writing-home-thread-retract 360ms var(--writing-retract-delay, 0ms) cubic-bezier(.52, 0, .48, .16) both !important;
 }
 
-body[data-page="home"].is-preparing-writing-note .star-thread,
-body[data-page="home"].is-entering-writing-note .star-thread {
-  opacity: 0.08;
-}
-
-body[data-page="home"].is-preparing-writing-note .writing-focus-thread,
-body[data-page="home"].is-entering-writing-note .writing-focus-thread {
-  transform-box: fill-box;
-  transform-origin: 50% 0%;
-  animation: writing-thread-focus-release 300ms cubic-bezier(.4, 0, .2, 1) both !important;
-}
-
-body[data-page="home"].is-preparing-writing-note .note-star:not(.writing-focus-source),
-body[data-page="home"].is-entering-writing-note .note-star:not(.writing-focus-source) {
-  opacity: 0.1;
-  scale: 0.82;
-  transition: opacity 300ms ease, scale 360ms cubic-bezier(.22, 1, .36, 1);
-}
-
-body[data-page="home"].is-preparing-writing-note .writing-focus-source .note-star-core,
-body[data-page="home"].is-entering-writing-note .writing-focus-source .note-star-core {
-  animation-play-state: paused;
-  scale: 1.12;
+body[data-page="home"].is-preparing-writing-note .writing-retract-bystander,
+body[data-page="home"].is-entering-writing-note .writing-retract-bystander {
+  opacity: .08;
+  scale: .8;
+  transition: opacity 240ms ease, scale 300ms cubic-bezier(.22, 1, .36, 1);
 }
 
 body[data-page="home"].is-preparing-writing-archive .all-writing-link,
@@ -243,24 +191,60 @@ body[data-page="home"].is-entering-writing-note .all-writing-link {
   opacity: 0;
 }
 
+html[data-writing-arrival-pending="archive"] body[data-page="notes"]:not(.is-arriving-writing-archive) .note-kind-marker,
+html[data-writing-arrival-pending="note"] body[data-page="note"]:not(.is-arriving-writing-note) .article-meta-line .note-kind-marker {
+  opacity: 0;
+}
+
+.writing-drop-thread {
+  position: fixed;
+  left: var(--writing-thread-x);
+  top: var(--writing-thread-top);
+  z-index: 1002;
+  width: 1px;
+  height: var(--writing-thread-height);
+  pointer-events: none;
+  color: color-mix(in srgb, var(--text) 36%, transparent);
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, currentColor 72%, transparent) 18%, currentColor 100%);
+  opacity: 0;
+  transform: translateX(-.5px) scaleY(.04);
+  transform-origin: top center;
+}
+
+body.is-arriving-writing-archive .writing-drop-thread,
+body.is-arriving-writing-note .writing-drop-thread {
+  animation: writing-thread-drop 520ms var(--writing-drop-delay, 0ms) cubic-bezier(.22, .74, .16, 1) both;
+}
+
+.writing-drop-target {
+  position: relative;
+  z-index: 1003;
+  opacity: 0;
+}
+
+body.is-arriving-writing-archive .writing-drop-target,
+body.is-arriving-writing-note .writing-drop-target {
+  animation: writing-coordinate-drop 520ms var(--writing-drop-delay, 0ms) cubic-bezier(.22, .74, .16, 1) both !important;
+}
+
 body[data-page="notes"].is-arriving-writing-archive .archive-list::before {
   transform-origin: top center;
-  animation: writing-archive-path-grow 640ms 90ms cubic-bezier(.2, .72, .2, 1) both;
+  animation: writing-archive-path-grow 560ms 260ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
 body[data-page="notes"].is-arriving-writing-archive .archive-row-v2::before {
-  animation: writing-archive-branch-grow 360ms calc(190ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.22, 1, .36, 1) both;
+  animation: writing-archive-branch-grow 330ms calc(330ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.22, 1, .36, 1) both;
 }
 
 body[data-page="notes"].is-arriving-writing-archive .archive-row-meta time,
 body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 h2,
 body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 p,
 body[data-page="notes"].is-arriving-writing-archive .archive-row-arrow {
-  animation: writing-archive-copy-open 460ms calc(230ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.2, .72, .2, 1) both;
+  animation: writing-archive-copy-open 420ms calc(370ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.2, .72, .2, 1) both;
 }
 
 body[data-page="notes"].is-arriving-writing-archive .site-footer {
-  animation: writing-quiet-content-in 440ms 420ms ease both;
+  animation: writing-quiet-content-in 400ms 560ms ease both;
 }
 
 body[data-page="note"].is-arriving-writing-note .back-link,
@@ -271,27 +255,46 @@ body[data-page="note"].is-arriving-writing-note .article-source,
 body[data-page="note"].is-arriving-writing-note .article-body,
 body[data-page="note"].is-arriving-writing-note .note-navigation,
 body[data-page="note"].is-arriving-writing-note .site-footer {
-  animation: writing-note-copy-open 540ms var(--writing-note-delay, 160ms) cubic-bezier(.2, .72, .2, 1) both;
+  animation: writing-note-copy-open 500ms var(--writing-note-delay, 280ms) cubic-bezier(.2, .72, .2, 1) both;
 }
 
-body[data-page="note"].is-arriving-writing-note .note-article header h1 { --writing-note-delay: 130ms; }
-body[data-page="note"].is-arriving-writing-note .article-source { --writing-note-delay: 190ms; }
-body[data-page="note"].is-arriving-writing-note .article-body { --writing-note-delay: 270ms; }
-body[data-page="note"].is-arriving-writing-note .note-navigation { --writing-note-delay: 430ms; }
-body[data-page="note"].is-arriving-writing-note .site-footer { --writing-note-delay: 510ms; }
+body[data-page="note"].is-arriving-writing-note .note-article header h1 { --writing-note-delay: 250ms; }
+body[data-page="note"].is-arriving-writing-note .article-source { --writing-note-delay: 320ms; }
+body[data-page="note"].is-arriving-writing-note .article-body { --writing-note-delay: 390ms; }
+body[data-page="note"].is-arriving-writing-note .note-navigation { --writing-note-delay: 520ms; }
+body[data-page="note"].is-arriving-writing-note .site-footer { --writing-note-delay: 590ms; }
 
 body[data-page="note"].is-arriving-writing-note .reading-path {
-  animation: writing-reading-path-grow 620ms 390ms cubic-bezier(.2, .72, .2, 1) both;
+  animation: writing-reading-path-grow 580ms 470ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
-@keyframes writing-thread-release {
-  from { opacity: 1; transform: scaleY(1); }
-  to { opacity: 0; transform: scaleY(.03); }
+@keyframes writing-home-star-retract {
+  0% { opacity: 1; }
+  74% { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: translate(var(--writing-retract-x), var(--writing-retract-y)) scale(.72);
+  }
 }
 
-@keyframes writing-thread-focus-release {
-  from { opacity: 1; transform: scaleY(1); }
-  to { opacity: 0; transform: scaleY(.02); }
+@keyframes writing-home-thread-retract {
+  0% { opacity: 1; transform: scaleY(1); }
+  78% { opacity: .72; }
+  100% { opacity: 0; transform: scaleY(.015); }
+}
+
+@keyframes writing-thread-drop {
+  0% { opacity: 0; transform: translateX(-.5px) scaleY(.04); }
+  20% { opacity: .68; }
+  78% { opacity: .76; transform: translateX(-.5px) scaleY(1); }
+  100% { opacity: 0; transform: translateX(-.5px) scaleY(1); }
+}
+
+@keyframes writing-coordinate-drop {
+  0% { opacity: 0; translate: 0 var(--writing-drop-y); scale: .72; }
+  18% { opacity: 1; }
+  82% { opacity: 1; translate: 0 0; scale: 1.06; }
+  100% { opacity: 1; translate: 0 0; scale: 1; }
 }
 
 @keyframes writing-planet-recede {
@@ -313,21 +316,21 @@ body[data-page="note"].is-arriving-writing-note .reading-path {
 
 @keyframes writing-world-settle-out {
   from { opacity: 1; transform: scale(1); filter: saturate(1); }
-  to { opacity: 0.3; transform: scale(1.004); filter: saturate(.84); }
+  to { opacity: .28; transform: scale(1.003); filter: saturate(.86); }
 }
 
 @keyframes writing-archive-world-in {
-  from { opacity: .52; transform: translateY(4px); }
+  from { opacity: .56; transform: translateY(3px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes writing-focus-world-out {
   from { opacity: 1; transform: scale(1); }
-  to { opacity: .22; transform: scale(1.004); }
+  to { opacity: .2; transform: scale(1.003); }
 }
 
 @keyframes writing-note-world-in {
-  from { opacity: .48; transform: translateY(4px); }
+  from { opacity: .52; transform: translateY(3px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -352,7 +355,7 @@ body[data-page="note"].is-arriving-writing-note .reading-path {
 }
 
 @keyframes writing-note-copy-open {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(9px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -364,15 +367,6 @@ body[data-page="note"].is-arriving-writing-note .reading-path {
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(writing-site-avatar),
   ::view-transition-group(writing-site-name),
-  ::view-transition-group(writing-focus-star),
-  ::view-transition-group(writing-star-0),
-  ::view-transition-group(writing-star-1),
-  ::view-transition-group(writing-star-2),
-  ::view-transition-group(writing-star-3),
-  ::view-transition-group(writing-star-4),
-  ::view-transition-group(writing-star-5),
-  ::view-transition-group(writing-star-6),
-  ::view-transition-group(writing-star-7),
   ::view-transition-group(writing-keke-planet),
   ::view-transition-old(writing-keke-planet),
   html:has(body.is-entering-writing-archive)::view-transition-old(root),
@@ -381,5 +375,13 @@ body[data-page="note"].is-arriving-writing-note .reading-path {
   html:has(body.is-arriving-writing-note)::view-transition-new(root) {
     animation-duration: 1ms;
     animation-delay: 0ms;
+  }
+
+  .writing-drop-thread,
+  .writing-drop-target,
+  .writing-retract-source,
+  .writing-retract-thread {
+    animation: none !important;
+    transition: none !important;
   }
 }

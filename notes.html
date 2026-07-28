@@ -7,16 +7,28 @@
     <meta name="theme-color" content="#f7f7fa" />
     <title>文字 — Tyr1onX</title>
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
+    <script>
+      (() => {
+        try {
+          const queryMode = new URL(location.href).searchParams.get("__writing");
+          const raw = sessionStorage.getItem("tyr1onx:writing-transition");
+          const storedMode = raw ? JSON.parse(raw)?.mode : "";
+          const mode = queryMode || storedMode;
+          if (mode) document.documentElement.dataset.writingArrivalPending = mode;
+        } catch {}
+      })();
+    </script>
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./notes-v2.css?v=3-inner-space" />
     <link rel="stylesheet" href="./inner-space.css?v=1-star-map" />
-    <link rel="stylesheet" href="./writing-transition.css?v=2-smooth-retreat" />
-    <link rel="stylesheet" href="./return-home-transition.css?v=2-responsive-return" />
+    <link rel="stylesheet" href="./writing-transition.css?v=3-thread-cycle" />
+    <link rel="stylesheet" href="./return-home-transition.css?v=3-fresh-route" />
     <script src="./notes-data.js" defer></script>
     <script src="./notes-2026.js?v=2" defer></script>
     <script src="./script.js?v=3-note-kinds" defer></script>
-    <script src="./writing-transition.js?v=2-smooth-retreat" defer></script>
-    <script src="./return-home-transition.js?v=2-responsive-return" defer></script>
+    <script src="./writing-transition.js?v=3-thread-cycle" defer></script>
+    <script src="./return-home-transition.js?v=3-fresh-route" defer></script>
+    <script src="./return-route-fix.js?v=1-unique-route" defer></script>
   </head>
   <body data-page="notes">
     <a class="skip-link" href="#main">跳到主要内容</a>
