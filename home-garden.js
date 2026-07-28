@@ -2,6 +2,25 @@
   const field = document.querySelector("#cosmos-field");
   if (!(field instanceof HTMLElement)) return;
 
+  const hero = field.closest(".cosmos-hero");
+  const footer = document.querySelector(".site-footer");
+  let extentFrame = 0;
+
+  const syncGardenExtent = () => {
+    extentFrame = 0;
+    if (!(footer instanceof HTMLElement)) return;
+
+    const fieldRect = field.getBoundingClientRect();
+    const footerRect = footer.getBoundingClientRect();
+    const sceneHeight = Math.max(fieldRect.height, footerRect.top - fieldRect.top);
+
+    field.style.setProperty("--garden-scene-height", `${sceneHeight.toFixed(2)}px`);
+  };
+
+  const scheduleGardenExtentSync = () => {
+    if (!extentFrame) extentFrame = requestAnimationFrame(syncGardenExtent);
+  };
+
   const timestamp = (note) => {
     const direct = Date.parse(note?.datetime || "");
     if (Number.isFinite(direct)) return direct;
@@ -67,4 +86,16 @@
     element.setAttribute("aria-label", `${note.title}，${date}，${noteKindLabel(note)}`);
     threadElements[index]?.classList.add(kindClass);
   });
+
+  addEventListener("resize", scheduleGardenExtentSync, { passive: true });
+  addEventListener("pageshow", scheduleGardenExtentSync);
+  addEventListener("load", scheduleGardenExtentSync, { once: true });
+
+  if ("ResizeObserver" in window) {
+    const extentObserver = new ResizeObserver(scheduleGardenExtentSync);
+    if (hero instanceof HTMLElement) extentObserver.observe(hero);
+    if (footer instanceof HTMLElement) extentObserver.observe(footer);
+  }
+
+  requestAnimationFrame(scheduleGardenExtentSync);
 })();
