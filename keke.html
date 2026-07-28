@@ -47,7 +47,7 @@
           <p class="case-kicker">课刻 · Windows 桌面课表</p>
           <h1>让一天在桌面上缓慢流动。</h1>
           <p class="case-lead">
-            课刻是一款本地桌面课表组件。它从学校导出的 Excel 中建立课表，在桌面展示当天课程与下一节课，并通过独立设置窗口管理多张课表、课程和作息时间。
+            从学校导出的 Excel 建立课表，在桌面展示当天课程，并在独立设置窗口中管理课表、课程和作息时间。
           </p>
 
           <div class="case-facts" aria-label="项目概况">
@@ -60,7 +60,6 @@
           <div class="case-actions" aria-label="项目入口">
             <a class="case-action is-primary" href="https://github.com/Tyr1onX/desktop-course-widget/releases/tag/v0.4.0" target="_blank" rel="noreferrer">下载 v0.4.0 <span aria-hidden="true">↗</span></a>
             <a class="case-action" href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer">查看 GitHub <span aria-hidden="true">↗</span></a>
-            <a class="case-action" href="https://github.com/Tyr1onX/desktop-course-widget/blob/main/CHANGELOG.md" target="_blank" rel="noreferrer">发布记录 <span aria-hidden="true">↗</span></a>
           </div>
         </div>
 
@@ -89,62 +88,30 @@
               </ol>
             </section>
           </article>
-          <p class="case-hero-note">基于 v0.4.0 当前界面代码构成<br />项目迭代后可直接同步替换</p>
+          <p class="case-hero-note">v0.4.0 当前界面预览</p>
         </div>
       </section>
 
-      <section class="case-section case-shell reveal" aria-labelledby="product-view-title">
+      <section class="case-section case-shell reveal" aria-labelledby="current-view-title">
         <div class="case-section-head">
           <div>
-            <p class="case-section-kicker">Product evidence</p>
-            <h2 id="product-view-title">不是概念图，而是当前产品正在承担的工作。</h2>
+            <p class="case-section-kicker">当前界面</p>
+            <h2 id="current-view-title">课表管理与导入。</h2>
           </div>
-          <p>
-            下面三组观察窗口根据当前项目代码中的桌面组件、七日课表和 Excel 检查流程重新构成。它们不是永久截图，因此后续界面变化时可以继续同步，而不需要让项目页停留在旧版本。
-          </p>
+          <p>预览基于当前版本代码构成，后续随项目界面同步更新。</p>
         </div>
 
         <div class="product-viewer" data-product-viewer>
           <div class="product-viewer-toolbar">
             <div class="product-viewer-tabs" role="tablist" aria-label="课刻界面预览">
-              <button class="product-viewer-tab" id="tab-widget" type="button" role="tab" aria-selected="true" aria-controls="panel-widget">桌面组件</button>
-              <button class="product-viewer-tab" id="tab-week" type="button" role="tab" aria-selected="false" aria-controls="panel-week" tabindex="-1">七日课表</button>
+              <button class="product-viewer-tab" id="tab-week" type="button" role="tab" aria-selected="true" aria-controls="panel-week">七日课表</button>
               <button class="product-viewer-tab" id="tab-import" type="button" role="tab" aria-selected="false" aria-controls="panel-import" tabindex="-1">Excel 检查</button>
             </div>
-            <span class="product-viewer-caption">v0.4.0 · 代码化预览</span>
+            <span class="product-viewer-caption">v0.4.0</span>
           </div>
 
           <div class="product-viewer-stage">
-            <section class="product-viewer-panel" id="panel-widget" role="tabpanel" aria-labelledby="tab-widget">
-              <div class="preview-desktop-scene">
-                <article class="keke-widget-demo" aria-label="桌面课表组件预览">
-                  <header class="keke-widget-head">
-                    <div>
-                      <div class="keke-widget-title-row"><strong>9月21日课表</strong><span class="keke-today-badge">今日</span></div>
-                      <p class="keke-widget-date">星期一 · 第1教学周</p>
-                    </div>
-                    <time class="keke-widget-time">08:48</time>
-                  </header>
-                  <section class="keke-widget-focus">
-                    <p class="focus-label">正在上课</p>
-                    <h2>计算机网络</h2>
-                    <p>08:00–09:40</p>
-                    <p>教学楼 A101</p>
-                    <p class="keke-countdown">距下课 52 分钟</p>
-                  </section>
-                  <section class="keke-following">
-                    <p>后续课程</p>
-                    <ol>
-                      <li><time>10:00</time><span><strong>概率论</strong><small>教学楼 A101</small></span></li>
-                      <li><time>13:30</time><span><strong>程序设计基础</strong><small>教学楼 B203</small></span></li>
-                      <li><time>15:30</time><span><strong>软件工程</strong><small>教学楼 A101</small></span></li>
-                    </ol>
-                  </section>
-                </article>
-              </div>
-            </section>
-
-            <section class="product-viewer-panel" id="panel-week" role="tabpanel" aria-labelledby="tab-week" hidden>
+            <section class="product-viewer-panel" id="panel-week" role="tabpanel" aria-labelledby="tab-week">
               <div class="settings-window" aria-label="课刻七日课表预览">
                 <aside class="settings-sidebar">
                   <div class="settings-brand"><img src="./assets/keke-icon-source.png" alt="" /><span>课刻</span></div>
@@ -196,104 +163,10 @@
         </div>
       </section>
 
-      <section class="case-section case-shell reveal" aria-labelledby="capability-title">
-        <div class="case-section-head">
-          <div>
-            <p class="case-section-kicker">Core capabilities</p>
-            <h2 id="capability-title">功能不是列表，而是四个完整的使用闭环。</h2>
-          </div>
-          <p>课刻目前最重要的价值，不是把所有课程一次性摆满屏幕，而是把导入、理解、编辑和长期使用串成一套本地桌面体验。</p>
-        </div>
-
-        <div class="case-capability-grid">
-          <article class="case-capability"><span class="case-capability-index">01</span><h3>此刻优先</h3><p>桌面组件根据日期、教学周和当前时间判断正在上课、下一节课、今日结束或当天无课，让用户先看到现在最需要的信息。</p></article>
-          <article class="case-capability"><span class="case-capability-index">02</span><h3>从 Excel 到可编辑课表</h3><p>学校导出的 .xlsx 文件只在本机解析。导入前先检查课程、星期、节次、周次、地点和教师，再创建一张独立课表。</p></article>
-          <article class="case-capability"><span class="case-capability-index">03</span><h3>多课表与课程管理</h3><p>每次导入都生成独立课表，可切换、激活、编辑和删除；课程也能手动新增、修改，并支持多个时间段与单双周。</p></article>
-          <article class="case-capability"><span class="case-capability-index">04</span><h3>真正的桌面应用行为</h3><p>系统托盘、开机启动、窗口位置恢复、单实例、DPI 与多显示器适配，共同保证它不是一个悬浮网页，而是能长期留在桌面的工具。</p></article>
-        </div>
-      </section>
-
-      <section class="case-section case-shell case-decisions reveal" aria-labelledby="decision-title">
-        <div class="case-decision-intro">
-          <p class="case-section-kicker">Design decisions</p>
-          <h2 id="decision-title">项目里真正重要的，是这些取舍。</h2>
-          <p>功能可以继续增加，但课刻必须始终回答同一个问题：怎样让课程、时间和桌面之间的关系更自然，而不是把复杂度重新交给用户。</p>
-        </div>
-
-        <div class="case-decision-list">
-          <article class="case-decision"><span>01</span><div><h3>为什么不是固定表格</h3><p>完整课表适合规划，桌面组件更适合提醒。主窗口只展示日期、教学周、当前课程和后续课程，七日总览被放进独立设置窗口。</p></div></article>
-          <article class="case-decision"><span>02</span><div><h3>为什么选择 Tauri</h3><p>项目需要透明无边框窗口、系统托盘、本地文件解析和安装包，同时又希望保持较轻的桌面体积。Tauri 让界面与 Rust 本地能力在同一个项目中协作。</p></div></article>
-          <article class="case-decision"><span>03</span><div><h3>为什么坚持本地优先</h3><p>课表文件可能包含姓名、教师和教室信息。Excel 解析、课表与设置都留在应用专属目录，不通过服务器换取便利。</p></div></article>
-          <article class="case-decision"><span>04</span><div><h3>为什么把稳定性放在动效之前</h3><p>桌面窗口必须在 Windows 缩放、多显示器和不同课程数量下保持稳定。视觉与时间流动动效只有在不破坏阅读、输入和窗口行为时才会保留。</p></div></article>
-        </div>
-      </section>
-
-      <section class="case-section case-shell reveal" aria-labelledby="implementation-title">
-        <div class="case-section-head">
-          <div>
-            <p class="case-section-kicker">Implementation</p>
-            <h2 id="implementation-title">一套正在运行的桌面结构，也保留真实边界。</h2>
-          </div>
-          <p>这里不把限制包装成“未来愿景”。已完成的能力、窗口约束和暂时没有实现的功能都应该被清楚地写出来。</p>
-        </div>
-
-        <div class="case-implementation">
-          <article class="case-tech-card">
-            <h3>技术栈</h3>
-            <dl>
-              <div><dt>桌面框架</dt><dd>Tauri 2</dd></div>
-              <div><dt>本地能力</dt><dd>Rust</dd></div>
-              <div><dt>前端</dt><dd>Vite / TypeScript</dd></div>
-              <div><dt>界面</dt><dd>HTML / CSS</dd></div>
-              <div><dt>Excel 解析</dt><dd>Calamine</dd></div>
-            </dl>
-          </article>
-
-          <article class="case-tech-card">
-            <h3>窗口与数据</h3>
-            <ul>
-              <li>主组件固定 392px 逻辑宽度，高度按内容在 160–740px 之间调整。</li>
-              <li>透明、无边框、隐藏任务栏，并以 always-on-bottom 方式留在桌面。</li>
-              <li>设置窗口默认 1180×760，可调整大小，最低 960×640。</li>
-              <li>课表、设置、多课表索引和备份均保存在本地应用目录。</li>
-            </ul>
-          </article>
-
-          <article class="case-tech-card case-limit-card">
-            <h3>当前限制</h3>
-            <ul>
-              <li>目前仅支持 Windows。</li>
-              <li>正式导入入口仍以 .xlsx 为主，不同教务系统可能需要额外适配。</li>
-              <li>暂不支持课程通知、云同步和自动更新。</li>
-              <li>安装包尚未进行商业代码签名，Windows 可能显示来源未知提示。</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="case-section case-shell reveal" aria-labelledby="trajectory-title">
-        <div class="case-section-head">
-          <div>
-            <p class="case-section-kicker">Trajectory</p>
-            <h2 id="trajectory-title">它不是突然完成的，而是一段连续收敛的过程。</h2>
-          </div>
-          <p>课刻的迭代不是简单累加功能。每一阶段都在把一个浏览器原型，逐步变成可以安装、导入、编辑和长期使用的桌面产品。</p>
-        </div>
-
-        <div class="case-trajectory">
-          <article class="case-milestone"><time>起点</time><div><h3>从桌面视觉原型开始</h3><p>先验证“当前课程优先”的信息结构，以及不同桌面背景、课程数量和时间状态下的可读性。</p></div></article>
-          <article class="case-milestone"><time>桌面化</time><div><h3>建立 Tauri 窗口与系统行为</h3><p>加入透明无边框窗口、系统托盘、单实例、位置恢复、开机启动和 Windows 安装包。</p></div></article>
-          <article class="case-milestone"><time>数据化</time><div><h3>让 Excel 成为真正的数据入口</h3><p>本机解析 .xlsx，增加导入预览、错误检查和隐私说明，让用户在创建课表前先看见系统理解了什么。</p></div></article>
-          <article class="case-milestone"><time>管理化</time><div><h3>从单课表扩展到多课表与课程编辑</h3><p>加入课表切换、激活、删除，课程新增与修改，以及学期周数、作息时间和旧数据迁移。</p></div></article>
-          <article class="case-milestone"><time>v0.4.0</time><div><h3>统一名称、发布与使用路径</h3><p>安装包、快捷方式和应用窗口统一使用“课刻”，并将当前完整版本公开发布。</p></div></article>
-          <article class="case-milestone"><time>现在</time><div><h3>继续处理稳定性与体验细节</h3><p>项目仍在迭代。后续界面、时间流动方式和交互细节会继续变化，这个案例页也会跟随真实代码更新。</p></div></article>
-        </div>
-      </section>
-
       <section class="case-ending case-shell reveal">
         <div>
-          <h2>它已经可以使用，也还没有停止生长。</h2>
-          <p>下载当前版本，或直接进入仓库查看代码、发布记录与仍在推进的问题。这个页面只展示已经存在的产品，不为尚未完成的功能提前占位。</p>
+          <h2>当前版本已经可以使用。</h2>
+          <p>项目仍在迭代，页面会随真实代码继续更新。</p>
         </div>
         <div class="case-ending-actions">
           <a class="case-action is-primary" href="https://github.com/Tyr1onX/desktop-course-widget/releases/tag/v0.4.0" target="_blank" rel="noreferrer">下载 v0.4.0 <span aria-hidden="true">↗</span></a>
