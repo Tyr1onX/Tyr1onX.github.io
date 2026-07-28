@@ -189,6 +189,7 @@ body[data-page="note"] .reading-path {
   position: fixed;
   left: max(24px, calc(50vw - 520px));
   top: 24vh;
+  right: auto;
   bottom: auto;
   z-index: 24;
   display: block;
@@ -198,6 +199,10 @@ body[data-page="note"] .reading-path {
   max-height: 520px;
   opacity: 1;
   pointer-events: none;
+}
+
+body[data-page="note"] .reading-path::before {
+  display: none;
 }
 
 body[data-page="note"] .reading-path-label {
@@ -216,6 +221,8 @@ body[data-page="note"] .reading-path-fill {
   position: absolute;
   left: 0;
   top: 0;
+  right: auto;
+  bottom: auto;
   width: 2px;
   border-radius: 999px;
 }
