@@ -1,22 +1,15 @@
 /* Keke orbit: move only the outer carrier and keep the source image untouched. */
 
-.orbit-project.is-pixel-orbit {
-  left: 0;
-  top: 0;
-  display: block;
+/* The fallback may orbit with CSS, but it never fades, scales or filters the artwork. */
+.orbit-project {
   visibility: visible !important;
   opacity: 1 !important;
-  offset-path: none;
-  offset-distance: 0;
-  offset-rotate: 0deg;
-  transform: none;
-  animation: none !important;
-  will-change: left, top;
+  animation: project-orbit var(--orbit-duration) linear infinite !important;
 }
 
-.orbit-project.is-pixel-orbit .orbit-icon-shell,
-.orbit-project.is-pixel-orbit:hover .orbit-icon-shell,
-.orbit-project.is-pixel-orbit:focus-visible .orbit-icon-shell {
+.orbit-project .orbit-icon-shell,
+.orbit-project:hover .orbit-icon-shell,
+.orbit-project:focus-visible .orbit-icon-shell {
   overflow: visible;
   border-radius: 0;
   background: transparent;
@@ -25,7 +18,7 @@
   transition: none;
 }
 
-.orbit-project.is-pixel-orbit .orbit-icon-shell img {
+.orbit-project .orbit-icon-shell img {
   display: block;
   width: 100%;
   height: 100%;
@@ -36,6 +29,18 @@
   opacity: 1 !important;
   visibility: visible !important;
   backface-visibility: visible;
+}
+
+.orbit-project.is-pixel-orbit {
+  left: 0;
+  top: 0;
+  display: block;
+  offset-path: none;
+  offset-distance: 0;
+  offset-rotate: 0deg;
+  transform: none;
+  animation: none !important;
+  will-change: left, top;
 }
 
 @media (max-width: 560px) {
