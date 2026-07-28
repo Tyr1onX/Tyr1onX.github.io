@@ -1,0 +1,159 @@
+/* Home -> Keke: enter the orbiting project as a shared planet. */
+@view-transition {
+  navigation: auto;
+}
+
+.keke-transition-source,
+.keke-transition-target {
+  view-transition-name: keke-planet;
+}
+
+::view-transition-group(keke-planet) {
+  z-index: 999;
+  animation-duration: 920ms;
+  animation-timing-function: cubic-bezier(.2, .78, .2, 1);
+}
+
+::view-transition-image-pair(keke-planet) {
+  isolation: auto;
+}
+
+::view-transition-old(keke-planet),
+::view-transition-new(keke-planet) {
+  mix-blend-mode: normal;
+  object-fit: contain;
+  filter: none;
+}
+
+::view-transition-old(root) {
+  animation: keke-world-out 760ms cubic-bezier(.4, 0, .2, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: keke-world-in 760ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+body[data-page="home"].is-entering-keke .orbit-project {
+  z-index: 60 !important;
+  pointer-events: none;
+}
+
+body[data-page="home"].is-entering-keke .orbit-tooltip,
+body[data-page="home"].is-entering-keke .orbit-icon-shell {
+  box-shadow: none !important;
+  opacity: 0 !important;
+}
+
+body[data-page="home"].is-entering-keke .orbit-project img {
+  opacity: 1 !important;
+}
+
+body[data-page="home"].is-entering-keke .garden-current {
+  animation-duration: 1.9s !important;
+  opacity: 0.9 !important;
+  filter: blur(7px) saturate(1.18);
+}
+
+body[data-page="home"].is-entering-keke .garden-trace {
+  animation-duration: 1.35s, 2.8s !important;
+  opacity: 0.98 !important;
+  stroke-width: 1.65;
+}
+
+body[data-page="home"].is-entering-keke .cosmos-hero::before {
+  animation-duration: 2.2s !important;
+  opacity: 1;
+}
+
+body[data-page="home"].is-entering-keke .project-orbit-line {
+  opacity: 0.78;
+  filter: drop-shadow(0 0 8px var(--garden-flow-warm));
+  transition: opacity 220ms ease, filter 220ms ease;
+}
+
+body[data-page="home"].is-entering-keke .cosmos-center,
+body[data-page="home"].is-entering-keke .note-stars,
+body[data-page="home"].is-entering-keke .decorative-stars,
+body[data-page="home"].is-entering-keke .all-writing-link {
+  opacity: 0.42;
+  transition: opacity 300ms ease;
+}
+
+.keke-title-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.keke-title-row h1 {
+  display: block;
+}
+
+.keke-summary h1::before {
+  display: none !important;
+  content: none !important;
+}
+
+.keke-transition-target {
+  display: block;
+  width: 68px;
+  height: 68px;
+  flex: 0 0 auto;
+  border-radius: 20px;
+  object-fit: cover;
+  image-rendering: auto;
+  box-shadow: 0 18px 44px rgba(68, 79, 108, 0.12);
+}
+
+body[data-page="keke"].is-arriving-keke .keke-summary > :not(.keke-title-row),
+body[data-page="keke"].is-arriving-keke .product-viewer {
+  animation: keke-content-arrive 700ms 180ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+@keyframes keke-world-out {
+  from { opacity: 1; filter: blur(0); transform: scale(1); }
+  to { opacity: 0.18; filter: blur(2px) saturate(1.12); transform: scale(1.012); }
+}
+
+@keyframes keke-world-in {
+  from { opacity: 0.36; filter: blur(5px); transform: scale(0.992); }
+  to { opacity: 1; filter: blur(0); transform: scale(1); }
+}
+
+@keyframes keke-content-arrive {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 560px) {
+  .keke-title-row {
+    gap: 14px;
+  }
+
+  .keke-transition-target {
+    width: 58px;
+    height: 58px;
+    border-radius: 17px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(keke-planet),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 1ms;
+  }
+
+  body[data-page="home"].is-entering-keke .garden-current,
+  body[data-page="home"].is-entering-keke .garden-trace,
+  body[data-page="home"].is-entering-keke .cosmos-hero::before,
+  body[data-page="keke"].is-arriving-keke .keke-summary > :not(.keke-title-row),
+  body[data-page="keke"].is-arriving-keke .product-viewer {
+    animation: none !important;
+    transition: none !important;
+  }
+}
