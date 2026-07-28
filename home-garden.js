@@ -24,7 +24,7 @@
   const windLayer = field.querySelector(".wind-streams");
   if (windLayer instanceof HTMLElement && !windLayer.querySelector(".garden-current")) {
     windLayer.insertAdjacentHTML(
-      "afterbegin",
+      "beforeend",
       [
         '<span class="garden-current garden-current-a"></span>',
         '<span class="garden-current garden-current-b"></span>',
