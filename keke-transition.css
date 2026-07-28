@@ -8,40 +8,70 @@
   view-transition-name: keke-planet;
 }
 
+.keke-site-avatar-source,
+body[data-page="keke"] .brand-avatar {
+  view-transition-name: keke-site-avatar;
+}
+
+.keke-site-name-source,
+body[data-page="keke"] .brand > span {
+  view-transition-name: keke-site-name;
+}
+
 ::view-transition-group(keke-planet) {
   z-index: 999;
-  animation-duration: 920ms;
+  animation-duration: 860ms;
   animation-timing-function: cubic-bezier(.2, .78, .2, 1);
 }
 
-::view-transition-image-pair(keke-planet) {
+::view-transition-group(keke-site-avatar),
+::view-transition-group(keke-site-name) {
+  z-index: 998;
+  animation-duration: 780ms;
+  animation-timing-function: cubic-bezier(.2, .74, .18, 1);
+}
+
+::view-transition-image-pair(keke-planet),
+::view-transition-image-pair(keke-site-avatar),
+::view-transition-image-pair(keke-site-name) {
   isolation: auto;
 }
 
 ::view-transition-old(keke-planet),
-::view-transition-new(keke-planet) {
+::view-transition-new(keke-planet),
+::view-transition-old(keke-site-avatar),
+::view-transition-new(keke-site-avatar),
+::view-transition-old(keke-site-name),
+::view-transition-new(keke-site-name) {
   mix-blend-mode: normal;
   object-fit: contain;
   filter: none;
 }
 
 ::view-transition-old(root) {
-  animation: keke-world-out 760ms cubic-bezier(.4, 0, .2, 1) both;
+  animation: keke-world-out 680ms cubic-bezier(.4, 0, .2, 1) both;
 }
 
 ::view-transition-new(root) {
-  animation: keke-world-in 760ms cubic-bezier(.2, .72, .2, 1) both;
+  animation: keke-world-in 680ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
 body[data-page="home"] .garden-current,
 body[data-page="home"] .garden-trace,
 body[data-page="home"] .cosmos-hero::before,
 body[data-page="home"] .project-orbit-line,
-body[data-page="home"] .cosmos-center,
+body[data-page="home"] .cosmos-center time,
 body[data-page="home"] .decorative-stars,
-body[data-page="home"] .all-writing-link {
-  transition-duration: 880ms;
+body[data-page="home"] .all-writing-link,
+body[data-page="home"] .site-header .brand {
+  transition-duration: 820ms;
   transition-timing-function: cubic-bezier(.33, 0, .18, 1);
+}
+
+/* Q ≈ vA: as playback speed rises, the visible current section narrows. */
+body[data-page="home"] .garden-current {
+  scale: 1 var(--keke-flow-thickness, 1);
+  transform-origin: 50% 50%;
 }
 
 body[data-page="home"].is-preparing-keke .orbit-project,
@@ -65,10 +95,9 @@ body[data-page="home"].is-entering-keke .orbit-project img {
   opacity: 1 !important;
 }
 
-/* Playback rate is ramped in JS; these rules only make the growing energy legible. */
 body[data-page="home"].is-preparing-keke .garden-current,
 body[data-page="home"].is-entering-keke .garden-current {
-  filter: blur(7px) saturate(1.2) brightness(1.08);
+  filter: blur(var(--keke-flow-blur, 19px)) saturate(1.14) brightness(1.08);
 }
 
 body[data-page="home"].is-preparing-keke .garden-trace,
@@ -93,37 +122,45 @@ body[data-page="home"].is-entering-keke .project-orbit-line {
   filter: drop-shadow(0 0 8px var(--garden-flow-warm));
 }
 
-body[data-page="home"].is-preparing-keke .cosmos-center,
+body[data-page="home"].is-preparing-keke .cosmos-center time,
 body[data-page="home"].is-preparing-keke .decorative-stars,
 body[data-page="home"].is-preparing-keke .all-writing-link,
-body[data-page="home"].is-entering-keke .cosmos-center,
+body[data-page="home"].is-entering-keke .cosmos-center time,
 body[data-page="home"].is-entering-keke .decorative-stars,
 body[data-page="home"].is-entering-keke .all-writing-link {
-  opacity: 0.38;
+  opacity: 0.32;
+}
+
+/* The center identity becomes the destination header identity, so hide the old duplicate. */
+body[data-page="home"].is-preparing-keke .site-header .brand,
+body[data-page="home"].is-entering-keke .site-header .brand {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 
 /* The hanging writing stars are pulled back to their top anchors one by one. */
 body[data-page="home"].is-preparing-keke .note-star,
 body[data-page="home"].is-entering-keke .note-star {
   pointer-events: none;
-  animation: keke-star-retract 580ms cubic-bezier(.55, 0, .55, .18) var(--keke-retract-delay, 120ms) both !important;
+  animation: keke-star-retract 520ms cubic-bezier(.55, 0, .55, .18) var(--keke-retract-delay, 70ms) both !important;
 }
 
 body[data-page="home"].is-preparing-keke .note-star-label,
 body[data-page="home"].is-entering-keke .note-star-label {
   opacity: 0 !important;
-  transition-duration: 120ms;
+  transition-duration: 100ms;
 }
 
 body[data-page="home"].is-preparing-keke .star-thread,
 body[data-page="home"].is-entering-keke .star-thread {
   transform-box: fill-box;
   transform-origin: 50% 0%;
-  animation: keke-thread-retract 580ms cubic-bezier(.55, 0, .55, .18) var(--keke-retract-delay, 120ms) both !important;
+  animation: keke-thread-retract 520ms cubic-bezier(.55, 0, .55, .18) var(--keke-retract-delay, 70ms) both !important;
 }
 
 .keke-title-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 18px;
 }
@@ -132,9 +169,28 @@ body[data-page="home"].is-entering-keke .star-thread {
   display: block;
 }
 
+.keke-title-row::after {
+  content: "Windows";
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  padding: 0 11px;
+  border: 1px solid color-mix(in srgb, var(--keke-cool) 34%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--keke-cool) 9%, transparent);
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 620;
+  letter-spacing: 0.01em;
+}
+
 .keke-summary h1::before {
   display: none !important;
   content: none !important;
+}
+
+.keke-summary .keke-meta {
+  display: none;
 }
 
 .keke-transition-target {
@@ -150,16 +206,12 @@ body[data-page="home"].is-entering-keke .star-thread {
 
 body[data-page="keke"].is-arriving-keke .keke-summary > :not(.keke-title-row),
 body[data-page="keke"].is-arriving-keke .product-viewer {
-  animation: keke-content-arrive 700ms 180ms cubic-bezier(.2, .72, .2, 1) both;
+  animation: keke-content-arrive 620ms 120ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
 @keyframes keke-star-retract {
-  0% {
-    opacity: 1;
-  }
-  72% {
-    opacity: 1;
-  }
+  0% { opacity: 1; }
+  72% { opacity: 1; }
   100% {
     opacity: 0;
     transform: translate(var(--keke-retract-x), var(--keke-retract-y)) scale(.72);
@@ -167,17 +219,9 @@ body[data-page="keke"].is-arriving-keke .product-viewer {
 }
 
 @keyframes keke-thread-retract {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  78% {
-    opacity: 0.72;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(.08, .015);
-  }
+  0% { opacity: 1; transform: scale(1); }
+  78% { opacity: 0.72; }
+  100% { opacity: 0; transform: scale(.08, .015); }
 }
 
 @keyframes keke-world-out {
@@ -191,13 +235,16 @@ body[data-page="keke"].is-arriving-keke .product-viewer {
 }
 
 @keyframes keke-content-arrive {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 560px) {
-  .keke-title-row {
-    gap: 14px;
+  .keke-title-row { gap: 14px; }
+
+  .keke-title-row::after {
+    min-height: 26px;
+    padding-inline: 9px;
   }
 
   .keke-transition-target {
@@ -209,6 +256,8 @@ body[data-page="keke"].is-arriving-keke .product-viewer {
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(keke-planet),
+  ::view-transition-group(keke-site-avatar),
+  ::view-transition-group(keke-site-name),
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 1ms;
