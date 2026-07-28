@@ -7,8 +7,11 @@
     <meta name="theme-color" content="#f7f7fa" />
     <title>课刻 — Tyr1onX</title>
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
+    <link rel="preload" as="image" href="./assets/keke-icon-source.png" type="image/png" />
     <link rel="stylesheet" href="./styles.css" />
-    <script src="./script.js" defer></script>
+    <link rel="stylesheet" href="./inner-space.css?v=1-star-map" />
+    <script src="./script.js?v=3-note-kinds" defer></script>
+    <script src="./inner-space.js?v=1-reading-path" defer></script>
   </head>
   <body data-page="keke">
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -38,23 +41,43 @@
     </header>
 
     <main id="main" class="project-page">
-      <section class="project-hero page-width reveal">
-        <img
-          class="project-hero-icon"
-          src="https://raw.githubusercontent.com/Tyr1onX/desktop-course-widget/main/src-tauri/icons/icon.png"
-          alt="课刻图标"
-        />
-        <p class="section-label">课刻 · 桌面课表</p>
-        <h1>让一天在桌面上缓慢流动。</h1>
-        <p>
-          课刻不是为了把课程重新排进另一张表，而是想让时间、课程和此刻的位置自然地出现在桌面上。
-        </p>
-        <a class="project-source-link" href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer">
-          查看 GitHub 仓库 <span aria-hidden="true">↗</span>
-        </a>
+      <section class="project-hero project-lab-hero page-width reveal">
+        <div class="project-hero-copy">
+          <p class="section-label">课刻 · 桌面课表</p>
+          <h1>让一天在桌面上缓慢流动。</h1>
+          <p>
+            课刻不是为了把课程重新排进另一张表，而是想让时间、课程和此刻的位置自然地出现在桌面上。
+          </p>
+          <div class="project-status-line" aria-label="项目状态">
+            <span class="project-status-dot" aria-hidden="true"></span>
+            <span>持续生长中</span>
+            <span>Windows 桌面</span>
+            <span>Tauri / Rust</span>
+          </div>
+          <a class="project-source-link" href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer">
+            查看 GitHub 仓库 <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <div class="project-observation" aria-label="课刻项目观察窗口">
+          <span class="project-observation-orbit" aria-hidden="true"></span>
+          <div class="project-observation-core">
+            <img
+              class="project-hero-icon project-observation-icon"
+              src="./assets/keke-icon-source.png"
+              width="1024"
+              height="1024"
+              loading="eager"
+              decoding="async"
+              draggable="false"
+              alt="课刻图标"
+            />
+            <span class="project-observation-caption">仍在运行</span>
+          </div>
+        </div>
       </section>
 
-      <div class="project-story page-width">
+      <div class="project-story project-trajectory page-width">
         <section class="story-block reveal">
           <span class="story-number">01</span>
           <div>
