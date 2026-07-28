@@ -5,12 +5,21 @@
   const article = document.querySelector("#note-article");
   if (!(main instanceof HTMLElement) || !(article instanceof HTMLElement)) return;
 
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const maxMilestones = 6;
+
   let readingFrame = 0;
+  let springFrame = 0;
   let path = null;
   let body = null;
   let headings = [];
   let resizeObserver = null;
   let listenersBound = false;
+  let targetProgress = 0;
+  let renderedProgress = 0;
+  let springVelocity = 0;
+  let lastSpringTime = 0;
+  let progressInitialized = false;
 
   const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
   const isHan = (character) => /[\u3400-\u9fff]/.test(character);
@@ -46,6 +55,75 @@
     body.dataset.normalized = "true";
   };
 
+  const selectMilestones = (container) => {
+    const majorHeadings = [...container.querySelectorAll("h2")];
+    const candidates = majorHeadings.length ? majorHeadings : [...container.querySelectorAll("h3")];
+    if (candidates.length <= maxMilestones) return candidates;
+
+    const sampled = [];
+    for (let index = 0; index < maxMilestones; index += 1) {
+      const candidateIndex = Math.round((index * (candidates.length - 1)) / (maxMilestones - 1));
+      const heading = candidates[candidateIndex];
+      if (heading && sampled.at(-1) !== heading) sampled.push(heading);
+    }
+    return sampled;
+  };
+
+  const applyReadingProgress = (progress) => {
+    if (!(path instanceof HTMLElement)) return;
+
+    const visibleProgress = clamp(progress, 0, 1);
+    path.style.setProperty("--reading-progress", visibleProgress.toFixed(4));
+
+    const nodes = [...path.querySelectorAll(".reading-path-node")];
+    nodes.forEach((node) => {
+      if (!(node instanceof HTMLElement)) return;
+      const position = Number.parseFloat(node.dataset.progress || "0");
+      node.classList.toggle("is-read", position <= visibleProgress + 0.01);
+    });
+  };
+
+  const advanceReadingSpring = (timestamp) => {
+    springFrame = 0;
+    if (!(path instanceof HTMLElement)) return;
+
+    if (reducedMotion.matches) {
+      renderedProgress = targetProgress;
+      springVelocity = 0;
+      lastSpringTime = timestamp;
+      applyReadingProgress(renderedProgress);
+      return;
+    }
+
+    const deltaSeconds = Math.min(0.032, Math.max(0.001, (timestamp - lastSpringTime) / 1000 || 1 / 60));
+    lastSpringTime = timestamp;
+
+    const stiffness = 72;
+    const damping = 13;
+    const acceleration = stiffness * (targetProgress - renderedProgress) - damping * springVelocity;
+
+    springVelocity += acceleration * deltaSeconds;
+    renderedProgress += springVelocity * deltaSeconds;
+    renderedProgress = clamp(renderedProgress, -0.025, 1.025);
+    applyReadingProgress(renderedProgress);
+
+    const settled = Math.abs(targetProgress - renderedProgress) < 0.00035 && Math.abs(springVelocity) < 0.00035;
+    if (settled) {
+      renderedProgress = targetProgress;
+      springVelocity = 0;
+      applyReadingProgress(renderedProgress);
+      return;
+    }
+
+    springFrame = requestAnimationFrame(advanceReadingSpring);
+  };
+
+  const startReadingSpring = () => {
+    if (springFrame) return;
+    lastSpringTime = performance.now();
+    springFrame = requestAnimationFrame(advanceReadingSpring);
+  };
+
   const paintReadingPath = () => {
     readingFrame = 0;
     if (!(path instanceof HTMLElement) || !(body instanceof HTMLElement)) return;
@@ -54,8 +132,7 @@
     const startLine = window.innerHeight * 0.26;
     const endLine = window.innerHeight * 0.74;
     const travel = Math.max(1, articleRect.height - (endLine - startLine));
-    const progress = clamp((startLine - articleRect.top) / travel, 0, 1);
-    path.style.setProperty("--reading-progress", progress.toFixed(4));
+    targetProgress = clamp((startLine - articleRect.top) / travel, 0, 1);
 
     const bodyHeight = Math.max(1, body.offsetHeight);
     const nodes = [...path.querySelectorAll(".reading-path-node")];
@@ -63,10 +140,20 @@
       const heading = headings[index];
       if (!(node instanceof HTMLElement) || !(heading instanceof HTMLElement)) return;
 
-      const position = clamp((heading.offsetTop / bodyHeight) * 100, 0, 100);
-      node.style.top = `${position.toFixed(2)}%`;
-      node.classList.toggle("is-read", position / 100 <= progress + 0.01);
+      const position = clamp(heading.offsetTop / bodyHeight, 0, 1);
+      node.dataset.progress = position.toFixed(4);
+      node.style.top = `${(position * 100).toFixed(2)}%`;
     });
+
+    if (!progressInitialized || reducedMotion.matches) {
+      renderedProgress = targetProgress;
+      springVelocity = 0;
+      progressInitialized = true;
+      applyReadingProgress(renderedProgress);
+      return;
+    }
+
+    startReadingSpring();
   };
 
   const scheduleReadingPathPaint = () => {
@@ -88,7 +175,7 @@
     body.classList.add(isTechnical ? "article-body-technical" : "article-body-essay");
 
     if (!isTechnical) normalizeEssayBody();
-    headings = isTechnical ? [...body.querySelectorAll("h2, h3")] : [];
+    headings = isTechnical ? selectMilestones(body) : [];
 
     if (!(path instanceof HTMLElement)) {
       path = document.createElement("aside");
@@ -117,6 +204,7 @@
       addEventListener("scroll", scheduleReadingPathPaint, { passive: true });
       addEventListener("resize", scheduleReadingPathPaint, { passive: true });
       addEventListener("pageshow", scheduleReadingPathPaint);
+      reducedMotion.addEventListener?.("change", scheduleReadingPathPaint);
       listenersBound = true;
     }
 
