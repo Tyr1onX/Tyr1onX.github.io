@@ -13,7 +13,6 @@
     const fieldRect = field.getBoundingClientRect();
     const footerRect = footer.getBoundingClientRect();
     const sceneHeight = Math.max(fieldRect.height, footerRect.top - fieldRect.top);
-
     field.style.setProperty("--garden-scene-height", `${sceneHeight.toFixed(2)}px`);
   };
 
@@ -30,9 +29,11 @@
     return Number.isFinite(fallback) ? fallback : 0;
   };
 
-  const notes = [...(Array.isArray(window.TYR1ONX_NOTES) ? window.TYR1ONX_NOTES : [])]
-    .sort((left, right) => timestamp(right) - timestamp(left))
-    .slice(0, 8);
+  const preparedNotes = Array.isArray(window.TYR1ONX_SORTED_NOTES)
+    ? window.TYR1ONX_SORTED_NOTES
+    : [...(Array.isArray(window.TYR1ONX_NOTES) ? window.TYR1ONX_NOTES : [])]
+      .sort((left, right) => timestamp(right) - timestamp(left));
+  const notes = preparedNotes.slice(0, 8);
 
   const noteKind = (note) => (note?.kind === "work" ? "work" : "essay");
   const noteKindLabel = (note) => (noteKind(note) === "work" ? "工作与技术" : "随笔");
@@ -89,7 +90,6 @@
 
   addEventListener("resize", scheduleGardenExtentSync, { passive: true });
   addEventListener("pageshow", scheduleGardenExtentSync);
-  addEventListener("load", scheduleGardenExtentSync, { once: true });
 
   if ("ResizeObserver" in window) {
     const extentObserver = new ResizeObserver(scheduleGardenExtentSync);
