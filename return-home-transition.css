@@ -1,0 +1,352 @@
+/* Reverse navigation: project and writing spaces return to the home cosmos. */
+@view-transition {
+  navigation: auto;
+}
+
+body[data-page] .return-site-avatar-source,
+.return-site-avatar-target {
+  view-transition-name: return-site-avatar;
+}
+
+body[data-page] .return-site-name-source,
+.return-site-name-target {
+  view-transition-name: return-site-name;
+}
+
+.return-keke-planet-source,
+.return-keke-planet-target {
+  view-transition-name: return-keke-planet;
+}
+
+::view-transition-group(return-site-avatar),
+::view-transition-group(return-site-name) {
+  z-index: 998;
+  animation-duration: 720ms;
+  animation-timing-function: cubic-bezier(.2, .74, .18, 1);
+  animation-fill-mode: both;
+}
+
+::view-transition-group(return-keke-planet) {
+  z-index: 999;
+  animation-duration: 820ms;
+  animation-timing-function: cubic-bezier(.2, .78, .18, 1);
+  animation-fill-mode: both;
+}
+
+::view-transition-group(return-writing-focus-star),
+::view-transition-group(return-writing-star-0),
+::view-transition-group(return-writing-star-1),
+::view-transition-group(return-writing-star-2),
+::view-transition-group(return-writing-star-3),
+::view-transition-group(return-writing-star-4),
+::view-transition-group(return-writing-star-5),
+::view-transition-group(return-writing-star-6),
+::view-transition-group(return-writing-star-7) {
+  z-index: 999;
+  animation-duration: 680ms;
+  animation-timing-function: cubic-bezier(.2, .78, .18, 1);
+  animation-fill-mode: both;
+}
+
+::view-transition-group(return-writing-star-1) { animation-delay: 14ms; }
+::view-transition-group(return-writing-star-2) { animation-delay: 28ms; }
+::view-transition-group(return-writing-star-3) { animation-delay: 42ms; }
+::view-transition-group(return-writing-star-4) { animation-delay: 56ms; }
+::view-transition-group(return-writing-star-5) { animation-delay: 70ms; }
+::view-transition-group(return-writing-star-6) { animation-delay: 84ms; }
+::view-transition-group(return-writing-star-7) { animation-delay: 98ms; }
+
+::view-transition-image-pair(return-site-avatar),
+::view-transition-image-pair(return-site-name),
+::view-transition-image-pair(return-keke-planet),
+::view-transition-image-pair(return-writing-focus-star),
+::view-transition-image-pair(return-writing-star-0),
+::view-transition-image-pair(return-writing-star-1),
+::view-transition-image-pair(return-writing-star-2),
+::view-transition-image-pair(return-writing-star-3),
+::view-transition-image-pair(return-writing-star-4),
+::view-transition-image-pair(return-writing-star-5),
+::view-transition-image-pair(return-writing-star-6),
+::view-transition-image-pair(return-writing-star-7) {
+  isolation: auto;
+}
+
+::view-transition-old(return-site-avatar),
+::view-transition-new(return-site-avatar),
+::view-transition-old(return-site-name),
+::view-transition-new(return-site-name),
+::view-transition-old(return-keke-planet),
+::view-transition-new(return-keke-planet),
+::view-transition-old(return-writing-focus-star),
+::view-transition-new(return-writing-focus-star),
+::view-transition-old(return-writing-star-0),
+::view-transition-new(return-writing-star-0),
+::view-transition-old(return-writing-star-1),
+::view-transition-new(return-writing-star-1),
+::view-transition-old(return-writing-star-2),
+::view-transition-new(return-writing-star-2),
+::view-transition-old(return-writing-star-3),
+::view-transition-new(return-writing-star-3),
+::view-transition-old(return-writing-star-4),
+::view-transition-new(return-writing-star-4),
+::view-transition-old(return-writing-star-5),
+::view-transition-new(return-writing-star-5),
+::view-transition-old(return-writing-star-6),
+::view-transition-new(return-writing-star-6),
+::view-transition-old(return-writing-star-7),
+::view-transition-new(return-writing-star-7) {
+  mix-blend-mode: normal;
+  object-fit: contain;
+  filter: none;
+}
+
+html:has(body.is-leaving-keke-home)::view-transition-old(root) {
+  animation: return-keke-world-out 520ms cubic-bezier(.36, 0, .2, 1) both;
+}
+
+html:has(body.is-returning-keke-home)::view-transition-new(root) {
+  animation: return-keke-world-in 720ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+html:has(body.is-leaving-writing-home)::view-transition-old(root) {
+  animation: return-writing-world-out 480ms cubic-bezier(.36, 0, .2, 1) both;
+}
+
+html:has(body.is-returning-writing-home)::view-transition-new(root) {
+  animation: return-writing-world-in 620ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+body[data-page="keke"] .keke-lead,
+body[data-page="keke"] .keke-body,
+body[data-page="keke"] .case-actions,
+body[data-page="keke"] .product-viewer,
+body[data-page="keke"] .keke-title-row h1,
+body[data-page="keke"] .keke-title-row::after,
+body[data-page="keke"] .site-footer {
+  transition: opacity 220ms ease, transform 300ms cubic-bezier(.22, 1, .36, 1);
+}
+
+body[data-page="keke"].is-leaving-keke-home .keke-lead,
+body[data-page="keke"].is-leaving-keke-home .keke-body,
+body[data-page="keke"].is-leaving-keke-home .case-actions,
+body[data-page="keke"].is-leaving-keke-home .keke-title-row h1,
+body[data-page="keke"].is-leaving-keke-home .keke-title-row::after,
+body[data-page="keke"].is-leaving-keke-home .site-footer {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+body[data-page="keke"].is-leaving-keke-home .product-viewer {
+  opacity: .18;
+  transform: translateY(10px) scale(.992);
+}
+
+body[data-page="notes"].is-leaving-writing-archive-home .archive-list::before {
+  transform-origin: top center;
+  animation: return-archive-path-fold 260ms cubic-bezier(.4, 0, .2, 1) both;
+}
+
+body[data-page="notes"].is-leaving-writing-archive-home .archive-row-v2::before {
+  transform-origin: left center;
+  animation: return-archive-branch-fold 220ms cubic-bezier(.4, 0, .2, 1) both;
+}
+
+body[data-page="notes"].is-leaving-writing-archive-home .archive-row-meta time,
+body[data-page="notes"].is-leaving-writing-archive-home .archive-row-v2 h2,
+body[data-page="notes"].is-leaving-writing-archive-home .archive-row-v2 p,
+body[data-page="notes"].is-leaving-writing-archive-home .archive-row-arrow,
+body[data-page="notes"].is-leaving-writing-archive-home .site-footer {
+  animation: return-writing-copy-fold 220ms ease both;
+}
+
+body[data-page="note"].is-leaving-writing-note-home .back-link,
+body[data-page="note"].is-leaving-writing-note-home .article-meta-line time,
+body[data-page="note"].is-leaving-writing-note-home .article-meta-line::after,
+body[data-page="note"].is-leaving-writing-note-home .note-article header h1,
+body[data-page="note"].is-leaving-writing-note-home .article-source,
+body[data-page="note"].is-leaving-writing-note-home .article-body,
+body[data-page="note"].is-leaving-writing-note-home .note-navigation,
+body[data-page="note"].is-leaving-writing-note-home .site-footer {
+  animation: return-writing-copy-fold 220ms ease both;
+}
+
+body[data-page="note"].is-leaving-writing-note-home .reading-path {
+  animation: return-reading-path-fold 260ms cubic-bezier(.4, 0, .2, 1) both;
+}
+
+body[data-page="home"].is-returning-keke-home .garden-current {
+  scale: 1 var(--keke-flow-thickness, .38);
+  transform-origin: 50% 50%;
+}
+
+body[data-page="home"].is-returning-keke-home .project-orbit-line,
+body[data-page="home"].is-returning-writing-home .project-orbit-line {
+  animation: return-orbit-line-in 700ms 120ms ease both;
+}
+
+body[data-page="home"].is-returning-keke-home .note-star,
+body[data-page="home"].is-returning-writing-home .note-star:not(.return-shared-star) {
+  animation: return-star-deploy 620ms calc(120ms + var(--return-star-index, 0) * 46ms) cubic-bezier(.22, 1, .36, 1) both;
+}
+
+body[data-page="home"].is-returning-keke-home .note-star:nth-child(1),
+body[data-page="home"].is-returning-writing-home .note-star:nth-child(1) { --return-star-index: 0; }
+body[data-page="home"].is-returning-keke-home .note-star:nth-child(2),
+body[data-page="home"].is-returning-writing-home .note-star:nth-child(2) { --return-star-index: 1; }
+body[data-page="home"].is-returning-keke-home .note-star:nth-child(3),
+body[data-page="home"].is-returning-writing-home .note-star:nth-child(3) { --return-star-index: 2; }
+body[data-page="home"].is-returning-keke-home .note-star:nth-child(4),
+body[data-page="home"].is-returning-writing-home .note-star:nth-child(4) { --return-star-index: 3; }
+body[data-page="home"].is-returning-keke-home .note-star:nth-child(5),
+body[data-page="home"].is-returning-writing-home .note-star:nth-child(5) { --return-star-index: 4; }
+body[data-page="home"].is-returning-keke-home .note-star:nth-child(6),
+body[data-page="home"].is-returning-writing-home .note-star:nth-child(6) { --return-star-index: 5; }
+body[data-page="home"].is-returning-keke-home .note-star:nth-child(7),
+body[data-page="home"].is-returning-writing-home .note-star:nth-child(7) { --return-star-index: 6; }
+body[data-page="home"].is-returning-keke-home .note-star:nth-child(8),
+body[data-page="home"].is-returning-writing-home .note-star:nth-child(8) { --return-star-index: 7; }
+
+body[data-page="home"].is-returning-keke-home .star-thread,
+body[data-page="home"].is-returning-writing-home .star-thread {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: return-thread-grow 600ms calc(90ms + var(--return-thread-index, 0) * 44ms) cubic-bezier(.22, 1, .36, 1) both;
+}
+
+body[data-page="home"].is-returning-keke-home .star-thread:nth-child(1),
+body[data-page="home"].is-returning-writing-home .star-thread:nth-child(1) { --return-thread-index: 0; }
+body[data-page="home"].is-returning-keke-home .star-thread:nth-child(2),
+body[data-page="home"].is-returning-writing-home .star-thread:nth-child(2) { --return-thread-index: 1; }
+body[data-page="home"].is-returning-keke-home .star-thread:nth-child(3),
+body[data-page="home"].is-returning-writing-home .star-thread:nth-child(3) { --return-thread-index: 2; }
+body[data-page="home"].is-returning-keke-home .star-thread:nth-child(4),
+body[data-page="home"].is-returning-writing-home .star-thread:nth-child(4) { --return-thread-index: 3; }
+body[data-page="home"].is-returning-keke-home .star-thread:nth-child(5),
+body[data-page="home"].is-returning-writing-home .star-thread:nth-child(5) { --return-thread-index: 4; }
+body[data-page="home"].is-returning-keke-home .star-thread:nth-child(6),
+body[data-page="home"].is-returning-writing-home .star-thread:nth-child(6) { --return-thread-index: 5; }
+body[data-page="home"].is-returning-keke-home .star-thread:nth-child(7),
+body[data-page="home"].is-returning-writing-home .star-thread:nth-child(7) { --return-thread-index: 6; }
+body[data-page="home"].is-returning-keke-home .star-thread:nth-child(8),
+body[data-page="home"].is-returning-writing-home .star-thread:nth-child(8) { --return-thread-index: 7; }
+
+body[data-page="home"].is-returning-writing-home .garden-current {
+  scale: 1 var(--writing-flow-spread, 1.16);
+  filter: blur(var(--writing-flow-blur, 22.5px)) saturate(.9) brightness(1.02);
+}
+
+body[data-page="home"].is-returning-writing-home .orbit-icon-shell {
+  animation: return-writing-planet-in 760ms 80ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+body[data-page="home"].is-returning-keke-home .cosmos-center time,
+body[data-page="home"].is-returning-keke-home .decorative-stars,
+body[data-page="home"].is-returning-keke-home .all-writing-link,
+body[data-page="home"].is-returning-writing-home .cosmos-center time,
+body[data-page="home"].is-returning-writing-home .decorative-stars,
+body[data-page="home"].is-returning-writing-home .all-writing-link {
+  animation: return-quiet-elements-in 620ms 300ms ease both;
+}
+
+@keyframes return-keke-world-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: .24; transform: scale(.992); }
+}
+
+@keyframes return-keke-world-in {
+  from { opacity: .4; transform: scale(1.008); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes return-writing-world-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: .28; transform: scale(.996); }
+}
+
+@keyframes return-writing-world-in {
+  from { opacity: .46; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes return-archive-path-fold {
+  from { opacity: .9; transform: scaleY(1) skewY(-1.6deg); }
+  to { opacity: 0; transform: scaleY(.04) skewY(-1.6deg); }
+}
+
+@keyframes return-archive-branch-fold {
+  from { opacity: 1; transform: rotate(var(--archive-branch-angle, -2deg)) scaleX(1); }
+  to { opacity: 0; transform: rotate(var(--archive-branch-angle, -2deg)) scaleX(.04); }
+}
+
+@keyframes return-writing-copy-fold {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+@keyframes return-reading-path-fold {
+  from { opacity: 1; clip-path: inset(0); }
+  to { opacity: 0; clip-path: inset(0 0 100% 0); }
+}
+
+@keyframes return-star-deploy {
+  from { opacity: 0; translate: 0 -46px; scale: .72; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+@keyframes return-thread-grow {
+  from { opacity: 0; transform: scaleY(.02); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+
+@keyframes return-orbit-line-in {
+  from { opacity: 0; filter: blur(2px); }
+  to { opacity: var(--orbit-return-opacity, .52); filter: blur(0); }
+}
+
+@keyframes return-writing-planet-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--return-planet-drift-x, 68px), var(--return-planet-drift-y, -22px)) scale(.36);
+    filter: blur(5px) saturate(.58);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    filter: blur(0) saturate(1);
+  }
+}
+
+@keyframes return-quiet-elements-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(return-site-avatar),
+  ::view-transition-group(return-site-name),
+  ::view-transition-group(return-keke-planet),
+  ::view-transition-group(return-writing-focus-star),
+  ::view-transition-group(return-writing-star-0),
+  ::view-transition-group(return-writing-star-1),
+  ::view-transition-group(return-writing-star-2),
+  ::view-transition-group(return-writing-star-3),
+  ::view-transition-group(return-writing-star-4),
+  ::view-transition-group(return-writing-star-5),
+  ::view-transition-group(return-writing-star-6),
+  ::view-transition-group(return-writing-star-7),
+  html:has(body.is-leaving-keke-home)::view-transition-old(root),
+  html:has(body.is-returning-keke-home)::view-transition-new(root),
+  html:has(body.is-leaving-writing-home)::view-transition-old(root),
+  html:has(body.is-returning-writing-home)::view-transition-new(root) {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+
+  body.is-leaving-keke-home *,
+  body.is-leaving-writing-home *,
+  body.is-returning-keke-home *,
+  body.is-returning-writing-home * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
