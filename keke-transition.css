@@ -1,4 +1,4 @@
-/* Home -> Keke: enter the orbiting project as a shared planet. */
+/* Home -> Keke: gather the garden, then enter the orbiting project. */
 @view-transition {
   navigation: auto;
 }
@@ -33,52 +33,93 @@
   animation: keke-world-in 760ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
+body[data-page="home"] .garden-current,
+body[data-page="home"] .garden-trace,
+body[data-page="home"] .cosmos-hero::before,
+body[data-page="home"] .project-orbit-line,
+body[data-page="home"] .cosmos-center,
+body[data-page="home"] .decorative-stars,
+body[data-page="home"] .all-writing-link {
+  transition-duration: 880ms;
+  transition-timing-function: cubic-bezier(.33, 0, .18, 1);
+}
+
+body[data-page="home"].is-preparing-keke .orbit-project,
 body[data-page="home"].is-entering-keke .orbit-project {
   z-index: 60 !important;
   pointer-events: none;
 }
 
+body[data-page="home"].is-preparing-keke .orbit-tooltip,
 body[data-page="home"].is-entering-keke .orbit-tooltip {
   opacity: 0 !important;
 }
 
+body[data-page="home"].is-preparing-keke .orbit-icon-shell,
 body[data-page="home"].is-entering-keke .orbit-icon-shell {
   box-shadow: none !important;
 }
 
+body[data-page="home"].is-preparing-keke .orbit-project img,
 body[data-page="home"].is-entering-keke .orbit-project img {
   opacity: 1 !important;
 }
 
+/* Playback rate is ramped in JS; these rules only make the growing energy legible. */
+body[data-page="home"].is-preparing-keke .garden-current,
 body[data-page="home"].is-entering-keke .garden-current {
-  animation-duration: 1.9s !important;
-  opacity: 0.9 !important;
-  filter: blur(7px) saturate(1.18);
+  filter: blur(7px) saturate(1.2) brightness(1.08);
 }
 
+body[data-page="home"].is-preparing-keke .garden-trace,
 body[data-page="home"].is-entering-keke .garden-trace {
-  animation-duration: 1.35s, 2.8s !important;
-  opacity: 0.98 !important;
-  stroke-width: 1.65;
+  filter: drop-shadow(0 0 9px color-mix(in srgb, var(--garden-trace-cool) 68%, transparent)) brightness(1.18);
 }
 
+body[data-page="home"].is-preparing-keke .garden-trace:nth-child(2n),
+body[data-page="home"].is-entering-keke .garden-trace:nth-child(2n) {
+  filter: drop-shadow(0 0 9px color-mix(in srgb, var(--garden-trace-warm) 68%, transparent)) brightness(1.18);
+}
+
+body[data-page="home"].is-preparing-keke .cosmos-hero::before,
 body[data-page="home"].is-entering-keke .cosmos-hero::before {
-  animation-duration: 2.2s !important;
   opacity: 1;
+  filter: saturate(1.16) contrast(1.04);
 }
 
+body[data-page="home"].is-preparing-keke .project-orbit-line,
 body[data-page="home"].is-entering-keke .project-orbit-line {
   opacity: 0.78;
   filter: drop-shadow(0 0 8px var(--garden-flow-warm));
-  transition: opacity 220ms ease, filter 220ms ease;
 }
 
+body[data-page="home"].is-preparing-keke .cosmos-center,
+body[data-page="home"].is-preparing-keke .decorative-stars,
+body[data-page="home"].is-preparing-keke .all-writing-link,
 body[data-page="home"].is-entering-keke .cosmos-center,
-body[data-page="home"].is-entering-keke .note-stars,
 body[data-page="home"].is-entering-keke .decorative-stars,
 body[data-page="home"].is-entering-keke .all-writing-link {
-  opacity: 0.42;
-  transition: opacity 300ms ease;
+  opacity: 0.38;
+}
+
+/* The hanging writing stars are pulled back to their top anchors one by one. */
+body[data-page="home"].is-preparing-keke .note-star,
+body[data-page="home"].is-entering-keke .note-star {
+  pointer-events: none;
+  animation: keke-star-retract 580ms cubic-bezier(.55, 0, .55, .18) var(--keke-retract-delay, 120ms) both !important;
+}
+
+body[data-page="home"].is-preparing-keke .note-star-label,
+body[data-page="home"].is-entering-keke .note-star-label {
+  opacity: 0 !important;
+  transition-duration: 120ms;
+}
+
+body[data-page="home"].is-preparing-keke .star-thread,
+body[data-page="home"].is-entering-keke .star-thread {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: keke-thread-retract 580ms cubic-bezier(.55, 0, .55, .18) var(--keke-retract-delay, 120ms) both !important;
 }
 
 .keke-title-row {
@@ -110,6 +151,33 @@ body[data-page="home"].is-entering-keke .all-writing-link {
 body[data-page="keke"].is-arriving-keke .keke-summary > :not(.keke-title-row),
 body[data-page="keke"].is-arriving-keke .product-viewer {
   animation: keke-content-arrive 700ms 180ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+@keyframes keke-star-retract {
+  0% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--keke-retract-x), var(--keke-retract-y)) scale(.72);
+  }
+}
+
+@keyframes keke-thread-retract {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  78% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(.08, .015);
+  }
 }
 
 @keyframes keke-world-out {
@@ -146,9 +214,10 @@ body[data-page="keke"].is-arriving-keke .product-viewer {
     animation-duration: 1ms;
   }
 
-  body[data-page="home"].is-entering-keke .garden-current,
-  body[data-page="home"].is-entering-keke .garden-trace,
-  body[data-page="home"].is-entering-keke .cosmos-hero::before,
+  body[data-page="home"].is-preparing-keke .note-star,
+  body[data-page="home"].is-preparing-keke .star-thread,
+  body[data-page="home"].is-entering-keke .note-star,
+  body[data-page="home"].is-entering-keke .star-thread,
   body[data-page="keke"].is-arriving-keke .keke-summary > :not(.keke-title-row),
   body[data-page="keke"].is-arriving-keke .product-viewer {
     animation: none !important;
