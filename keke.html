@@ -10,7 +10,7 @@
     <link rel="preload" as="image" href="./assets/keke-icon-source.png" type="image/png" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./inner-space.css?v=1-star-map" />
-    <link rel="stylesheet" href="./keke-case.css?v=1-case-study" />
+    <link rel="stylesheet" href="./keke-case.css?v=2-compact-showcase" />
     <script src="./script.js?v=3-note-kinds" defer></script>
     <script src="./keke-case.js?v=1-preview-switcher" defer></script>
   </head>
@@ -29,9 +29,7 @@
         </nav>
         <div class="nav-actions">
           <a class="icon-button" href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer" aria-label="打开课刻仓库">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2.7a9.5 9.5 0 0 0-3 18.52c.48.1.65-.2.65-.46v-1.83c-2.65.58-3.2-1.12-3.2-1.12-.43-1.1-1.06-1.4-1.06-1.4-.87-.6.07-.59.07-.59.96.07 1.46.99 1.46.99.85 1.46 2.24 1.04 2.79.8.08-.62.33-1.04.6-1.28-2.12-.24-4.35-1.06-4.35-4.7 0-1.04.37-1.89.98-2.56-.1-.24-.43-1.21.09-2.52 0 0 .8-.26 2.61.98A9.1 9.1 0 0 1 12 7.22a9 9 0 0 1 2.38.32c1.81-1.23 2.61-.98 2.61-.98.52 1.31.19 2.28.09 2.52.61.67.98 1.52.98 2.56 0 3.65-2.24 4.46-4.37 4.7.34.3.65.88.65 1.78v2.64c0 .26.17.57.66.46A9.5 9.5 0 0 0 12 2.7Z" />
-            </svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.7a9.5 9.5 0 0 0-3 18.52c.48.1.65-.2.65-.46v-1.83c-2.65.58-3.2-1.12-3.2-1.12-.43-1.1-1.06-1.4-1.06-1.4-.87-.6.07-.59.07-.59.96.07 1.46.99 1.46.99.85 1.46 2.24 1.04 2.79.8.08-.62.33-1.04.6-1.28-2.12-.24-4.35-1.06-4.35-4.7 0-1.04.37-1.89.98-2.56-.1-.24-.43-1.21.09-2.52 0 0 .8-.26 2.61.98A9.1 9.1 0 0 1 12 7.22a9 9 0 0 1 2.38.32c1.81-1.23 2.61-.98 2.61-.98.52 1.31.19 2.28.09 2.52.61.67.98 1.52.98 2.56 0 3.65-2.24 4.46-4.37 4.7.34.3.65.88.65 1.78v2.64c0 .26.17.57.66.46A9.5 9.5 0 0 0 12 2.7Z" /></svg>
           </a>
           <button class="icon-button theme-toggle" type="button" aria-label="切换到深色模式">
             <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.3 15.5A8 8 0 0 1 8.5 4.7 8.6 8.6 0 1 0 19.3 15.5Z" /></svg>
@@ -42,20 +40,19 @@
     </header>
 
     <main id="main" class="project-page">
-      <section class="case-hero case-shell reveal">
-        <div class="case-hero-copy">
-          <p class="case-kicker">课刻 · Windows 桌面课表</p>
-          <h1>让一天在桌面上缓慢流动。</h1>
-          <p class="case-lead">
-            从学校导出的 Excel 建立课表，在桌面展示当天课程，并在独立设置窗口中管理课表、课程和作息时间。
-          </p>
+      <section class="keke-showcase case-shell reveal">
+        <div class="keke-summary">
+          <p class="keke-kicker">课刻 · Windows 桌面课表</p>
+          <h1>课刻</h1>
+          <p class="keke-lead">让一天在桌面上缓慢流动。</p>
+          <p class="keke-body">从学校导出的 Excel 建立课表，在桌面展示当天课程，并在独立设置窗口中管理课表、课程和作息时间。</p>
 
-          <div class="case-facts" aria-label="项目概况">
-            <div class="case-fact"><span>当前版本</span><strong>v0.4.0</strong></div>
-            <div class="case-fact"><span>运行平台</span><strong>Windows</strong></div>
-            <div class="case-fact"><span>数据方式</span><strong>本地保存</strong></div>
-            <div class="case-fact"><span>开源许可</span><strong>MIT</strong></div>
-          </div>
+          <dl class="keke-meta" aria-label="项目概况">
+            <div><dt>版本</dt><dd>v0.4.0</dd></div>
+            <div><dt>平台</dt><dd>Windows</dd></div>
+            <div><dt>数据</dt><dd>本地保存</dd></div>
+            <div><dt>许可</dt><dd>MIT</dd></div>
+          </dl>
 
           <div class="case-actions" aria-label="项目入口">
             <a class="case-action is-primary" href="https://github.com/Tyr1onX/desktop-course-widget/releases/tag/v0.4.0" target="_blank" rel="noreferrer">下载 v0.4.0 <span aria-hidden="true">↗</span></a>
@@ -63,79 +60,62 @@
           </div>
         </div>
 
-        <div class="case-hero-product" aria-label="课刻桌面组件预览">
-          <article class="keke-widget-demo" aria-label="9月21日课表">
-            <header class="keke-widget-head">
-              <div>
-                <div class="keke-widget-title-row"><strong>9月21日课表</strong><span class="keke-today-badge">今日</span></div>
-                <p class="keke-widget-date">星期一 · 第1教学周</p>
-              </div>
-              <time class="keke-widget-time">08:48</time>
-            </header>
-            <section class="keke-widget-focus">
-              <p class="focus-label">正在上课</p>
-              <h2>计算机网络</h2>
-              <p>08:00–09:40</p>
-              <p>教学楼 A101</p>
-              <p class="keke-countdown">距下课 52 分钟</p>
-            </section>
-            <section class="keke-following">
-              <p>后续课程</p>
-              <ol>
-                <li><time>10:00</time><span><strong>概率论</strong><small>教学楼 A101</small></span></li>
-                <li><time>13:30</time><span><strong>程序设计基础</strong><small>教学楼 B203</small></span></li>
-                <li><time>15:30</time><span><strong>软件工程</strong><small>教学楼 A101</small></span></li>
-              </ol>
-            </section>
-          </article>
-          <p class="case-hero-note">v0.4.0 当前界面预览</p>
-        </div>
-      </section>
-
-      <section class="case-section case-shell reveal" aria-labelledby="current-view-title">
-        <div class="case-section-head">
-          <div>
-            <p class="case-section-kicker">当前界面</p>
-            <h2 id="current-view-title">课表管理与导入。</h2>
-          </div>
-          <p>预览基于当前版本代码构成，后续随项目界面同步更新。</p>
-        </div>
-
         <div class="product-viewer" data-product-viewer>
           <div class="product-viewer-toolbar">
             <div class="product-viewer-tabs" role="tablist" aria-label="课刻界面预览">
-              <button class="product-viewer-tab" id="tab-week" type="button" role="tab" aria-selected="true" aria-controls="panel-week">七日课表</button>
+              <button class="product-viewer-tab" id="tab-overview" type="button" role="tab" aria-selected="true" aria-controls="panel-overview">概览</button>
+              <button class="product-viewer-tab" id="tab-week" type="button" role="tab" aria-selected="false" aria-controls="panel-week" tabindex="-1">七日课表</button>
               <button class="product-viewer-tab" id="tab-import" type="button" role="tab" aria-selected="false" aria-controls="panel-import" tabindex="-1">Excel 检查</button>
             </div>
             <span class="product-viewer-caption">v0.4.0</span>
           </div>
 
           <div class="product-viewer-stage">
-            <section class="product-viewer-panel" id="panel-week" role="tabpanel" aria-labelledby="tab-week">
+            <section class="product-viewer-panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
+              <div class="overview-stage" aria-label="课刻项目概览">
+                <div class="overview-mark">
+                  <img src="./assets/keke-icon-source.png" alt="课刻图标" />
+                  <div>
+                    <p class="overview-name">课刻</p>
+                    <p class="overview-phrase">让一天在桌面上缓慢流动。</p>
+                  </div>
+                </div>
+                <article class="keke-widget-demo" aria-label="课刻桌面组件预览">
+                  <header class="keke-widget-head">
+                    <div><div class="keke-widget-title-row"><strong>9月21日课表</strong><span class="keke-today-badge">今日</span></div><p class="keke-widget-date">星期一 · 第1教学周</p></div>
+                    <time class="keke-widget-time">08:48</time>
+                  </header>
+                  <section class="keke-widget-focus">
+                    <p class="focus-label">正在上课</p><h2>计算机网络</h2><p>08:00–09:40</p><p>教学楼 A101</p><p class="keke-countdown">距下课 52 分钟</p>
+                  </section>
+                  <section class="keke-following">
+                    <p>后续课程</p>
+                    <ol>
+                      <li><time>10:00</time><span><strong>概率论</strong><small>教学楼 A101</small></span></li>
+                      <li><time>13:30</time><span><strong>程序设计基础</strong><small>教学楼 B203</small></span></li>
+                      <li><time>15:30</time><span><strong>软件工程</strong><small>教学楼 A101</small></span></li>
+                    </ol>
+                  </section>
+                </article>
+              </div>
+            </section>
+
+            <section class="product-viewer-panel" id="panel-week" role="tabpanel" aria-labelledby="tab-week" hidden>
               <div class="settings-window" aria-label="课刻七日课表预览">
                 <aside class="settings-sidebar">
                   <div class="settings-brand"><img src="./assets/keke-icon-source.png" alt="" /><span>课刻</span></div>
                   <div class="settings-schedule-picker">示例课表　⌄</div>
-                  <div class="settings-menu">
-                    <span class="is-active">周课表</span>
-                    <span>课表与数据</span>
-                    <span>作息时间</span>
-                    <span>帮助与关于</span>
-                  </div>
+                  <div class="settings-menu"><span class="is-active">周课表</span><span>课表与数据</span><span>作息时间</span><span>帮助与关于</span></div>
                 </aside>
                 <div class="settings-content">
-                  <header class="settings-heading">
-                    <div><h3>第 1 教学周</h3><p>9月21日 – 9月27日</p></div>
-                    <span class="settings-week-switch">‹　本周　›</span>
-                  </header>
+                  <header class="settings-heading"><div><h3>第 1 教学周</h3><p>9月21日 – 9月27日</p></div><span class="settings-week-switch">‹　本周　›</span></header>
                   <div class="week-grid">
                     <div class="week-column"><strong>周一</strong><div class="week-course" style="--course-color:#dfe8fb"><strong>计算机网络</strong><small>08:00 · A101</small></div><div class="week-course" style="--course-color:#e6ddf5"><strong>概率论</strong><small>10:00 · A101</small></div><div class="week-course" style="--course-color:#f5dfc3"><strong>程序设计基础</strong><small>13:30 · B203</small></div></div>
                     <div class="week-column"><strong>周二</strong><div class="week-course" style="--course-color:#dcebd8"><strong>通信原理</strong><small>08:00 · C302</small></div><div class="week-course" style="--course-color:#f1deda"><strong>大学英语</strong><small>15:30 · A204</small></div></div>
                     <div class="week-column"><strong>周三</strong><div class="week-course" style="--course-color:#dce8ee"><strong>数字信号处理</strong><small>10:00 · 实验楼</small></div></div>
                     <div class="week-column"><strong>周四</strong><div class="week-course" style="--course-color:#f2e7bd"><strong>单片机原理</strong><small>08:00 · B405</small></div><div class="week-course" style="--course-color:#e1e5f4"><strong>信息论</strong><small>13:30 · A301</small></div></div>
                     <div class="week-column"><strong>周五</strong><div class="week-course" style="--course-color:#ead9e7"><strong>高频电子技术</strong><small>10:00 · C210</small></div></div>
-                    <div class="week-column"><strong>周六</strong></div>
-                    <div class="week-column"><strong>周日</strong></div>
+                    <div class="week-column"><strong>周六</strong></div><div class="week-column"><strong>周日</strong></div>
                   </div>
                 </div>
               </div>
@@ -146,11 +126,7 @@
                 <h3>从 Excel 创建独立课表</h3>
                 <p>先逐项检查识别结果，再创建新课表；已有课表不会被覆盖。</p>
                 <div class="import-picker-demo"><strong>2026秋季课表.xlsx</strong><span>文件只在本机解析，不会上传</span></div>
-                <div class="import-summary-demo">
-                  <div><span>课程安排</span><strong>18 项</strong></div>
-                  <div><span>最高教学周</span><strong>18 周</strong></div>
-                  <div><span>待确认</span><strong>0 项</strong></div>
-                </div>
+                <div class="import-summary-demo"><div><span>课程安排</span><strong>18 项</strong></div><div><span>最高教学周</span><strong>18 周</strong></div><div><span>待确认</span><strong>0 项</strong></div></div>
                 <div class="import-course-demo">
                   <article><div><strong>计算机网络</strong><small>周一 · 第 1–2 节 · 1–18 周</small></div><span class="import-state">信息完整</span></article>
                   <article><div><strong>概率论</strong><small>周一 · 第 3–4 节 · 1–16 周</small></div><span class="import-state">信息完整</span></article>
@@ -160,17 +136,6 @@
               </div>
             </section>
           </div>
-        </div>
-      </section>
-
-      <section class="case-ending case-shell reveal">
-        <div>
-          <h2>当前版本已经可以使用。</h2>
-          <p>项目仍在迭代，页面会随真实代码继续更新。</p>
-        </div>
-        <div class="case-ending-actions">
-          <a class="case-action is-primary" href="https://github.com/Tyr1onX/desktop-course-widget/releases/tag/v0.4.0" target="_blank" rel="noreferrer">下载 v0.4.0 <span aria-hidden="true">↗</span></a>
-          <a class="case-action" href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer">查看源代码 <span aria-hidden="true">↗</span></a>
         </div>
       </section>
     </main>
