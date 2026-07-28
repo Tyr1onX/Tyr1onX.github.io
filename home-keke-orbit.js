@@ -8,9 +8,8 @@
     || !(orbitLine instanceof HTMLElement)
     || !(orbitProject instanceof HTMLElement)) return;
 
-  const mobileQuery = matchMedia("(max-width: 560px)");
   const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
-  const duration = 60000;
+  const duration = 56000;
   const initialPhase = 0.38;
 
   let frame = 0;
@@ -18,6 +17,7 @@
   let startedAt = performance.now() - duration * initialPhase;
   let pausedAt = 0;
   let geometry = null;
+  let interactionPaused = false;
 
   const snap = (value) => {
     const ratio = Math.max(1, window.devicePixelRatio || 1);
@@ -33,19 +33,15 @@
   }
 
   function useCssFallback() {
+    clearTimeout(retryTimer);
     cancelAnimationFrame(frame);
     frame = 0;
     geometry = null;
-    orbitProject.classList.remove("is-mobile-snap-orbit");
+    orbitProject.classList.remove("is-pixel-orbit");
     clearInlinePosition();
   }
 
   function measure() {
-    if (!mobileQuery.matches) {
-      geometry = null;
-      return false;
-    }
-
     const width = field.clientWidth;
     const height = field.clientHeight;
     const orbitWidth = orbitLine.offsetWidth;
@@ -89,25 +85,22 @@
   }
 
   function animate(now) {
-    if (!mobileQuery.matches || reducedQuery.matches || document.hidden) {
+    if (reducedQuery.matches || document.hidden || interactionPaused) {
       frame = 0;
       return;
     }
 
     if (!placeAtPhase(currentPhase(now))) {
       useCssFallback();
+      retryTimer = setTimeout(start, 120);
       return;
     }
+
     frame = requestAnimationFrame(animate);
   }
 
   function start() {
     clearTimeout(retryTimer);
-
-    if (!mobileQuery.matches) {
-      stop();
-      return;
-    }
 
     if (!measure()) {
       useCssFallback();
@@ -115,34 +108,30 @@
       return;
     }
 
-    orbitProject.classList.add("is-mobile-snap-orbit");
+    orbitProject.classList.add("is-pixel-orbit");
     placeAtPhase(currentPhase());
 
-    if (!reducedQuery.matches && !document.hidden && !frame) {
+    if (!reducedQuery.matches && !document.hidden && !interactionPaused && !frame) {
       frame = requestAnimationFrame(animate);
     }
   }
 
-  function stop() {
-    clearTimeout(retryTimer);
+  function pauseTimeline() {
+    if (!pausedAt) pausedAt = performance.now();
     cancelAnimationFrame(frame);
     frame = 0;
-    geometry = null;
-    orbitProject.classList.remove("is-mobile-snap-orbit");
-    clearInlinePosition();
   }
 
-  function handleVisibility() {
-    if (document.hidden) {
-      pausedAt = performance.now();
-      cancelAnimationFrame(frame);
-      frame = 0;
-      return;
-    }
-
+  function resumeTimeline() {
+    if (document.hidden || interactionPaused) return;
     if (pausedAt) startedAt += performance.now() - pausedAt;
     pausedAt = 0;
     start();
+  }
+
+  function handleVisibility() {
+    if (document.hidden) pauseTimeline();
+    else resumeTimeline();
   }
 
   function handleResize() {
@@ -150,15 +139,33 @@
     start();
   }
 
-  mobileQuery.addEventListener?.("change", handleResize);
+  orbitProject.addEventListener("pointerenter", () => {
+    if (matchMedia("(hover: hover)").matches) {
+      interactionPaused = true;
+      pauseTimeline();
+    }
+  });
+
+  orbitProject.addEventListener("pointerleave", () => {
+    interactionPaused = false;
+    resumeTimeline();
+  });
+
+  orbitProject.addEventListener("focusin", () => {
+    interactionPaused = true;
+    pauseTimeline();
+  });
+
+  orbitProject.addEventListener("focusout", () => {
+    interactionPaused = false;
+    resumeTimeline();
+  });
+
   reducedQuery.addEventListener?.("change", handleResize);
   document.addEventListener("visibilitychange", handleVisibility);
   addEventListener("resize", handleResize, { passive: true });
   addEventListener("pageshow", start);
-  addEventListener("pagehide", () => {
-    cancelAnimationFrame(frame);
-    frame = 0;
-  });
+  addEventListener("pagehide", pauseTimeline);
 
   if (orbitImage instanceof HTMLImageElement && !orbitImage.complete) {
     orbitImage.addEventListener("load", start, { once: true });
