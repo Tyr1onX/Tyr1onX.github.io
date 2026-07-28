@@ -73,6 +73,33 @@ body[data-page="note"].is-arriving-writing-note .site-footer {
   animation-delay: 1120ms !important;
 }
 
+/* Runtime performance: keep the atmosphere, but avoid full-screen filter repaint on every frame. */
+body[data-page="home"] .garden-current {
+  filter: blur(7px);
+  will-change: transform;
+}
+
+body[data-page="home"] .garden-current::before,
+body[data-page="home"] .garden-current::after {
+  filter: none;
+}
+
+body[data-page="home"] .garden-trace {
+  filter: none;
+  animation-name: garden-trace-flow;
+}
+
+body[data-page="home"] .garden-trace:nth-child(2n) {
+  filter: none;
+}
+
+@media (max-width: 780px) {
+  body[data-page="home"] .garden-current-c,
+  body[data-page="home"] .garden-trace:nth-child(n + 4) {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .writing-retract-source,
   .writing-retract-thread,
