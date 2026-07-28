@@ -10,13 +10,20 @@
     <script>
       (() => {
         try {
-          const queryMode = new URL(location.href).searchParams.get("__return");
+          const url = new URL(location.href);
+          const queryMode = url.searchParams.get("__return");
           const raw = sessionStorage.getItem("tyr1onx:return-home-transition");
           const storedMode = raw ? JSON.parse(raw)?.mode : "";
           const mode = queryMode === "keke" ? "keke-return"
             : queryMode === "writing" ? "writing-archive-return"
               : storedMode;
           if (mode) document.documentElement.dataset.returnHomePending = mode;
+
+          if (url.searchParams.has("__return") || url.searchParams.has("__t")) {
+            url.searchParams.delete("__return");
+            url.searchParams.delete("__t");
+            history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`);
+          }
         } catch {}
       })();
     </script>
@@ -37,10 +44,9 @@
     <script src="./home-cosmos.js" defer></script>
     <script src="./home-keke-orbit.js?v=4-frame-cost" defer></script>
     <script src="./home-garden.js?v=4-shared-notes" defer></script>
-    <script src="./keke-transition.js?v=4-return-guard" defer></script>
+    <script src="./keke-transition.js?v=5-idle-prefetch" defer></script>
     <script src="./writing-transition.js?v=4-sequenced-source" defer></script>
     <script src="./return-home-transition.js?v=4-arrival-only" defer></script>
-    <script src="./return-route-fix.js?v=2-sequenced-return" defer></script>
   </head>
   <body data-page="home">
     <a class="skip-link" href="#main">跳到主要内容</a>
