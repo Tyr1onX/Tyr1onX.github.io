@@ -82,14 +82,20 @@
     }
   };
 
+  const setNamedElement = (element, className, transitionName) => {
+    if (!(element instanceof HTMLElement)) return;
+    element.classList.add(className);
+    element.style.setProperty("view-transition-name", transitionName);
+  };
+
   const setIdentitySource = () => {
-    document.querySelector(".site-header .brand-avatar")?.classList.add("return-site-avatar-source");
-    document.querySelector(".site-header .brand > span")?.classList.add("return-site-name-source");
+    setNamedElement(document.querySelector(".site-header .brand-avatar"), "return-site-avatar-source", "return-site-avatar");
+    setNamedElement(document.querySelector(".site-header .brand > span"), "return-site-name-source", "return-site-name");
   };
 
   const setIdentityTarget = () => {
-    document.querySelector(".cosmos-center img")?.classList.add("return-site-avatar-target");
-    document.querySelector(".cosmos-center h1")?.classList.add("return-site-name-target");
+    setNamedElement(document.querySelector(".cosmos-center img"), "return-site-avatar-target", "return-site-avatar");
+    setNamedElement(document.querySelector(".cosmos-center h1"), "return-site-name-target", "return-site-name");
   };
 
   const collectHomeAnimations = () => {
@@ -204,6 +210,7 @@
     );
     document.querySelectorAll(".return-site-avatar-source, .return-site-name-source, .return-keke-planet-source").forEach((element) => {
       element.classList.remove("return-site-avatar-source", "return-site-name-source", "return-keke-planet-source");
+      element.style.removeProperty("view-transition-name");
     });
     document.querySelectorAll(".return-writing-source").forEach((element) => {
       element.classList.remove("return-writing-source");
@@ -226,7 +233,7 @@
     navigating = true;
     prefetchHome();
     setIdentitySource();
-    document.querySelector(".keke-transition-target")?.classList.add("return-keke-planet-source");
+    setNamedElement(document.querySelector(".keke-transition-target"), "return-keke-planet-source", "return-keke-planet");
     writePayload({ mode: "keke-return" });
     body.classList.add("is-leaving-keke-home");
     navigateHome(link);
@@ -287,7 +294,7 @@
     addEventListener("pageshow", clearSourceState);
   };
 
-  const stabilizeHomeStars = (duration = 760) => {
+  const stabilizeHomeStars = (duration = 1450) => {
     const field = document.querySelector("#cosmos-field");
     const stars = [...document.querySelectorAll("#note-stars .note-star")];
     const threads = [...document.querySelectorAll("#star-threads .star-thread")];
@@ -371,6 +378,7 @@
     );
     document.querySelectorAll(".return-site-avatar-target, .return-site-name-target, .return-keke-planet-target").forEach((element) => {
       element.classList.remove("return-site-avatar-target", "return-site-name-target", "return-keke-planet-target");
+      element.style.removeProperty("view-transition-name");
     });
     document.querySelectorAll(".return-writing-target").forEach((element) => {
       element.classList.remove("return-writing-target");
@@ -388,7 +396,7 @@
 
     setIdentityTarget();
     if (payload.mode === "keke-return") {
-      document.querySelector(".orbit-project img")?.classList.add("return-keke-planet-target");
+      setNamedElement(document.querySelector(".orbit-project img"), "return-keke-planet-target", "return-keke-planet");
       body.classList.add("is-returning-keke-home");
       requestAnimationFrame(settleKekeWind);
     } else if (payload.mode === "writing-archive-return" || payload.mode === "writing-note-return") {
