@@ -19,14 +19,10 @@
   let geometry = null;
   let interactionPaused = false;
 
-  const snap = (value) => {
-    const ratio = Math.max(1, window.devicePixelRatio || 1);
-    return Math.round(value * ratio) / ratio;
-  };
-
   function clearInlinePosition() {
     orbitProject.style.removeProperty("left");
     orbitProject.style.removeProperty("top");
+    orbitProject.style.removeProperty("transform");
     orbitProject.style.removeProperty("z-index");
     orbitProject.style.removeProperty("visibility");
     orbitProject.style.removeProperty("opacity");
@@ -76,8 +72,11 @@
     const x = geometry.centerX + Math.cos(angle) * geometry.radiusX - geometry.iconSize / 2;
     const y = geometry.centerY + Math.sin(angle) * geometry.radiusY - geometry.iconSize / 2;
 
-    orbitProject.style.left = `${snap(x)}px`;
-    orbitProject.style.top = `${snap(y)}px`;
+    // Keep the artwork untouched and move only its carrier. Fractional compositor
+    // coordinates avoid the stop-and-jump cadence caused by physical-pixel snapping.
+    orbitProject.style.left = "0px";
+    orbitProject.style.top = "0px";
+    orbitProject.style.transform = `translate3d(${x.toFixed(3)}px, ${y.toFixed(3)}px, 0)`;
     orbitProject.style.zIndex = Math.sin(angle) >= 0 ? "5" : "2";
     orbitProject.style.visibility = "visible";
     orbitProject.style.opacity = "1";

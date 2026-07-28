@@ -64,7 +64,7 @@ html[data-theme="light"] .orbit-project:focus-visible .orbit-icon-shell {
   offset-rotate: 0deg;
   transform: none;
   animation: none !important;
-  will-change: left, top;
+  will-change: transform;
 }
 
 @media (max-width: 560px) {
