@@ -18,6 +18,7 @@
   z-index: 998;
   animation-duration: 720ms;
   animation-timing-function: cubic-bezier(.2, .74, .18, 1);
+  animation-fill-mode: both;
 }
 
 ::view-transition-group(writing-focus-star),
@@ -32,6 +33,7 @@
   z-index: 999;
   animation-duration: 760ms;
   animation-timing-function: cubic-bezier(.2, .78, .18, 1);
+  animation-fill-mode: both;
 }
 
 ::view-transition-group(writing-star-1) { animation-delay: 24ms; }
@@ -214,7 +216,9 @@ body[data-page="notes"].is-arriving-writing-archive .archive-row-v2::before {
   animation: writing-archive-branch-grow 420ms calc(260ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.22, 1, .36, 1) both;
 }
 
-body[data-page="notes"].is-arriving-writing-archive .archive-row-main,
+body[data-page="notes"].is-arriving-writing-archive .archive-row-meta time,
+body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 h2,
+body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 p,
 body[data-page="notes"].is-arriving-writing-archive .archive-row-arrow {
   animation: writing-archive-copy-open 520ms calc(300ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.2, .72, .2, 1) both;
 }
