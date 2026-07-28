@@ -164,7 +164,7 @@
   reducedQuery.addEventListener?.("change", handleResize);
   document.addEventListener("visibilitychange", handleVisibility);
   addEventListener("resize", handleResize, { passive: true });
-  addEventListener("pageshow", start);
+  addEventListener("pageshow", resumeTimeline);
   addEventListener("pagehide", pauseTimeline);
 
   if (orbitImage instanceof HTMLImageElement && !orbitImage.complete) {
