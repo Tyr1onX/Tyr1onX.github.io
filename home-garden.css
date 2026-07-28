@@ -1,0 +1,286 @@
+/* Windfield star garden: a visible, content-aware atmosphere for the homepage. */
+
+body[data-page="home"] {
+  --garden-work: #8298d4;
+  --garden-work-glow: rgba(119, 145, 211, 0.46);
+  --garden-essay: #d1ad70;
+  --garden-essay-glow: rgba(210, 169, 100, 0.42);
+  --garden-flow-cool: rgba(92, 122, 169, 0.24);
+  --garden-flow-cool-soft: rgba(72, 103, 150, 0.12);
+  --garden-flow-warm: rgba(185, 139, 72, 0.13);
+  --garden-trace-cool: rgba(131, 157, 205, 0.22);
+  --garden-trace-warm: rgba(206, 165, 101, 0.18);
+  --garden-shift-x: 0px;
+  --garden-shift-y: 0px;
+  --garden-trace-shift-x: 0px;
+  --garden-trace-shift-y: 0px;
+  background:
+    radial-gradient(ellipse 54% 46% at 50% 43%, rgba(75, 105, 145, 0.18), transparent 70%),
+    radial-gradient(ellipse 42% 38% at 8% 78%, rgba(173, 130, 68, 0.065), transparent 74%),
+    radial-gradient(ellipse 46% 40% at 94% 18%, rgba(83, 115, 158, 0.105), transparent 76%),
+    var(--cosmos-bg);
+}
+
+html[data-theme="light"] body[data-page="home"] {
+  --garden-work: #7183b7;
+  --garden-work-glow: rgba(101, 124, 183, 0.28);
+  --garden-essay: #ad8b5f;
+  --garden-essay-glow: rgba(168, 128, 75, 0.24);
+  --garden-flow-cool: rgba(110, 139, 173, 0.16);
+  --garden-flow-cool-soft: rgba(130, 156, 184, 0.09);
+  --garden-flow-warm: rgba(183, 143, 88, 0.095);
+  --garden-trace-cool: rgba(91, 119, 159, 0.17);
+  --garden-trace-warm: rgba(156, 119, 70, 0.14);
+  background:
+    radial-gradient(ellipse 54% 46% at 50% 43%, rgba(137, 164, 193, 0.17), transparent 70%),
+    radial-gradient(ellipse 42% 38% at 8% 78%, rgba(195, 159, 108, 0.075), transparent 74%),
+    radial-gradient(ellipse 46% 40% at 94% 18%, rgba(139, 166, 193, 0.11), transparent 76%),
+    var(--cosmos-bg);
+}
+
+body[data-page="home"] .cosmos-hero::before {
+  inset: -14%;
+  opacity: 0.88;
+  background:
+    radial-gradient(ellipse 66% 50% at 8% 28%, var(--garden-flow-cool-soft), transparent 72%),
+    radial-gradient(ellipse 56% 44% at 92% 70%, var(--garden-flow-cool-soft), transparent 74%),
+    radial-gradient(ellipse 42% 34% at 70% 8%, var(--garden-flow-warm), transparent 76%);
+  animation-duration: 58s;
+}
+
+.wind-streams {
+  z-index: 0;
+  overflow: hidden;
+  opacity: 1;
+  transform: translate3d(var(--garden-shift-x), var(--garden-shift-y), 0);
+  transition: transform 1.25s cubic-bezier(.22, 1, .36, 1);
+}
+
+.garden-current {
+  --current-rotate: 0deg;
+  position: absolute;
+  left: -20%;
+  width: 140%;
+  height: clamp(128px, 18vw, 228px);
+  border-radius: 50%;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--garden-flow-cool-soft) 18%,
+      var(--garden-flow-cool) 44%,
+      var(--garden-flow-warm) 61%,
+      transparent 84%
+    );
+  opacity: 0.58;
+  filter: blur(19px);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.garden-current::after {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 50%;
+  height: 1px;
+  content: "";
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--garden-trace-cool), var(--garden-trace-warm), transparent);
+  opacity: 0.84;
+  box-shadow: 0 0 24px var(--garden-flow-cool), 0 0 42px var(--garden-flow-warm);
+}
+
+.garden-current-a {
+  --current-rotate: -7deg;
+  top: 5%;
+  animation: garden-current-a 46s ease-in-out infinite alternate;
+}
+
+.garden-current-b {
+  --current-rotate: 5deg;
+  top: 39%;
+  height: clamp(110px, 15vw, 190px);
+  opacity: 0.42;
+  animation: garden-current-b 55s ease-in-out -17s infinite alternate;
+}
+
+.garden-current-c {
+  --current-rotate: -4deg;
+  bottom: -2%;
+  opacity: 0.5;
+  animation: garden-current-c 51s ease-in-out -29s infinite alternate;
+}
+
+.garden-traces {
+  position: absolute;
+  inset: -5%;
+  z-index: 1;
+  width: 110%;
+  height: 110%;
+  overflow: visible;
+  pointer-events: none;
+  transform: translate3d(var(--garden-trace-shift-x), var(--garden-trace-shift-y), 0);
+  transition: transform 1.5s cubic-bezier(.22, 1, .36, 1);
+}
+
+.garden-trace {
+  fill: none;
+  stroke: var(--garden-trace-cool);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-dasharray: 8 17 2 25;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.7;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--garden-trace-cool) 48%, transparent));
+  animation:
+    garden-trace-flow var(--trace-duration, 52s) linear infinite,
+    garden-trace-breathe 14s ease-in-out var(--trace-delay, 0s) infinite alternate;
+}
+
+.garden-trace:nth-child(2n) {
+  stroke: var(--garden-trace-warm);
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--garden-trace-warm) 44%, transparent));
+}
+
+.garden-trace:nth-child(2) { --trace-duration: 61s; --trace-delay: -5s; opacity: 0.56; }
+.garden-trace:nth-child(3) { --trace-duration: 47s; --trace-delay: -9s; opacity: 0.64; }
+.garden-trace:nth-child(4) { --trace-duration: 68s; --trace-delay: -2s; opacity: 0.48; }
+.garden-trace:nth-child(5) { --trace-duration: 58s; --trace-delay: -12s; opacity: 0.56; }
+.garden-trace:nth-child(6) { --trace-duration: 73s; --trace-delay: -7s; opacity: 0.42; }
+
+.decorative-star:nth-child(n + 14) {
+  display: none;
+}
+
+.decorative-star {
+  animation-duration: 8s;
+}
+
+.note-star.note-kind-work {
+  --note-star-color: var(--garden-work);
+  --note-star-glow: var(--garden-work-glow);
+}
+
+.note-star.note-kind-essay {
+  --note-star-color: var(--garden-essay);
+  --note-star-glow: var(--garden-essay-glow);
+}
+
+.note-star .note-star-core {
+  background: var(--note-star-color, var(--cosmos-star));
+  opacity: var(--note-strength, 1);
+  filter:
+    drop-shadow(0 0 2.6px color-mix(in srgb, var(--note-star-color, var(--cosmos-star)) 88%, transparent))
+    drop-shadow(0 0 8px var(--note-star-glow, var(--cosmos-glow)))
+    drop-shadow(0 0 15px color-mix(in srgb, var(--note-star-glow, var(--cosmos-glow)) 76%, transparent));
+}
+
+.note-star:hover .note-star-core,
+.note-star:focus-visible .note-star-core,
+.note-star.is-touch-active .note-star-core,
+body[data-page="home"].windy .note-star .note-star-core {
+  filter:
+    drop-shadow(0 0 3.4px color-mix(in srgb, var(--note-star-color, var(--cosmos-star)) 96%, transparent))
+    drop-shadow(0 0 11px var(--note-star-glow, var(--cosmos-glow)))
+    drop-shadow(0 0 20px color-mix(in srgb, var(--note-star-glow, var(--cosmos-glow)) 86%, transparent));
+}
+
+.star-thread.note-kind-work {
+  stroke: color-mix(in srgb, var(--garden-work) 31%, transparent);
+}
+
+.star-thread.note-kind-essay {
+  stroke: color-mix(in srgb, var(--garden-essay) 27%, transparent);
+}
+
+.star-thread.note-kind-work.is-active {
+  stroke: color-mix(in srgb, var(--garden-work) 58%, transparent);
+}
+
+.star-thread.note-kind-essay.is-active {
+  stroke: color-mix(in srgb, var(--garden-essay) 54%, transparent);
+}
+
+body.is-page-hidden .garden-current,
+body.is-page-hidden .garden-trace {
+  animation-play-state: paused !important;
+}
+
+@keyframes garden-current-a {
+  0% { opacity: 0.43; transform: translate3d(-5%, -2%, 0) rotate(var(--current-rotate)) scaleX(0.96); }
+  48% { opacity: 0.66; transform: translate3d(3%, 4%, 0) rotate(calc(var(--current-rotate) + 1.2deg)) scaleX(1.04); }
+  100% { opacity: 0.52; transform: translate3d(7%, -1%, 0) rotate(calc(var(--current-rotate) - 0.8deg)) scaleX(1); }
+}
+
+@keyframes garden-current-b {
+  0% { opacity: 0.32; transform: translate3d(6%, 3%, 0) rotate(var(--current-rotate)) scaleX(1.03); }
+  55% { opacity: 0.5; transform: translate3d(-3%, -4%, 0) rotate(calc(var(--current-rotate) - 1deg)) scaleX(0.95); }
+  100% { opacity: 0.38; transform: translate3d(-7%, 2%, 0) rotate(calc(var(--current-rotate) + 0.7deg)) scaleX(1.01); }
+}
+
+@keyframes garden-current-c {
+  0% { opacity: 0.37; transform: translate3d(-4%, 2%, 0) rotate(var(--current-rotate)) scaleX(0.98); }
+  50% { opacity: 0.58; transform: translate3d(4%, -3%, 0) rotate(calc(var(--current-rotate) + 1deg)) scaleX(1.05); }
+  100% { opacity: 0.44; transform: translate3d(8%, 1%, 0) rotate(calc(var(--current-rotate) - 0.6deg)) scaleX(1); }
+}
+
+@keyframes garden-trace-flow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -220; }
+}
+
+@keyframes garden-trace-breathe {
+  from { stroke-width: 0.85; }
+  to { stroke-width: 1.28; }
+}
+
+@media (max-width: 780px) {
+  .garden-current {
+    left: -34%;
+    width: 168%;
+    filter: blur(16px);
+  }
+
+  .garden-trace:nth-child(5),
+  .garden-trace:nth-child(6) {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  body[data-page="home"] .cosmos-hero::before {
+    inset: -20%;
+    opacity: 0.82;
+  }
+
+  .garden-current-a { top: 4%; }
+  .garden-current-b { top: 42%; opacity: 0.38; }
+  .garden-current-c { bottom: 2%; }
+  .garden-current::after { opacity: 0.7; }
+  .garden-traces { inset: -3%; width: 106%; height: 106%; }
+  .garden-trace { stroke-width: 0.9; opacity: 0.5; }
+  .garden-trace:nth-child(4) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wind-streams,
+  .garden-traces {
+    transform: none;
+    transition: none;
+  }
+
+  .garden-current {
+    animation: none;
+    opacity: 0.42;
+    transform: rotate(var(--current-rotate));
+  }
+
+  .garden-trace {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
