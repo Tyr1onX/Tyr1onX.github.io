@@ -38,10 +38,12 @@ body[data-page="home"].is-entering-keke .orbit-project {
   pointer-events: none;
 }
 
-body[data-page="home"].is-entering-keke .orbit-tooltip,
+body[data-page="home"].is-entering-keke .orbit-tooltip {
+  opacity: 0 !important;
+}
+
 body[data-page="home"].is-entering-keke .orbit-icon-shell {
   box-shadow: none !important;
-  opacity: 0 !important;
 }
 
 body[data-page="home"].is-entering-keke .orbit-project img {
@@ -138,10 +140,6 @@ body[data-page="keke"].is-arriving-keke .product-viewer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  @view-transition {
-    navigation: auto;
-  }
-
   ::view-transition-group(keke-planet),
   ::view-transition-old(root),
   ::view-transition-new(root) {
