@@ -1,5 +1,6 @@
 (() => {
   const body = document.body;
+  const root = document.documentElement;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const returnKey = "tyr1onx:return-home-transition";
   const planetMemoryKey = "tyr1onx:writing-planet-memory";
@@ -8,6 +9,8 @@
     "return-source-star-reel",
     "return-pull-thread-reel",
   ]);
+
+  let navigating = false;
 
   const sleep = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
   const afterStyleCommit = () => new Promise((resolve) => {
@@ -38,6 +41,24 @@
   }
 
   if (page !== "keke" && page !== "notes" && page !== "note") return;
+
+  const capturePlanetMemory = () => {
+    if (page !== "notes" && page !== "note") return;
+    const x = root.style.getPropertyValue("--writing-planet-drift-x").trim();
+    const y = root.style.getPropertyValue("--writing-planet-drift-y").trim();
+    if (!x && !y) return;
+
+    try {
+      sessionStorage.setItem(planetMemoryKey, JSON.stringify({
+        x: x || "68px",
+        y: y || "-22px",
+      }));
+    } catch {
+      // The default return direction remains available without storage.
+    }
+  };
+
+  capturePlanetMemory();
 
   const mode = page === "keke" ? "keke" : "writing";
   const destination = new URL("./", location.href);
@@ -124,6 +145,8 @@
   };
 
   const start = async (link) => {
+    if (navigating) return;
+    navigating = true;
     setIdentity();
     link.setAttribute("aria-disabled", "true");
     link.dataset.returnHomeLink = "true";
