@@ -122,7 +122,7 @@
       if (!(star instanceof HTMLAnchorElement)) return;
       const id = noteIdFromHref(star.href);
       if (!id) return;
-      ids.push(id);
+      ids[index] = id;
       star.style.setProperty("view-transition-name", `writing-star-${index}`);
     });
 
@@ -213,6 +213,7 @@
       element.classList.remove("writing-archive-target", "writing-note-target");
       element.style.removeProperty("view-transition-name");
     });
+    document.querySelectorAll(".archive-row-v2").forEach((row) => row.style.removeProperty("--writing-arrival-delay"));
   };
 
   const installArchiveArrival = (payload) => {
@@ -223,16 +224,16 @@
     const ids = Array.isArray(payload.ids) ? payload.ids : [];
 
     ids.forEach((id, index) => {
+      if (!id) return;
       const row = rows.find((candidate) => candidate instanceof HTMLAnchorElement && noteIdFromHref(candidate.href) === id);
       const marker = row?.querySelector(".note-kind-marker");
       if (!(row instanceof HTMLElement) || !(marker instanceof HTMLElement)) return;
 
-      row.style.setProperty("--writing-arrival-index", String(index));
       marker.classList.add("writing-archive-target");
       marker.style.setProperty("view-transition-name", `writing-star-${index}`);
     });
 
-    rows.forEach((row, index) => row.style.setProperty("--writing-arrival-index", String(index)));
+    rows.forEach((row, index) => row.style.setProperty("--writing-arrival-delay", `${index * 44}ms`));
     body.classList.add("is-arriving-writing-archive");
     setTimeout(() => {
       body.classList.remove("is-arriving-writing-archive");
