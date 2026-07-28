@@ -1,16 +1,20 @@
 (() => {
   const body = document.body;
+  const root = document.documentElement;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const storageKey = "tyr1onx:writing-transition";
-  const ARCHIVE_PRELUDE_MS = 520;
-  const NOTE_PRELUDE_MS = 430;
-  const WIND_CALM_MS = 480;
-  const MIN_WIND_RATE = 0.2;
+  const ARCHIVE_PRELUDE_MS = 390;
+  const NOTE_PRELUDE_MS = 330;
+  const WIND_CALM_MS = 420;
+  const MIN_WIND_RATE = 0.24;
 
   let calmFrame = 0;
   let slowedAnimations = [];
   let navigateTimer = 0;
   let navigating = false;
+  const prefetched = new Set();
+
+  const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 
   const noteIdFromHref = (href) => {
     try {
@@ -18,6 +22,22 @@
     } catch {
       return "";
     }
+  };
+
+  const prefetchDestination = (href) => {
+    let destination;
+    try {
+      destination = new URL(href, location.href).href;
+    } catch {
+      return;
+    }
+    if (prefetched.has(destination)) return;
+    prefetched.add(destination);
+
+    const link = document.createElement("link");
+    link.rel = "prefetch";
+    link.href = destination;
+    document.head.append(link);
   };
 
   const setAnimationRate = (animation, rate) => {
@@ -55,8 +75,8 @@
       const progress = Math.min(1, Math.max(0, (now - startedAt) / WIND_CALM_MS));
       const eased = 1 - Math.pow(1 - progress, 3);
       const factor = 1 - (1 - MIN_WIND_RATE) * eased;
-      const spread = 1 + 0.22 * eased;
-      const blur = 19 + 7 * eased;
+      const spread = 1 + 0.16 * eased;
+      const blur = 19 + 3.5 * eased;
 
       body.style.setProperty("--writing-flow-spread", spread.toFixed(3));
       body.style.setProperty("--writing-flow-blur", `${blur.toFixed(2)}px`);
@@ -64,7 +84,7 @@
 
       slowedAnimations.forEach(({ animation, rate }) => {
         try {
-          setAnimationRate(animation, Math.max(0.08, rate * factor));
+          setAnimationRate(animation, Math.max(0.1, rate * factor));
         } catch {
           // One missing animation must not block navigation.
         }
@@ -79,6 +99,64 @@
   const setIdentitySource = () => {
     document.querySelector(".cosmos-center img")?.classList.add("writing-site-avatar-source");
     document.querySelector(".cosmos-center h1")?.classList.add("writing-site-name-source");
+  };
+
+  const preparePlanetRetreat = () => {
+    const field = document.querySelector("#cosmos-field");
+    const orbitProject = document.querySelector(".orbit-project");
+    const orbitLine = document.querySelector(".project-orbit-line");
+    const shell = orbitProject?.querySelector(".orbit-icon-shell");
+
+    if (!(field instanceof HTMLElement)
+      || !(orbitProject instanceof HTMLElement)
+      || !(orbitLine instanceof HTMLElement)
+      || !(shell instanceof HTMLElement)) {
+      return { x: 68, y: -22 };
+    }
+
+    const fieldRect = field.getBoundingClientRect();
+    const projectRect = orbitProject.getBoundingClientRect();
+    const orbitRect = orbitLine.getBoundingClientRect();
+    const centerX = fieldRect.left + fieldRect.width / 2;
+    const centerY = fieldRect.top + fieldRect.height / 2;
+    const projectX = projectRect.left + projectRect.width / 2;
+    const projectY = projectRect.top + projectRect.height / 2;
+    const radiusX = Math.max(1, orbitRect.width / 2);
+    const radiusY = Math.max(1, orbitRect.height / 2);
+    const cosine = clamp((projectX - centerX) / radiusX, -1, 1);
+    const sine = clamp((projectY - centerY) / radiusY, -1, 1);
+
+    let tangentX = -radiusX * sine;
+    let tangentY = radiusY * cosine;
+    const tangentLength = Math.hypot(tangentX, tangentY) || 1;
+    tangentX /= tangentLength;
+    tangentY /= tangentLength;
+
+    let outwardX = projectX - centerX;
+    let outwardY = projectY - centerY;
+    const outwardLength = Math.hypot(outwardX, outwardY) || 1;
+    outwardX /= outwardLength;
+    outwardY /= outwardLength;
+
+    const drift = {
+      x: Math.round(tangentX * 78 + outwardX * 26),
+      y: Math.round(tangentY * 78 + outwardY * 26),
+    };
+
+    shell.classList.add("writing-planet-source");
+    return drift;
+  };
+
+  const applyPlanetDrift = (payload) => {
+    const x = Number(payload?.planet?.x);
+    const y = Number(payload?.planet?.y);
+    root.style.setProperty("--writing-planet-drift-x", `${Number.isFinite(x) ? x : 68}px`);
+    root.style.setProperty("--writing-planet-drift-y", `${Number.isFinite(y) ? y : -22}px`);
+  };
+
+  const clearPlanetDrift = () => {
+    root.style.removeProperty("--writing-planet-drift-x");
+    root.style.removeProperty("--writing-planet-drift-y");
   };
 
   const clearHomeState = () => {
@@ -99,9 +177,13 @@
 
     document.querySelectorAll(".note-star").forEach((star) => {
       star.classList.remove("writing-focus-source");
-      star.style.removeProperty("view-transition-name");
+    });
+    document.querySelectorAll(".note-star-core").forEach((core) => {
+      core.style.removeProperty("view-transition-name");
     });
     document.querySelectorAll(".star-thread").forEach((thread) => thread.classList.remove("writing-focus-thread"));
+    document.querySelector(".writing-planet-source")?.classList.remove("writing-planet-source");
+    clearPlanetDrift();
   };
 
   const saveTransition = (payload) => {
@@ -115,19 +197,22 @@
   const beginArchiveTransition = (link) => {
     if (navigating) return;
     navigating = true;
+    prefetchDestination(link.href);
 
     const stars = [...document.querySelectorAll("#note-stars .note-star")];
     const ids = [];
     stars.forEach((star, index) => {
       if (!(star instanceof HTMLAnchorElement)) return;
       const id = noteIdFromHref(star.href);
-      if (!id) return;
+      const core = star.querySelector(".note-star-core");
+      if (!id || !(core instanceof HTMLElement)) return;
       ids[index] = id;
-      star.style.setProperty("view-transition-name", `writing-star-${index}`);
+      core.style.setProperty("view-transition-name", `writing-star-${index}`);
     });
 
     setIdentitySource();
-    saveTransition({ mode: "archive", ids });
+    const planet = preparePlanetRetreat();
+    saveTransition({ mode: "archive", ids, planet });
     body.classList.add("is-preparing-writing-archive");
     calmWind();
 
@@ -142,16 +227,19 @@
     navigating = true;
 
     const id = noteIdFromHref(star.href);
-    if (!id) {
+    const core = star.querySelector(".note-star-core");
+    if (!id || !(core instanceof HTMLElement)) {
       location.assign(star.href);
       return;
     }
 
+    prefetchDestination(star.href);
     star.classList.add("writing-focus-source");
-    star.style.setProperty("view-transition-name", "writing-focus-star");
+    core.style.setProperty("view-transition-name", "writing-focus-star");
     document.querySelectorAll("#star-threads .star-thread")[index]?.classList.add("writing-focus-thread");
     setIdentitySource();
-    saveTransition({ mode: "note", id });
+    const planet = preparePlanetRetreat();
+    saveTransition({ mode: "note", id, planet });
     body.classList.add("is-preparing-writing-note");
     calmWind();
 
@@ -169,6 +257,8 @@
     ];
     archiveLinks.forEach((link) => {
       if (!(link instanceof HTMLAnchorElement)) return;
+      link.addEventListener("pointerenter", () => prefetchDestination(link.href), { passive: true });
+      link.addEventListener("focus", () => prefetchDestination(link.href), { passive: true });
       link.addEventListener("click", (event) => {
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
         if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
@@ -179,6 +269,8 @@
 
     [...document.querySelectorAll("#note-stars .note-star")].forEach((star, index) => {
       if (!(star instanceof HTMLAnchorElement)) return;
+      star.addEventListener("pointerenter", () => prefetchDestination(star.href), { passive: true });
+      star.addEventListener("focus", () => prefetchDestination(star.href), { passive: true });
       star.addEventListener("click", (event) => {
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
         if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
@@ -214,11 +306,13 @@
       element.style.removeProperty("view-transition-name");
     });
     document.querySelectorAll(".archive-row-v2").forEach((row) => row.style.removeProperty("--writing-arrival-delay"));
+    clearPlanetDrift();
   };
 
   const installArchiveArrival = (payload) => {
     if (body.dataset.page !== "notes" || payload?.mode !== "archive") return false;
 
+    applyPlanetDrift(payload);
     setIdentityTarget();
     const rows = [...document.querySelectorAll(".archive-row-v2")];
     const ids = Array.isArray(payload.ids) ? payload.ids : [];
@@ -233,12 +327,12 @@
       marker.style.setProperty("view-transition-name", `writing-star-${index}`);
     });
 
-    rows.forEach((row, index) => row.style.setProperty("--writing-arrival-delay", `${index * 44}ms`));
+    rows.forEach((row, index) => row.style.setProperty("--writing-arrival-delay", `${index * 36}ms`));
     body.classList.add("is-arriving-writing-archive");
     setTimeout(() => {
       body.classList.remove("is-arriving-writing-archive");
       clearArrivalNames();
-    }, 1700);
+    }, 1500);
     return true;
   };
 
@@ -248,6 +342,7 @@
     const currentId = new URLSearchParams(location.search).get("id") || "";
     if (!currentId || currentId !== payload.id) return false;
 
+    applyPlanetDrift(payload);
     setIdentityTarget();
     const marker = document.querySelector(".article-meta-line .note-kind-marker");
     if (marker instanceof HTMLElement) {
@@ -259,7 +354,7 @@
     setTimeout(() => {
       body.classList.remove("is-arriving-writing-note");
       clearArrivalNames();
-    }, 2200);
+    }, 1900);
     return true;
   };
 
