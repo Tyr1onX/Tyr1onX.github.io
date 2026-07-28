@@ -1,0 +1,308 @@
+/* Article reading v2: technical Markdown and Chinese prose use different typographic systems. */
+
+body[data-page="note"] {
+  --reading-track: color-mix(in srgb, var(--text) 18%, transparent);
+  --reading-paper: color-mix(in srgb, var(--bg) 94%, transparent);
+}
+
+body[data-page="note"] .article-main {
+  width: min(calc(100% - 40px), 960px);
+  max-width: 960px;
+  padding: 64px 0 144px;
+}
+
+body[data-page="note"] .article-main::before {
+  opacity: 0.1;
+}
+
+body[data-page="note"] .article-main::after {
+  opacity: 0.24;
+}
+
+body[data-page="note"] .back-link {
+  margin-bottom: 54px;
+  color: var(--quiet);
+  font-size: 0.82rem;
+  font-weight: 520;
+}
+
+body[data-page="note"] .note-article {
+  width: 100%;
+}
+
+body[data-page="note"] .note-article header {
+  width: min(100%, 820px);
+  margin: 0 auto 56px;
+  padding-bottom: 42px;
+}
+
+body[data-page="note"] .note-format-essay header {
+  width: min(100%, 680px);
+  margin-bottom: 48px;
+}
+
+body[data-page="note"] .article-meta-line {
+  margin-bottom: 16px;
+  gap: 9px;
+}
+
+body[data-page="note"] .article-meta-line::after {
+  width: 42px;
+}
+
+body[data-page="note"] .note-article h1 {
+  max-width: 820px;
+  margin: 0;
+  font-size: clamp(2.08rem, 4.25vw, 3.55rem);
+  font-weight: 680;
+  letter-spacing: -0.048em;
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+body[data-page="note"] .note-format-essay h1 {
+  max-width: 680px;
+  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+  font-size: clamp(2rem, 3.7vw, 3.18rem);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  line-height: 1.22;
+}
+
+body[data-page="note"] .article-source {
+  margin-top: 16px;
+  line-height: 1.7;
+}
+
+body[data-page="note"] .article-body {
+  padding-top: 0;
+}
+
+/* Technical writing keeps visible Markdown hierarchy. */
+body[data-page="note"] .article-body-technical {
+  width: min(100%, 820px);
+  margin-inline: auto;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: clamp(1rem, 1.15vw, 1.08rem);
+  line-height: 1.86;
+  text-align: left;
+}
+
+body[data-page="note"] .article-body-technical p {
+  margin: 0 0 1.28em;
+  text-indent: 0;
+}
+
+body[data-page="note"] .article-body-technical h2 {
+  margin: 2.7em 0 0.9em;
+  font-size: clamp(1.55rem, 2.5vw, 2.05rem);
+  line-height: 1.3;
+}
+
+body[data-page="note"] .article-body-technical h3 {
+  margin: 2.2em 0 0.72em;
+  font-size: clamp(1.16rem, 1.8vw, 1.4rem);
+}
+
+body[data-page="note"] .article-body-technical ul {
+  margin: 0 0 1.5em;
+  padding-left: 1.45em;
+}
+
+body[data-page="note"] .article-body-technical blockquote {
+  margin: 1.9em 0;
+  padding: 0.35em 0 0.35em 1.15em;
+  border-left-width: 2px;
+  font-size: 0.98em;
+  line-height: 1.8;
+}
+
+body[data-page="note"] .article-body-technical code {
+  font-size: 0.86em;
+}
+
+/* Essays follow Chinese book-style paragraph rhythm instead of Markdown rhythm. */
+body[data-page="note"] .article-body-essay {
+  width: min(100%, 680px);
+  margin-inline: auto;
+  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", serif;
+  font-size: clamp(1.08rem, 1.25vw, 1.18rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 2.08;
+  text-align: justify;
+  text-justify: inter-ideograph;
+  line-break: strict;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hanging-punctuation: first last;
+}
+
+body[data-page="note"] .article-body-essay p {
+  margin: 0;
+  text-indent: 2em;
+}
+
+body[data-page="note"] .article-body-essay p + p {
+  margin-top: 0;
+}
+
+body[data-page="note"] .article-body-essay blockquote {
+  margin: 2.2em 0;
+  padding: 0.25em 1.35em;
+  border-left: 0;
+  color: var(--muted);
+  text-indent: 0;
+}
+
+body[data-page="note"] .article-body-essay hr {
+  width: 5em;
+  margin: 3.2em auto;
+  background: linear-gradient(90deg, transparent, var(--note-kind-color), transparent);
+  opacity: 0.48;
+}
+
+body[data-page="note"] .note-format-essay .article-body h2,
+body[data-page="note"] .note-format-essay .article-body h3,
+body[data-page="note"] .note-format-essay .article-body ul,
+body[data-page="note"] .note-format-essay .article-body code {
+  font-family: inherit;
+}
+
+body[data-page="note"] .note-format-essay .article-body h2::before,
+body[data-page="note"] .note-format-essay .article-body h3::before {
+  display: none;
+}
+
+body[data-page="note"] .note-navigation {
+  width: min(100%, 820px);
+  margin: 86px auto 0;
+}
+
+body[data-page="note"] .note-format-essay + .note-navigation {
+  width: min(100%, 680px);
+}
+
+/* Fixed progress path: visible throughout reading instead of scrolling away with the article. */
+body[data-page="note"] .reading-path {
+  --reading-progress: 0;
+  position: fixed;
+  left: max(24px, calc(50vw - 520px));
+  top: 24vh;
+  bottom: auto;
+  z-index: 24;
+  display: block;
+  width: 2px;
+  height: 52vh;
+  min-height: 260px;
+  max-height: 520px;
+  opacity: 1;
+  pointer-events: none;
+}
+
+body[data-page="note"] .reading-path-label {
+  position: absolute;
+  left: -8px;
+  top: -34px;
+  color: var(--quiet);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  transform: translateX(-2px);
+}
+
+body[data-page="note"] .reading-path-track,
+body[data-page="note"] .reading-path-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  border-radius: 999px;
+}
+
+body[data-page="note"] .reading-path-track {
+  height: 100%;
+  background: var(--reading-track);
+}
+
+body[data-page="note"] .reading-path-fill {
+  height: calc(var(--reading-progress) * 100%);
+  background: linear-gradient(180deg, var(--note-kind-color, var(--inner-cool)), var(--inner-warm));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--note-kind-color, var(--inner-cool)) 32%, transparent);
+  transform: none;
+  transition: height 80ms linear;
+}
+
+body[data-page="note"] .reading-path-current {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--reading-progress) * 100%);
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--note-kind-color, var(--inner-cool));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--note-kind-color, var(--inner-cool)) 62%, transparent),
+    0 0 14px color-mix(in srgb, var(--note-kind-color, var(--inner-cool)) 42%, transparent);
+  transform: translate(-50%, -50%);
+  transition: top 80ms linear;
+}
+
+body[data-page="note"] .reading-path-node {
+  width: 8px;
+  height: 8px;
+  border-color: color-mix(in srgb, var(--note-kind-color, var(--inner-cool)) 62%, transparent);
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+
+body[data-page="note"] .reading-path-node.is-read {
+  background: var(--note-kind-color, var(--inner-cool));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--note-kind-color, var(--inner-cool)) 28%, transparent);
+}
+
+@media (max-width: 1080px) {
+  body[data-page="note"] .reading-path {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  body[data-page="note"] .article-main {
+    width: min(calc(100% - 28px), 960px);
+    padding-top: 42px;
+  }
+
+  body[data-page="note"] .back-link {
+    margin-bottom: 42px;
+  }
+
+  body[data-page="note"] .note-article header,
+  body[data-page="note"] .note-format-essay header {
+    padding-bottom: 34px;
+    margin-bottom: 40px;
+  }
+
+  body[data-page="note"] .note-article h1,
+  body[data-page="note"] .note-format-essay h1 {
+    font-size: clamp(1.9rem, 9vw, 2.65rem);
+    line-height: 1.2;
+  }
+
+  body[data-page="note"] .article-body-essay {
+    font-size: 1.06rem;
+    line-height: 2;
+  }
+
+  body[data-page="note"] .article-body-technical {
+    font-size: 0.98rem;
+    line-height: 1.82;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="note"] .reading-path-fill,
+  body[data-page="note"] .reading-path-current {
+    transition: none;
+  }
+}
