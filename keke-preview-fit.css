@@ -1,5 +1,31 @@
 /* Final compatibility pass for the compact Keke showcase. */
 
+/* Keep the project identity compact: icon + title, no repeated kicker. */
+.keke-kicker {
+  display: none;
+}
+
+.keke-summary h1 {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.keke-summary h1::before {
+  width: 68px;
+  height: 68px;
+  flex: 0 0 auto;
+  content: "";
+  border-radius: 20px;
+  background: url("./assets/keke-icon-source.png") center / cover no-repeat;
+  box-shadow: 0 18px 44px rgba(68, 79, 108, 0.12);
+}
+
+/* Version and platform are enough for the compact summary. */
+.keke-meta div:nth-child(n + 3) {
+  display: none;
+}
+
 /* The project identity already lives in the left summary. */
 .overview-stage {
   grid-template-columns: 1fr;
@@ -130,6 +156,16 @@
 }
 
 @media (max-width: 560px) {
+  .keke-summary h1 {
+    gap: 14px;
+  }
+
+  .keke-summary h1::before {
+    width: 58px;
+    height: 58px;
+    border-radius: 17px;
+  }
+
   .settings-heading {
     align-items: flex-start;
     flex-direction: column;
