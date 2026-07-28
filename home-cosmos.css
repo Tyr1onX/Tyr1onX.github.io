@@ -1,4 +1,4 @@
-/* Homepage cosmos: tokens, stage, stars, orbit, interactions and motion. */
+/* Homepage cosmos: tokens, full-page atmosphere, stage, stars and motion. */
 
 body[data-page="home"] {
   --cosmos-bg: #0b1015;
@@ -42,7 +42,6 @@ html[data-theme="light"] body[data-page="home"] {
     var(--cosmos-bg);
 }
 
-/* Full-page atmosphere and fixed-size stage. */
 body[data-page="home"] .cosmos-hero {
   position: relative;
   width: 100%;
@@ -95,9 +94,7 @@ body[data-page="home"] .cosmos-hero::after {
   min-height: min(82svh, 860px);
   margin: 0;
   overflow: visible;
-  border-radius: 0;
   background: transparent;
-  box-shadow: none;
   isolation: isolate;
 }
 
@@ -127,7 +124,6 @@ body[data-page="home"] .cosmos-hero::after {
   pointer-events: none;
 }
 
-/* Ambient stars and writing-star threads. */
 .decorative-star {
   position: absolute;
   width: calc(var(--star-size, 5px) * 0.62);
@@ -180,7 +176,6 @@ html[data-theme="light"] .decorative-star {
   stroke: var(--cosmos-line-strong);
 }
 
-/* Wind. */
 .wind-streams {
   z-index: 2;
   overflow: hidden;
@@ -218,7 +213,6 @@ html[data-theme="light"] .decorative-star {
   animation: wind-flow-left var(--wind-duration, 2.2s) cubic-bezier(.2, .7, .25, 1) both;
 }
 
-/* Project orbit and center identity. */
 .project-orbit-line {
   position: absolute;
   inset: 19% 12%;
@@ -275,9 +269,9 @@ html[data-theme="light"] .project-orbit-line-inner {
 
 .cosmos-center img,
 .orbit-icon-shell img {
+  display: block;
   image-rendering: auto;
   transform: none;
-  backface-visibility: visible;
 }
 
 .orbit-project {
@@ -307,6 +301,7 @@ html[data-theme="light"] .project-orbit-line-inner {
   box-shadow:
     0 12px 32px rgba(0, 0, 0, 0.13),
     0 0 0 1px rgba(255, 255, 255, 0.22);
+  contain: paint;
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
@@ -355,7 +350,6 @@ html[data-theme="light"] .orbit-icon-shell {
   opacity: 1;
 }
 
-/* Writing stars and labels. */
 .note-stars {
   z-index: 4;
   pointer-events: none;
@@ -474,7 +468,6 @@ body[data-page="home"].windy .note-star-core {
   gap: 20px;
 }
 
-/* Pause all nonessential motion while hidden. */
 body.is-page-hidden .cosmos-hero::before,
 body.is-page-hidden .orbit-project,
 body.is-page-hidden .decorative-star,
@@ -483,24 +476,11 @@ body.is-page-hidden .wind-stream {
   animation-play-state: paused !important;
 }
 
-/* Motion. */
 @keyframes cosmos-atmosphere-drift {
-  0% {
-    opacity: 0.56;
-    transform: translate3d(-0.7%, -0.45%, 0) scale(1.008) rotate(-0.05deg);
-  }
-  34% {
-    opacity: 0.66;
-    transform: translate3d(0.65%, -0.18%, 0) scale(1.016) rotate(0.03deg);
-  }
-  68% {
-    opacity: 0.6;
-    transform: translate3d(0.35%, 0.7%, 0) scale(1.012) rotate(0.05deg);
-  }
-  100% {
-    opacity: 0.64;
-    transform: translate3d(-0.35%, 0.28%, 0) scale(1.014) rotate(-0.03deg);
-  }
+  0% { opacity: 0.56; transform: translate3d(-0.7%, -0.45%, 0) scale(1.008) rotate(-0.05deg); }
+  34% { opacity: 0.66; transform: translate3d(0.65%, -0.18%, 0) scale(1.016) rotate(0.03deg); }
+  68% { opacity: 0.6; transform: translate3d(0.35%, 0.7%, 0) scale(1.012) rotate(0.05deg); }
+  100% { opacity: 0.64; transform: translate3d(-0.35%, 0.28%, 0) scale(1.014) rotate(-0.03deg); }
 }
 
 @keyframes ambient-twinkle {
@@ -554,7 +534,6 @@ body.is-page-hidden .wind-stream {
   78% { z-index: 3; opacity: 0.94; }
 }
 
-/* Responsive interaction and layout. */
 @media (hover: none), (pointer: coarse) {
   .note-star-label {
     min-width: min(168px, calc(100vw - 36px));
@@ -575,34 +554,48 @@ body.is-page-hidden .wind-stream {
   .orbit-project:hover {
     animation-play-state: running;
   }
+
+  .orbit-project:hover .orbit-icon-shell {
+    transform: none;
+  }
 }
 
 @media (max-width: 780px) {
   .cosmos-shell {
-    width: min(calc(100% - 28px), 1180px);
+    width: min(calc(100% - 28px), 700px);
   }
 
   .cosmos-field {
-    min-height: 70svh;
+    min-height: 720px;
+  }
+
+  .project-orbit-line,
+  .project-orbit-line-inner {
+    inset: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .project-orbit-line {
-    inset: 23% 6%;
+    width: min(84vw, 620px);
+    aspect-ratio: 1.72;
   }
 
   .project-orbit-line-inner {
-    inset: 33% 16%;
+    width: min(60vw, 440px);
+    aspect-ratio: 1.72;
   }
 
   .orbit-project {
-    offset-path: ellipse(44% 29% at 50% 50%);
+    offset-path: ellipse(43% 25% at 50% 50%);
   }
 }
 
 @media (max-width: 560px) {
   body[data-page="home"] .cosmos-hero {
-    min-height: calc(100svh - 62px);
-    padding-bottom: 32px;
+    min-height: auto;
+    padding-bottom: 28px;
   }
 
   body[data-page="home"] .cosmos-hero::before {
@@ -614,20 +607,89 @@ body.is-page-hidden .wind-stream {
     background-size: 148px 148px;
   }
 
+  .cosmos-shell {
+    width: 100%;
+  }
+
   .cosmos-field {
-    min-height: 68svh;
+    width: 100%;
+    height: clamp(640px, 168vw, 720px);
+    min-height: 0;
+  }
+
+  .cosmos-center {
+    top: 51%;
+  }
+
+  .cosmos-center img {
+    width: 82px;
+    height: 82px;
+  }
+
+  .cosmos-center h1 {
+    margin-top: 18px;
+    font-size: clamp(3.1rem, 14vw, 3.65rem);
+  }
+
+  .cosmos-center time {
+    margin-top: 10px;
+  }
+
+  .project-orbit-line {
+    width: min(88vw, 420px);
+  }
+
+  .project-orbit-line-inner {
+    width: min(62vw, 296px);
   }
 
   .orbit-project {
     --orbit-duration: 60s;
-    width: 58px;
-    height: 58px;
+    width: 64px;
+    height: 64px;
+    offset-path: ellipse(43% 14.5% at 50% 51%);
+  }
+
+  .orbit-icon-shell {
+    border-radius: 24%;
+    box-shadow:
+      0 10px 26px rgba(0, 0, 0, 0.12),
+      0 0 0 1px rgba(255, 255, 255, 0.24);
+  }
+
+  .orbit-icon-shell img {
+    image-rendering: -webkit-optimize-contrast;
   }
 
   .note-star-label {
     min-width: 140px;
     max-width: 170px;
     backdrop-filter: blur(8px);
+  }
+
+  .all-writing-link {
+    right: 18px;
+    bottom: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  .cosmos-field {
+    height: 640px;
+  }
+
+  .cosmos-center img {
+    width: 76px;
+    height: 76px;
+  }
+
+  .cosmos-center h1 {
+    font-size: 3rem;
+  }
+
+  .orbit-project {
+    width: 60px;
+    height: 60px;
   }
 }
 
