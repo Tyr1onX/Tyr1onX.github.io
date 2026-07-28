@@ -211,12 +211,12 @@ body[data-page="notes"].is-arriving-writing-archive .archive-list::before {
 }
 
 body[data-page="notes"].is-arriving-writing-archive .archive-row-v2::before {
-  animation: writing-archive-branch-grow 420ms calc(260ms + var(--writing-arrival-index, 0) * 44ms) cubic-bezier(.22, 1, .36, 1) both;
+  animation: writing-archive-branch-grow 420ms calc(260ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.22, 1, .36, 1) both;
 }
 
 body[data-page="notes"].is-arriving-writing-archive .archive-row-main,
 body[data-page="notes"].is-arriving-writing-archive .archive-row-arrow {
-  animation: writing-archive-copy-open 520ms calc(300ms + var(--writing-arrival-index, 0) * 44ms) cubic-bezier(.2, .72, .2, 1) both;
+  animation: writing-archive-copy-open 520ms calc(300ms + var(--writing-arrival-delay, 0ms)) cubic-bezier(.2, .72, .2, 1) both;
 }
 
 body[data-page="notes"].is-arriving-writing-archive .site-footer {
