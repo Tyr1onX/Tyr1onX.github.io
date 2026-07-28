@@ -4,6 +4,28 @@
   const returnKey = "tyr1onx:return-home-transition";
   const planetMemoryKey = "tyr1onx:writing-planet-memory";
   const page = body.dataset.page || "";
+  const PULL_ANIMATION_NAMES = new Set([
+    "return-source-star-reel",
+    "return-pull-thread-reel",
+  ]);
+
+  const sleep = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
+  const afterStyleCommit = () => new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+
+  const waitForNamedAnimations = async (elements, fallbackMs) => {
+    await afterStyleCommit();
+    const animations = [...new Set(elements.flatMap((element) => (
+      element instanceof Element ? element.getAnimations() : []
+    )))].filter((animation) => PULL_ANIMATION_NAMES.has(animation.animationName));
+
+    if (!animations.length) {
+      await sleep(fallbackMs);
+      return;
+    }
+    await Promise.allSettled(animations.map((animation) => animation.finished));
+  };
 
   if (page === "home") {
     const url = new URL(location.href);
@@ -98,9 +120,10 @@
     thread.style.setProperty("--return-thread-height", `${distance.toFixed(2)}px`);
     thread.style.setProperty("--return-pull-delay", `${delay}ms`);
     document.body.append(thread);
+    return [marker, thread];
   };
 
-  const start = (link) => {
+  const start = async (link) => {
     setIdentity();
     link.setAttribute("aria-disabled", "true");
     link.dataset.returnHomeLink = "true";
@@ -109,11 +132,13 @@
       setNamed(document.querySelector(".keke-transition-target"), "return-keke-planet-source", "return-keke-planet");
       writePayload({ mode: "keke-return" });
       body.classList.add("is-leaving-keke-home");
-      setTimeout(() => location.assign(destination.href), 90);
+      await sleep(90);
+      location.assign(destination.href);
       return;
     }
 
     const planet = planetMemory();
+    const pullElements = [];
     if (page === "notes") {
       const viewportHeight = innerHeight || document.documentElement.clientHeight;
       const rows = [...document.querySelectorAll(".archive-row-v2")].filter((row) => {
@@ -128,21 +153,24 @@
         if (!id || !(marker instanceof HTMLElement)) return;
         ids[index] = id;
         marker.style.setProperty("view-transition-name", `return-writing-star-${index}`);
-        createPullThread(marker, index);
+        pullElements.push(...createPullThread(marker, index));
       });
       writePayload({ mode: "writing-archive-return", ids, planet });
       body.classList.add("is-leaving-writing-home", "is-leaving-writing-archive-home");
+      await waitForNamedAnimations(pullElements, 540);
     } else {
       const id = new URLSearchParams(location.search).get("id") || "";
       const marker = document.querySelector(".article-meta-line .note-kind-marker");
       if (marker instanceof HTMLElement && id) {
         marker.style.setProperty("view-transition-name", "return-writing-focus-star");
-        createPullThread(marker, 0);
+        pullElements.push(...createPullThread(marker, 0));
       }
       writePayload({ mode: "writing-note-return", id, planet });
       body.classList.add("is-leaving-writing-home", "is-leaving-writing-note-home");
+      await waitForNamedAnimations(pullElements, 460);
     }
-    setTimeout(() => location.assign(destination.href), 250);
+
+    location.assign(destination.href);
   };
 
   prefetch();
@@ -156,6 +184,6 @@
 
     event.preventDefault();
     event.stopImmediatePropagation();
-    start(target);
+    void start(target);
   }, true);
 })();
