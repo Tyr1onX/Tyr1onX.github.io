@@ -55,7 +55,9 @@
 
   const applyReadingProgress = (progress) => {
     if (!(path instanceof HTMLElement)) return;
-    path.style.setProperty("--reading-progress", clamp(progress, 0, 1).toFixed(4));
+    const visibleProgress = clamp(progress, 0, 1);
+    path.style.setProperty("--reading-progress", visibleProgress.toFixed(4));
+    path.style.setProperty("--reading-progress-position", `${(visibleProgress * 100).toFixed(3)}%`);
   };
 
   const advanceReadingMotion = (timestamp) => {
