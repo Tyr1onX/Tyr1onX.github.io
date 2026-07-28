@@ -12,8 +12,10 @@
     <link rel="stylesheet" href="./inner-space.css?v=1-star-map" />
     <link rel="stylesheet" href="./keke-case.css?v=2-compact-showcase" />
     <link rel="stylesheet" href="./keke-preview-fit.css?v=1-fit" />
+    <link rel="stylesheet" href="./keke-transition.css?v=1-enter-planet" />
     <script src="./script.js?v=3-note-kinds" defer></script>
     <script src="./keke-case.js?v=1-preview-switcher" defer></script>
+    <script src="./keke-transition.js?v=1-enter-planet" defer></script>
   </head>
   <body data-page="keke">
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -45,8 +47,10 @@
     <main id="main" class="project-page">
       <section class="keke-showcase case-shell reveal">
         <div class="keke-summary">
-          <p class="keke-kicker">课刻 · Windows 桌面课表</p>
-          <h1>课刻</h1>
+          <div class="keke-title-row">
+            <img class="keke-transition-target" src="./assets/keke-icon-source.png" width="1024" height="1024" decoding="async" alt="课刻图标" />
+            <h1>课刻</h1>
+          </div>
           <p class="keke-lead">让一天在桌面上缓慢流动。</p>
           <p class="keke-body">
             从学校导出的 Excel 建立课表，在桌面展示当天课程，并在独立设置窗口中管理课表、课程和作息时间。
@@ -55,8 +59,6 @@
           <dl class="keke-meta" aria-label="项目概况">
             <div><dt>版本</dt><dd>v0.4.0</dd></div>
             <div><dt>平台</dt><dd>Windows</dd></div>
-            <div><dt>数据</dt><dd>本地保存</dd></div>
-            <div><dt>许可</dt><dd>MIT</dd></div>
           </dl>
 
           <div class="case-actions" aria-label="项目入口">
