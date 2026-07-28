@@ -6,19 +6,17 @@
   if (!(main instanceof HTMLElement) || !(article instanceof HTMLElement)) return;
 
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  const maxMilestones = 6;
+  const tickCount = 10;
 
   let readingFrame = 0;
-  let springFrame = 0;
+  let motionFrame = 0;
   let path = null;
   let body = null;
-  let headings = [];
   let resizeObserver = null;
   let listenersBound = false;
   let targetProgress = 0;
   let renderedProgress = 0;
-  let springVelocity = 0;
-  let lastSpringTime = 0;
+  let lastMotionTime = 0;
   let progressInitialized = false;
 
   const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
@@ -55,73 +53,44 @@
     body.dataset.normalized = "true";
   };
 
-  const selectMilestones = (container) => {
-    const majorHeadings = [...container.querySelectorAll("h2")];
-    const candidates = majorHeadings.length ? majorHeadings : [...container.querySelectorAll("h3")];
-    if (candidates.length <= maxMilestones) return candidates;
-
-    const sampled = [];
-    for (let index = 0; index < maxMilestones; index += 1) {
-      const candidateIndex = Math.round((index * (candidates.length - 1)) / (maxMilestones - 1));
-      const heading = candidates[candidateIndex];
-      if (heading && sampled.at(-1) !== heading) sampled.push(heading);
-    }
-    return sampled;
-  };
-
   const applyReadingProgress = (progress) => {
     if (!(path instanceof HTMLElement)) return;
-
-    const visibleProgress = clamp(progress, 0, 1);
-    path.style.setProperty("--reading-progress", visibleProgress.toFixed(4));
-
-    const nodes = [...path.querySelectorAll(".reading-path-node")];
-    nodes.forEach((node) => {
-      if (!(node instanceof HTMLElement)) return;
-      const position = Number.parseFloat(node.dataset.progress || "0");
-      node.classList.toggle("is-read", position <= visibleProgress + 0.01);
-    });
+    path.style.setProperty("--reading-progress", clamp(progress, 0, 1).toFixed(4));
   };
 
-  const advanceReadingSpring = (timestamp) => {
-    springFrame = 0;
+  const advanceReadingMotion = (timestamp) => {
+    motionFrame = 0;
     if (!(path instanceof HTMLElement)) return;
 
     if (reducedMotion.matches) {
       renderedProgress = targetProgress;
-      springVelocity = 0;
-      lastSpringTime = timestamp;
+      lastMotionTime = timestamp;
       applyReadingProgress(renderedProgress);
       return;
     }
 
-    const deltaSeconds = Math.min(0.032, Math.max(0.001, (timestamp - lastSpringTime) / 1000 || 1 / 60));
-    lastSpringTime = timestamp;
+    const deltaSeconds = Math.min(0.05, Math.max(0.001, (timestamp - lastMotionTime) / 1000 || 1 / 60));
+    lastMotionTime = timestamp;
 
-    const stiffness = 72;
-    const damping = 13;
-    const acceleration = stiffness * (targetProgress - renderedProgress) - damping * springVelocity;
-
-    springVelocity += acceleration * deltaSeconds;
-    renderedProgress += springVelocity * deltaSeconds;
-    renderedProgress = clamp(renderedProgress, -0.025, 1.025);
+    // A critically calm follow: slightly behind the page, but never overshooting or bouncing.
+    const followRate = 8.2;
+    const blend = 1 - Math.exp(-followRate * deltaSeconds);
+    renderedProgress += (targetProgress - renderedProgress) * blend;
     applyReadingProgress(renderedProgress);
 
-    const settled = Math.abs(targetProgress - renderedProgress) < 0.00035 && Math.abs(springVelocity) < 0.00035;
-    if (settled) {
+    if (Math.abs(targetProgress - renderedProgress) < 0.00035) {
       renderedProgress = targetProgress;
-      springVelocity = 0;
       applyReadingProgress(renderedProgress);
       return;
     }
 
-    springFrame = requestAnimationFrame(advanceReadingSpring);
+    motionFrame = requestAnimationFrame(advanceReadingMotion);
   };
 
-  const startReadingSpring = () => {
-    if (springFrame) return;
-    lastSpringTime = performance.now();
-    springFrame = requestAnimationFrame(advanceReadingSpring);
+  const startReadingMotion = () => {
+    if (motionFrame) return;
+    lastMotionTime = performance.now();
+    motionFrame = requestAnimationFrame(advanceReadingMotion);
   };
 
   const paintReadingPath = () => {
@@ -134,26 +103,14 @@
     const travel = Math.max(1, articleRect.height - (endLine - startLine));
     targetProgress = clamp((startLine - articleRect.top) / travel, 0, 1);
 
-    const bodyHeight = Math.max(1, body.offsetHeight);
-    const nodes = [...path.querySelectorAll(".reading-path-node")];
-    nodes.forEach((node, index) => {
-      const heading = headings[index];
-      if (!(node instanceof HTMLElement) || !(heading instanceof HTMLElement)) return;
-
-      const position = clamp(heading.offsetTop / bodyHeight, 0, 1);
-      node.dataset.progress = position.toFixed(4);
-      node.style.top = `${(position * 100).toFixed(2)}%`;
-    });
-
     if (!progressInitialized || reducedMotion.matches) {
       renderedProgress = targetProgress;
-      springVelocity = 0;
       progressInitialized = true;
       applyReadingProgress(renderedProgress);
       return;
     }
 
-    startReadingSpring();
+    startReadingMotion();
   };
 
   const scheduleReadingPathPaint = () => {
@@ -170,12 +127,12 @@
     const kindClass = header?.classList.contains("note-kind-work") ? "note-kind-work" : "note-kind-essay";
     const isTechnical = kindClass === "note-kind-work";
 
-    article.classList.remove("note-kind-work", "note-kind-essay");
+    article.classList.remove("note-kind-work", "note-kind-essay", "note-format-technical", "note-format-essay");
     article.classList.add(kindClass, isTechnical ? "note-format-technical" : "note-format-essay");
+    body.classList.remove("article-body-technical", "article-body-essay");
     body.classList.add(isTechnical ? "article-body-technical" : "article-body-essay");
 
     if (!isTechnical) normalizeEssayBody();
-    headings = isTechnical ? selectMilestones(body) : [];
 
     if (!(path instanceof HTMLElement)) {
       path = document.createElement("aside");
@@ -183,22 +140,20 @@
       path.id = "reading-path";
       path.setAttribute("aria-hidden", "true");
       path.innerHTML = [
-        '<span class="reading-path-label">阅读进度</span>',
-        '<span class="reading-path-track"></span>',
-        '<span class="reading-path-fill"></span>',
-        '<span class="reading-path-current"></span>',
-        '<span class="reading-path-nodes"></span>',
+        `<span class="reading-scale-ticks">${Array.from(
+          { length: tickCount },
+          () => '<span class="reading-scale-tick"></span>'
+        ).join("")}</span>`,
+        '<span class="reading-scale-marker">',
+        '  <span class="reading-growth-dash"></span>',
+        '  <span class="reading-seed"></span>',
+        '</span>',
       ].join("");
       main.append(path);
     }
 
     path.classList.remove("note-kind-work", "note-kind-essay");
     path.classList.add(kindClass);
-
-    const nodeLayer = path.querySelector(".reading-path-nodes");
-    if (nodeLayer instanceof HTMLElement) {
-      nodeLayer.innerHTML = headings.map(() => '<span class="reading-path-node"></span>').join("");
-    }
 
     if (!listenersBound) {
       addEventListener("scroll", scheduleReadingPathPaint, { passive: true });
