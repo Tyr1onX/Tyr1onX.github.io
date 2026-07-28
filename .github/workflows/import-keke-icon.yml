@@ -1,0 +1,37 @@
+name: Import exact Keke icon
+
+on:
+  push:
+    branches:
+      - fix/keke-icon-source-1024
+    paths:
+      - .github/workflows/import-keke-icon.yml
+
+permissions:
+  contents: write
+
+jobs:
+  import-icon:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/keke-icon-source-1024
+
+      - name: Copy the finalized 1024px source icon
+        run: |
+          mkdir -p assets
+          curl --fail --location --retry 3 \
+            "https://raw.githubusercontent.com/Tyr1onX/desktop-course-widget/e0c73672444066da769a7acf6c7b83bea7e93a1a/app.icon.png" \
+            --output assets/keke-icon-source.png
+          file assets/keke-icon-source.png
+
+      - name: Commit the exact source file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/keke-icon-source.png
+          git diff --cached --quiet && exit 0
+          git commit -m "assets: import finalized Keke source icon"
+          git push origin HEAD:fix/keke-icon-source-1024
