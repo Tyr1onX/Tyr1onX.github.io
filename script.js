@@ -193,18 +193,16 @@ function noteUrl(note) {
   return `./note.html?id=${encodeURIComponent(note.id)}`;
 }
 
-function noteTags(note) {
-  if (Array.isArray(note?.tags)) return note.tags.filter(Boolean);
-  return note?.category ? [note.category] : [];
+function noteKind(note) {
+  return note?.kind === "work" ? "work" : "essay";
 }
 
-function renderTags(note, className = "note-tags") {
-  const tags = noteTags(note);
-  if (!tags.length) return "";
+function noteKindLabel(note) {
+  return noteKind(note) === "work" ? "工作与技术" : "随笔";
+}
 
-  return `<span class="${className}">${tags
-    .map((tag) => `<span class="note-tag">${escapeHtml(tag)}</span>`)
-    .join("")}</span>`;
+function renderKindMarker(note) {
+  return `<span class="note-kind-marker" role="img" aria-label="${noteKindLabel(note)}"></span>`;
 }
 
 function renderHomeNotes() {
@@ -232,11 +230,11 @@ function renderArchive() {
   container.innerHTML = notes
     .map(
       (note) => `
-        <a class="archive-row archive-row-v2" href="${noteUrl(note)}">
+        <a class="archive-row archive-row-v2 note-kind-${noteKind(note)}" href="${noteUrl(note)}">
           <div class="archive-row-main">
             <div class="archive-row-meta">
+              ${renderKindMarker(note)}
               <time datetime="${escapeHtml(note.datetime || "")}">${escapeHtml(note.date)}</time>
-              ${renderTags(note)}
             </div>
             <h2>${escapeHtml(note.title)}</h2>
             ${note.excerpt ? `<p>${escapeHtml(note.excerpt)}</p>` : ""}
@@ -277,10 +275,10 @@ async function renderNote() {
 
   document.title = `${note.title} — Tyr1onX`;
   article.innerHTML = `
-    <header>
+    <header class="note-kind-${noteKind(note)}">
       <div class="article-meta-line">
+        ${renderKindMarker(note)}
         <time datetime="${escapeHtml(note.datetime || "")}">${escapeHtml(note.date)}</time>
-        ${renderTags(note, "article-tags note-tags")}
       </div>
       <h1>${escapeHtml(note.title)}</h1>
       ${note.source ? `<p class="article-source">${escapeHtml(note.source)}</p>` : ""}
