@@ -2,6 +2,7 @@
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const storageKey = "tyr1onx:keke-planet-transition";
   const body = document.body;
+  const root = document.documentElement;
   const PRELUDE_MS = 860;
   const WIND_RAMP_MS = 820;
   const MAX_WIND_RATE = 7;
@@ -33,6 +34,18 @@
     acceleratedAnimations = [];
     body.style.removeProperty("--keke-flow-thickness");
     body.style.removeProperty("--keke-flow-energy");
+  }
+
+  function releaseForwardWindWithoutClearingReturnState() {
+    cancelAnimationFrame(rampFrame);
+    rampFrame = 0;
+    acceleratedAnimations = [];
+    body.style.removeProperty("--keke-flow-energy");
+  }
+
+  function isKekeReturnArrival() {
+    return root.dataset.returnHomePending === "keke-return"
+      || body.classList.contains("is-returning-keke-home");
   }
 
   function collectWindAnimations() {
@@ -95,8 +108,10 @@
     });
   }
 
-  function clearPreparation(link, image, identityAvatar, identityName) {
-    restoreWindRate();
+  function clearPreparation(link, image, identityAvatar, identityName, { preserveReturnWind = false } = {}) {
+    if (preserveReturnWind) releaseForwardWindWithoutClearingReturnState();
+    else restoreWindRate();
+
     body.classList.remove("is-preparing-keke", "is-entering-keke");
     image.classList.remove("keke-transition-source");
     identityAvatar?.classList.remove("keke-site-avatar-source");
@@ -175,7 +190,9 @@
       clearTimeout(navigateTimer);
       navigateTimer = 0;
       navigating = false;
-      clearPreparation(link, image, identityAvatar, identityName);
+      clearPreparation(link, image, identityAvatar, identityName, {
+        preserveReturnWind: isKekeReturnArrival(),
+      });
     });
   }
 
