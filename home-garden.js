@@ -2,9 +2,6 @@
   const field = document.querySelector("#cosmos-field");
   if (!(field instanceof HTMLElement)) return;
 
-  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const coarsePointer = matchMedia("(hover: none), (pointer: coarse)").matches;
-
   const timestamp = (note) => {
     const direct = Date.parse(note?.datetime || "");
     if (Number.isFinite(direct)) return direct;
@@ -70,38 +67,4 @@
     element.setAttribute("aria-label", `${note.title}，${date}，${noteKindLabel(note)}`);
     threadElements[index]?.classList.add(kindClass);
   });
-
-  if (!reducedMotion && !coarsePointer) {
-    let pointerFrame = 0;
-    let pointerX = 0;
-    let pointerY = 0;
-
-    const paintPointerPressure = () => {
-      pointerFrame = 0;
-      field.style.setProperty("--garden-shift-x", `${(pointerX * 10).toFixed(2)}px`);
-      field.style.setProperty("--garden-shift-y", `${(pointerY * 7).toFixed(2)}px`);
-      field.style.setProperty("--garden-trace-shift-x", `${(-pointerX * 4).toFixed(2)}px`);
-      field.style.setProperty("--garden-trace-shift-y", `${(-pointerY * 3).toFixed(2)}px`);
-    };
-
-    field.addEventListener(
-      "pointermove",
-      (event) => {
-        const rect = field.getBoundingClientRect();
-        if (!rect.width || !rect.height) return;
-
-        pointerX = Math.max(-0.5, Math.min(0.5, (event.clientX - rect.left) / rect.width - 0.5));
-        pointerY = Math.max(-0.5, Math.min(0.5, (event.clientY - rect.top) / rect.height - 0.5));
-
-        if (!pointerFrame) pointerFrame = requestAnimationFrame(paintPointerPressure);
-      },
-      { passive: true }
-    );
-
-    field.addEventListener("pointerleave", () => {
-      pointerX = 0;
-      pointerY = 0;
-      if (!pointerFrame) pointerFrame = requestAnimationFrame(paintPointerPressure);
-    });
-  }
 })();
