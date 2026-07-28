@@ -29,6 +29,7 @@ html[data-theme="light"] .orbit-project:focus-visible .orbit-icon-shell {
   border-radius: 26%;
   background: transparent;
   box-shadow: 0 0 0 1px var(--cosmos-line-strong);
+  transform: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -37,6 +38,7 @@ html[data-theme="light"] .orbit-project:focus-visible .orbit-icon-shell {
     border-radius: 26%;
     background: transparent;
     box-shadow: 0 0 0 1px var(--cosmos-line-strong);
+    transform: none;
   }
 }
 
