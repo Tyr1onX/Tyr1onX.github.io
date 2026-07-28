@@ -1,32 +1,14 @@
 (() => {
   const body = document.body;
   const root = document.documentElement;
+  if (body.dataset.page !== "home") return;
+
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const returnKey = "tyr1onx:return-home-transition";
-  const planetMemoryKey = "tyr1onx:writing-planet-memory";
   const WIND_WAKE_MS = 620;
   const WIND_SETTLE_MS = 700;
   const WRITING_CALM_RATE = 0.24;
   const KEKE_PEAK_RATE = 7;
-
-  function capturePlanetMemory() {
-    if (body.dataset.page !== "notes" && body.dataset.page !== "note") return;
-    const x = root.style.getPropertyValue("--writing-planet-drift-x").trim();
-    const y = root.style.getPropertyValue("--writing-planet-drift-y").trim();
-    if (!x && !y) return;
-
-    try {
-      sessionStorage.setItem(planetMemoryKey, JSON.stringify({
-        x: x || "68px",
-        y: y || "-22px",
-      }));
-    } catch {
-      // The return uses the default direction when storage is unavailable.
-    }
-  }
-
-  capturePlanetMemory();
-  if (body.dataset.page !== "home") return;
 
   let windFrame = 0;
   let returnAnimations = [];
@@ -38,6 +20,10 @@
     } catch {
       return "";
     }
+  };
+
+  const releaseHomePhysics = () => {
+    dispatchEvent(new CustomEvent("tyr1onx:return-home-complete"));
   };
 
   const setAnimationRate = (animation, rate) => {
@@ -169,50 +155,6 @@
     windFrame = requestAnimationFrame(step);
   };
 
-  const stabilizeHomeStars = (duration = 1350) => {
-    const field = document.querySelector("#cosmos-field");
-    const stars = [...document.querySelectorAll("#note-stars .note-star")];
-    const threads = [...document.querySelectorAll("#star-threads .star-thread")];
-    if (!(field instanceof HTMLElement) || !stars.length) return;
-
-    const layouts = [
-      [0.10, 0.24, -0.19], [0.22, 0.39, 0.12], [0.35, 0.22, -0.13], [0.50, 0.31, 0.16],
-      [0.66, 0.20, -0.12], [0.82, 0.35, 0.11], [0.18, 0.57, 0.08], [0.76, 0.56, -0.08],
-    ];
-    const startedAt = performance.now();
-
-    const place = (now) => {
-      const width = field.clientWidth;
-      const height = field.clientHeight;
-      if (width >= 120 && height >= 240) {
-        stars.forEach((star, index) => {
-          if (!(star instanceof HTMLElement) || !layouts[index]) return;
-          const [anchorRatio, ropeRatio, angle] = layouts[index];
-          const anchorX = width * anchorRatio;
-          const anchorY = -10;
-          const length = Math.max(140, height * ropeRatio);
-          const x = anchorX + Math.sin(angle) * length;
-          const y = anchorY + Math.cos(angle) * length;
-          const size = Number.parseFloat(getComputedStyle(star).getPropertyValue("--note-star-size"));
-          const tip = Number.isFinite(size) ? size / 2 : 6;
-
-          star.style.transform = `translate(${(x - 22).toFixed(2)}px, ${(y - 22).toFixed(2)}px)`;
-          const line = threads[index];
-          if (line instanceof SVGElement) {
-            line.setAttribute("x1", anchorX.toFixed(2));
-            line.setAttribute("y1", String(anchorY));
-            line.setAttribute("x2", x.toFixed(2));
-            line.setAttribute("y2", (y - tip).toFixed(2));
-          }
-        });
-      }
-
-      if (now - startedAt < duration) requestAnimationFrame(place);
-    };
-
-    requestAnimationFrame(place);
-  };
-
   const findHomeStar = (id) => [...document.querySelectorAll("#note-stars .note-star")].find(
     (star) => star instanceof HTMLAnchorElement && noteIdFromHref(star.href) === id
   );
@@ -264,12 +206,14 @@
     document.querySelectorAll(".return-shared-star").forEach((element) => element.classList.remove("return-shared-star"));
     root.style.removeProperty("--return-planet-drift-x");
     root.style.removeProperty("--return-planet-drift-y");
+    releaseHomePhysics();
   };
 
   const installHomeArrival = () => {
     const payload = readPayload();
     if (!payload || reducedMotion.matches) {
       delete root.dataset.returnHomePending;
+      releaseHomePhysics();
       return;
     }
 
@@ -284,7 +228,6 @@
     } else if (payload.mode === "writing-archive-return" || payload.mode === "writing-note-return") {
       body.style.setProperty("--writing-flow-spread", "1.16");
       body.style.setProperty("--writing-flow-blur", "22.5px");
-      stabilizeHomeStars();
       setWritingTargets(payload);
       root.style.setProperty("--return-planet-drift-x", payload.planet?.x || "68px");
       root.style.setProperty("--return-planet-drift-y", payload.planet?.y || "-22px");
