@@ -37,10 +37,29 @@
     <link rel="stylesheet" href="./writing-transition.css?v=3-thread-cycle" />
     <link rel="stylesheet" href="./return-home-transition.css?v=3-fresh-route" />
     <link rel="stylesheet" href="./transition-sequence-timing.css?v=5-motion-system" />
+    <style>
+      /* A focused article transition must not dim unrelated hanging stars. */
+      body[data-page="home"].is-preparing-writing-note .writing-retract-bystander,
+      body[data-page="home"].is-entering-writing-note .writing-retract-bystander {
+        opacity: 1 !important;
+        scale: 1 !important;
+        transition: none !important;
+      }
+
+      body[data-page="home"].is-preparing-writing-note .note-star:not(.writing-retract-source):hover .note-star-label,
+      body[data-page="home"].is-preparing-writing-note .note-star:not(.writing-retract-source):focus-visible .note-star-label,
+      body[data-page="home"].is-preparing-writing-note .note-star:not(.writing-retract-source).is-touch-active .note-star-label,
+      body[data-page="home"].is-entering-writing-note .note-star:not(.writing-retract-source):hover .note-star-label,
+      body[data-page="home"].is-entering-writing-note .note-star:not(.writing-retract-source):focus-visible .note-star-label,
+      body[data-page="home"].is-entering-writing-note .note-star:not(.writing-retract-source).is-touch-active .note-star-label {
+        opacity: 1 !important;
+        transform: translate(-50%, 0);
+      }
+    </style>
     <script src="./notes-data.js" defer></script>
     <script src="./notes-2026.js?v=2" defer></script>
     <script src="./site-runtime.js?v=1-lightweight" defer></script>
-    <script src="./home-cosmos.js?v=2-coordinated-physics" defer></script>
+    <script src="./home-cosmos.js?v=3-smooth-intro" defer></script>
     <script src="./home-keke-orbit.js?v=4-frame-cost" defer></script>
     <script src="./home-garden.js?v=4-shared-notes" defer></script>
     <script src="./keke-transition.js?v=6-motion-lifecycle" defer></script>
