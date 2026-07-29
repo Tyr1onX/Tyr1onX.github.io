@@ -45,47 +45,6 @@
   `;
   document.head.append(style);
 
-  let activeMode = "";
-
-  const allIndices = () => [...document.querySelectorAll("#note-stars .note-star")]
-    .map((_, index) => index);
-
-  const focusedIndex = () => [...document.querySelectorAll("#note-stars .note-star")]
-    .findIndex((star) => star.classList.contains("writing-retract-source"));
-
-  const startForwardRetraction = (mode) => {
-    if (activeMode) return;
-
-    let options;
-    if (mode === "keke") {
-      options = { indices: allIndices(), duration: 520, baseDelay: 70, stagger: 42 };
-    } else if (mode === "writing-archive") {
-      options = { indices: allIndices(), duration: 440, baseDelay: 0, stagger: 28 };
-    } else {
-      const index = focusedIndex();
-      if (index < 0) return;
-      options = { indices: [index], duration: 440, baseDelay: 0, stagger: 0 };
-    }
-
-    activeMode = mode;
-    body.classList.add("is-cosmos-retracting");
-    void motion.retract(options);
-  };
-
-  const synchronizeForwardState = () => {
-    if (body.classList.contains("is-preparing-keke")) {
-      startForwardRetraction("keke");
-      return;
-    }
-    if (body.classList.contains("is-preparing-writing-archive")) {
-      startForwardRetraction("writing-archive");
-      return;
-    }
-    if (body.classList.contains("is-preparing-writing-note")) {
-      startForwardRetraction("writing-note");
-    }
-  };
-
   const returnStateActive = () => Boolean(root.dataset.returnHomePending)
     || body.classList.contains("is-returning-keke-home")
     || body.classList.contains("is-returning-writing-home");
@@ -101,26 +60,14 @@
     body.classList.remove("is-cosmos-return-drop");
   };
 
-  const bodyObserver = new MutationObserver(() => {
-    synchronizeForwardState();
-    synchronizeReturnState();
-  });
+  const bodyObserver = new MutationObserver(synchronizeReturnState);
   bodyObserver.observe(body, { attributes: true, attributeFilter: ["class"] });
 
   const rootObserver = new MutationObserver(synchronizeReturnState);
   rootObserver.observe(root, { attributes: true, attributeFilter: ["data-return-home-pending"] });
 
   addEventListener("pageshow", () => {
-    motion.resetRetraction();
-    activeMode = "";
-    requestAnimationFrame(() => {
-      if (!body.classList.contains("is-preparing-keke")
-        && !body.classList.contains("is-preparing-writing-archive")
-        && !body.classList.contains("is-preparing-writing-note")) {
-        body.classList.remove("is-cosmos-retracting");
-      }
-      synchronizeReturnState();
-    });
+    requestAnimationFrame(synchronizeReturnState);
   });
 
   synchronizeReturnState();
