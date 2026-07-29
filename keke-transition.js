@@ -7,10 +7,6 @@
   const MAX_WIND_RATE = 7;
   const STAR_BASE_DELAY = 70;
   const STAR_STAGGER_MS = 42;
-  const RETRACT_ANIMATION_NAMES = new Set([
-    "keke-star-retract",
-    "keke-thread-retract",
-  ]);
   const ARRIVAL_ANIMATION_NAMES = new Set(["keke-content-arrive"]);
 
   let rampFrame = 0;
@@ -116,40 +112,12 @@
     rampFrame = requestAnimationFrame(step);
   }
 
-  function prepareStarRetraction() {
-    const field = document.querySelector("#cosmos-field");
-    const stars = [...document.querySelectorAll("#note-stars .note-star")];
-    const threads = [...document.querySelectorAll("#star-threads .star-thread")];
-    const elements = [];
-    if (!(field instanceof HTMLElement)) return elements;
-
-    stars.forEach((star, index) => {
-      if (!(star instanceof HTMLElement)) return;
-      const line = threads[index];
-      const anchorX = Number.parseFloat(line?.getAttribute("x1") || "");
-      const anchorY = Number.parseFloat(line?.getAttribute("y1") || "");
-      const targetX = Number.isFinite(anchorX) ? anchorX - star.offsetWidth / 2 : star.offsetLeft;
-      const targetY = Number.isFinite(anchorY) ? anchorY - star.offsetHeight / 2 : -star.offsetHeight;
-      const delay = STAR_BASE_DELAY + index * STAR_STAGGER_MS;
-
-      star.style.setProperty("--keke-retract-x", `${targetX.toFixed(2)}px`);
-      star.style.setProperty("--keke-retract-y", `${targetY.toFixed(2)}px`);
-      star.style.setProperty("--keke-retract-delay", `${delay}ms`);
-      elements.push(star);
-
-      if (line instanceof SVGElement) {
-        line.style.setProperty("--keke-retract-delay", `${delay}ms`);
-        elements.push(line);
-      }
-    });
-    return elements;
-  }
-
   function clearPreparation(link, image, identityAvatar, identityName, { preserveReturnWind = false } = {}) {
     if (preserveReturnWind) releaseForwardWindWithoutClearingReturnState();
     else restoreWindRate();
 
-    body.classList.remove("is-preparing-keke", "is-entering-keke");
+    window.TYR1ONX_COSMOS_MOTION?.resetRetraction();
+    body.classList.remove("is-preparing-keke", "is-entering-keke", "is-cosmos-retracting");
     image.classList.remove("keke-transition-source");
     identityAvatar?.classList.remove("keke-site-avatar-source");
     identityName?.classList.remove("keke-site-name-source");
@@ -238,12 +206,8 @@
       identityAvatar?.classList.add("keke-site-avatar-source");
       identityName?.classList.add("keke-site-name-source");
       link.setAttribute("aria-disabled", "true");
-      const retractionElements = prepareStarRetraction();
-
-      requestAnimationFrame(() => {
-        body.classList.add("is-preparing-keke");
-        rampWind();
-      });
+      body.classList.add("is-cosmos-retracting", "is-preparing-keke");
+      rampWind();
 
       try {
         sessionStorage.setItem(storageKey, "1");
@@ -252,11 +216,19 @@
       }
 
       void (async () => {
-        const fallback = motionMs("--motion-project-retract", 520)
-          + STAR_BASE_DELAY
-          + 7 * STAR_STAGGER_MS
-          + motionMs("--motion-micro", 180);
-        await waitForNamedAnimations(retractionElements, RETRACT_ANIMATION_NAMES, fallback);
+        const duration = motionMs("--motion-project-retract", 520);
+        const indices = [...document.querySelectorAll("#note-stars .note-star")].map((_, index) => index);
+        const motion = window.TYR1ONX_COSMOS_MOTION;
+        if (motion) {
+          await motion.retract({
+            indices,
+            duration,
+            baseDelay: STAR_BASE_DELAY,
+            stagger: STAR_STAGGER_MS,
+          });
+        } else {
+          await sleep(duration + STAR_BASE_DELAY + 7 * STAR_STAGGER_MS);
+        }
         if (!navigating) return;
         body.classList.add("is-entering-keke");
         location.assign(destination);
