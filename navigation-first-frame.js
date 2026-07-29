@@ -56,17 +56,20 @@
     }
   };
 
+  const readJsonMode = (key) => {
+    try {
+      return JSON.parse(readSession(key) || "null")?.mode || "";
+    } catch {
+      return "";
+    }
+  };
+
   const currentPage = pageName(location.href);
   const url = new URL(location.href);
   let route = "";
 
   if (currentPage === "home") {
-    let storedMode = "";
-    try {
-      storedMode = JSON.parse(readSession(RETURN_KEY) || "null")?.mode || "";
-    } catch {
-      storedMode = "";
-    }
+    const storedMode = readJsonMode(RETURN_KEY);
     const queryMode = url.searchParams.get("__return");
     const mode = storedMode
       || (queryMode === "keke" ? "keke-return" : queryMode === "writing" ? "writing-archive-return" : "");
@@ -80,12 +83,7 @@
       route = "home-to-keke";
     }
   } else if (currentPage === "notes" || currentPage === "note") {
-    let storedMode = "";
-    try {
-      storedMode = JSON.parse(readSession(WRITING_KEY) || "null")?.mode || "";
-    } catch {
-      storedMode = "";
-    }
+    const storedMode = readJsonMode(WRITING_KEY);
     const queryMode = url.searchParams.get("__writing");
     const mode = queryMode || storedMode;
     const expectedMode = currentPage === "notes" ? "archive" : "note";
@@ -139,6 +137,32 @@
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) removeSession(WRITING_KEY);
     }
   });
+
+  document.addEventListener("click", (event) => {
+    const link = event.target instanceof Element ? event.target.closest("a[href]") : null;
+    if (!(link instanceof HTMLAnchorElement)) return;
+
+    queueMicrotask(() => {
+      const targetPage = pageName(link.href);
+      let nextRoute = "";
+
+      if (currentPage === "home") {
+        if (targetPage === "keke" && readSession(KEKE_KEY) === "1") {
+          nextRoute = "home-to-keke";
+        } else if (targetPage === "notes" || targetPage === "note") {
+          const mode = readJsonMode(WRITING_KEY);
+          if (mode === "archive" && targetPage === "notes") nextRoute = "home-to-writing-archive";
+          else if (mode === "note" && targetPage === "note") nextRoute = "home-to-writing-note";
+        }
+      } else if (targetPage === "home") {
+        const mode = readJsonMode(RETURN_KEY);
+        if (mode === "keke-return") nextRoute = "keke-to-home";
+        else if (mode === "writing-archive-return" || mode === "writing-note-return") nextRoute = "writing-to-home";
+      }
+
+      if (nextRoute) root.dataset.transitionRoute = nextRoute;
+    });
+  }, true);
 
   addEventListener("pageswap", (event) => {
     const destination = event.activation?.entry?.url;
