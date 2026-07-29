@@ -9,10 +9,47 @@
   const WIND_SETTLE_MS = 700;
   const WRITING_CALM_RATE = 0.24;
   const KEKE_PEAK_RATE = 7;
+  const ARRIVAL_ANIMATION_NAMES = new Set([
+    "return-star-drop-from-anchor",
+    "return-thread-release",
+    "return-orbit-line-in",
+    "return-writing-planet-in",
+  ]);
 
   let windFrame = 0;
   let returnAnimations = [];
-  let arrivalTimer = 0;
+
+  const sleep = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
+  const afterStyleCommit = () => new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+
+  const motionMs = (name, fallback) => {
+    const raw = getComputedStyle(root).getPropertyValue(name).trim();
+    const value = Number.parseFloat(raw);
+    if (!Number.isFinite(value)) return fallback;
+    return raw.endsWith("s") && !raw.endsWith("ms") ? value * 1000 : value;
+  };
+
+  const arrivalFallbackMs = () => (
+    motionMs("--motion-delay-base", 70)
+    + motionMs("--motion-release", 620)
+    + 7 * motionMs("--motion-stagger-star", 42)
+    + motionMs("--motion-micro", 180)
+  );
+
+  const waitForArrivalAnimations = async () => {
+    await afterStyleCommit();
+    const animations = document.getAnimations().filter((animation) => (
+      ARRIVAL_ANIMATION_NAMES.has(animation.animationName)
+    ));
+
+    if (!animations.length) {
+      await sleep(arrivalFallbackMs());
+      return;
+    }
+    await Promise.allSettled(animations.map((animation) => animation.finished));
+  };
 
   const releaseHomePhysics = () => {
     dispatchEvent(new CustomEvent("tyr1onx:return-home-complete"));
@@ -47,6 +84,8 @@
   const prepareHomeStarDeploy = () => {
     const stars = [...document.querySelectorAll("#note-stars .note-star")];
     const lines = [...document.querySelectorAll("#star-threads .star-thread")];
+    const baseDelay = motionMs("--motion-delay-base", 70);
+    const stagger = motionMs("--motion-stagger-star", 42);
 
     stars.forEach((star, index) => {
       if (!(star instanceof HTMLElement)) return;
@@ -59,6 +98,7 @@
       const tipY = Number.parseFloat(line.getAttribute("y2") || "");
       const starSize = Number.parseFloat(getComputedStyle(star).getPropertyValue("--note-star-size"));
       const halfStar = Number.isFinite(starSize) ? starSize / 2 : 6;
+      const delay = baseDelay + index * stagger;
 
       if (!Number.isFinite(anchorX)
         || !Number.isFinite(anchorY)
@@ -68,6 +108,8 @@
       const centerY = tipY + halfStar;
       star.style.setProperty("--return-star-drop-x", `${(anchorX - tipX).toFixed(2)}px`);
       star.style.setProperty("--return-star-drop-y", `${(anchorY - centerY).toFixed(2)}px`);
+      star.style.setProperty("--return-star-delay", `${delay}ms`);
+      line.style.setProperty("--return-thread-delay", `${delay}ms`);
     });
   };
 
@@ -99,7 +141,7 @@
     body.style.removeProperty("--writing-flow-blur");
   };
 
-  const settleKekeWind = () => {
+  const settleKekeWind = () => new Promise((resolve) => {
     restoreWindRates();
     body.style.setProperty("--keke-flow-thickness", "0.38");
     collectHomeAnimations();
@@ -133,13 +175,14 @@
       } else {
         body.style.setProperty("--keke-flow-thickness", "1");
         restoreWindRates();
+        resolve();
       }
     };
 
     windFrame = requestAnimationFrame(step);
-  };
+  });
 
-  const awakenWritingWind = () => {
+  const awakenWritingWind = () => new Promise((resolve) => {
     restoreWindRates();
     body.style.setProperty("--writing-flow-spread", "1.16");
     body.style.setProperty("--writing-flow-blur", "22.5px");
@@ -177,20 +220,17 @@
         body.style.setProperty("--writing-flow-spread", "1");
         body.style.setProperty("--writing-flow-blur", "7px");
         restoreWindRates();
+        resolve();
       }
     };
 
     windFrame = requestAnimationFrame(step);
-  };
+  });
 
   const clearArrivalState = () => {
-    clearTimeout(arrivalTimer);
-    arrivalTimer = 0;
     restoreWindRates();
 
-    // Remove every selector that consumes the visual variables before clearing
-    // those variables. This prevents the CSS fallback values from recreating a
-    // narrow wind band for one extra frame.
+    // Remove selectors before variables so no fallback can recreate an old state.
     delete root.dataset.returnHomePending;
     body.classList.remove(
       "is-returning-keke-home",
@@ -207,13 +247,17 @@
     document.querySelectorAll("#note-stars .note-star").forEach((star) => {
       star.style.removeProperty("--return-star-drop-x");
       star.style.removeProperty("--return-star-drop-y");
+      star.style.removeProperty("--return-star-delay");
+    });
+    document.querySelectorAll("#star-threads .star-thread").forEach((thread) => {
+      thread.style.removeProperty("--return-thread-delay");
     });
     root.style.removeProperty("--return-planet-drift-x");
     root.style.removeProperty("--return-planet-drift-y");
     releaseHomePhysics();
   };
 
-  const installHomeArrival = () => {
+  const installHomeArrival = async () => {
     const payload = readPayload();
     if (!payload || reducedMotion.matches) {
       delete root.dataset.returnHomePending;
@@ -226,11 +270,12 @@
     setIdentityTarget();
     prepareHomeStarDeploy();
 
+    let windPromise = Promise.resolve();
     if (payload.mode === "keke-return") {
       body.style.setProperty("--keke-flow-thickness", "0.38");
       setNamedElement(document.querySelector(".orbit-project img"), "return-keke-planet-target", "return-keke-planet");
       body.classList.add("is-returning-keke-home");
-      settleKekeWind();
+      windPromise = settleKekeWind();
     } else if (payload.mode === "writing-archive-return" || payload.mode === "writing-note-return") {
       body.style.setProperty("--writing-flow-spread", "1.16");
       body.style.setProperty("--writing-flow-blur", "22.5px");
@@ -240,11 +285,12 @@
         "is-returning-writing-home",
         payload.mode === "writing-archive-return" ? "is-returning-writing-archive-home" : "is-returning-writing-note-home"
       );
-      awakenWritingWind();
+      windPromise = awakenWritingWind();
     }
 
-    arrivalTimer = setTimeout(clearArrivalState, 1550);
+    await Promise.all([windPromise, waitForArrivalAnimations()]);
+    clearArrivalState();
   };
 
-  installHomeArrival();
+  void installHomeArrival();
 })();

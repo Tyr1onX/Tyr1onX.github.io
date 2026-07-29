@@ -3,15 +3,44 @@
   const storageKey = "tyr1onx:keke-planet-transition";
   const body = document.body;
   const root = document.documentElement;
-  const PRELUDE_MS = 860;
   const WIND_RAMP_MS = 820;
   const MAX_WIND_RATE = 7;
   const STAR_BASE_DELAY = 70;
   const STAR_STAGGER_MS = 42;
+  const RETRACT_ANIMATION_NAMES = new Set([
+    "keke-star-retract",
+    "keke-thread-retract",
+  ]);
+  const ARRIVAL_ANIMATION_NAMES = new Set(["keke-content-arrive"]);
 
   let rampFrame = 0;
   let acceleratedAnimations = [];
   let prefetchedDestination = "";
+
+  const sleep = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
+  const afterStyleCommit = () => new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+
+  const motionMs = (name, fallback) => {
+    const raw = getComputedStyle(root).getPropertyValue(name).trim();
+    const value = Number.parseFloat(raw);
+    if (!Number.isFinite(value)) return fallback;
+    return raw.endsWith("s") && !raw.endsWith("ms") ? value * 1000 : value;
+  };
+
+  const waitForNamedAnimations = async (elements, names, fallbackMs) => {
+    await afterStyleCommit();
+    const animations = [...new Set(elements.flatMap((element) => (
+      element instanceof Element ? element.getAnimations() : []
+    )))].filter((animation) => names.has(animation.animationName));
+
+    if (!animations.length) {
+      await sleep(fallbackMs);
+      return;
+    }
+    await Promise.allSettled(animations.map((animation) => animation.finished));
+  };
 
   function setAnimationRate(animation, rate) {
     if (typeof animation.updatePlaybackRate === "function") {
@@ -91,7 +120,8 @@
     const field = document.querySelector("#cosmos-field");
     const stars = [...document.querySelectorAll("#note-stars .note-star")];
     const threads = [...document.querySelectorAll("#star-threads .star-thread")];
-    if (!(field instanceof HTMLElement)) return;
+    const elements = [];
+    if (!(field instanceof HTMLElement)) return elements;
 
     stars.forEach((star, index) => {
       if (!(star instanceof HTMLElement)) return;
@@ -105,8 +135,14 @@
       star.style.setProperty("--keke-retract-x", `${targetX.toFixed(2)}px`);
       star.style.setProperty("--keke-retract-y", `${targetY.toFixed(2)}px`);
       star.style.setProperty("--keke-retract-delay", `${delay}ms`);
-      line?.style.setProperty("--keke-retract-delay", `${delay}ms`);
+      elements.push(star);
+
+      if (line instanceof SVGElement) {
+        line.style.setProperty("--keke-retract-delay", `${delay}ms`);
+        elements.push(line);
+      }
     });
+    return elements;
   }
 
   function clearPreparation(link, image, identityAvatar, identityName, { preserveReturnWind = false } = {}) {
@@ -150,7 +186,7 @@
     return destination;
   }
 
-  function setArrivalState() {
+  async function setArrivalState() {
     if (body.dataset.page !== "keke") return;
 
     let arrivedFromHome = false;
@@ -162,8 +198,16 @@
     }
 
     if (!arrivedFromHome || reducedMotion.matches) return;
+    const content = [
+      ...document.querySelectorAll(".keke-summary > :not(.keke-title-row), .product-viewer"),
+    ];
     body.classList.add("is-arriving-keke");
-    setTimeout(() => body.classList.remove("is-arriving-keke"), 1200);
+    await waitForNamedAnimations(
+      content,
+      ARRIVAL_ANIMATION_NAMES,
+      motionMs("--motion-release", 620) + 240
+    );
+    body.classList.remove("is-arriving-keke");
   }
 
   function installHomeTransition() {
@@ -176,7 +220,6 @@
     if (!(link instanceof HTMLAnchorElement) || !(image instanceof HTMLImageElement)) return;
 
     let navigating = false;
-    let navigateTimer = 0;
 
     link.addEventListener("pointerenter", () => prefetchDestination(link), { passive: true });
     link.addEventListener("focus", () => prefetchDestination(link), { passive: true });
@@ -195,7 +238,7 @@
       identityAvatar?.classList.add("keke-site-avatar-source");
       identityName?.classList.add("keke-site-name-source");
       link.setAttribute("aria-disabled", "true");
-      prepareStarRetraction();
+      const retractionElements = prepareStarRetraction();
 
       requestAnimationFrame(() => {
         body.classList.add("is-preparing-keke");
@@ -208,10 +251,16 @@
         // The transition remains usable without storage; only the destination reveal is skipped.
       }
 
-      navigateTimer = window.setTimeout(() => {
+      void (async () => {
+        const fallback = motionMs("--motion-project-retract", 520)
+          + STAR_BASE_DELAY
+          + 7 * STAR_STAGGER_MS
+          + motionMs("--motion-micro", 180);
+        await waitForNamedAnimations(retractionElements, RETRACT_ANIMATION_NAMES, fallback);
+        if (!navigating) return;
         body.classList.add("is-entering-keke");
         location.assign(destination);
-      }, PRELUDE_MS);
+      })();
     });
 
     const idlePrefetch = () => prefetchDestination(link);
@@ -219,8 +268,6 @@
     else setTimeout(idlePrefetch, 1800);
 
     addEventListener("pageshow", () => {
-      clearTimeout(navigateTimer);
-      navigateTimer = 0;
       navigating = false;
       clearPreparation(link, image, identityAvatar, identityName, {
         preserveReturnWind: isKekeReturnArrival(),
@@ -228,6 +275,6 @@
     });
   }
 
-  setArrivalState();
+  void setArrivalState();
   installHomeTransition();
 })();

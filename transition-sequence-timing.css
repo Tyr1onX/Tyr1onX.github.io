@@ -1,4 +1,114 @@
-/* Strict sequencing for writing transitions: finish one physical phase before the next begins. */
+/* Shared motion system: one timing vocabulary for every spatial transition. */
+:root {
+  --motion-press: 90ms;
+  --motion-micro: 180ms;
+  --motion-fold: 240ms;
+  --motion-retract: 440ms;
+  --motion-project-retract: 520ms;
+  --motion-release: 620ms;
+  --motion-world-exit: 420ms;
+  --motion-world-enter: 560ms;
+  --motion-identity: 620ms;
+  --motion-project-identity: 780ms;
+  --motion-project-transfer: 860ms;
+  --motion-project-return: 720ms;
+  --motion-environment: 700ms;
+  --motion-delay-base: 70ms;
+  --motion-stagger-star: 42ms;
+  --motion-stagger-coordinate: 38ms;
+  --motion-stagger-copy: 34ms;
+
+  --motion-archive-content-start: 920ms;
+  --motion-archive-branch-start: 980ms;
+  --motion-archive-copy-start: 1020ms;
+  --motion-archive-footer-start: 1320ms;
+  --motion-note-meta-start: 660ms;
+  --motion-note-title-start: 700ms;
+  --motion-note-source-start: 780ms;
+  --motion-note-body-start: 860ms;
+  --motion-note-path-start: 900ms;
+  --motion-note-nav-start: 1040ms;
+  --motion-note-footer-start: 1120ms;
+
+  --ease-press: cubic-bezier(.22, 1, .36, 1);
+  --ease-enter: cubic-bezier(.2, .72, .18, 1);
+  --ease-exit: cubic-bezier(.38, 0, .16, 1);
+  --ease-spatial: cubic-bezier(.2, .78, .18, 1);
+  --ease-settle: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* Shared-element rhythm. Project travel remains deliberately slower than writing travel. */
+::view-transition-group(keke-planet) {
+  animation-duration: var(--motion-project-transfer) !important;
+  animation-timing-function: var(--ease-spatial) !important;
+}
+
+::view-transition-group(keke-site-avatar),
+::view-transition-group(keke-site-name) {
+  animation-duration: var(--motion-project-identity) !important;
+  animation-timing-function: var(--ease-enter) !important;
+}
+
+::view-transition-group(writing-site-avatar),
+::view-transition-group(writing-site-name),
+::view-transition-group(return-site-avatar),
+::view-transition-group(return-site-name) {
+  animation-duration: var(--motion-identity) !important;
+  animation-timing-function: var(--ease-enter) !important;
+}
+
+::view-transition-group(return-keke-planet) {
+  animation-duration: var(--motion-project-return) !important;
+  animation-timing-function: var(--ease-spatial) !important;
+}
+
+::view-transition-group(return-writing-focus-star),
+::view-transition-group(return-writing-star-0),
+::view-transition-group(return-writing-star-1),
+::view-transition-group(return-writing-star-2),
+::view-transition-group(return-writing-star-3),
+::view-transition-group(return-writing-star-4) {
+  animation-duration: var(--motion-release) !important;
+  animation-timing-function: var(--ease-spatial) !important;
+}
+
+::view-transition-old(root) {
+  animation-duration: var(--motion-environment) !important;
+}
+
+::view-transition-new(root) {
+  animation-duration: var(--motion-environment) !important;
+}
+
+html:has(body.is-entering-writing-archive)::view-transition-old(root),
+html:has(body.is-entering-writing-note)::view-transition-old(root),
+html:has(body.is-leaving-keke-home)::view-transition-old(root),
+html:has(body.is-leaving-writing-home)::view-transition-old(root) {
+  animation-duration: var(--motion-world-exit) !important;
+  animation-timing-function: var(--ease-exit) !important;
+}
+
+html:has(body.is-arriving-writing-archive)::view-transition-new(root),
+html:has(body.is-arriving-writing-note)::view-transition-new(root),
+html:has(body.is-returning-writing-home)::view-transition-new(root) {
+  animation-duration: var(--motion-world-enter) !important;
+  animation-timing-function: var(--ease-enter) !important;
+}
+
+html:has(body.is-returning-keke-home)::view-transition-new(root) {
+  animation-duration: var(--motion-release) !important;
+  animation-timing-function: var(--ease-enter) !important;
+}
+
+/* Source phases: a source must finish retracting before navigation begins. */
+body[data-page="home"].is-preparing-keke .note-star,
+body[data-page="home"].is-entering-keke .note-star,
+body[data-page="home"].is-preparing-keke .star-thread,
+body[data-page="home"].is-entering-keke .star-thread {
+  animation-duration: var(--motion-project-retract) !important;
+  animation-timing-function: var(--ease-exit) !important;
+}
+
 body[data-page="home"].is-preparing-writing-archive .writing-retract-source,
 body[data-page="home"].is-entering-writing-archive .writing-retract-source,
 body[data-page="home"].is-preparing-writing-note .writing-retract-source,
@@ -7,70 +117,74 @@ body[data-page="home"].is-preparing-writing-archive .writing-retract-thread,
 body[data-page="home"].is-entering-writing-archive .writing-retract-thread,
 body[data-page="home"].is-preparing-writing-note .writing-retract-thread,
 body[data-page="home"].is-entering-writing-note .writing-retract-thread {
-  animation-duration: 440ms !important;
-}
-
-body.is-arriving-writing-archive .writing-drop-thread,
-body.is-arriving-writing-note .writing-drop-thread,
-body.is-arriving-writing-archive .writing-drop-target,
-body.is-arriving-writing-note .writing-drop-target {
-  animation-duration: 620ms !important;
+  animation-duration: var(--motion-retract) !important;
+  animation-timing-function: var(--ease-exit) !important;
 }
 
 .return-pull-thread,
 .return-writing-source.is-return-pulled {
-  animation-duration: 420ms !important;
+  animation-duration: var(--motion-retract) !important;
+  animation-timing-function: var(--ease-exit) !important;
 }
 
-/* Archive content starts only after the last visible coordinate has finished dropping. */
+/* Destination release: coordinates and their suspension lines share one clock. */
+body.is-arriving-writing-archive .writing-drop-thread,
+body.is-arriving-writing-note .writing-drop-thread,
+body.is-arriving-writing-archive .writing-drop-target,
+body.is-arriving-writing-note .writing-drop-target {
+  animation-duration: var(--motion-release) !important;
+  animation-timing-function: var(--ease-enter) !important;
+}
+
+/* Archive copy begins only after the final visible coordinate has landed. */
 body[data-page="notes"].is-arriving-writing-archive .archive-list::before {
-  animation-delay: 920ms !important;
+  animation-delay: var(--motion-archive-content-start) !important;
 }
 
 body[data-page="notes"].is-arriving-writing-archive .archive-row-v2::before {
-  animation-delay: calc(980ms + var(--writing-arrival-delay, 0ms)) !important;
+  animation-delay: calc(var(--motion-archive-branch-start) + var(--writing-arrival-delay, 0ms)) !important;
 }
 
 body[data-page="notes"].is-arriving-writing-archive .archive-row-meta time,
 body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 h2,
 body[data-page="notes"].is-arriving-writing-archive .archive-row-v2 p,
 body[data-page="notes"].is-arriving-writing-archive .archive-row-arrow {
-  animation-delay: calc(1020ms + var(--writing-arrival-delay, 0ms)) !important;
+  animation-delay: calc(var(--motion-archive-copy-start) + var(--writing-arrival-delay, 0ms)) !important;
 }
 
 body[data-page="notes"].is-arriving-writing-archive .site-footer {
-  animation-delay: 1320ms !important;
+  animation-delay: var(--motion-archive-footer-start) !important;
 }
 
-/* A single article coordinate lands first; reading content opens afterward. */
+/* A single article coordinate lands before reading content opens. */
 body[data-page="note"].is-arriving-writing-note .back-link,
 body[data-page="note"].is-arriving-writing-note .article-meta-line time,
 body[data-page="note"].is-arriving-writing-note .article-meta-line::after {
-  animation-delay: 660ms !important;
+  animation-delay: var(--motion-note-meta-start) !important;
 }
 
 body[data-page="note"].is-arriving-writing-note .note-article header h1 {
-  animation-delay: 700ms !important;
+  animation-delay: var(--motion-note-title-start) !important;
 }
 
 body[data-page="note"].is-arriving-writing-note .article-source {
-  animation-delay: 780ms !important;
+  animation-delay: var(--motion-note-source-start) !important;
 }
 
 body[data-page="note"].is-arriving-writing-note .article-body {
-  animation-delay: 860ms !important;
+  animation-delay: var(--motion-note-body-start) !important;
 }
 
 body[data-page="note"].is-arriving-writing-note .reading-path {
-  animation-delay: 900ms !important;
+  animation-delay: var(--motion-note-path-start) !important;
 }
 
 body[data-page="note"].is-arriving-writing-note .note-navigation {
-  animation-delay: 1040ms !important;
+  animation-delay: var(--motion-note-nav-start) !important;
 }
 
 body[data-page="note"].is-arriving-writing-note .site-footer {
-  animation-delay: 1120ms !important;
+  animation-delay: var(--motion-note-footer-start) !important;
 }
 
 /* Keep the atmosphere alive until the footer divider without a separate stylesheet. */
@@ -107,11 +221,7 @@ body[data-page="home"] .garden-trace:nth-child(2n) {
   filter: none;
 }
 
-/*
- * A returning document must begin with the suspension system fully reeled in.
- * The JS receiver writes each star's exact anchor-to-rest vector before adding
- * the body arrival class, so the star and its SVG thread can descend together.
- */
+/* A returning document begins with every suspension line fully reeled in. */
 html[data-return-home-pending] body[data-page="home"] .note-star {
   opacity: 0;
   translate: var(--return-star-drop-x, 0) var(--return-star-drop-y, -160px);
@@ -127,12 +237,12 @@ html[data-return-home-pending] body[data-page="home"] .star-thread {
 
 body[data-page="home"].is-returning-keke-home .note-star,
 body[data-page="home"].is-returning-writing-home .note-star {
-  animation: return-star-drop-from-anchor 620ms calc(70ms + var(--return-star-index, 0) * 42ms) cubic-bezier(.2, .72, .18, 1) both !important;
+  animation: return-star-drop-from-anchor var(--motion-release) var(--return-star-delay, var(--motion-delay-base)) var(--ease-enter) both !important;
 }
 
 body[data-page="home"].is-returning-keke-home .star-thread,
 body[data-page="home"].is-returning-writing-home .star-thread {
-  animation: return-thread-release 620ms calc(70ms + var(--return-thread-index, 0) * 42ms) cubic-bezier(.2, .72, .18, 1) both !important;
+  animation: return-thread-release var(--motion-release) var(--return-thread-delay, var(--motion-delay-base)) var(--ease-enter) both !important;
 }
 
 @keyframes return-star-drop-from-anchor {
@@ -175,6 +285,26 @@ body[data-page="home"].is-returning-writing-home .star-thread {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-press: 1ms;
+    --motion-micro: 1ms;
+    --motion-fold: 1ms;
+    --motion-retract: 1ms;
+    --motion-project-retract: 1ms;
+    --motion-release: 1ms;
+    --motion-world-exit: 1ms;
+    --motion-world-enter: 1ms;
+    --motion-identity: 1ms;
+    --motion-project-identity: 1ms;
+    --motion-project-transfer: 1ms;
+    --motion-project-return: 1ms;
+    --motion-environment: 1ms;
+    --motion-delay-base: 0ms;
+    --motion-stagger-star: 0ms;
+    --motion-stagger-coordinate: 0ms;
+    --motion-stagger-copy: 0ms;
+  }
+
   .writing-retract-source,
   .writing-retract-thread,
   .writing-drop-thread,
