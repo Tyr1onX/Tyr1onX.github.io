@@ -72,6 +72,40 @@
     const FINAL_RETRACT_SCALE = 0.72;
     const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
+    const style = document.createElement("style");
+    style.dataset.rigidStarRetraction = "true";
+    style.textContent = `
+      @keyframes writing-home-star-retract {
+        0% { opacity: 1; translate: 0 0; scale: 1; }
+        80% { opacity: 1; }
+        100% {
+          opacity: 0;
+          translate: var(--writing-retract-x, 0) var(--writing-retract-y, -160px);
+          scale: .72;
+        }
+      }
+      @keyframes writing-home-thread-retract {
+        0% { opacity: 1; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+        80% { opacity: .72; }
+        100% { opacity: 0; stroke-dasharray: 0 1; stroke-dashoffset: 0; }
+      }
+      @keyframes keke-star-retract {
+        0% { opacity: 1; translate: 0 0; scale: 1; }
+        80% { opacity: 1; }
+        100% {
+          opacity: 0;
+          translate: var(--keke-retract-x, 0) var(--keke-retract-y, -160px);
+          scale: .72;
+        }
+      }
+      @keyframes keke-thread-retract {
+        0% { opacity: 1; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+        80% { opacity: .72; }
+        100% { opacity: 0; stroke-dasharray: 0 1; stroke-dashoffset: 0; }
+      }
+    `;
+    document.head.append(style);
+
     const setRigidRetraction = (star, line, prefix) => {
       if (!(star instanceof HTMLElement) || !(line instanceof SVGLineElement)) return;
 
