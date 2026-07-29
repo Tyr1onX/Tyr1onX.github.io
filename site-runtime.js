@@ -67,4 +67,61 @@
   } else {
     revealElements.forEach((element) => element.classList.add("is-visible"));
   }
+
+  if (document.body?.dataset.page === "home") {
+    const FINAL_RETRACT_SCALE = 0.72;
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+    const setRigidRetraction = (star, line, prefix) => {
+      if (!(star instanceof HTMLElement) || !(line instanceof SVGLineElement)) return;
+
+      const anchorX = Number.parseFloat(line.getAttribute("x1") || "");
+      const anchorY = Number.parseFloat(line.getAttribute("y1") || "");
+      const tipX = Number.parseFloat(line.getAttribute("x2") || "");
+      const tipY = Number.parseFloat(line.getAttribute("y2") || "");
+      const starSize = Number.parseFloat(getComputedStyle(star).getPropertyValue("--note-star-size"));
+      const tipOffset = Number.isFinite(starSize) ? starSize / 2 : 6;
+
+      if (![anchorX, anchorY, tipX, tipY].every(Number.isFinite)) return;
+
+      const centerX = tipX;
+      const centerY = tipY + tipOffset;
+      const deltaX = anchorX - centerX;
+      const deltaY = anchorY + tipOffset * FINAL_RETRACT_SCALE - centerY;
+
+      star.style.setProperty(`--${prefix}-retract-x`, `${deltaX.toFixed(2)}px`);
+      star.style.setProperty(`--${prefix}-retract-y`, `${deltaY.toFixed(2)}px`);
+      line.setAttribute("pathLength", "1");
+    };
+
+    const setAllRigidRetractions = (prefix) => {
+      const stars = [...document.querySelectorAll("#note-stars .note-star")];
+      const lines = [...document.querySelectorAll("#star-threads .star-thread")];
+      stars.forEach((star, index) => setRigidRetraction(star, lines[index], prefix));
+    };
+
+    document.addEventListener("click", (event) => {
+      if (reducedMotion.matches || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (!(event.target instanceof Element)) return;
+
+      const projectLink = event.target.closest(".orbit-project[href$='keke.html']");
+      if (projectLink) {
+        setAllRigidRetractions("keke");
+        return;
+      }
+
+      const noteStar = event.target.closest("#note-stars .note-star");
+      if (noteStar instanceof HTMLElement) {
+        const stars = [...document.querySelectorAll("#note-stars .note-star")];
+        const lines = [...document.querySelectorAll("#star-threads .star-thread")];
+        const index = stars.indexOf(noteStar);
+        if (index >= 0) setRigidRetraction(noteStar, lines[index], "writing");
+        return;
+      }
+
+      const archiveLink = event.target.closest(".all-writing-link, .site-header .nav-links a[href$='notes.html']");
+      if (archiveLink) setAllRigidRetractions("writing");
+    });
+  }
 })();
