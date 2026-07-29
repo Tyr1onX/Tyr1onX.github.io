@@ -237,12 +237,12 @@ html[data-return-home-pending] body[data-page="home"] .star-thread {
 
 body[data-page="home"].is-returning-keke-home .note-star,
 body[data-page="home"].is-returning-writing-home .note-star {
-  animation: return-star-drop-from-anchor var(--motion-release) calc(var(--motion-delay-base) + var(--return-star-index, 0) * var(--motion-stagger-star)) var(--ease-enter) both !important;
+  animation: return-star-drop-from-anchor var(--motion-release) var(--return-star-delay, var(--motion-delay-base)) var(--ease-enter) both !important;
 }
 
 body[data-page="home"].is-returning-keke-home .star-thread,
 body[data-page="home"].is-returning-writing-home .star-thread {
-  animation: return-thread-release var(--motion-release) calc(var(--motion-delay-base) + var(--return-thread-index, 0) * var(--motion-stagger-star)) var(--ease-enter) both !important;
+  animation: return-thread-release var(--motion-release) var(--return-thread-delay, var(--motion-delay-base)) var(--ease-enter) both !important;
 }
 
 @keyframes return-star-drop-from-anchor {
