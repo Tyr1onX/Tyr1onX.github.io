@@ -12,6 +12,7 @@
   let slowedAnimations = [];
   let navigating = false;
   let arrivalActive = false;
+  let pressedPointerId = null;
   const prefetched = new Map();
 
   const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
@@ -22,6 +23,33 @@
     const value = Number.parseFloat(raw);
     if (!Number.isFinite(value)) return fallback;
     return raw.endsWith("s") && !raw.endsWith("ms") ? value * 1000 : value;
+  };
+
+  const isPlainPrimaryPointer = (event) => (
+    event.button === 0
+    && event.isPrimary !== false
+    && !event.metaKey
+    && !event.ctrlKey
+    && !event.shiftKey
+    && !event.altKey
+    && !event.defaultPrevented
+    && !reducedMotion.matches
+    && !navigating
+  );
+
+  const clearWritingPress = (pointerId = null) => {
+    if (pointerId !== null && pressedPointerId !== null && pointerId !== pressedPointerId) return;
+    pressedPointerId = null;
+    body.classList.remove("is-writing-pressed");
+  };
+
+  const beginWritingPress = (event) => {
+    if (!isPlainPrimaryPointer(event)) {
+      clearWritingPress();
+      return;
+    }
+    pressedPointerId = event.pointerId;
+    body.classList.add("is-writing-pressed");
   };
 
   const noteIdFromHref = (href) => {
@@ -115,9 +143,12 @@
 
   const calmWind = () => {
     restoreWind();
+    const seenAnimations = new Set();
     document.querySelectorAll(".garden-current, .garden-trace").forEach((element) => {
       element.getAnimations().forEach((animation) => {
-        slowedAnimations.push({ animation, rate: 1 });
+        if (seenAnimations.has(animation)) return;
+        seenAnimations.add(animation);
+        slowedAnimations.push({ animation, rate: animation.playbackRate || 1 });
       });
     });
 
@@ -242,9 +273,9 @@
     else restoreWind();
 
     navigating = false;
+    clearWritingPress();
     window.TYR1ONX_COSMOS_MOTION?.resetRetraction();
     body.classList.remove(
-      "is-writing-pressed",
       "is-preparing-writing-archive",
       "is-entering-writing-archive",
       "is-preparing-writing-note",
@@ -331,6 +362,13 @@
   const installHomeTransitions = () => {
     if (body.dataset.page !== "home") return;
 
+    const installPressLifecycle = (link) => {
+      link.addEventListener("pointerdown", beginWritingPress, { passive: true });
+      link.addEventListener("pointerup", (event) => clearWritingPress(event.pointerId), { passive: true });
+      link.addEventListener("pointercancel", (event) => clearWritingPress(event.pointerId), { passive: true });
+      link.addEventListener("lostpointercapture", (event) => clearWritingPress(event.pointerId), { passive: true });
+    };
+
     const archiveLinks = [
       ...document.querySelectorAll(".all-writing-link, .site-header .nav-links a[href$='notes.html']"),
     ];
@@ -338,13 +376,15 @@
       if (!(link instanceof HTMLAnchorElement)) return;
       link.addEventListener("pointerenter", () => prefetchDestination(link.href, "archive"), { passive: true });
       link.addEventListener("focus", () => prefetchDestination(link.href, "archive"), { passive: true });
-      link.addEventListener("pointerdown", (event) => {
-        if (event.button === 0 && !reducedMotion.matches) body.classList.add("is-writing-pressed");
-      }, { passive: true });
+      installPressLifecycle(link);
       link.addEventListener("click", (event) => {
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
-        if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
+        if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) {
+          clearWritingPress();
+          return;
+        }
         event.preventDefault();
+        clearWritingPress();
         void beginArchiveTransition(link);
       });
     });
@@ -353,17 +393,27 @@
       if (!(star instanceof HTMLAnchorElement)) return;
       star.addEventListener("pointerenter", () => prefetchDestination(star.href, "note"), { passive: true });
       star.addEventListener("focus", () => prefetchDestination(star.href, "note"), { passive: true });
-      star.addEventListener("pointerdown", (event) => {
-        if (event.button === 0 && !reducedMotion.matches) body.classList.add("is-writing-pressed");
-      }, { passive: true });
+      installPressLifecycle(star);
       star.addEventListener("click", (event) => {
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
-        if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
+        if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) {
+          clearWritingPress();
+          return;
+        }
         event.preventDefault();
+        clearWritingPress();
         void beginNoteTransition(star, index);
       });
     });
 
+    const clearPointerPress = (event) => clearWritingPress(event.pointerId);
+    addEventListener("pointerup", clearPointerPress, { capture: true, passive: true });
+    addEventListener("pointercancel", clearPointerPress, { capture: true, passive: true });
+    addEventListener("blur", () => clearWritingPress());
+    addEventListener("pagehide", () => clearWritingPress());
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) clearWritingPress();
+    });
     addEventListener("pageshow", clearHomeState);
   };
 
