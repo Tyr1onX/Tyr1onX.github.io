@@ -70,7 +70,6 @@
 
   if (document.body?.dataset.page === "home") {
     const FINAL_RETRACT_SCALE = 0.72;
-    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
     const style = document.createElement("style");
     style.dataset.rigidStarRetraction = "true";
@@ -128,34 +127,39 @@
       line.setAttribute("pathLength", "1");
     };
 
+    const stars = [...document.querySelectorAll("#note-stars .note-star")];
+    const lines = [...document.querySelectorAll("#star-threads .star-thread")];
+
     const setAllRigidRetractions = (prefix) => {
-      const stars = [...document.querySelectorAll("#note-stars .note-star")];
-      const lines = [...document.querySelectorAll("#star-threads .star-thread")];
       stars.forEach((star, index) => setRigidRetraction(star, lines[index], prefix));
     };
 
-    document.addEventListener("click", (event) => {
-      if (reducedMotion.matches || event.button !== 0) return;
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      if (!(event.target instanceof Element)) return;
+    const setFocusedRigidRetraction = () => {
+      stars.forEach((star, index) => {
+        if (star.classList.contains("writing-retract-source")) {
+          setRigidRetraction(star, lines[index], "writing");
+        }
+      });
+    };
 
-      const projectLink = event.target.closest(".orbit-project[href$='keke.html']");
-      if (projectLink) {
+    const synchronizeRetraction = () => {
+      if (document.body.classList.contains("is-preparing-keke")) {
         setAllRigidRetractions("keke");
         return;
       }
-
-      const noteStar = event.target.closest("#note-stars .note-star");
-      if (noteStar instanceof HTMLElement) {
-        const stars = [...document.querySelectorAll("#note-stars .note-star")];
-        const lines = [...document.querySelectorAll("#star-threads .star-thread")];
-        const index = stars.indexOf(noteStar);
-        if (index >= 0) setRigidRetraction(noteStar, lines[index], "writing");
+      if (document.body.classList.contains("is-preparing-writing-archive")) {
+        setAllRigidRetractions("writing");
         return;
       }
+      if (document.body.classList.contains("is-preparing-writing-note")) {
+        setFocusedRigidRetraction();
+      }
+    };
 
-      const archiveLink = event.target.closest(".all-writing-link, .site-header .nav-links a[href$='notes.html']");
-      if (archiveLink) setAllRigidRetractions("writing");
+    const retractionObserver = new MutationObserver(synchronizeRetraction);
+    retractionObserver.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
     });
   }
 })();
