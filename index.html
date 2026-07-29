@@ -38,6 +38,12 @@
     <link rel="stylesheet" href="./return-home-transition.css?v=3-fresh-route" />
     <link rel="stylesheet" href="./transition-sequence-timing.css?v=5-motion-system" />
     <style>
+      body[data-page="home"].is-cosmos-retracting .note-star,
+      body[data-page="home"].is-cosmos-retracting .star-thread {
+        animation: none !important;
+        transition: none !important;
+      }
+
       /* A focused article transition must not dim unrelated hanging stars. */
       body[data-page="home"].is-preparing-writing-note .writing-retract-bystander,
       body[data-page="home"].is-entering-writing-note .writing-retract-bystander {
@@ -58,8 +64,9 @@
     </style>
     <script src="./notes-data.js" defer></script>
     <script src="./notes-2026.js?v=2" defer></script>
-    <script src="./site-runtime.js?v=2-rigid-star-thread" defer></script>
+    <script src="./site-runtime.js?v=3-lightweight" defer></script>
     <script src="./home-cosmos.js?v=4-native-refresh-intro" defer></script>
+    <script src="./cosmos-star-motion.js?v=1-line-axis-physics" defer></script>
     <script src="./home-keke-orbit.js?v=4-frame-cost" defer></script>
     <script src="./home-garden.js?v=4-shared-notes" defer></script>
     <script src="./keke-transition.js?v=6-motion-lifecycle" defer></script>
