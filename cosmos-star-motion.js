@@ -1,6 +1,5 @@
 (() => {
   const body = document.body;
-  const root = document.documentElement;
   if (body?.dataset.page !== "home") return;
 
   const rawMotion = window.TYR1ONX_COSMOS_MOTION;
@@ -79,15 +78,14 @@
   `;
   document.head.append(style);
 
-  const returnStateActive = () => Boolean(root.dataset.returnHomePending)
-    || body.classList.contains("is-returning-keke-home")
+  const returnStateActive = () => body.classList.contains("is-returning-keke-home")
     || body.classList.contains("is-returning-writing-home");
 
   const synchronizeReturnState = () => {
     if (returnStateActive()) {
       if (!body.classList.contains("is-cosmos-return-drop")) {
         body.classList.add("is-cosmos-return-drop");
-        motion.releaseFromTop();
+        if (!motion.isReleaseActive()) motion.releaseFromTop();
       }
       return;
     }
@@ -98,9 +96,6 @@
 
   const bodyObserver = new MutationObserver(synchronizeReturnState);
   bodyObserver.observe(body, { attributes: true, attributeFilter: ["class"] });
-
-  const rootObserver = new MutationObserver(synchronizeReturnState);
-  rootObserver.observe(root, { attributes: true, attributeFilter: ["data-return-home-pending"] });
 
   addEventListener("pageshow", () => {
     requestAnimationFrame(synchronizeReturnState);
