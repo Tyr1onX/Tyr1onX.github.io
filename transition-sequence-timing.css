@@ -107,6 +107,60 @@ body[data-page="home"] .garden-trace:nth-child(2n) {
   filter: none;
 }
 
+/*
+ * A returning document must begin with the suspension system fully reeled in.
+ * The JS receiver writes each star's exact anchor-to-rest vector before adding
+ * the body arrival class, so the star and its SVG thread can descend together.
+ */
+html[data-return-home-pending] body[data-page="home"] .note-star {
+  opacity: 0;
+  translate: var(--return-star-drop-x, 0) var(--return-star-drop-y, -160px);
+  scale: .7;
+}
+
+html[data-return-home-pending] body[data-page="home"] .star-thread {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  transform: scaleY(.015);
+}
+
+body[data-page="home"].is-returning-keke-home .note-star,
+body[data-page="home"].is-returning-writing-home .note-star {
+  animation: return-star-drop-from-anchor 620ms calc(70ms + var(--return-star-index, 0) * 42ms) cubic-bezier(.2, .72, .18, 1) both !important;
+}
+
+body[data-page="home"].is-returning-keke-home .star-thread,
+body[data-page="home"].is-returning-writing-home .star-thread {
+  animation: return-thread-release 620ms calc(70ms + var(--return-thread-index, 0) * 42ms) cubic-bezier(.2, .72, .18, 1) both !important;
+}
+
+@keyframes return-star-drop-from-anchor {
+  0% {
+    opacity: 0;
+    translate: var(--return-star-drop-x, 0) var(--return-star-drop-y, -160px);
+    scale: .7;
+  }
+  12% { opacity: 1; }
+  84% {
+    opacity: 1;
+    translate: 0 5px;
+    scale: 1.025;
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@keyframes return-thread-release {
+  0% { opacity: 0; transform: scaleY(.015); }
+  12% { opacity: .48; }
+  84% { opacity: .92; transform: scaleY(1); }
+  100% { opacity: 1; transform: scaleY(1); }
+}
+
 @media (max-width: 780px) {
   body[data-page="home"] .garden-current-c,
   body[data-page="home"] .garden-trace:nth-child(n + 4) {
@@ -126,7 +180,11 @@ body[data-page="home"] .garden-trace:nth-child(2n) {
   .writing-drop-thread,
   .writing-drop-target,
   .return-pull-thread,
-  .return-writing-source.is-return-pulled {
+  .return-writing-source.is-return-pulled,
+  body[data-page="home"].is-returning-keke-home .note-star,
+  body[data-page="home"].is-returning-writing-home .note-star,
+  body[data-page="home"].is-returning-keke-home .star-thread,
+  body[data-page="home"].is-returning-writing-home .star-thread {
     animation-duration: 1ms !important;
     animation-delay: 0ms !important;
   }
