@@ -3,8 +3,42 @@
   const root = document.documentElement;
   if (body?.dataset.page !== "home") return;
 
-  const motion = window.TYR1ONX_COSMOS_MOTION;
-  if (!motion) return;
+  const rawMotion = window.TYR1ONX_COSMOS_MOTION;
+  if (!rawMotion) return;
+
+  const safeRetract = (options = {}) => {
+    const duration = Number.isFinite(options.duration) ? options.duration : 440;
+    const baseDelay = Number.isFinite(options.baseDelay) ? options.baseDelay : 0;
+    const stagger = Number.isFinite(options.stagger) ? options.stagger : 0;
+    const count = Array.isArray(options.indices) ? options.indices.length : 8;
+    const deadline = Math.max(320, duration + baseDelay + Math.max(0, count - 1) * stagger + 260);
+
+    return new Promise((resolve) => {
+      let settled = false;
+      let timer = 0;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        resolve();
+      };
+
+      timer = setTimeout(finish, deadline);
+      try {
+        Promise.resolve(rawMotion.retract?.(options)).then(finish, finish);
+      } catch {
+        finish();
+      }
+    });
+  };
+
+  const motion = Object.freeze({
+    retract: safeRetract,
+    resetRetraction: (...args) => rawMotion.resetRetraction?.(...args),
+    releaseFromTop: (...args) => rawMotion.releaseFromTop?.(...args),
+    isReleaseActive: () => Boolean(rawMotion.isReleaseActive?.()),
+  });
+  window.TYR1ONX_COSMOS_MOTION = motion;
 
   const style = document.createElement("style");
   style.dataset.cosmosStarMotion = "true";
@@ -57,7 +91,9 @@
       }
       return;
     }
-    body.classList.remove("is-cosmos-return-drop");
+    if (body.classList.contains("is-cosmos-return-drop")) {
+      body.classList.remove("is-cosmos-return-drop");
+    }
   };
 
   const bodyObserver = new MutationObserver(synchronizeReturnState);
