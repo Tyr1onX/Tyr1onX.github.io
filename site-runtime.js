@@ -86,7 +86,7 @@
       }
       @keyframes writing-home-thread-retract {
         0% { opacity: 1; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
-        80% { opacity: .72; }
+        80% { opacity: 1; }
         100% { opacity: 0; stroke-dasharray: 0 1; stroke-dashoffset: 0; }
       }
       @keyframes keke-star-retract {
@@ -100,7 +100,7 @@
       }
       @keyframes keke-thread-retract {
         0% { opacity: 1; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
-        80% { opacity: .72; }
+        80% { opacity: 1; }
         100% { opacity: 0; stroke-dasharray: 0 1; stroke-dashoffset: 0; }
       }
     `;
