@@ -84,6 +84,8 @@
   const prepareHomeStarDeploy = () => {
     const stars = [...document.querySelectorAll("#note-stars .note-star")];
     const lines = [...document.querySelectorAll("#star-threads .star-thread")];
+    const baseDelay = motionMs("--motion-delay-base", 70);
+    const stagger = motionMs("--motion-stagger-star", 42);
 
     stars.forEach((star, index) => {
       if (!(star instanceof HTMLElement)) return;
@@ -96,6 +98,7 @@
       const tipY = Number.parseFloat(line.getAttribute("y2") || "");
       const starSize = Number.parseFloat(getComputedStyle(star).getPropertyValue("--note-star-size"));
       const halfStar = Number.isFinite(starSize) ? starSize / 2 : 6;
+      const delay = baseDelay + index * stagger;
 
       if (!Number.isFinite(anchorX)
         || !Number.isFinite(anchorY)
@@ -105,6 +108,8 @@
       const centerY = tipY + halfStar;
       star.style.setProperty("--return-star-drop-x", `${(anchorX - tipX).toFixed(2)}px`);
       star.style.setProperty("--return-star-drop-y", `${(anchorY - centerY).toFixed(2)}px`);
+      star.style.setProperty("--return-star-delay", `${delay}ms`);
+      line.style.setProperty("--return-thread-delay", `${delay}ms`);
     });
   };
 
@@ -242,6 +247,10 @@
     document.querySelectorAll("#note-stars .note-star").forEach((star) => {
       star.style.removeProperty("--return-star-drop-x");
       star.style.removeProperty("--return-star-drop-y");
+      star.style.removeProperty("--return-star-delay");
+    });
+    document.querySelectorAll("#star-threads .star-thread").forEach((thread) => {
+      thread.style.removeProperty("--return-thread-delay");
     });
     root.style.removeProperty("--return-planet-drift-x");
     root.style.removeProperty("--return-planet-drift-y");
