@@ -127,14 +127,18 @@
       line.setAttribute("pathLength", "1");
     };
 
-    const stars = [...document.querySelectorAll("#note-stars .note-star")];
-    const lines = [...document.querySelectorAll("#star-threads .star-thread")];
+    const readPairs = () => ({
+      stars: [...document.querySelectorAll("#note-stars .note-star")],
+      lines: [...document.querySelectorAll("#star-threads .star-thread")],
+    });
 
     const setAllRigidRetractions = (prefix) => {
+      const { stars, lines } = readPairs();
       stars.forEach((star, index) => setRigidRetraction(star, lines[index], prefix));
     };
 
     const setFocusedRigidRetraction = () => {
+      const { stars, lines } = readPairs();
       stars.forEach((star, index) => {
         if (star.classList.contains("writing-retract-source")) {
           setRigidRetraction(star, lines[index], "writing");
