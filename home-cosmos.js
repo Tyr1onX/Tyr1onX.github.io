@@ -14,8 +14,7 @@
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const coarsePointer = matchMedia("(hover: none), (pointer: coarse)").matches;
   const steadyPhysicsInterval = 1000 / (coarsePointer ? 30 : 45);
-  const introPhysicsInterval = 1000 / (coarsePointer ? 45 : 60);
-  const INTRO_FULL_RATE_MS = 5200;
+  const INTRO_NATIVE_REFRESH_MS = 5200;
 
   let pageVisible = !document.hidden;
   let sceneVisible = true;
@@ -276,11 +275,9 @@
     }
 
     const elapsed = now - started;
-    const physicsInterval = elapsed < INTRO_FULL_RATE_MS
-      ? introPhysicsInterval
-      : steadyPhysicsInterval;
+    const introActive = elapsed < INTRO_NATIVE_REFRESH_MS;
 
-    if (now - lastPhysicsPaint < physicsInterval) {
+    if (!introActive && now - lastPhysicsPaint < steadyPhysicsInterval) {
       frame = requestAnimationFrame(animate);
       return;
     }
