@@ -154,7 +154,8 @@ html[data-writing-arrival-pending="note"] body[data-page="note"] .reading-path {
   clip-path: inset(0 0 100% 0);
 }
 
-html[data-writing-arrival-pending="note"] body[data-page="note"] .article-meta-line .note-kind-marker {
+html[data-writing-arrival-pending="note"] body[data-page="note"] .article-meta-line .note-kind-marker,
+html[data-writing-arrival-pending="note"] body[data-page="note"] .note-article > .loading-copy {
   opacity: 0;
 }
 
