@@ -2,13 +2,8 @@
  * Route-specific states are established synchronously by navigation-first-frame.js.
  */
 
-/* Ordinary same-origin navigation must not inherit the Keke root animation. */
-::view-transition-old(root) {
-  animation: none;
-  opacity: 0;
-  mix-blend-mode: normal;
-}
-
+/* Ordinary same-origin navigation must not inherit a feature-specific root animation. */
+::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
   opacity: 1;
@@ -23,20 +18,40 @@ html[data-transition-route="home-to-keke"]::view-transition-new(root) {
   animation: navigation-keke-world-in 680ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
-html[data-transition-route="home-to-writing-archive"]::view-transition-old(root) {
+html[data-transition-route="home-to-writing-archive"]::view-transition-old(root),
+html[data-transition-route="home-to-writing-archive"]:has(body.is-entering-writing-archive)::view-transition-old(root) {
   animation: navigation-writing-archive-out 440ms cubic-bezier(.36, 0, .2, 1) both;
 }
 
-html[data-transition-route="home-to-writing-archive"]::view-transition-new(root) {
+html[data-transition-route="home-to-writing-archive"]::view-transition-new(root),
+html[data-transition-route="home-to-writing-archive"]:has(body.is-arriving-writing-archive)::view-transition-new(root) {
   animation: navigation-writing-archive-in 520ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
-html[data-transition-route="home-to-writing-note"]::view-transition-old(root) {
+html[data-transition-route="home-to-writing-note"]::view-transition-old(root),
+html[data-transition-route="home-to-writing-note"]:has(body.is-entering-writing-note)::view-transition-old(root) {
   animation: navigation-writing-note-out 400ms cubic-bezier(.36, 0, .2, 1) both;
 }
 
-html[data-transition-route="home-to-writing-note"]::view-transition-new(root) {
+html[data-transition-route="home-to-writing-note"]::view-transition-new(root),
+html[data-transition-route="home-to-writing-note"]:has(body.is-arriving-writing-note)::view-transition-new(root) {
   animation: navigation-writing-note-in 500ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+html[data-transition-route="keke-to-home"]:has(body.is-leaving-keke-home)::view-transition-old(root) {
+  animation: navigation-return-keke-out 420ms cubic-bezier(.36, 0, .2, 1) both;
+}
+
+html[data-transition-route="keke-to-home"][data-return-home-pending="keke-return"]::view-transition-new(root) {
+  animation: navigation-return-keke-in 620ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+html[data-transition-route="writing-to-home"]:has(body.is-leaving-writing-home)::view-transition-old(root) {
+  animation: navigation-return-writing-out 420ms cubic-bezier(.36, 0, .2, 1) both;
+}
+
+html[data-transition-route="writing-to-home"][data-return-home-pending^="writing-"]::view-transition-new(root) {
+  animation: navigation-return-writing-in 560ms cubic-bezier(.2, .72, .2, 1) both;
 }
 
 /* Keke shared targets only exist for the explicit home -> Keke route. */
@@ -58,7 +73,7 @@ html[data-transition-route="home-to-keke"] body[data-page="keke"] .brand > span 
   view-transition-name: keke-site-name;
 }
 
-/* Writing identity targets are also available before deferred scripts run. */
+/* Writing identity targets are available before deferred scripts run. */
 html[data-transition-route="home-to-writing-archive"] body[data-page="notes"] .site-header .brand-avatar,
 html[data-transition-route="home-to-writing-note"] body[data-page="note"] .site-header .brand-avatar {
   view-transition-name: writing-site-avatar;
@@ -121,7 +136,7 @@ html[data-writing-arrival-pending="archive"] body[data-page="notes"] .note-kind-
   opacity: 0;
 }
 
-/* Article arrival is hidden at its real keyframe origin before dynamic content is inserted. */
+/* Article arrival is hidden at its true keyframe origin before dynamic content is inserted. */
 html[data-writing-arrival-pending="note"] body[data-page="note"] .back-link,
 html[data-writing-arrival-pending="note"] body[data-page="note"] .article-meta-line time,
 html[data-writing-arrival-pending="note"] body[data-page="note"] .article-meta-line::after,
@@ -143,7 +158,7 @@ html[data-writing-arrival-pending="note"] body[data-page="note"] .article-meta-l
   opacity: 0;
 }
 
-/* The old document stays opaque underneath the incoming one, so the browser canvas is never exposed. */
+/* Root snapshots crossfade over an opaque old document; the browser canvas is never exposed. */
 @keyframes navigation-keke-world-out {
   from { opacity: 1; filter: blur(0); transform: scale(1); }
   to { opacity: 1; filter: blur(2px) saturate(1.12); transform: scale(1.012); }
@@ -171,6 +186,26 @@ html[data-writing-arrival-pending="note"] body[data-page="note"] .article-meta-l
 
 @keyframes navigation-writing-note-in {
   from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes navigation-return-keke-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 1; transform: scale(.994); }
+}
+
+@keyframes navigation-return-keke-in {
+  from { opacity: 0; transform: scale(1.005); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes navigation-return-writing-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 1; transform: translateY(-3px) scale(.995); }
+}
+
+@keyframes navigation-return-writing-in {
+  from { opacity: 0; transform: translateY(-3px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
