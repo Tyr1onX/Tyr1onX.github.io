@@ -112,7 +112,7 @@
     rampFrame = requestAnimationFrame(step);
   }
 
-  function clearPreparation(link, image, identityAvatar, identityName, { preserveReturnWind = false } = {}) {
+  function clearPreparation(links, image, identityAvatar, identityName, { preserveReturnWind = false } = {}) {
     if (preserveReturnWind) releaseForwardWindWithoutClearingReturnState();
     else restoreWindRate();
 
@@ -121,7 +121,7 @@
     image.classList.remove("keke-transition-source");
     identityAvatar?.classList.remove("keke-site-avatar-source");
     identityName?.classList.remove("keke-site-name-source");
-    link.removeAttribute("aria-disabled");
+    links.forEach((link) => link.removeAttribute("aria-disabled"));
 
     document.querySelectorAll("#note-stars .note-star, #star-threads .star-thread").forEach((element) => {
       element.style.removeProperty("--keke-retract-x");
@@ -181,31 +181,26 @@
   function installHomeTransition() {
     if (body.dataset.page !== "home") return;
 
-    const link = document.querySelector(".orbit-project[href$='keke.html']");
-    const image = link?.querySelector("img");
+    const orbitLink = document.querySelector(".orbit-project[href$='keke.html']");
+    const menuLink = document.querySelector(".site-header .nav-links a[href$='keke.html']");
+    const links = [...new Set([orbitLink, menuLink])].filter((link) => link instanceof HTMLAnchorElement);
+    const image = orbitLink?.querySelector("img");
     const identityAvatar = document.querySelector(".cosmos-center img");
     const identityName = document.querySelector(".cosmos-center h1");
-    if (!(link instanceof HTMLAnchorElement) || !(image instanceof HTMLImageElement)) return;
+    if (!(orbitLink instanceof HTMLAnchorElement) || !(image instanceof HTMLImageElement)) return;
 
     let navigating = false;
 
-    link.addEventListener("pointerenter", () => prefetchDestination(link), { passive: true });
-    link.addEventListener("focus", () => prefetchDestination(link), { passive: true });
-
-    link.addEventListener("click", (event) => {
-      const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
-      if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
-
-      event.preventDefault();
+    const beginTransition = (triggerLink) => {
       if (navigating) return;
       navigating = true;
 
-      const destination = prefetchDestination(link) || new URL(link.href, location.href).href;
-      link.focus({ preventScroll: true });
+      const destination = prefetchDestination(orbitLink) || new URL(orbitLink.href, location.href).href;
+      triggerLink.focus({ preventScroll: true });
       image.classList.add("keke-transition-source");
       identityAvatar?.classList.add("keke-site-avatar-source");
       identityName?.classList.add("keke-site-name-source");
-      link.setAttribute("aria-disabled", "true");
+      links.forEach((link) => link.setAttribute("aria-disabled", "true"));
       body.classList.add("is-cosmos-retracting", "is-preparing-keke");
       rampWind();
 
@@ -233,15 +228,27 @@
         body.classList.add("is-entering-keke");
         location.assign(destination);
       })();
+    };
+
+    links.forEach((link) => {
+      link.addEventListener("pointerenter", () => prefetchDestination(orbitLink), { passive: true });
+      link.addEventListener("focus", () => prefetchDestination(orbitLink), { passive: true });
+      link.addEventListener("click", (event) => {
+        const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+        if (event.defaultPrevented || event.button !== 0 || modified || reducedMotion.matches) return;
+
+        event.preventDefault();
+        beginTransition(link);
+      });
     });
 
-    const idlePrefetch = () => prefetchDestination(link);
+    const idlePrefetch = () => prefetchDestination(orbitLink);
     if ("requestIdleCallback" in window) requestIdleCallback(idlePrefetch, { timeout: 2600 });
     else setTimeout(idlePrefetch, 1800);
 
     addEventListener("pageshow", () => {
       navigating = false;
-      clearPreparation(link, image, identityAvatar, identityName, {
+      clearPreparation(links, image, identityAvatar, identityName, {
         preserveReturnWind: isKekeReturnArrival(),
       });
     });
