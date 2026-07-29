@@ -7,35 +7,21 @@
   const MIN_WIND_RATE = 0.24;
   const HOME_STAR_STAGGER_MS = 28;
   const DROP_STAGGER_MS = 38;
-  const RETRACT_ANIMATION_NAMES = new Set([
-    "writing-home-star-retract",
-    "writing-home-thread-retract",
-  ]);
 
   let calmFrame = 0;
   let slowedAnimations = [];
-  let navigateTimer = 0;
   let navigating = false;
   let arrivalActive = false;
   const prefetched = new Map();
 
   const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
   const sleep = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
-  const afterStyleCommit = () => new Promise((resolve) => {
-    requestAnimationFrame(() => requestAnimationFrame(resolve));
-  });
 
-  const waitForNamedAnimations = async (elements, names, fallbackMs) => {
-    await afterStyleCommit();
-    const animations = [...new Set(elements.flatMap((element) => (
-      element instanceof Element ? element.getAnimations() : []
-    )))].filter((animation) => names.has(animation.animationName));
-
-    if (!animations.length) {
-      await sleep(fallbackMs);
-      return;
-    }
-    await Promise.allSettled(animations.map((animation) => animation.finished));
+  const motionMs = (name, fallback) => {
+    const raw = getComputedStyle(root).getPropertyValue(name).trim();
+    const value = Number.parseFloat(raw);
+    if (!Number.isFinite(value)) return fallback;
+    return raw.endsWith("s") && !raw.endsWith("ms") ? value * 1000 : value;
   };
 
   const noteIdFromHref = (href) => {
@@ -229,11 +215,10 @@
     root.style.removeProperty("--writing-planet-drift-y");
   };
 
-  const prepareHomeStarRetraction = ({ focusIndex = null } = {}) => {
+  const prepareHomeStars = ({ focusIndex = null } = {}) => {
     const stars = [...document.querySelectorAll("#note-stars .note-star")];
-    const threads = [...document.querySelectorAll("#star-threads .star-thread")];
     const ids = [];
-    const elements = [];
+    const indices = [];
 
     stars.forEach((star, index) => {
       if (!(star instanceof HTMLAnchorElement)) return;
@@ -245,42 +230,26 @@
         return;
       }
 
-      const line = threads[index];
-      const anchorX = Number.parseFloat(line?.getAttribute("x1") || "");
-      const anchorY = Number.parseFloat(line?.getAttribute("y1") || "");
-      const targetX = Number.isFinite(anchorX) ? anchorX - star.offsetWidth / 2 : star.offsetLeft;
-      const targetY = Number.isFinite(anchorY) ? anchorY - star.offsetHeight / 2 : -star.offsetHeight;
-      const delay = focusIndex === null ? index * HOME_STAR_STAGGER_MS : 0;
-
-      star.style.setProperty("--writing-retract-x", `${targetX.toFixed(2)}px`);
-      star.style.setProperty("--writing-retract-y", `${targetY.toFixed(2)}px`);
-      star.style.setProperty("--writing-retract-delay", `${delay}ms`);
       star.classList.add("writing-retract-source");
-      elements.push(star);
-
-      if (line instanceof SVGElement) {
-        line.style.setProperty("--writing-retract-delay", `${delay}ms`);
-        line.classList.add("writing-retract-thread");
-        elements.push(line);
-      }
+      indices.push(index);
     });
 
-    return { ids, elements };
+    return { ids, indices };
   };
 
   const clearHomeState = () => {
     if (isWritingReturnArrival()) releaseForwardWindWithoutClearingReturnState();
     else restoreWind();
 
-    clearTimeout(navigateTimer);
-    navigateTimer = 0;
     navigating = false;
+    window.TYR1ONX_COSMOS_MOTION?.resetRetraction();
     body.classList.remove(
       "is-writing-pressed",
       "is-preparing-writing-archive",
       "is-entering-writing-archive",
       "is-preparing-writing-note",
-      "is-entering-writing-note"
+      "is-entering-writing-note",
+      "is-cosmos-retracting"
     );
 
     document.querySelectorAll(".writing-site-avatar-source, .writing-site-name-source").forEach((element) => {
@@ -308,19 +277,30 @@
     }
   };
 
+  const runHomeRetraction = async (indices, { stagger = 0 } = {}) => {
+    const duration = motionMs("--motion-retract", 440);
+    const motion = window.TYR1ONX_COSMOS_MOTION;
+    if (motion) {
+      await motion.retract({ indices, duration, baseDelay: 0, stagger });
+    } else {
+      const maxDelay = Math.max(0, indices.length - 1) * stagger;
+      await sleep(duration + maxDelay);
+    }
+  };
+
   const beginArchiveTransition = async (link) => {
     if (navigating) return;
     navigating = true;
     const destination = prefetchDestination(link.href, "archive") || link.href;
-    const { ids, elements } = prepareHomeStarRetraction();
+    const { ids, indices } = prepareHomeStars();
 
     setIdentitySource();
     const planet = preparePlanetRetreat();
     saveTransition({ mode: "archive", ids, planet });
-    body.classList.add("is-preparing-writing-archive");
+    body.classList.add("is-cosmos-retracting", "is-preparing-writing-archive");
     calmWind();
 
-    await waitForNamedAnimations(elements, RETRACT_ANIMATION_NAMES, 760);
+    await runHomeRetraction(indices, { stagger: HOME_STAR_STAGGER_MS });
     body.classList.add("is-entering-writing-archive");
     location.assign(destination);
   };
@@ -336,14 +316,14 @@
     }
 
     const destination = prefetchDestination(star.href, "note") || star.href;
-    const { elements } = prepareHomeStarRetraction({ focusIndex: index });
+    const { indices } = prepareHomeStars({ focusIndex: index });
     setIdentitySource();
     const planet = preparePlanetRetreat();
     saveTransition({ mode: "note", id, planet });
-    body.classList.add("is-preparing-writing-note");
+    body.classList.add("is-cosmos-retracting", "is-preparing-writing-note");
     calmWind();
 
-    await waitForNamedAnimations(elements, RETRACT_ANIMATION_NAMES, 520);
+    await runHomeRetraction(indices);
     body.classList.add("is-entering-writing-note");
     location.assign(destination);
   };
