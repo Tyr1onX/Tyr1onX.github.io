@@ -42,6 +42,26 @@
 
   if (page !== "keke" && page !== "notes" && page !== "note") return;
 
+  const snapshotStyle = document.createElement("style");
+  snapshotStyle.dataset.cleanReturnSnapshot = "true";
+  snapshotStyle.textContent = `
+    body.is-leaving-keke-home .project-page::before,
+    body.is-leaving-keke-home .project-page::after,
+    body.is-leaving-writing-home .writing-page-direct::before,
+    body.is-leaving-writing-home .article-main::before,
+    body.is-leaving-writing-home .article-main::after,
+    body.is-leaving-writing-home .archive-list::before,
+    body.is-leaving-writing-home .archive-row-v2::before,
+    body.is-leaving-writing-home .reading-path,
+    body.is-leaving-writing-home .reading-path::before,
+    body.is-leaving-writing-home .reading-path-fill {
+      opacity: 0 !important;
+      animation: none !important;
+      transition: opacity 80ms linear !important;
+    }
+  `;
+  document.head.append(snapshotStyle);
+
   const capturePlanetMemory = () => {
     if (page !== "notes" && page !== "note") return;
     const x = root.style.getPropertyValue("--writing-planet-drift-x").trim();
@@ -187,6 +207,7 @@
       writePayload({ mode: "keke-return" });
       body.classList.add("is-leaving-keke-home");
       await sleep(90);
+      await afterStyleCommit();
       location.assign(destination.href);
       return;
     }
