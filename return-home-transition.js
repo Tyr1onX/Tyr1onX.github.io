@@ -14,14 +14,6 @@
   let returnAnimations = [];
   let arrivalTimer = 0;
 
-  const noteIdFromHref = (href) => {
-    try {
-      return new URL(href, location.href).searchParams.get("id") || "";
-    } catch {
-      return "";
-    }
-  };
-
   const releaseHomePhysics = () => {
     dispatchEvent(new CustomEvent("tyr1onx:return-home-complete"));
   };
@@ -52,6 +44,33 @@
     setNamedElement(document.querySelector(".cosmos-center h1"), "return-site-name-target", "return-site-name");
   };
 
+  const prepareHomeStarDeploy = () => {
+    const stars = [...document.querySelectorAll("#note-stars .note-star")];
+    const lines = [...document.querySelectorAll("#star-threads .star-thread")];
+
+    stars.forEach((star, index) => {
+      if (!(star instanceof HTMLElement)) return;
+      const line = lines[index];
+      if (!(line instanceof SVGElement)) return;
+
+      const anchorX = Number.parseFloat(line.getAttribute("x1") || "");
+      const anchorY = Number.parseFloat(line.getAttribute("y1") || "");
+      const tipX = Number.parseFloat(line.getAttribute("x2") || "");
+      const tipY = Number.parseFloat(line.getAttribute("y2") || "");
+      const starSize = Number.parseFloat(getComputedStyle(star).getPropertyValue("--note-star-size"));
+      const halfStar = Number.isFinite(starSize) ? starSize / 2 : 6;
+
+      if (!Number.isFinite(anchorX)
+        || !Number.isFinite(anchorY)
+        || !Number.isFinite(tipX)
+        || !Number.isFinite(tipY)) return;
+
+      const centerY = tipY + halfStar;
+      star.style.setProperty("--return-star-drop-x", `${(anchorX - tipX).toFixed(2)}px`);
+      star.style.setProperty("--return-star-drop-y", `${(anchorY - centerY).toFixed(2)}px`);
+    });
+  };
+
   const collectHomeAnimations = () => {
     returnAnimations = [];
     document.querySelectorAll(".garden-current, .garden-trace").forEach((element) => {
@@ -61,7 +80,7 @@
     });
   };
 
-  const stopWindRamp = ({ clearVisuals = true } = {}) => {
+  const restoreWindRates = () => {
     cancelAnimationFrame(windFrame);
     windFrame = 0;
     returnAnimations.forEach(({ animation, rate }) => {
@@ -72,16 +91,16 @@
       }
     });
     returnAnimations = [];
+  };
 
-    if (clearVisuals) {
-      body.style.removeProperty("--keke-flow-thickness");
-      body.style.removeProperty("--writing-flow-spread");
-      body.style.removeProperty("--writing-flow-blur");
-    }
+  const clearWindVisuals = () => {
+    body.style.removeProperty("--keke-flow-thickness");
+    body.style.removeProperty("--writing-flow-spread");
+    body.style.removeProperty("--writing-flow-blur");
   };
 
   const settleKekeWind = () => {
-    stopWindRamp({ clearVisuals: false });
+    restoreWindRates();
     body.style.setProperty("--keke-flow-thickness", "0.38");
     collectHomeAnimations();
     const startedAt = performance.now();
@@ -109,15 +128,19 @@
         }
       });
 
-      if (progress < 1) windFrame = requestAnimationFrame(step);
-      else stopWindRamp();
+      if (progress < 1) {
+        windFrame = requestAnimationFrame(step);
+      } else {
+        body.style.setProperty("--keke-flow-thickness", "1");
+        restoreWindRates();
+      }
     };
 
     windFrame = requestAnimationFrame(step);
   };
 
   const awakenWritingWind = () => {
-    stopWindRamp({ clearVisuals: false });
+    restoreWindRates();
     body.style.setProperty("--writing-flow-spread", "1.16");
     body.style.setProperty("--writing-flow-blur", "22.5px");
     collectHomeAnimations();
@@ -136,7 +159,7 @@
       const eased = progress * progress * (3 - 2 * progress);
       const factor = WRITING_CALM_RATE + (1 - WRITING_CALM_RATE) * eased;
       const spread = 1.16 - 0.16 * eased;
-      const blur = 22.5 - 3.5 * eased;
+      const blur = 22.5 - 15.5 * eased;
 
       body.style.setProperty("--writing-flow-spread", spread.toFixed(3));
       body.style.setProperty("--writing-flow-blur", `${blur.toFixed(2)}px`);
@@ -148,45 +171,26 @@
         }
       });
 
-      if (progress < 1) windFrame = requestAnimationFrame(step);
-      else stopWindRamp();
+      if (progress < 1) {
+        windFrame = requestAnimationFrame(step);
+      } else {
+        body.style.setProperty("--writing-flow-spread", "1");
+        body.style.setProperty("--writing-flow-blur", "7px");
+        restoreWindRates();
+      }
     };
 
     windFrame = requestAnimationFrame(step);
   };
 
-  const findHomeStar = (id) => [...document.querySelectorAll("#note-stars .note-star")].find(
-    (star) => star instanceof HTMLAnchorElement && noteIdFromHref(star.href) === id
-  );
-
-  const setWritingTargets = (payload) => {
-    if (payload.mode === "writing-archive-return") {
-      const ids = Array.isArray(payload.ids) ? payload.ids : [];
-      ids.forEach((id, index) => {
-        if (!id) return;
-        const star = findHomeStar(id);
-        const core = star?.querySelector(".note-star-core");
-        if (!(star instanceof HTMLElement) || !(core instanceof HTMLElement)) return;
-        star.classList.add("return-shared-star");
-        core.classList.add("return-writing-target");
-        core.style.setProperty("view-transition-name", `return-writing-star-${index}`);
-      });
-      return;
-    }
-
-    const star = findHomeStar(payload.id || "");
-    const core = star?.querySelector(".note-star-core");
-    if (star instanceof HTMLElement && core instanceof HTMLElement) {
-      star.classList.add("return-shared-star");
-      core.classList.add("return-writing-target");
-      core.style.setProperty("view-transition-name", "return-writing-focus-star");
-    }
-  };
-
   const clearArrivalState = () => {
     clearTimeout(arrivalTimer);
     arrivalTimer = 0;
-    stopWindRamp();
+    restoreWindRates();
+
+    // Remove every selector that consumes the visual variables before clearing
+    // those variables. This prevents the CSS fallback values from recreating a
+    // narrow wind band for one extra frame.
     delete root.dataset.returnHomePending;
     body.classList.remove(
       "is-returning-keke-home",
@@ -194,16 +198,16 @@
       "is-returning-writing-archive-home",
       "is-returning-writing-note-home"
     );
+    clearWindVisuals();
 
     document.querySelectorAll(".return-site-avatar-target, .return-site-name-target, .return-keke-planet-target").forEach((element) => {
       element.classList.remove("return-site-avatar-target", "return-site-name-target", "return-keke-planet-target");
       element.style.removeProperty("view-transition-name");
     });
-    document.querySelectorAll(".return-writing-target").forEach((element) => {
-      element.classList.remove("return-writing-target");
-      element.style.removeProperty("view-transition-name");
+    document.querySelectorAll("#note-stars .note-star").forEach((star) => {
+      star.style.removeProperty("--return-star-drop-x");
+      star.style.removeProperty("--return-star-drop-y");
     });
-    document.querySelectorAll(".return-shared-star").forEach((element) => element.classList.remove("return-shared-star"));
     root.style.removeProperty("--return-planet-drift-x");
     root.style.removeProperty("--return-planet-drift-y");
     releaseHomePhysics();
@@ -213,12 +217,14 @@
     const payload = readPayload();
     if (!payload || reducedMotion.matches) {
       delete root.dataset.returnHomePending;
+      clearWindVisuals();
       releaseHomePhysics();
       return;
     }
 
     root.dataset.returnHomePending = payload.mode;
     setIdentityTarget();
+    prepareHomeStarDeploy();
 
     if (payload.mode === "keke-return") {
       body.style.setProperty("--keke-flow-thickness", "0.38");
@@ -228,7 +234,6 @@
     } else if (payload.mode === "writing-archive-return" || payload.mode === "writing-note-return") {
       body.style.setProperty("--writing-flow-spread", "1.16");
       body.style.setProperty("--writing-flow-blur", "22.5px");
-      setWritingTargets(payload);
       root.style.setProperty("--return-planet-drift-x", payload.planet?.x || "68px");
       root.style.setProperty("--return-planet-drift-y", payload.planet?.y || "-22px");
       body.classList.add(
