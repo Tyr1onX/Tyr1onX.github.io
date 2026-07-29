@@ -7,36 +7,7 @@
     <meta name="theme-color" content="#0b1015" />
     <title>Tyr1onX</title>
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
-    <script>
-      (() => {
-        window.TYR1ONX_RETURN_HANDOFF = new Promise((resolve) => {
-          if (!("onpagereveal" in window)) {
-            resolve();
-            return;
-          }
-          addEventListener("pagereveal", (event) => {
-            Promise.resolve(event.viewTransition?.finished).then(resolve, resolve);
-          }, { once: true });
-        });
-
-        try {
-          const url = new URL(location.href);
-          const queryMode = url.searchParams.get("__return");
-          const raw = sessionStorage.getItem("tyr1onx:return-home-transition");
-          const storedMode = raw ? JSON.parse(raw)?.mode : "";
-          const mode = queryMode === "keke" ? "keke-return"
-            : queryMode === "writing" ? "writing-archive-return"
-              : storedMode;
-          if (mode) document.documentElement.dataset.returnHomePending = mode;
-
-          if (url.searchParams.has("__return") || url.searchParams.has("__t")) {
-            url.searchParams.delete("__return");
-            url.searchParams.delete("__t");
-            history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`);
-          }
-        } catch {}
-      })();
-    </script>
+    <script src="./navigation-first-frame.js?v=1-first-frame"></script>
     <link rel="preload" as="image" href="./assets/keke-icon-source.png" type="image/png" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./home-cosmos-v3.css" />
@@ -47,6 +18,7 @@
     <link rel="stylesheet" href="./writing-transition.css?v=3-thread-cycle" />
     <link rel="stylesheet" href="./return-home-transition.css?v=3-fresh-route" />
     <link rel="stylesheet" href="./transition-sequence-timing.css?v=5-motion-system" />
+    <link rel="stylesheet" href="./navigation-first-frame.css?v=1-first-frame" />
     <style>
       /*
        * The return mode is known before first paint. Keep the live home document
