@@ -64,6 +64,25 @@
     }
   };
 
+  const routeFromCommittedIntent = (targetPage) => {
+    if (currentPage === "home") {
+      if (targetPage === "keke" && readSession(KEKE_KEY) === "1") return "home-to-keke";
+      const mode = readJsonMode(WRITING_KEY);
+      if (targetPage === "notes" && mode === "archive") return "home-to-writing-archive";
+      if (targetPage === "note" && mode === "note") return "home-to-writing-note";
+      return "";
+    }
+
+    if (targetPage !== "home") return "";
+    const mode = readJsonMode(RETURN_KEY);
+    if (currentPage === "keke" && mode === "keke-return") return "keke-to-home";
+    if ((currentPage === "notes" || currentPage === "note")
+      && (mode === "writing-archive-return" || mode === "writing-note-return")) {
+      return "writing-to-home";
+    }
+    return "";
+  };
+
   const currentPage = pageName(location.href);
   const url = new URL(location.href);
   let route = "";
@@ -143,42 +162,14 @@
     if (!(link instanceof HTMLAnchorElement)) return;
 
     queueMicrotask(() => {
-      const targetPage = pageName(link.href);
-      let nextRoute = "";
-
-      if (currentPage === "home") {
-        if (targetPage === "keke" && readSession(KEKE_KEY) === "1") {
-          nextRoute = "home-to-keke";
-        } else if (targetPage === "notes" || targetPage === "note") {
-          const mode = readJsonMode(WRITING_KEY);
-          if (mode === "archive" && targetPage === "notes") nextRoute = "home-to-writing-archive";
-          else if (mode === "note" && targetPage === "note") nextRoute = "home-to-writing-note";
-        }
-      } else if (targetPage === "home") {
-        const mode = readJsonMode(RETURN_KEY);
-        if (mode === "keke-return") nextRoute = "keke-to-home";
-        else if (mode === "writing-archive-return" || mode === "writing-note-return") nextRoute = "writing-to-home";
-      }
-
+      const nextRoute = routeFromCommittedIntent(pageName(link.href));
       if (nextRoute) root.dataset.transitionRoute = nextRoute;
     });
   }, true);
 
   addEventListener("pageswap", (event) => {
     const destination = event.activation?.entry?.url;
-    if (!destination) return;
-    const targetPage = pageName(destination);
-    let nextRoute = "";
-
-    if (currentPage === "home") {
-      if (targetPage === "keke") nextRoute = "home-to-keke";
-      else if (targetPage === "notes") nextRoute = "home-to-writing-archive";
-      else if (targetPage === "note") nextRoute = "home-to-writing-note";
-    } else if (targetPage === "home") {
-      if (currentPage === "keke") nextRoute = "keke-to-home";
-      else if (currentPage === "notes" || currentPage === "note") nextRoute = "writing-to-home";
-    }
-
+    const nextRoute = destination ? routeFromCommittedIntent(pageName(destination)) : "";
     if (nextRoute) root.dataset.transitionRoute = nextRoute;
     else delete root.dataset.transitionRoute;
   });
