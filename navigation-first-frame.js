@@ -140,10 +140,15 @@
   window.TYR1ONX_NAVIGATION_HANDOFF = handoff;
   window.TYR1ONX_RETURN_HANDOFF = handoff;
 
-  domReady.then(() => requestAnimationFrame(() => {
-    root.classList.remove("theme-initializing");
-    root.dataset.themeReady = "true";
-  }));
+  domReady.then(() => {
+    if (route === "home-to-keke" || route === "home-to-writing-archive" || route === "home-to-writing-note") {
+      document.querySelectorAll("main .reveal").forEach((element) => element.classList.add("is-visible"));
+    }
+    requestAnimationFrame(() => {
+      root.classList.remove("theme-initializing");
+      root.dataset.themeReady = "true";
+    });
+  });
 
   handoff.then(() => {
     if (route === "home-to-keke") {
