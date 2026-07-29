@@ -1,0 +1,185 @@
+/* First-frame ownership for cross-document navigation.
+ * Route-specific states are established synchronously by navigation-first-frame.js.
+ */
+
+/* Ordinary same-origin navigation must not inherit the Keke root animation. */
+::view-transition-old(root) {
+  animation: none;
+  opacity: 0;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
+html[data-transition-route="home-to-keke"]::view-transition-old(root) {
+  animation: navigation-keke-world-out 680ms cubic-bezier(.4, 0, .2, 1) both;
+}
+
+html[data-transition-route="home-to-keke"]::view-transition-new(root) {
+  animation: navigation-keke-world-in 680ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+html[data-transition-route="home-to-writing-archive"]::view-transition-old(root) {
+  animation: navigation-writing-archive-out 440ms cubic-bezier(.36, 0, .2, 1) both;
+}
+
+html[data-transition-route="home-to-writing-archive"]::view-transition-new(root) {
+  animation: navigation-writing-archive-in 520ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+html[data-transition-route="home-to-writing-note"]::view-transition-old(root) {
+  animation: navigation-writing-note-out 400ms cubic-bezier(.36, 0, .2, 1) both;
+}
+
+html[data-transition-route="home-to-writing-note"]::view-transition-new(root) {
+  animation: navigation-writing-note-in 500ms cubic-bezier(.2, .72, .2, 1) both;
+}
+
+/* Keke shared targets only exist for the explicit home -> Keke route. */
+body[data-page="keke"] .keke-transition-target,
+body[data-page="keke"] .brand-avatar,
+body[data-page="keke"] .brand > span {
+  view-transition-name: none;
+}
+
+html[data-transition-route="home-to-keke"] body[data-page="keke"] .keke-transition-target {
+  view-transition-name: keke-planet;
+}
+
+html[data-transition-route="home-to-keke"] body[data-page="keke"] .brand-avatar {
+  view-transition-name: keke-site-avatar;
+}
+
+html[data-transition-route="home-to-keke"] body[data-page="keke"] .brand > span {
+  view-transition-name: keke-site-name;
+}
+
+/* Writing identity targets are also available before deferred scripts run. */
+html[data-transition-route="home-to-writing-archive"] body[data-page="notes"] .site-header .brand-avatar,
+html[data-transition-route="home-to-writing-note"] body[data-page="note"] .site-header .brand-avatar {
+  view-transition-name: writing-site-avatar;
+}
+
+html[data-transition-route="home-to-writing-archive"] body[data-page="notes"] .site-header .brand > span,
+html[data-transition-route="home-to-writing-note"] body[data-page="note"] .site-header .brand > span {
+  view-transition-name: writing-site-name;
+}
+
+/* Keep the real target document frozen while its View Transition snapshot is visible. */
+html[data-keke-arrival-pending] body[data-page="keke"] *,
+html[data-keke-arrival-pending] body[data-page="keke"] *::before,
+html[data-keke-arrival-pending] body[data-page="keke"] *::after,
+html[data-writing-arrival-pending] body[data-page="notes"] *,
+html[data-writing-arrival-pending] body[data-page="notes"] *::before,
+html[data-writing-arrival-pending] body[data-page="notes"] *::after,
+html[data-writing-arrival-pending] body[data-page="note"] *,
+html[data-writing-arrival-pending] body[data-page="note"] *::before,
+html[data-writing-arrival-pending] body[data-page="note"] *::after {
+  animation-play-state: paused !important;
+}
+
+/* Keke arrives from a stable first-frame state instead of being reset by defer. */
+html[data-keke-arrival-pending="home"] body[data-page="keke"] .keke-showcase.reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+html[data-keke-arrival-pending="home"] body[data-page="keke"] .keke-summary > :not(.keke-title-row),
+html[data-keke-arrival-pending="home"] body[data-page="keke"] .product-viewer {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Archive arrival starts with its path, branches and copy closed. */
+html[data-writing-arrival-pending="archive"] body[data-page="notes"] .archive-list::before {
+  opacity: 0;
+  transform: scaleY(0) skewY(-1.6deg);
+  transform-origin: top center;
+}
+
+html[data-writing-arrival-pending="archive"] body[data-page="notes"] .archive-row-v2::before {
+  opacity: 0;
+  transform: rotate(var(--archive-branch-angle, -2deg)) scaleX(0);
+  transform-origin: left center;
+}
+
+html[data-writing-arrival-pending="archive"] body[data-page="notes"] .archive-row-meta time,
+html[data-writing-arrival-pending="archive"] body[data-page="notes"] .archive-row-v2 h2,
+html[data-writing-arrival-pending="archive"] body[data-page="notes"] .archive-row-v2 p,
+html[data-writing-arrival-pending="archive"] body[data-page="notes"] .archive-row-arrow {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+html[data-writing-arrival-pending="archive"] body[data-page="notes"] .site-footer,
+html[data-writing-arrival-pending="archive"] body[data-page="notes"] .note-kind-marker {
+  opacity: 0;
+}
+
+/* Article arrival is hidden at its real keyframe origin before dynamic content is inserted. */
+html[data-writing-arrival-pending="note"] body[data-page="note"] .back-link,
+html[data-writing-arrival-pending="note"] body[data-page="note"] .article-meta-line time,
+html[data-writing-arrival-pending="note"] body[data-page="note"] .article-meta-line::after,
+html[data-writing-arrival-pending="note"] body[data-page="note"] .note-article header h1,
+html[data-writing-arrival-pending="note"] body[data-page="note"] .article-source,
+html[data-writing-arrival-pending="note"] body[data-page="note"] .article-body,
+html[data-writing-arrival-pending="note"] body[data-page="note"] .note-navigation,
+html[data-writing-arrival-pending="note"] body[data-page="note"] .site-footer {
+  opacity: 0;
+  transform: translateY(9px);
+}
+
+html[data-writing-arrival-pending="note"] body[data-page="note"] .reading-path {
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+}
+
+html[data-writing-arrival-pending="note"] body[data-page="note"] .article-meta-line .note-kind-marker {
+  opacity: 0;
+}
+
+/* The old document stays opaque underneath the incoming one, so the browser canvas is never exposed. */
+@keyframes navigation-keke-world-out {
+  from { opacity: 1; filter: blur(0); transform: scale(1); }
+  to { opacity: 1; filter: blur(2px) saturate(1.12); transform: scale(1.012); }
+}
+
+@keyframes navigation-keke-world-in {
+  from { opacity: 0; filter: blur(5px); transform: scale(.992); }
+  to { opacity: 1; filter: blur(0); transform: scale(1); }
+}
+
+@keyframes navigation-writing-archive-out {
+  from { opacity: 1; transform: scale(1); filter: saturate(1); }
+  to { opacity: 1; transform: scale(1.003); filter: saturate(.86); }
+}
+
+@keyframes navigation-writing-archive-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes navigation-writing-note-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.003); }
+}
+
+@keyframes navigation-writing-note-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-transition-route]::view-transition-old(root),
+  html[data-transition-route]::view-transition-new(root) {
+    animation: none !important;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
