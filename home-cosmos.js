@@ -19,11 +19,13 @@
   let pageVisible = !document.hidden;
   let sceneVisible = true;
   let returnHold = Boolean(root.dataset.returnHomePending);
+  let transitionHold = false;
   let initialized = false;
   let initTimer = 0;
   let startupWatchdog = 0;
   let resizeTimer = 0;
   let clockTimer = 0;
+  let pendingReturnRelease = false;
 
   if (currentYear) currentYear.textContent = String(new Date().getFullYear());
 
@@ -125,13 +127,25 @@
   let windScheduleTimer = 0;
   let lastWindSign = 0;
   let activeTouchStar = null;
+  let routeFrame = 0;
+  let routeSnapshot = null;
+  let routePromise = null;
+  let releaseActive = false;
+
+  const clamp01 = (value) => Math.min(1, Math.max(0, value));
+  const smoothstep = (value) => value * value * (3 - 2 * value);
 
   function stageHasSize() {
     return field.clientWidth >= 120 && field.clientHeight >= 240;
   }
 
   function canRunPhysics() {
-    return !reduced && initialized && pageVisible && sceneVisible && !returnHold;
+    return !reduced
+      && initialized
+      && pageVisible
+      && sceneVisible
+      && !returnHold
+      && !transitionHold;
   }
 
   function draw(index, body) {
@@ -329,6 +343,7 @@
       if (elapsed < body.delay + 7600 || Math.abs(body.vx) + Math.abs(body.vy) > 0.45) moving = true;
     });
 
+    if (!moving) releaseActive = false;
     frame = moving ? requestAnimationFrame(animate) : 0;
   }
 
@@ -382,6 +397,155 @@
     armStartupWatchdog();
   }
 
+  function normalizeIndices(indices) {
+    if (!Array.isArray(indices)) return bodies.map((_, index) => index);
+    return [...new Set(indices)]
+      .filter((index) => Number.isInteger(index) && index >= 0 && index < bodies.length);
+  }
+
+  function resetRouteRetraction() {
+    cancelAnimationFrame(routeFrame);
+    routeFrame = 0;
+
+    routeSnapshot?.forEach((item) => {
+      const body = bodies[item.index];
+      if (!body) return;
+      Object.assign(body, item.body);
+      item.star.style.opacity = item.starOpacity;
+      item.line.style.opacity = item.lineOpacity;
+      draw(item.index, body);
+    });
+
+    routeSnapshot = null;
+    routePromise = null;
+    transitionHold = false;
+    if (!returnHold) resumeMotion();
+  }
+
+  function retractStars({ indices, duration = 440, baseDelay = 0, stagger = 0 } = {}) {
+    if (reduced || !initialized) return Promise.resolve();
+    if (routePromise) return routePromise;
+
+    const selected = normalizeIndices(indices);
+    if (!selected.length) return Promise.resolve();
+
+    closeTouchStar();
+    transitionHold = true;
+    pauseMotion();
+
+    routeSnapshot = selected.map((index, order) => {
+      const body = bodies[index];
+      const star = elements[index];
+      const line = lines[index];
+      if (!body || !(star instanceof HTMLElement) || !(line instanceof SVGLineElement)) return null;
+      return {
+        index,
+        star,
+        line,
+        startX: body.x,
+        startY: body.y,
+        targetX: body.ax,
+        targetY: body.ay + starTipOffsets[index],
+        delay: baseDelay + order * stagger,
+        body: { ...body },
+        starOpacity: star.style.opacity,
+        lineOpacity: line.style.opacity,
+      };
+    }).filter(Boolean);
+
+    if (!routeSnapshot.length) {
+      transitionHold = false;
+      return Promise.resolve();
+    }
+
+    const startedAt = performance.now();
+    routePromise = new Promise((resolve) => {
+      const step = (now) => {
+        let complete = true;
+
+        routeSnapshot.forEach((item) => {
+          const local = clamp01((now - startedAt - item.delay) / duration);
+          if (local < 1) complete = false;
+          const progress = smoothstep(local);
+          const body = bodies[item.index];
+          body.x = item.startX + (item.targetX - item.startX) * progress;
+          body.y = item.startY + (item.targetY - item.startY) * progress;
+          body.vx = 0;
+          body.vy = 0;
+          draw(item.index, body);
+
+          const fade = local < 0.86 ? 1 : 1 - (local - 0.86) / 0.14;
+          const opacity = clamp01(fade).toFixed(3);
+          item.star.style.opacity = opacity;
+          item.line.style.opacity = opacity;
+        });
+
+        if (complete) {
+          routeFrame = 0;
+          resolve();
+        } else {
+          routeFrame = requestAnimationFrame(step);
+        }
+      };
+      routeFrame = requestAnimationFrame(step);
+    });
+
+    return routePromise;
+  }
+
+  function releaseFromTop({ animate = true } = {}) {
+    if (!initialized) {
+      pendingReturnRelease = true;
+      initializeScene();
+      return;
+    }
+
+    cancelAnimationFrame(routeFrame);
+    routeFrame = 0;
+    routeSnapshot = null;
+    routePromise = null;
+    transitionHold = false;
+    returnHold = false;
+    releaseActive = Boolean(animate && !reduced);
+
+    if (!animate || reduced) {
+      started = performance.now() - 8000;
+      rebuild({ settle: true });
+      releaseActive = false;
+      resumeMotion();
+      return;
+    }
+
+    const now = performance.now();
+    started = now;
+    pausedAt = 0;
+    last = now;
+    lastPhysicsPaint = now;
+
+    bodies.forEach((body, index) => {
+      body.x = body.ax + (index % 2 ? 28 : -28);
+      body.y = -80 - index * 34;
+      body.vx = index % 2 ? 18 : -18;
+      body.vy = 0;
+      body.born = false;
+      body.delay = index * 130;
+      elements[index]?.classList.remove("is-born");
+      elements[index]?.style.removeProperty("opacity");
+      elements[index]?.style.removeProperty("translate");
+      lines[index]?.style.removeProperty("opacity");
+      draw(index, body);
+    });
+
+    resumeMotion();
+  }
+
+  window.TYR1ONX_COSMOS_MOTION = Object.freeze({
+    retract: retractStars,
+    resetRetraction: resetRouteRetraction,
+    releaseFromTop,
+    isReleaseActive: () => releaseActive,
+  });
+
   function initializeScene(attempt = 0) {
     clearTimeout(initTimer);
     if (initialized) return;
@@ -394,6 +558,12 @@
     started = performance.now();
     if (!rebuild({ settle: returnHold })) return;
     initialized = true;
+
+    if (pendingReturnRelease) {
+      pendingReturnRelease = false;
+      releaseFromTop();
+      return;
+    }
 
     if (document.hidden) {
       pageVisible = false;
@@ -414,7 +584,7 @@
 
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      if (!stageHasSize()) return;
+      if (!stageHasSize() || transitionHold) return;
       cancelAnimationFrame(frame);
       frame = 0;
       last = performance.now();
@@ -475,6 +645,7 @@
   });
 
   addEventListener("pageshow", (event) => {
+    if (routeSnapshot) resetRouteRetraction();
     if (!initialized) {
       initializeScene();
       return;
@@ -486,6 +657,7 @@
   addEventListener("resize", scheduleRebuild, { passive: true });
   addEventListener("tyr1onx:return-home-complete", () => {
     returnHold = false;
+    if (releaseActive) return;
     started = performance.now() - 8000;
     bodies.forEach((body) => {
       body.vx = 0;

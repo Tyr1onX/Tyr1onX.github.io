@@ -10,10 +10,9 @@
   const WRITING_CALM_RATE = 0.24;
   const KEKE_PEAK_RATE = 7;
   const ARRIVAL_ANIMATION_NAMES = new Set([
-    "return-star-drop-from-anchor",
-    "return-thread-release",
     "return-orbit-line-in",
     "return-writing-planet-in",
+    "return-quiet-elements-in",
   ]);
 
   let windFrame = 0;
@@ -31,13 +30,6 @@
     return raw.endsWith("s") && !raw.endsWith("ms") ? value * 1000 : value;
   };
 
-  const arrivalFallbackMs = () => (
-    motionMs("--motion-delay-base", 70)
-    + motionMs("--motion-release", 620)
-    + 7 * motionMs("--motion-stagger-star", 42)
-    + motionMs("--motion-micro", 180)
-  );
-
   const waitForArrivalAnimations = async () => {
     await afterStyleCommit();
     const animations = document.getAnimations().filter((animation) => (
@@ -45,14 +37,10 @@
     ));
 
     if (!animations.length) {
-      await sleep(arrivalFallbackMs());
+      await sleep(motionMs("--motion-environment", 700) + motionMs("--motion-micro", 180));
       return;
     }
     await Promise.allSettled(animations.map((animation) => animation.finished));
-  };
-
-  const releaseHomePhysics = () => {
-    dispatchEvent(new CustomEvent("tyr1onx:return-home-complete"));
   };
 
   const setAnimationRate = (animation, rate) => {
@@ -79,38 +67,6 @@
   const setIdentityTarget = () => {
     setNamedElement(document.querySelector(".cosmos-center img"), "return-site-avatar-target", "return-site-avatar");
     setNamedElement(document.querySelector(".cosmos-center h1"), "return-site-name-target", "return-site-name");
-  };
-
-  const prepareHomeStarDeploy = () => {
-    const stars = [...document.querySelectorAll("#note-stars .note-star")];
-    const lines = [...document.querySelectorAll("#star-threads .star-thread")];
-    const baseDelay = motionMs("--motion-delay-base", 70);
-    const stagger = motionMs("--motion-stagger-star", 42);
-
-    stars.forEach((star, index) => {
-      if (!(star instanceof HTMLElement)) return;
-      const line = lines[index];
-      if (!(line instanceof SVGElement)) return;
-
-      const anchorX = Number.parseFloat(line.getAttribute("x1") || "");
-      const anchorY = Number.parseFloat(line.getAttribute("y1") || "");
-      const tipX = Number.parseFloat(line.getAttribute("x2") || "");
-      const tipY = Number.parseFloat(line.getAttribute("y2") || "");
-      const starSize = Number.parseFloat(getComputedStyle(star).getPropertyValue("--note-star-size"));
-      const halfStar = Number.isFinite(starSize) ? starSize / 2 : 6;
-      const delay = baseDelay + index * stagger;
-
-      if (!Number.isFinite(anchorX)
-        || !Number.isFinite(anchorY)
-        || !Number.isFinite(tipX)
-        || !Number.isFinite(tipY)) return;
-
-      const centerY = tipY + halfStar;
-      star.style.setProperty("--return-star-drop-x", `${(anchorX - tipX).toFixed(2)}px`);
-      star.style.setProperty("--return-star-drop-y", `${(anchorY - centerY).toFixed(2)}px`);
-      star.style.setProperty("--return-star-delay", `${delay}ms`);
-      line.style.setProperty("--return-thread-delay", `${delay}ms`);
-    });
   };
 
   const collectHomeAnimations = () => {
@@ -244,31 +200,29 @@
       element.classList.remove("return-site-avatar-target", "return-site-name-target", "return-keke-planet-target");
       element.style.removeProperty("view-transition-name");
     });
-    document.querySelectorAll("#note-stars .note-star").forEach((star) => {
-      star.style.removeProperty("--return-star-drop-x");
-      star.style.removeProperty("--return-star-drop-y");
-      star.style.removeProperty("--return-star-delay");
-    });
-    document.querySelectorAll("#star-threads .star-thread").forEach((thread) => {
-      thread.style.removeProperty("--return-thread-delay");
-    });
     root.style.removeProperty("--return-planet-drift-x");
     root.style.removeProperty("--return-planet-drift-y");
-    releaseHomePhysics();
+  };
+
+  const ensureHomeRelease = (animate) => {
+    const motion = window.TYR1ONX_COSMOS_MOTION;
+    if (!motion) return;
+    if (animate && motion.isReleaseActive()) return;
+    motion.releaseFromTop({ animate });
   };
 
   const installHomeArrival = async () => {
     const payload = readPayload();
     if (!payload || reducedMotion.matches) {
+      ensureHomeRelease(false);
       delete root.dataset.returnHomePending;
       clearWindVisuals();
-      releaseHomePhysics();
       return;
     }
 
     root.dataset.returnHomePending = payload.mode;
     setIdentityTarget();
-    prepareHomeStarDeploy();
+    ensureHomeRelease(true);
 
     let windPromise = Promise.resolve();
     if (payload.mode === "keke-return") {
