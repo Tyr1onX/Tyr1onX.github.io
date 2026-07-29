@@ -9,6 +9,16 @@
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
     <script>
       (() => {
+        window.TYR1ONX_RETURN_HANDOFF = new Promise((resolve) => {
+          if (!("onpagereveal" in window)) {
+            resolve();
+            return;
+          }
+          addEventListener("pagereveal", (event) => {
+            Promise.resolve(event.viewTransition?.finished).then(resolve, resolve);
+          }, { once: true });
+        });
+
         try {
           const url = new URL(location.href);
           const queryMode = url.searchParams.get("__return");
@@ -39,9 +49,9 @@
     <link rel="stylesheet" href="./transition-sequence-timing.css?v=5-motion-system" />
     <style>
       /*
-       * The return mode is written on <html> in the head, before the first paint.
-       * Mirror the deferred body classes here so the incoming View Transition
-       * and home elements never expose their static end state for one frame.
+       * The return mode is known before first paint. Keep the live home document
+       * frozen in the same initial state as the incoming View Transition snapshot;
+       * the deferred controller starts real motion only after that snapshot leaves.
        */
       html[data-return-home-pending="keke-return"]::view-transition-new(root) {
         animation: return-keke-world-in 620ms cubic-bezier(.2, .72, .2, 1) both;
@@ -63,49 +73,47 @@
         view-transition-name: return-keke-planet;
       }
 
+      html[data-return-home-pending] body[data-page="home"] .cosmos-hero::before,
+      html[data-return-home-pending] body[data-page="home"] .decorative-star,
+      html[data-return-home-pending] body[data-page="home"] .note-star-core,
+      html[data-return-home-pending] body[data-page="home"] .orbit-project,
+      html[data-return-home-pending] body[data-page="home"] .garden-current,
+      html[data-return-home-pending] body[data-page="home"] .garden-trace,
+      html[data-return-home-pending] body[data-page="home"] .wind-stream {
+        animation-play-state: paused !important;
+      }
+
       html[data-return-home-pending="keke-return"] body[data-page="home"] .project-orbit-line,
       html[data-return-home-pending^="writing-"] body[data-page="home"] .project-orbit-line {
-        animation: return-orbit-line-in 580ms 70ms ease both;
+        opacity: 0;
+        filter: blur(1.5px);
       }
 
       html[data-return-home-pending="keke-return"] body[data-page="home"] .note-star,
       html[data-return-home-pending^="writing-"] body[data-page="home"] .note-star:not(.return-shared-star) {
-        animation: return-star-deploy 520ms calc(70ms + var(--return-star-index, 0) * 34ms) cubic-bezier(.22, 1, .36, 1) both;
+        opacity: 0;
+        translate: 0 -38px;
+        scale: .76;
       }
-
-      html[data-return-home-pending] body[data-page="home"] .note-star:nth-child(1) { --return-star-index: 0; }
-      html[data-return-home-pending] body[data-page="home"] .note-star:nth-child(2) { --return-star-index: 1; }
-      html[data-return-home-pending] body[data-page="home"] .note-star:nth-child(3) { --return-star-index: 2; }
-      html[data-return-home-pending] body[data-page="home"] .note-star:nth-child(4) { --return-star-index: 3; }
-      html[data-return-home-pending] body[data-page="home"] .note-star:nth-child(5) { --return-star-index: 4; }
-      html[data-return-home-pending] body[data-page="home"] .note-star:nth-child(6) { --return-star-index: 5; }
-      html[data-return-home-pending] body[data-page="home"] .note-star:nth-child(7) { --return-star-index: 6; }
-      html[data-return-home-pending] body[data-page="home"] .note-star:nth-child(8) { --return-star-index: 7; }
 
       html[data-return-home-pending="keke-return"] body[data-page="home"] .star-thread,
       html[data-return-home-pending^="writing-"] body[data-page="home"] .star-thread {
+        opacity: 0;
         transform-box: fill-box;
         transform-origin: 50% 0%;
-        animation: return-thread-grow 520ms calc(54ms + var(--return-thread-index, 0) * 34ms) cubic-bezier(.22, 1, .36, 1) both;
+        transform: scaleY(.02);
       }
 
-      html[data-return-home-pending] body[data-page="home"] .star-thread:nth-child(1) { --return-thread-index: 0; }
-      html[data-return-home-pending] body[data-page="home"] .star-thread:nth-child(2) { --return-thread-index: 1; }
-      html[data-return-home-pending] body[data-page="home"] .star-thread:nth-child(3) { --return-thread-index: 2; }
-      html[data-return-home-pending] body[data-page="home"] .star-thread:nth-child(4) { --return-thread-index: 3; }
-      html[data-return-home-pending] body[data-page="home"] .star-thread:nth-child(5) { --return-thread-index: 4; }
-      html[data-return-home-pending] body[data-page="home"] .star-thread:nth-child(6) { --return-thread-index: 5; }
-      html[data-return-home-pending] body[data-page="home"] .star-thread:nth-child(7) { --return-thread-index: 6; }
-      html[data-return-home-pending] body[data-page="home"] .star-thread:nth-child(8) { --return-thread-index: 7; }
-
       html[data-return-home-pending^="writing-"] body[data-page="home"] .orbit-icon-shell {
-        animation: return-writing-planet-in 640ms 40ms cubic-bezier(.2, .72, .2, 1) both;
+        opacity: 0;
+        transform: translate(var(--return-planet-drift-x, 68px), var(--return-planet-drift-y, -22px)) scale(.36);
+        filter: blur(4px) saturate(.62);
       }
 
       html[data-return-home-pending] body[data-page="home"] .cosmos-center time,
       html[data-return-home-pending] body[data-page="home"] .decorative-stars,
       html[data-return-home-pending] body[data-page="home"] .all-writing-link {
-        animation: return-quiet-elements-in 500ms 190ms ease both;
+        opacity: 0;
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -138,12 +146,12 @@
     <script src="./notes-2026.js?v=2" defer></script>
     <script src="./site-runtime.js?v=3-lightweight" defer></script>
     <script src="./home-cosmos.js?v=5-single-owner-motion" defer></script>
-    <script src="./cosmos-star-motion.js?v=3-navigation-deadlock-guard" defer></script>
-    <script src="./home-keke-orbit.js?v=4-frame-cost" defer></script>
+    <script src="./cosmos-star-motion.js?v=4-live-handoff" defer></script>
+    <script src="./home-keke-orbit.js?v=5-return-handoff" defer></script>
     <script src="./home-garden.js?v=4-shared-notes" defer></script>
     <script src="./keke-transition.js?v=7-single-owner" defer></script>
     <script src="./writing-transition.js?v=5-single-owner" defer></script>
-    <script src="./return-home-transition.js?v=8-physics-release" defer></script>
+    <script src="./return-home-transition.js?v=9-live-handoff" defer></script>
   </head>
   <body data-page="home">
     <a class="skip-link" href="#main">跳到主要内容</a>

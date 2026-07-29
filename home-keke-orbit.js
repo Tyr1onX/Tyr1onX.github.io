@@ -1,4 +1,5 @@
 (() => {
+  const root = document.documentElement;
   const field = document.querySelector("#cosmos-field");
   const orbitLine = document.querySelector(".project-orbit-line");
   const orbitProject = document.querySelector(".orbit-project");
@@ -97,6 +98,7 @@
   function canAnimate() {
     return !reducedQuery.matches
       && !document.hidden
+      && !root.dataset.returnHomePending
       && !interactionPaused
       && sceneVisible;
   }
@@ -205,5 +207,12 @@
     observer.observe(orbitLine);
   }
 
+  const returnObserver = new MutationObserver(() => {
+    if (root.dataset.returnHomePending) pauseTimeline();
+    else resumeTimeline();
+  });
+  returnObserver.observe(root, { attributes: true, attributeFilter: ["data-return-home-pending"] });
+
+  if (root.dataset.returnHomePending) pauseTimeline();
   requestAnimationFrame(start);
 })();

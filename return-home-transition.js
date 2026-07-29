@@ -30,6 +30,15 @@
     return raw.endsWith("s") && !raw.endsWith("ms") ? value * 1000 : value;
   };
 
+  const waitForReturnHandoff = async () => {
+    const handoff = window.TYR1ONX_RETURN_HANDOFF;
+    if (!handoff || typeof handoff.then !== "function") return;
+    await Promise.race([
+      Promise.resolve(handoff).catch(() => {}),
+      sleep(1200),
+    ]);
+  };
+
   const waitForArrivalAnimations = async () => {
     await afterStyleCommit();
     const animations = document.getAnimations().filter((animation) => (
@@ -222,23 +231,32 @@
 
     root.dataset.returnHomePending = payload.mode;
     setIdentityTarget();
-    ensureHomeRelease(true);
 
-    let windPromise = Promise.resolve();
     if (payload.mode === "keke-return") {
       body.style.setProperty("--keke-flow-thickness", "0.38");
       setNamedElement(document.querySelector(".orbit-project img"), "return-keke-planet-target", "return-keke-planet");
-      body.classList.add("is-returning-keke-home");
-      windPromise = settleKekeWind();
     } else if (payload.mode === "writing-archive-return" || payload.mode === "writing-note-return") {
       body.style.setProperty("--writing-flow-spread", "1.16");
       body.style.setProperty("--writing-flow-blur", "22.5px");
       root.style.setProperty("--return-planet-drift-x", payload.planet?.x || "68px");
       root.style.setProperty("--return-planet-drift-y", payload.planet?.y || "-22px");
+    }
+
+    await waitForReturnHandoff();
+
+    let windPromise = Promise.resolve();
+    if (payload.mode === "keke-return") {
+      body.classList.add("is-returning-keke-home");
+      delete root.dataset.returnHomePending;
+      ensureHomeRelease(true);
+      windPromise = settleKekeWind();
+    } else if (payload.mode === "writing-archive-return" || payload.mode === "writing-note-return") {
       body.classList.add(
         "is-returning-writing-home",
         payload.mode === "writing-archive-return" ? "is-returning-writing-archive-home" : "is-returning-writing-note-home"
       );
+      delete root.dataset.returnHomePending;
+      ensureHomeRelease(true);
       windPromise = awakenWritingWind();
     }
 
