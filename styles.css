@@ -215,3 +215,139 @@ html[data-theme="dark"] .keke-motion-course { color: #f2eff9; border-color: rgba
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .js .reveal { opacity: 1; transform: none; }
 }
+
+/* UI/UX audit pass: improve professional baselines without changing the visual concept. */
+:root {
+  --quiet: #70707a;
+  --accent: #5f56ef;
+  --focus-ring: #5f56ef;
+  --focus-ring-soft: color-mix(in srgb, var(--focus-ring) 22%, transparent);
+}
+
+html[data-theme="dark"] {
+  --focus-ring: #b8b4ff;
+  --focus-ring-soft: color-mix(in srgb, var(--focus-ring) 24%, transparent);
+}
+
+:where(a, button, [role="tab"]):focus-visible {
+  outline: 2px solid var(--focus-ring) !important;
+  outline-offset: 3px;
+}
+
+.skip-link:focus-visible {
+  outline-color: currentColor !important;
+}
+
+.nav-links a[aria-current="page"] {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+/* The cosmos keeps its own focus language: a small orbital halo, not a box. */
+body[data-page="home"] .note-star::after {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--note-star-size, 12px) + 12px);
+  height: calc(var(--note-star-size, 12px) + 12px);
+  border: 2px solid transparent;
+  border-radius: 50%;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(.82);
+  transition: opacity 160ms ease, transform 180ms cubic-bezier(.22, 1, .36, 1), border-color 160ms ease, box-shadow 160ms ease;
+}
+
+body[data-page="home"] .note-star:focus-visible,
+body[data-page="home"] .orbit-project:focus-visible {
+  outline: none !important;
+}
+
+body[data-page="home"] .note-star:focus-visible::after {
+  border-color: var(--cosmos-star, var(--focus-ring));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--cosmos-star, var(--focus-ring)) 16%, transparent), 0 0 18px color-mix(in srgb, var(--cosmos-glow, var(--focus-ring)) 45%, transparent);
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+body[data-page="home"] .orbit-project:focus-visible .orbit-icon-shell {
+  box-shadow: 0 0 0 3px var(--cosmos-bg, var(--bg)), 0 0 0 5px var(--cosmos-star, var(--focus-ring)), 0 0 24px color-mix(in srgb, var(--cosmos-glow, var(--focus-ring)) 55%, transparent) !important;
+  transform: scale(1.04);
+}
+
+/* Article kinds use both color and geometry: work = diamond, essay = round star. */
+.note-kind-marker {
+  display: inline-grid !important;
+  width: 10px !important;
+  height: 10px !important;
+  place-items: center;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.note-kind-marker::before {
+  display: block;
+  width: 7px;
+  height: 7px;
+  background: var(--note-kind-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--note-kind-color) 10%, transparent);
+  content: "";
+}
+
+.note-kind-work .note-kind-marker::before {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(.9);
+}
+
+.note-kind-essay .note-kind-marker::before {
+  border-radius: 50%;
+}
+
+@media (max-width: 820px) {
+  .nav-shell {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 4px;
+    width: min(calc(100% - 24px), var(--page));
+  }
+
+  .brand span {
+    display: none;
+  }
+
+  .nav-links {
+    display: flex;
+    justify-self: center;
+    gap: 0;
+  }
+
+  .nav-links a {
+    min-width: 44px;
+    justify-content: center;
+    padding-inline: 9px;
+    border-radius: 999px;
+    font-size: .82rem;
+  }
+
+  .nav-actions {
+    gap: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav-shell {
+    gap: 0;
+    width: min(calc(100% - 16px), var(--page));
+  }
+
+  .nav-links a {
+    padding-inline: 7px;
+    font-size: .78rem;
+  }
+
+  .brand-avatar {
+    width: 36px;
+    height: 36px;
+  }
+}
