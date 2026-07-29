@@ -104,14 +104,6 @@
     setNamed(document.querySelector(".site-header .brand > span"), "return-site-name-source", "return-site-name");
   };
 
-  const noteId = (href) => {
-    try {
-      return new URL(href, location.href).searchParams.get("id") || "";
-    } catch {
-      return "";
-    }
-  };
-
   const planetMemory = () => {
     try {
       const raw = sessionStorage.getItem(planetMemoryKey);
@@ -119,6 +111,38 @@
     } catch {
       return { x: "68px", y: "-22px" };
     }
+  };
+
+  const cleanupWritingArrivalArtifacts = () => {
+    document.querySelectorAll(".writing-drop-thread").forEach((thread) => thread.remove());
+    document.querySelectorAll(".writing-drop-target").forEach((marker) => {
+      marker.classList.remove("writing-drop-target");
+      marker.style.removeProperty("--writing-drop-y");
+      marker.style.removeProperty("--writing-drop-delay");
+    });
+    document.querySelectorAll(".writing-site-avatar-target, .writing-site-name-target").forEach((element) => {
+      element.classList.remove("writing-site-avatar-target", "writing-site-name-target");
+      element.style.removeProperty("view-transition-name");
+    });
+    body.classList.remove("is-arriving-writing-archive", "is-arriving-writing-note");
+    delete root.dataset.writingArrivalPending;
+  };
+
+  const cleanupPullArtifacts = () => {
+    document.querySelectorAll(".return-pull-thread").forEach((thread) => thread.remove());
+    document.querySelectorAll(".return-writing-source, .is-return-pulled").forEach((marker) => {
+      marker.classList.remove("return-writing-source", "is-return-pulled");
+      marker.style.removeProperty("--return-pull-y");
+      marker.style.removeProperty("--return-pull-delay");
+      marker.style.removeProperty("view-transition-name");
+    });
+  };
+
+  const cleanupNamedSources = () => {
+    document.querySelectorAll(".return-site-avatar-source, .return-site-name-source, .return-keke-planet-source").forEach((element) => {
+      element.classList.remove("return-site-avatar-source", "return-site-name-source", "return-keke-planet-source");
+      element.style.removeProperty("view-transition-name");
+    });
   };
 
   const createPullThread = (marker, index) => {
@@ -144,9 +168,16 @@
     return [marker, thread];
   };
 
+  const prepareCleanNavigationSnapshot = async () => {
+    cleanupPullArtifacts();
+    await afterStyleCommit();
+  };
+
   const start = async (link) => {
     if (navigating) return;
     navigating = true;
+    cleanupWritingArrivalArtifacts();
+    cleanupPullArtifacts();
     setIdentity();
     link.setAttribute("aria-disabled", "true");
     link.dataset.returnHomeLink = "true";
@@ -168,32 +199,41 @@
         const rect = row.getBoundingClientRect();
         return rect.bottom > 54 && rect.top < viewportHeight - 24;
       }).slice(0, 5);
-      const ids = [];
       rows.forEach((row, index) => {
         if (!(row instanceof HTMLAnchorElement)) return;
         const marker = row.querySelector(".note-kind-marker");
-        const id = noteId(row.href);
-        if (!id || !(marker instanceof HTMLElement)) return;
-        ids[index] = id;
-        marker.style.setProperty("view-transition-name", `return-writing-star-${index}`);
+        if (!(marker instanceof HTMLElement)) return;
         pullElements.push(...createPullThread(marker, index));
       });
-      writePayload({ mode: "writing-archive-return", ids, planet });
+      writePayload({ mode: "writing-archive-return", planet });
       body.classList.add("is-leaving-writing-home", "is-leaving-writing-archive-home");
       await waitForNamedAnimations(pullElements, 540);
     } else {
-      const id = new URLSearchParams(location.search).get("id") || "";
       const marker = document.querySelector(".article-meta-line .note-kind-marker");
-      if (marker instanceof HTMLElement && id) {
-        marker.style.setProperty("view-transition-name", "return-writing-focus-star");
-        pullElements.push(...createPullThread(marker, 0));
-      }
-      writePayload({ mode: "writing-note-return", id, planet });
+      if (marker instanceof HTMLElement) pullElements.push(...createPullThread(marker, 0));
+      writePayload({ mode: "writing-note-return", planet });
       body.classList.add("is-leaving-writing-home", "is-leaving-writing-note-home");
       await waitForNamedAnimations(pullElements, 460);
     }
 
+    await prepareCleanNavigationSnapshot();
     location.assign(destination.href);
+  };
+
+  const resetSourcePage = () => {
+    navigating = false;
+    cleanupPullArtifacts();
+    cleanupNamedSources();
+    body.classList.remove(
+      "is-leaving-keke-home",
+      "is-leaving-writing-home",
+      "is-leaving-writing-archive-home",
+      "is-leaving-writing-note-home"
+    );
+    document.querySelectorAll("[data-return-home-link]").forEach((link) => {
+      link.removeAttribute("aria-disabled");
+      delete link.dataset.returnHomeLink;
+    });
   };
 
   prefetch();
@@ -209,4 +249,6 @@
     event.stopImmediatePropagation();
     void start(target);
   }, true);
+
+  addEventListener("pageshow", resetSourcePage);
 })();
