@@ -1,5 +1,13 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-08-01-absence-everywhere",
+    date: "2026.08.01",
+    datetime: "2026-08-01T10:15:00+08:00",
+    title: "她将以缺席的方式在我的生命里无处不在",
+    excerpt: "她将以缺席的方式在我的生命里无处不在。",
+    content: ["她将以缺席的方式在我的生命里无处不在。"],
+  },
+  {
     id: "2026-07-28-ai-tool-stall",
     date: "2026.07.28",
     datetime: "2026-07-28T11:30:00+08:00",
