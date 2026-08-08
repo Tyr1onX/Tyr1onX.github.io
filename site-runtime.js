@@ -2,6 +2,14 @@
   const root = document.documentElement;
   root.classList.add("js");
 
+  const nav = document.querySelector(".nav-links");
+  if (nav && !nav.querySelector('a[href="./knowledge.html"]')) {
+    const knowledgeLink = document.createElement("a");
+    knowledgeLink.href = "./knowledge.html";
+    knowledgeLink.textContent = "星图";
+    nav.append(knowledgeLink);
+  }
+
   let storedTheme = null;
   try {
     storedTheme = localStorage.getItem("tyr1onx-theme");
