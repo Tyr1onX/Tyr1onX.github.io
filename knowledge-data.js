@@ -1,18 +1,24 @@
 window.TYR1ONX_KNOWLEDGE_GRAPH = {
   meta: {
-    version: "0.2",
+    version: "0.3",
     source: "Tyr1onX/Learning",
     updated: "2026-08-08",
-    note: "Mastery and practice stay separate. Project usage never raises mastery by itself.",
+    note: "The overview only shows the strongest current cognitive links. Mastery and practice remain separate, and hidden cross-galaxy links can still surface on interaction.",
   },
+  primaryCrossEdges: [
+    ["http", "browser"],
+    ["typescript", "tauri"],
+    ["ai-coding", "llm"],
+    ["python", "sql"]
+  ],
   galaxies: [
-    { id: "algorithms", label: "Algorithms", x: 13, y: 18, width: 17, height: 18, strength: 0.35 },
-    { id: "web-request", label: "Web Request", x: 47, y: 24, width: 36, height: 30, strength: 0.82 },
-    { id: "browser", label: "Browser", x: 27, y: 49, width: 35, height: 34, strength: 0.90 },
-    { id: "app-system", label: "App & System", x: 26, y: 76, width: 27, height: 25, strength: 0.72 },
-    { id: "engineering", label: "Engineering", x: 54, y: 75, width: 31, height: 27, strength: 0.78 },
-    { id: "ai", label: "AI", x: 80, y: 45, width: 31, height: 37, strength: 0.86 },
-    { id: "data", label: "Data", x: 84, y: 78, width: 21, height: 22, strength: 0.55 },
+    { id: "algorithms", label: "Algorithms", x: 13, y: 18, width: 17, height: 18, strength: 0.42, tone: "148 153 157" },
+    { id: "web-request", label: "Web Request", x: 47, y: 24, width: 36, height: 30, strength: 0.90, tone: "188 154 99" },
+    { id: "browser", label: "Browser", x: 27, y: 49, width: 35, height: 34, strength: 0.92, tone: "174 177 166" },
+    { id: "app-system", label: "App & System", x: 26, y: 76, width: 27, height: 25, strength: 0.76, tone: "128 151 167" },
+    { id: "engineering", label: "Engineering", x: 54, y: 75, width: 31, height: 27, strength: 0.82, tone: "139 156 171" },
+    { id: "ai", label: "AI", x: 80, y: 45, width: 31, height: 37, strength: 0.90, tone: "132 165 176" },
+    { id: "data", label: "Data", x: 84, y: 78, width: 21, height: 22, strength: 0.64, tone: "111 148 164" },
   ],
   nodes: [
     { id: "dfs", label: "DFS", x: 10, y: 21, galaxy: "algorithms", tier: "satellite", importance: 0.30, mastery: 0.24, practice: 0.18, kind: "concept" },
