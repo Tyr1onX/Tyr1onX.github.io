@@ -37,7 +37,7 @@ window.TYR1ONX_KNOWLEDGE_GRAPH = {
     { id: "html", label: "HTML", x: 15, y: 42, galaxy: "browser", tier: "major", importance: 0.60, mastery: 0.18, practice: 0.92, kind: "technology" },
     { id: "css", label: "CSS", x: 15, y: 57, galaxy: "browser", tier: "major", importance: 0.62, mastery: 0.18, practice: 0.94, kind: "technology" },
     { id: "dom", label: "DOM", x: 24, y: 39, galaxy: "browser", tier: "satellite", importance: 0.44, mastery: 0.30, practice: 0.82, kind: "concept" },
-    { id: "typescript", label: "TypeScript", x: 37, y: 61, galaxy: "browser", tier: "major", importance: 0.76, mastery: 0.27, practice: 0.98, kind: "technology" },
+    { id: "typescript", label: "TypeScript", x: 35, y: 59, galaxy: "browser", tier: "major", importance: 0.76, mastery: 0.27, practice: 0.98, kind: "technology" },
 
     { id: "tauri", label: "Tauri", x: 29, y: 73, galaxy: "app-system", tier: "core", importance: 0.90, mastery: 0.55, practice: 1.00, kind: "technology" },
     { id: "rust", label: "Rust", x: 18, y: 79, galaxy: "app-system", tier: "major", importance: 0.60, mastery: 0.16, practice: 0.82, kind: "technology" },
