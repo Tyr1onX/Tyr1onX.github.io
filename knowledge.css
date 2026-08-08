@@ -282,8 +282,8 @@ html[data-theme="light"] .knowledge-node-label {
 
 @media (max-width: 520px) {
   .knowledge-plane {
-    inset-left: -170px;
-    inset-right: -170px;
+    left: -170px;
+    right: -170px;
   }
 
   .knowledge-heading h1 {
