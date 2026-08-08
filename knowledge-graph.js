@@ -14,6 +14,8 @@
   const coarsePointer = matchMedia("(hover: none), (pointer: coarse)").matches;
   const nodeMap = new Map(graph.nodes.map((node) => [node.id, node]));
   const adjacency = new Map(graph.nodes.map((node) => [node.id, new Set()]));
+  const edgeKey = (left, right) => [left, right].sort().join("|");
+  const primaryCrossEdges = new Set((graph.primaryCrossEdges || []).map(([left, right]) => edgeKey(left, right)));
 
   graph.edges.forEach(([left, right]) => {
     adjacency.get(left)?.add(right);
@@ -24,7 +26,7 @@
     <div
       class="knowledge-galaxy"
       data-galaxy="${galaxy.id}"
-      style="--gx:${galaxy.x}%;--gy:${galaxy.y}%;--gw:${galaxy.width}%;--gh:${galaxy.height}%;--galaxy-strength:${galaxy.strength}"
+      style="--gx:${galaxy.x}%;--gy:${galaxy.y}%;--gw:${galaxy.width}%;--gh:${galaxy.height}%;--galaxy-strength:${galaxy.strength};--galaxy-rgb:${galaxy.tone || "145 158 170"}"
     >
       <span class="knowledge-galaxy-label">${galaxy.label}</span>
     </div>`).join("");
@@ -36,7 +38,11 @@
     const right = nodeMap.get(rightId);
     if (!left || !right) return "";
     const cross = left.galaxy !== right.galaxy;
-    return `<line class="knowledge-edge${cross ? " is-cross-galaxy" : ""}" data-edge="${index}" data-left="${leftId}" data-right="${rightId}" data-left-galaxy="${left.galaxy}" data-right-galaxy="${right.galaxy}" x1="${left.x * 10}" y1="${left.y * 7}" x2="${right.x * 10}" y2="${right.y * 7}" />`;
+    const primary = cross && primaryCrossEdges.has(edgeKey(leftId, rightId));
+    const crossClass = cross
+      ? ` is-cross-galaxy ${primary ? "is-cross-primary" : "is-cross-secondary"}`
+      : "";
+    return `<line class="knowledge-edge${crossClass}" data-edge="${index}" data-left="${leftId}" data-right="${rightId}" data-left-galaxy="${left.galaxy}" data-right-galaxy="${right.galaxy}" x1="${left.x * 10}" y1="${left.y * 7}" x2="${right.x * 10}" y2="${right.y * 7}" />`;
   }).join("");
 
   nodesLayer.innerHTML = graph.nodes.map((node) => {
@@ -62,7 +68,7 @@
   const edgeElements = [...edgesLayer.querySelectorAll(".knowledge-edge")];
 
   function clearState() {
-    galaxyElements.forEach((element) => element.classList.remove("is-active", "is-subdued"));
+    galaxyElements.forEach((element) => element.classList.remove("is-active", "is-connected", "is-subdued"));
     nodeElements.forEach((element) => {
       element.classList.remove("is-active", "is-related", "is-same-galaxy", "is-soft-dim");
     });
@@ -78,9 +84,18 @@
 
     const related = adjacency.get(id) || new Set();
     const galaxyId = selected.galaxy;
+    const relatedGalaxies = new Set();
+
+    related.forEach((relatedId) => {
+      const relatedNode = nodeMap.get(relatedId);
+      if (relatedNode?.galaxy && relatedNode.galaxy !== galaxyId) relatedGalaxies.add(relatedNode.galaxy);
+    });
 
     galaxyElements.forEach((element) => {
-      element.classList.add(element.dataset.galaxy === galaxyId ? "is-active" : "is-subdued");
+      const elementGalaxy = element.dataset.galaxy;
+      if (elementGalaxy === galaxyId) element.classList.add("is-active");
+      else if (relatedGalaxies.has(elementGalaxy)) element.classList.add("is-connected");
+      else element.classList.add("is-subdued");
     });
 
     nodeElements.forEach((element) => {
