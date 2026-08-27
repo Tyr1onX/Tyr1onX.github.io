@@ -21,10 +21,11 @@
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./home-cosmos.css?v=6-static" />
     <link rel="stylesheet" href="./home-texture.css?v=1-static-texture" />
-    <link rel="stylesheet" href="./ui-components.css?v=2-exact-ports" />
+    <link rel="stylesheet" href="./ui-components.css?v=3-liquid-gradient" />
     <script src="./notes-data.js" defer></script>
     <script src="./notes-2026.js?v=2" defer></script>
     <script src="./site-runtime.js?v=4-switch-state" defer></script>
+    <script src="./github-liquid-gradient.js?v=1-exact-port" defer></script>
     <script src="./home-cosmos.js?v=6-static" defer></script>
   </head>
   <body data-page="home">
@@ -42,11 +43,26 @@
           <a href="./knowledge.html">星图</a>
         </nav>
         <div class="nav-actions">
-          <a class="ui-liquid-button ui-liquid-icon" href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer" aria-label="打开 Tyr1onX 的 GitHub">
-            <span class="ui-liquid-shadow" aria-hidden="true"></span>
-            <span class="ui-liquid-filter-surface" aria-hidden="true"></span>
-            <span class="ui-liquid-content">
+          <a class="github-liquid-button" href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener" aria-label="打开 Tyr1onX 的 GitHub">
+            <span class="github-liquid-glow" aria-hidden="true">
+              <span class="github-liquid-glow-base"></span>
+              <span class="github-liquid-glow-clip" data-liquid-gradient-host></span>
+            </span>
+            <span class="github-liquid-shadow-core" aria-hidden="true"></span>
+            <span class="github-liquid-main" aria-hidden="true">
+              <span class="github-liquid-base-grey"></span>
+              <span class="github-liquid-base-black"></span>
+              <span class="github-liquid-flow" data-liquid-gradient-host></span>
+              <span class="github-liquid-spark github-liquid-spark-1"></span>
+              <span class="github-liquid-spark github-liquid-spark-2"></span>
+              <span class="github-liquid-spark github-liquid-spark-3"></span>
+              <span class="github-liquid-spark github-liquid-spark-4"></span>
+              <span class="github-liquid-spark github-liquid-spark-5"></span>
+              <span class="github-liquid-inner-blur"></span>
+            </span>
+            <span class="github-liquid-label">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.7a9.5 9.5 0 0 0-3 18.52c.48.1.65-.2.65-.46v-1.83c-2.65.58-3.2-1.12-3.2-1.12-.43-1.1-1.06-1.4-1.06-1.4-.87-.6.07-.59.07-.59.96.07 1.46.99 1.46.99.85 1.46 2.24 1.04 2.79.8.08-.62.33-1.04.6-1.28-2.12-.24-4.35-1.06-4.35-4.7 0-1.04.37-1.89.98-2.56-.1-.24-.43-1.21.09-2.52 0 0 .8-.26 2.61.98A9.1 9.1 0 0 1 12 7.22a9 9 0 0 1 2.38.32c1.81-1.23 2.61-.98 2.61-.98.52 1.31.19 2.28.09 2.52.61.67.98 1.52.98 2.56 0 3.65-2.24 4.46-4.37 4.7.34.3.65.88.65 1.78v2.64c0 .26.17.57.66.46A9.5 9.5 0 0 0 12 2.7Z" /></svg>
+              <span>Github</span>
             </span>
           </a>
           <button class="icon-button theme-toggle ui-theme-toggle" type="button" role="switch" aria-checked="false" aria-label="切换到深色模式">
@@ -106,18 +122,6 @@
         </div>
       </section>
     </main>
-
-    <svg class="ui-filter-defs" aria-hidden="true" focusable="false">
-      <defs>
-        <filter id="container-glass" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.05 0.05" numOctaves="1" seed="1" result="turbulence" />
-          <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise" />
-          <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="70" xChannelSelector="R" yChannelSelector="B" result="displaced" />
-          <feGaussianBlur in="displaced" stdDeviation="4" result="finalBlur" />
-          <feComposite in="finalBlur" in2="finalBlur" operator="over" />
-        </filter>
-      </defs>
-    </svg>
 
     <footer class="site-footer page-width">
       <p>© <span id="current-year">2026</span> Tyr1onX</p>

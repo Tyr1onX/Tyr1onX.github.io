@@ -1,113 +1,234 @@
 /* Direct ports from Tyr1onX/ui.
  * Source of truth:
+ * - components/buttons/liquid-gradient-button.tsx
+ * - components/buttons/liquid-gradient.tsx
  * - components/toggles/theme-toggle.tsx
  * - components/buttons/expand-arrow-button.tsx
- * - components/buttons/liquid-glass-button.tsx
  *
- * Only framework syntax (React/Tailwind) is translated to static HTML/CSS.
- * Visual layers, SVG filter values, shadows and interaction timing are preserved.
+ * React/Tailwind syntax is translated to static HTML/CSS/JS; the component's
+ * colors, layered liquid construction, dimensions and hover behavior are retained.
  */
 
 body[data-page="home"] .nav-actions {
   align-items: center;
-  gap: 7px;
+  gap: 10px;
 }
 
-/* LiquidButton — icon size, default variant. */
-.ui-liquid-button {
+/* LiquidGradientButton — faithful static-site port. */
+.github-liquid-button {
   position: relative;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  gap: 8px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--accent);
-  cursor: pointer;
+  display: inline-block;
+  width: 128px;
+  height: 43.2px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #fff;
+  color: #fff;
   text-decoration: none;
+  isolation: isolate;
   outline: none;
-  transition: color 300ms ease, box-shadow 300ms ease, transform 300ms ease;
 }
 
-.ui-liquid-button:hover,
-.ui-liquid-button:focus-visible {
-  transform: scale(1.05);
+html[data-theme="dark"] .github-liquid-button {
+  border-color: #fff;
+  background: #000;
 }
 
-.ui-liquid-button:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+.github-liquid-button:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, #656fe2 38%, transparent);
 }
 
-.ui-liquid-icon {
-  width: 36px;
-  height: 36px;
+.github-liquid-glow {
+  position: absolute;
+  top: 8.57%;
+  left: 50%;
+  width: 112.81%;
+  height: 128.57%;
+  pointer-events: none;
+  opacity: 0.7;
+  filter: blur(19px);
+  transform: translateX(-50%);
 }
 
-.ui-liquid-shadow,
-.ui-liquid-filter-surface {
+.github-liquid-glow-base {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: #d9d9d9;
+  filter: blur(6.5px);
+}
+
+.github-liquid-glow-clip,
+.github-liquid-main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.github-liquid-shadow-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 92.23%;
+  height: 112.85%;
+  pointer-events: none;
+  border-radius: 8px;
+  background: #010128;
+  filter: blur(7.3px);
+  transform: translate(-50%, -40%);
+}
+
+.github-liquid-main {
+  z-index: 1;
+}
+
+.github-liquid-base-grey,
+.github-liquid-base-black,
+.github-liquid-spark,
+.github-liquid-inner-blur,
+.github-liquid-flow {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.ui-liquid-shadow {
-  z-index: 0;
-  border-radius: 9999px;
-  box-shadow:
-    0 0 6px rgba(0, 0, 0, 0.03),
-    0 2px 6px rgba(0, 0, 0, 0.08),
-    inset 3px 3px 0.5px -3px rgba(0, 0, 0, 0.9),
-    inset -3px -3px 0.5px -3px rgba(0, 0, 0, 0.85),
-    inset 1px 1px 1px -0.5px rgba(0, 0, 0, 0.6),
-    inset -1px -1px 1px -0.5px rgba(0, 0, 0, 0.6),
-    inset 0 0 6px 6px rgba(0, 0, 0, 0.12),
-    inset 0 0 2px 2px rgba(0, 0, 0, 0.06),
-    0 0 12px rgba(255, 255, 255, 0.15);
-  transition: all 300ms ease;
+.github-liquid-base-grey {
+  border-radius: 8px;
+  background: #d9d9d9;
 }
 
-html[data-theme="dark"] .ui-liquid-shadow {
-  box-shadow:
-    0 0 8px rgba(0, 0, 0, 0.03),
-    0 2px 6px rgba(0, 0, 0, 0.08),
-    inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.09),
-    inset -3px -3px 0.5px -3.5px rgba(255, 255, 255, 0.85),
-    inset 1px 1px 1px -0.5px rgba(255, 255, 255, 0.6),
-    inset -1px -1px 1px -0.5px rgba(255, 255, 255, 0.6),
-    inset 0 0 6px 6px rgba(255, 255, 255, 0.12),
-    inset 0 0 2px 2px rgba(255, 255, 255, 0.06),
-    0 0 12px rgba(0, 0, 0, 0.15);
+.github-liquid-base-black {
+  border-radius: 8px;
+  background: #000;
 }
 
-.ui-liquid-filter-surface {
-  z-index: -1;
+.github-liquid-flow {
   overflow: hidden;
-  border-radius: 6px;
-  backdrop-filter: url("#container-glass");
-  -webkit-backdrop-filter: url("#container-glass");
+  border-radius: 8px;
 }
 
-.ui-liquid-content {
-  position: relative;
-  z-index: 10;
-  pointer-events: none;
+.github-liquid-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 
-.ui-liquid-content svg {
-  width: 16px;
-  height: 16px;
+.github-liquid-layer-0,
+.github-liquid-layer-1,
+.github-liquid-layer-2 {
+  width: 443px;
+  height: 121px;
+  mix-blend-mode: difference;
+}
+
+.github-liquid-layer-0 {
+  transform: translate(-50%, -50%);
+}
+
+.github-liquid-layer-1 {
+  transform: translate(-50%, -50%) rotate(164.971deg);
+}
+
+.github-liquid-layer-2 {
+  transform: translate(-53%, -53%) rotate(-11.61deg);
+}
+
+.github-liquid-layer-3,
+.github-liquid-layer-4,
+.github-liquid-layer-5,
+.github-liquid-layer-6 {
+  width: 756px;
+  height: 207px;
+  mix-blend-mode: difference;
+}
+
+.github-liquid-layer-3 {
+  transform: translate(-50%, -57%) rotate(-179.012deg);
+}
+
+.github-liquid-layer-4 {
+  transform: translate(-57%, -50%) rotate(-29.722deg);
+}
+
+.github-liquid-layer-5 {
+  transform: translate(-62%, -24%) rotate(160.227deg);
+}
+
+.github-liquid-layer-6 {
+  mix-blend-mode: hard-light;
+  transform: translate(-67%, -29%) rotate(180deg);
+}
+
+.github-liquid-gradient-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.github-liquid-spark {
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  mix-blend-mode: overlay;
+}
+
+.github-liquid-spark-1,
+.github-liquid-spark-2 {
+  filter: blur(3px);
+}
+
+.github-liquid-spark-3 {
+  filter: blur(5px);
+}
+
+.github-liquid-spark-4,
+.github-liquid-spark-5 {
+  filter: blur(2px);
+}
+
+.github-liquid-inner-blur {
+  top: 50%;
+  left: 50%;
+  width: 70.8%;
+  height: 42.85%;
+  border-radius: 8px;
+  background: #006;
+  filter: blur(15px);
+  transform: translate(-50%, -40%);
+}
+
+.github-liquid-label {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 8px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+
+.github-liquid-label svg {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
   fill: currentColor;
 }
 
-.ui-filter-defs {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  pointer-events: none;
+.github-liquid-button:hover .github-liquid-label,
+.github-liquid-button:focus-visible .github-liquid-label {
+  color: #facc15;
 }
 
 /* ThemeToggle — direct structure/values from theme-toggle.tsx. */
@@ -160,7 +281,7 @@ body[data-page="home"] .ui-theme-toggle:focus-visible {
 }
 
 .ui-theme-toggle-sun {
-  background: #ffffff;
+  background: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
 
@@ -188,21 +309,10 @@ html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle .sun-icon {
   stroke-linejoin: round;
 }
 
-body[data-page="home"] .ui-theme-toggle .moon-icon {
-  color: #6b7280;
-}
-
-body[data-page="home"] .ui-theme-toggle .sun-icon {
-  color: #18181b;
-}
-
-html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle .moon-icon {
-  color: #ffffff;
-}
-
-html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle .sun-icon {
-  color: #6b7280;
-}
+body[data-page="home"] .ui-theme-toggle .moon-icon { color: #6b7280; }
+body[data-page="home"] .ui-theme-toggle .sun-icon { color: #18181b; }
+html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle .moon-icon { color: #fff; }
+html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle .sun-icon { color: #6b7280; }
 
 /* ExpandArrowButton — direct port. Only "Visit" is localized to "全部文字". */
 body[data-page="home"] .all-writing-link.ui-expand-button {
@@ -267,23 +377,40 @@ body[data-page="home"] .all-writing-link.ui-expand-button:focus-visible {
   fill: none;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 720px) {
+  .github-liquid-button {
+    width: 112px;
+    height: 37.8px;
+  }
+
+  .github-liquid-label {
+    gap: 3px;
+    font-size: 17px;
+  }
+
+  .github-liquid-label svg {
+    width: 21px;
+    height: 21px;
+  }
+}
+
+@media (max-width: 520px) {
   body[data-page="home"] .brand > span {
     display: none;
   }
 
-  body[data-page="home"] .ui-liquid-button {
+  .github-liquid-button {
     display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-liquid-button,
   body[data-page="home"] .ui-theme-toggle,
   .ui-theme-toggle-moon,
   .ui-theme-toggle-sun,
   body[data-page="home"] .all-writing-link.ui-expand-button,
-  .ui-expand-label {
+  .ui-expand-label,
+  .github-liquid-label {
     transition: none !important;
   }
 }
