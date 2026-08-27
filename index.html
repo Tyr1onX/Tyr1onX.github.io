@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Tyr1onX 的个人空间：项目、文字与学习记录。" />
-    <meta name="theme-color" content="#f7f7f5" />
+    <meta name="theme-color" content="#f6f6f3" />
     <meta name="color-scheme" content="light dark" />
     <title>Tyr1onX</title>
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
@@ -19,145 +19,203 @@
         root.dataset.theme = theme;
       })();
     </script>
-    <link rel="stylesheet" href="./home-minimal.css?v=1" />
+    <link rel="stylesheet" href="./home-minimal.css?v=2-master-detail" />
+    <script src="./home-detail.js?v=1" defer></script>
   </head>
   <body>
     <div class="page-shell">
-      <header class="site-intro">
-        <div class="intro-topline">
-          <a class="identity" href="./" aria-label="Tyr1onX 首页">
-            <img src="./avatar.svg" width="42" height="42" alt="" />
-            <span>Tyr1onX</span>
-          </a>
-          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换到深色模式">主题</button>
-        </div>
+      <aside class="sidebar" aria-label="个人空间索引">
+        <header class="identity-block">
+          <div class="identity-row">
+            <button class="identity-home" type="button" data-panel-target="about" aria-selected="true">
+              <img src="./avatar.svg" width="48" height="48" alt="" />
+              <span>
+                <strong>Tyr1onX</strong>
+                <small>个人空间</small>
+              </span>
+            </button>
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换到深色模式">深色</button>
+          </div>
+          <p>学习、写作，也做一些自己真正会用的东西。</p>
+          <div class="quick-links">
+            <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
+            <a href="./ui/">UI</a>
+            <a href="mailto:yit38331@gmail.com">Email</a>
+          </div>
+        </header>
 
-        <p class="intro-copy">学习、写作，也做一些自己真正会用的东西。</p>
+        <nav class="index-nav" aria-label="内容索引">
+          <section class="nav-group" aria-labelledby="project-index-title">
+            <h2 id="project-index-title">项目</h2>
+            <button class="nav-item" type="button" data-panel-target="keke" aria-selected="false" tabindex="-1">
+              <span>课刻</span><small>桌面课表</small>
+            </button>
+            <button class="nav-item" type="button" data-panel-target="knowledge" aria-selected="false" tabindex="-1">
+              <span>知识星图</span><small>Learning</small>
+            </button>
+            <button class="nav-item" type="button" data-panel-target="ui" aria-selected="false" tabindex="-1">
+              <span>UI</span><small>组件库</small>
+            </button>
+            <button class="nav-item" type="button" data-panel-target="learning" aria-selected="false" tabindex="-1">
+              <span>Learning</span><small>学习记录</small>
+            </button>
+          </section>
 
-        <nav class="quick-links" aria-label="主要链接">
-          <a href="./notes.html">文字</a>
-          <a href="./knowledge.html">星图</a>
-          <a href="./ui/">UI</a>
-          <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
+          <section class="nav-group writing-index" aria-labelledby="writing-index-title">
+            <div class="nav-group-heading">
+              <h2 id="writing-index-title">文章</h2>
+              <a href="./notes.html">全部</a>
+            </div>
+            <button class="nav-item nav-item-writing" type="button" data-panel-target="note-absence" aria-selected="false" tabindex="-1">
+              <time>08.01</time><span>她将以缺席的方式在我的生命里无处不在</span>
+            </button>
+            <button class="nav-item nav-item-writing" type="button" data-panel-target="note-ai" aria-selected="false" tabindex="-1">
+              <time>07.28</time><span>当 AI 开始“磨洋工”</span>
+            </button>
+            <button class="nav-item nav-item-writing" type="button" data-panel-target="note-meeting" aria-selected="false" tabindex="-1">
+              <time>05.28</time><span>遇见谁，都是在遇见自己</span>
+            </button>
+            <button class="nav-item nav-item-writing" type="button" data-panel-target="note-winter" aria-selected="false" tabindex="-1">
+              <time>11.11</time><span>冬天里，只有人会变得蓬松</span>
+            </button>
+          </section>
         </nav>
-      </header>
 
-      <main>
-        <section class="index-section" aria-labelledby="projects-title">
-          <h2 id="projects-title">项目</h2>
-          <div class="entry-list">
-            <a class="entry" href="./keke.html">
-              <span class="entry-meta">2026</span>
-              <span class="entry-body">
-                <strong>课刻</strong>
-                <span>桌面课表、截图识别与本地课程管理。</span>
-              </span>
-              <span class="entry-arrow" aria-hidden="true">→</span>
-            </a>
+        <footer class="sidebar-footer">
+          <span>© <span id="current-year">2026</span> Tyr1onX</span>
+        </footer>
+      </aside>
 
-            <a class="entry" href="./knowledge.html">
-              <span class="entry-meta">2026</span>
-              <span class="entry-body">
-                <strong>知识星图</strong>
-                <span>把学习路线、知识与进度整理成可浏览的知识空间。</span>
-              </span>
-              <span class="entry-arrow" aria-hidden="true">→</span>
-            </a>
+      <main class="detail-area" id="main">
+        <article class="detail-panel is-active" data-panel="about">
+          <p class="eyebrow">个人空间</p>
+          <h1>Tyr1onX</h1>
+          <p class="lead">这里放我正在做的项目、学习留下的轨迹，以及偶尔写下来的文字。</p>
 
-            <a class="entry" href="./ui/">
-              <span class="entry-meta">2026</span>
-              <span class="entry-body">
-                <strong>UI</strong>
-                <span>收集、实现并预览自己会复用的前端组件。</span>
-              </span>
-              <span class="entry-arrow" aria-hidden="true">→</span>
-            </a>
+          <div class="detail-rule"></div>
 
-            <a class="entry" href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer noopener">
-              <span class="entry-meta">持续</span>
-              <span class="entry-body">
-                <strong>Learning</strong>
-                <span>学习路线、笔记、面试准备与进度记录。</span>
-              </span>
-              <span class="entry-arrow" aria-hidden="true">↗</span>
-            </a>
+          <section class="detail-section">
+            <h2>这里有什么</h2>
+            <div class="feature-list">
+              <a href="#keke" data-open-panel="keke"><strong>项目</strong><span>课刻、知识星图和一些持续维护的小东西。</span></a>
+              <a href="#learning" data-open-panel="learning"><strong>学习</strong><span>路线、笔记、进度和面试准备慢慢积累在 Learning。</span></a>
+              <a href="#note-absence" data-open-panel="note-absence"><strong>文字</strong><span>不是专门的博客，更像一些想留下来的片段。</span></a>
+              <a href="./ui/"><strong>UI</strong><span>视觉实验和组件放到单独的组件库里，不再挤在主页。</span></a>
+            </div>
+          </section>
+
+          <section class="detail-section quiet-section">
+            <h2>最近</h2>
+            <p>主页现在更像一个目录。左边负责找到东西，右边负责真正阅读内容；需要完整体验的项目，再进入各自独立的页面。</p>
+          </section>
+        </article>
+
+        <article class="detail-panel" data-panel="keke" hidden>
+          <p class="eyebrow">项目 · 2026</p>
+          <h1>课刻</h1>
+          <p class="lead">桌面课表、截图识别与本地课程管理工具。</p>
+          <div class="detail-rule"></div>
+          <section class="detail-section prose">
+            <h2>关于这个项目</h2>
+            <p>课刻从一个真正会长期使用的桌面课表开始。重点不是把功能堆得很多，而是让课程导入、查看和日常使用尽量顺手。</p>
+            <p>项目页面保留自己的视觉和交互，主页只负责给它一个清晰入口。</p>
+          </section>
+          <div class="detail-actions">
+            <a class="primary-link" href="./keke.html">进入课刻 →</a>
+            <a href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
           </div>
-        </section>
+        </article>
 
-        <section class="index-section" aria-labelledby="writing-title">
-          <div class="section-heading">
-            <h2 id="writing-title">文章</h2>
-            <a href="./notes.html">全部文字 →</a>
+        <article class="detail-panel" data-panel="knowledge" hidden>
+          <p class="eyebrow">项目 · 2026</p>
+          <h1>知识星图</h1>
+          <p class="lead">把学习路线、知识节点和进度整理成一个可以浏览的空间。</p>
+          <div class="detail-rule"></div>
+          <section class="detail-section prose">
+            <h2>为什么做它</h2>
+            <p>普通笔记很容易变成一排文件。知识星图更关心“我已经学了什么、它们之间是什么关系、下一步应该去哪”。</p>
+            <p>数据仍然来自 Learning，星图页面则专心负责可视化和探索。</p>
+          </section>
+          <div class="detail-actions">
+            <a class="primary-link" href="./knowledge.html">打开星图 →</a>
+            <a href="https://github.com/Tyr1onX/knowledge-constellation" target="_blank" rel="noreferrer noopener">Renderer ↗</a>
           </div>
+        </article>
 
-          <div class="entry-list writing-list">
-            <a class="entry" href="./note.html?id=2026-08-01-absence-everywhere">
-              <time class="entry-meta" datetime="2026-08-01">2026.08.01</time>
-              <span class="entry-body">
-                <strong>她将以缺席的方式在我的生命里无处不在</strong>
-                <span>她将以缺席的方式在我的生命里无处不在。</span>
-              </span>
-              <span class="entry-arrow" aria-hidden="true">→</span>
-            </a>
-
-            <a class="entry" href="./note.html?id=2026-07-28-ai-tool-stall">
-              <time class="entry-meta" datetime="2026-07-28">2026.07.28</time>
-              <span class="entry-body">
-                <strong>当 AI 开始“磨洋工”：一次 GitHub 工具失效的排查与复盘</strong>
-                <span>工具任务不要只看它怎么描述行动，更要检查有没有真实、可验证的结果。</span>
-              </span>
-              <span class="entry-arrow" aria-hidden="true">→</span>
-            </a>
-
-            <a class="entry" href="./note.html?id=2026-05-28-meeting-yourself">
-              <time class="entry-meta" datetime="2026-05-28">2026.05.28</time>
-              <span class="entry-body">
-                <strong>遇见谁，都是在遇见自己</strong>
-                <span>他人只是触发认知自己的工具，真正的课题始终落回自身。</span>
-              </span>
-              <span class="entry-arrow" aria-hidden="true">→</span>
-            </a>
-
-            <a class="entry" href="./note.html?id=2025-11-11-winter">
-              <time class="entry-meta" datetime="2025-11-11">2025.11.11</time>
-              <span class="entry-body">
-                <strong>冬天里，只有人会变得蓬松</strong>
-                <span>一切植物都在靠做减法保护自己，只有人在冬天会变得蓬松。</span>
-              </span>
-              <span class="entry-arrow" aria-hidden="true">→</span>
-            </a>
+        <article class="detail-panel" data-panel="ui" hidden>
+          <p class="eyebrow">项目 · 2026</p>
+          <h1>UI</h1>
+          <p class="lead">一个专门放视觉实验、公开组件和可复用前端元素的地方。</p>
+          <div class="detail-rule"></div>
+          <section class="detail-section prose">
+            <h2>和主页分开</h2>
+            <p>复杂的液态玻璃、动态背景、按钮和主题开关都更适合待在组件库里。这样组件可以完整展示，个人主页也不用承担“效果展厅”的职责。</p>
+          </section>
+          <div class="detail-actions">
+            <a class="primary-link" href="./ui/">浏览组件 →</a>
+            <a href="https://github.com/Tyr1onX/ui" target="_blank" rel="noreferrer noopener">源码 ↗</a>
           </div>
-        </section>
+        </article>
+
+        <article class="detail-panel" data-panel="learning" hidden>
+          <p class="eyebrow">持续记录</p>
+          <h1>Learning</h1>
+          <p class="lead">学习路线、知识笔记、进度记录与阶段复盘。</p>
+          <div class="detail-rule"></div>
+          <section class="detail-section prose">
+            <h2>不是一份完成品</h2>
+            <p>这个仓库更像长期日志：学过什么、现在卡在哪里、接下来要补什么，都持续留下痕迹。知识星图使用它作为数据来源。</p>
+          </section>
+          <div class="detail-actions">
+            <a class="primary-link" href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer noopener">查看 Learning ↗</a>
+            <a href="./knowledge.html">查看星图 →</a>
+          </div>
+        </article>
+
+        <article class="detail-panel article-preview" data-panel="note-absence" hidden>
+          <p class="eyebrow">文字 · 2026.08.01</p>
+          <h1>她将以缺席的方式在我的生命里无处不在</h1>
+          <p class="lead">她将以缺席的方式在我的生命里无处不在。</p>
+          <div class="detail-rule"></div>
+          <section class="detail-section prose">
+            <p>有些文字很短，只是当时想留下来的一个句子。它不需要被包装成一篇完整文章。</p>
+          </section>
+          <div class="detail-actions"><a class="primary-link" href="./note.html?id=2026-08-01-absence-everywhere">阅读全文 →</a></div>
+        </article>
+
+        <article class="detail-panel article-preview" data-panel="note-ai" hidden>
+          <p class="eyebrow">文字 · 2026.07.28</p>
+          <h1>当 AI 开始“磨洋工”：一次 GitHub 工具失效的排查与复盘</h1>
+          <p class="lead">当 AI 应该执行工具任务时，不看它如何描述行动，只检查它是否产生了真实、可验证的工具结果。</p>
+          <div class="detail-rule"></div>
+          <section class="detail-section prose">
+            <p>一次工具调用失效后的排查记录，也留下一个之后一直适用的判断方式：执行型任务最终要看真实结果，而不是过程描述得多完整。</p>
+          </section>
+          <div class="detail-actions"><a class="primary-link" href="./note.html?id=2026-07-28-ai-tool-stall">阅读全文 →</a></div>
+        </article>
+
+        <article class="detail-panel article-preview" data-panel="note-meeting" hidden>
+          <p class="eyebrow">文字 · 2026.05.28</p>
+          <h1>遇见谁，都是在遇见自己</h1>
+          <p class="lead">他人只是触发你认知自己的工具，而真正的课题永远是修整内心的缺口。</p>
+          <div class="detail-rule"></div>
+          <section class="detail-section prose">
+            <p>所谓“遇见谁都是遇见自己”，更像一次反身观察：通过关系里的反应重新看见自己的期待、定义和情绪。</p>
+          </section>
+          <div class="detail-actions"><a class="primary-link" href="./note.html?id=2026-05-28-meeting-yourself">阅读全文 →</a></div>
+        </article>
+
+        <article class="detail-panel article-preview" data-panel="note-winter" hidden>
+          <p class="eyebrow">文字 · 2025.11.11</p>
+          <h1>冬天里，只有人会变得蓬松</h1>
+          <p class="lead">一切植物都在靠着做减法来保护自己，只有人在冬天的时候会变得蓬松。</p>
+          <div class="detail-rule"></div>
+          <section class="detail-section prose">
+            <p>冬天的树和草越来越瘦小，人却被厚衣服包起来。很普通的校园画面，因为这个反差变得有点可爱。</p>
+          </section>
+          <div class="detail-actions"><a class="primary-link" href="./note.html?id=2025-11-11-winter">阅读全文 →</a></div>
+        </article>
       </main>
-
-      <footer class="site-footer">
-        <span>© <span id="current-year">2026</span> Tyr1onX</span>
-        <span class="footer-links">
-          <a href="mailto:yit38331@gmail.com">Email</a>
-          <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener">GitHub</a>
-        </span>
-      </footer>
     </div>
-
-    <script>
-      (() => {
-        const root = document.documentElement;
-        const toggle = document.querySelector("#theme-toggle");
-        const metaTheme = document.querySelector('meta[name="theme-color"]');
-        const apply = (theme) => {
-          root.dataset.theme = theme;
-          if (toggle) toggle.setAttribute("aria-label", theme === "dark" ? "切换到浅色模式" : "切换到深色模式");
-          metaTheme?.setAttribute("content", theme === "dark" ? "#111214" : "#f7f7f5");
-        };
-        apply(root.dataset.theme === "dark" ? "dark" : "light");
-        toggle?.addEventListener("click", () => {
-          const next = root.dataset.theme === "dark" ? "light" : "dark";
-          try { localStorage.setItem("tyr1onx-theme", next); } catch {}
-          apply(next);
-        });
-        const year = document.querySelector("#current-year");
-        if (year) year.textContent = String(new Date().getFullYear());
-      })();
-    </script>
   </body>
 </html>
