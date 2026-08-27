@@ -6,3 +6,14 @@
 //
 // Renderer baseline commit: f27ef3e8675dcde661df954f20e548ff1bde4a7d
 import "https://cdn.jsdelivr.net/gh/Tyr1onX/knowledge-constellation@f27ef3e8675dcde661df954f20e548ff1bde4a7d/renderer/runtime.js";
+
+// The upstream preview runtime owns its standalone document title. On the
+// personal site, restore the site's own title after the renderer boot microtask.
+const SITE_TITLE = "Knowledge · Tyr1onX";
+const restoreSiteTitle = () => {
+  if (document.title !== SITE_TITLE) document.title = SITE_TITLE;
+};
+
+restoreSiteTitle();
+queueMicrotask(restoreSiteTitle);
+requestAnimationFrame(restoreSiteTitle);
