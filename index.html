@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Tyr1onX 的个人空间。" />
-    <meta name="theme-color" content="#0b1015" />
+    <meta name="description" content="Tyr1onX 的个人空间：项目、文字与学习记录。" />
+    <meta name="theme-color" content="#f7f7f5" />
+    <meta name="color-scheme" content="light dark" />
     <title>Tyr1onX</title>
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
     <script>
@@ -18,117 +19,145 @@
         root.dataset.theme = theme;
       })();
     </script>
-    <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./home-cosmos.css?v=6-static" />
-    <link rel="stylesheet" href="./home-texture.css?v=1-static-texture" />
-    <link rel="stylesheet" href="./ui-components.css?v=5-liquid-local" />
-    <script src="./notes-data.js" defer></script>
-    <script src="./notes-2026.js?v=2" defer></script>
-    <script src="./site-runtime.js?v=4-switch-state" defer></script>
-    <script src="./github-liquid-gradient.js?v=1-exact-port" defer></script>
-    <script src="./home-cosmos.js?v=6-static" defer></script>
+    <link rel="stylesheet" href="./home-minimal.css?v=1" />
   </head>
-  <body data-page="home">
-    <a class="skip-link" href="#main">跳到主要内容</a>
+  <body>
+    <div class="page-shell">
+      <header class="site-intro">
+        <div class="intro-topline">
+          <a class="identity" href="./" aria-label="Tyr1onX 首页">
+            <img src="./avatar.svg" width="42" height="42" alt="" />
+            <span>Tyr1onX</span>
+          </a>
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换到深色模式">主题</button>
+        </div>
 
-    <header class="site-header" data-scrolled="false">
-      <div class="nav-shell">
-        <a class="brand" href="./" aria-label="返回首页">
-          <img class="brand-avatar" src="./avatar.svg" alt="" />
-          <span>Tyr1onX</span>
-        </a>
-        <nav class="nav-links" aria-label="主导航">
-          <a href="./keke.html">课刻</a>
+        <p class="intro-copy">学习、写作，也做一些自己真正会用的东西。</p>
+
+        <nav class="quick-links" aria-label="主要链接">
           <a href="./notes.html">文字</a>
           <a href="./knowledge.html">星图</a>
+          <a href="./ui/">UI</a>
+          <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
         </nav>
-        <div class="nav-actions">
-          <a class="github-liquid-button" href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener" aria-label="打开 Tyr1onX 的 GitHub">
-            <span class="github-liquid-glow" aria-hidden="true">
-              <span class="github-liquid-glow-base"></span>
-              <span class="github-liquid-glow-clip" data-liquid-gradient-host></span>
-            </span>
-            <span class="github-liquid-shadow-core" aria-hidden="true"></span>
-            <span class="github-liquid-main" aria-hidden="true">
-              <span class="github-liquid-base-grey"></span>
-              <span class="github-liquid-base-black"></span>
-              <span class="github-liquid-flow" data-liquid-gradient-host></span>
-              <span class="github-liquid-spark github-liquid-spark-1"></span>
-              <span class="github-liquid-spark github-liquid-spark-2"></span>
-              <span class="github-liquid-spark github-liquid-spark-3"></span>
-              <span class="github-liquid-spark github-liquid-spark-4"></span>
-              <span class="github-liquid-spark github-liquid-spark-5"></span>
-              <span class="github-liquid-inner-blur"></span>
-            </span>
-            <span class="github-liquid-label">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.7a9.5 9.5 0 0 0-3 18.52c.48.1.65-.2.65-.46v-1.83c-2.65.58-3.2-1.12-3.2-1.12-.43-1.1-1.06-1.4-1.06-1.4-.87-.6.07-.59.07-.59.96.07 1.46.99 1.46.99.85 1.46 2.24 1.04 2.79.8.08-.62.33-1.04.6-1.28-2.12-.24-4.35-1.06-4.35-4.7 0-1.04.37-1.89.98-2.56-.1-.24-.43-1.21.09-2.52 0 0 .8-.26 2.61.98A9.1 9.1 0 0 1 12 7.22a9 9 0 0 1 2.38.32c1.81-1.23 2.61-.98 2.61-.98.52 1.31.19 2.28.09 2.52.61.67.98 1.52.98 2.56 0 3.65-2.24 4.46-4.37 4.7.34.3.65.88.65 1.78v2.64c0 .26.17.57.66.46A9.5 9.5 0 0 0 12 2.7Z" /></svg>
-              <span>Github</span>
-            </span>
-          </a>
-          <button class="icon-button theme-toggle ui-theme-toggle" type="button" role="switch" aria-checked="false" aria-label="切换到深色模式">
-            <span class="ui-theme-toggle-inner">
-              <span class="ui-theme-toggle-moon">
-                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
-                </svg>
+      </header>
+
+      <main>
+        <section class="index-section" aria-labelledby="projects-title">
+          <h2 id="projects-title">项目</h2>
+          <div class="entry-list">
+            <a class="entry" href="./keke.html">
+              <span class="entry-meta">2026</span>
+              <span class="entry-body">
+                <strong>课刻</strong>
+                <span>桌面课表、截图识别与本地课程管理。</span>
               </span>
-              <span class="ui-theme-toggle-sun">
-                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2m-7.07-15.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                </svg>
-              </span>
-            </span>
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <main id="main">
-      <section class="cosmos-hero" aria-labelledby="cosmos-title">
-        <div class="cosmos-shell">
-          <div class="cosmos-field" id="cosmos-field">
-            <div class="decorative-stars" id="decorative-stars" aria-hidden="true"></div>
-            <svg class="star-threads" id="star-threads" aria-hidden="true"></svg>
-            <div class="note-stars" id="note-stars" aria-label="最近文字"></div>
-
-            <div class="project-orbit" aria-hidden="true">
-              <span class="project-orbit-line"></span>
-              <span class="project-orbit-line project-orbit-line-inner"></span>
-            </div>
-
-            <div class="cosmos-center">
-              <img src="./avatar.svg" width="104" height="104" decoding="async" alt="" />
-              <h1 id="cosmos-title">Tyr1onX</h1>
-              <time id="current-time" aria-label="当前时间">--:--</time>
-            </div>
-
-            <a class="orbit-project" href="./keke.html" aria-label="进入课刻项目世界">
-              <span class="orbit-icon-shell">
-                <img src="./assets/keke-icon-source.png" width="128" height="128" loading="lazy" decoding="async" fetchpriority="low" draggable="false" alt="课刻" />
-              </span>
-              <span class="orbit-tooltip" aria-hidden="true">课刻</span>
+              <span class="entry-arrow" aria-hidden="true">→</span>
             </a>
 
-            <a class="all-writing-link ui-expand-button" href="./notes.html" aria-label="查看全部文字">
-              <span class="ui-expand-label">全部文字</span>
-              <span class="ui-expand-arrow" aria-hidden="true">
-                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" />
-                </svg>
+            <a class="entry" href="./knowledge.html">
+              <span class="entry-meta">2026</span>
+              <span class="entry-body">
+                <strong>知识星图</strong>
+                <span>把学习路线、知识与进度整理成可浏览的知识空间。</span>
               </span>
+              <span class="entry-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="entry" href="./ui/">
+              <span class="entry-meta">2026</span>
+              <span class="entry-body">
+                <strong>UI</strong>
+                <span>收集、实现并预览自己会复用的前端组件。</span>
+              </span>
+              <span class="entry-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="entry" href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer noopener">
+              <span class="entry-meta">持续</span>
+              <span class="entry-body">
+                <strong>Learning</strong>
+                <span>学习路线、笔记、面试准备与进度记录。</span>
+              </span>
+              <span class="entry-arrow" aria-hidden="true">↗</span>
             </a>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
 
-    <footer class="site-footer page-width">
-      <p>© <span id="current-year">2026</span> Tyr1onX</p>
-      <div class="footer-links">
-        <a href="mailto:yit38331@gmail.com">邮箱</a>
-        <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer">GitHub</a>
-      </div>
-    </footer>
+        <section class="index-section" aria-labelledby="writing-title">
+          <div class="section-heading">
+            <h2 id="writing-title">文章</h2>
+            <a href="./notes.html">全部文字 →</a>
+          </div>
+
+          <div class="entry-list writing-list">
+            <a class="entry" href="./note.html?id=2026-08-01-absence-everywhere">
+              <time class="entry-meta" datetime="2026-08-01">2026.08.01</time>
+              <span class="entry-body">
+                <strong>她将以缺席的方式在我的生命里无处不在</strong>
+                <span>她将以缺席的方式在我的生命里无处不在。</span>
+              </span>
+              <span class="entry-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="entry" href="./note.html?id=2026-07-28-ai-tool-stall">
+              <time class="entry-meta" datetime="2026-07-28">2026.07.28</time>
+              <span class="entry-body">
+                <strong>当 AI 开始“磨洋工”：一次 GitHub 工具失效的排查与复盘</strong>
+                <span>工具任务不要只看它怎么描述行动，更要检查有没有真实、可验证的结果。</span>
+              </span>
+              <span class="entry-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="entry" href="./note.html?id=2026-05-28-meeting-yourself">
+              <time class="entry-meta" datetime="2026-05-28">2026.05.28</time>
+              <span class="entry-body">
+                <strong>遇见谁，都是在遇见自己</strong>
+                <span>他人只是触发认知自己的工具，真正的课题始终落回自身。</span>
+              </span>
+              <span class="entry-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="entry" href="./note.html?id=2025-11-11-winter">
+              <time class="entry-meta" datetime="2025-11-11">2025.11.11</time>
+              <span class="entry-body">
+                <strong>冬天里，只有人会变得蓬松</strong>
+                <span>一切植物都在靠做减法保护自己，只有人在冬天会变得蓬松。</span>
+              </span>
+              <span class="entry-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>© <span id="current-year">2026</span> Tyr1onX</span>
+        <span class="footer-links">
+          <a href="mailto:yit38331@gmail.com">Email</a>
+          <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener">GitHub</a>
+        </span>
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const toggle = document.querySelector("#theme-toggle");
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        const apply = (theme) => {
+          root.dataset.theme = theme;
+          if (toggle) toggle.setAttribute("aria-label", theme === "dark" ? "切换到浅色模式" : "切换到深色模式");
+          metaTheme?.setAttribute("content", theme === "dark" ? "#111214" : "#f7f7f5");
+        };
+        apply(root.dataset.theme === "dark" ? "dark" : "light");
+        toggle?.addEventListener("click", () => {
+          const next = root.dataset.theme === "dark" ? "light" : "dark";
+          try { localStorage.setItem("tyr1onx-theme", next); } catch {}
+          apply(next);
+        });
+        const year = document.querySelector("#current-year");
+        if (year) year.textContent = String(new Date().getFullYear());
+      })();
+    </script>
   </body>
 </html>
