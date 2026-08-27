@@ -22,10 +22,14 @@
 
   const applyTheme = (theme) => {
     root.dataset.theme = theme;
-    document.querySelector(".theme-toggle")?.setAttribute(
+    const toggle = document.querySelector(".theme-toggle");
+    toggle?.setAttribute(
       "aria-label",
       theme === "dark" ? "切换到浅色模式" : "切换到深色模式"
     );
+    if (toggle?.getAttribute("role") === "switch") {
+      toggle.setAttribute("aria-checked", String(theme === "dark"));
+    }
     document.querySelector('meta[name="theme-color"]')?.setAttribute(
       "content",
       theme === "dark" ? "#0d0d10" : "#f7f7fa"

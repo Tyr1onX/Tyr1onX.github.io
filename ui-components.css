@@ -1,264 +1,270 @@
-/* Lightweight adaptations from Tyr1onX/ui.
- * Reuses the visual language of ThemeToggle, ExpandArrowButton and LiquidGlassButton
- * without React, continuous animation loops or SVG displacement filters.
+/* Direct ports from Tyr1onX/ui.
+ * Source of truth:
+ * - components/toggles/theme-toggle.tsx
+ * - components/buttons/expand-arrow-button.tsx
+ * - components/buttons/liquid-glass-button.tsx
+ *
+ * Only framework syntax (React/Tailwind) is translated to static HTML/CSS.
+ * Visual layers, SVG filter values, shadows and interaction timing are preserved.
  */
-
-body[data-page="home"] .nav-links {
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface) 54%, transparent), color-mix(in srgb, var(--surface) 24%, transparent));
-  box-shadow:
-    0 5px 18px rgba(0, 0, 0, 0.055),
-    inset 1px 1px 0 color-mix(in srgb, white 26%, transparent),
-    inset -1px -1px 0 color-mix(in srgb, var(--text) 5%, transparent);
-  backdrop-filter: blur(14px) saturate(145%);
-  -webkit-backdrop-filter: blur(14px) saturate(145%);
-}
-
-html[data-theme="dark"] body[data-page="home"] .nav-links {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.028));
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 7px 22px rgba(0, 0, 0, 0.18),
-    inset 1px 1px 0 rgba(255, 255, 255, 0.085),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.18);
-}
-
-body[data-page="home"] .nav-links a {
-  min-height: 34px;
-  padding-inline: 12px;
-  border-radius: 999px;
-  transition: color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
-}
-
-body[data-page="home"] .nav-links a:hover,
-body[data-page="home"] .nav-links a:focus-visible {
-  color: var(--text);
-  background: color-mix(in srgb, var(--text) 7%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 4%, transparent);
-}
 
 body[data-page="home"] .nav-actions {
   align-items: center;
   gap: 7px;
 }
 
-body[data-page="home"] .nav-actions > .icon-button:not(.theme-toggle) {
-  width: 36px;
-  height: 36px;
-  border: 1px solid color-mix(in srgb, var(--text) 10%, transparent);
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface) 52%, transparent), color-mix(in srgb, var(--surface) 24%, transparent));
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.05),
-    inset 1px 1px 0 color-mix(in srgb, white 24%, transparent),
-    inset -1px -1px 0 color-mix(in srgb, var(--text) 5%, transparent);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease;
-}
-
-body[data-page="home"] .nav-actions > .icon-button:not(.theme-toggle):hover,
-body[data-page="home"] .nav-actions > .icon-button:not(.theme-toggle):focus-visible {
-  transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--text) 16%, transparent);
-  background: color-mix(in srgb, var(--surface) 62%, transparent);
-}
-
-/* ThemeToggle adaptation: moon and sun are both visible, with a moving active well. */
-body[data-page="home"] .theme-toggle {
+/* LiquidButton — icon size, default variant. */
+.ui-liquid-button {
   position: relative;
-  display: block;
-  width: 64px;
-  height: 34px;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid rgba(23, 23, 26, 0.11);
-  border-radius: 999px;
-  background: rgba(245, 245, 247, 0.78);
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.05),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(12px) saturate(135%);
-  -webkit-backdrop-filter: blur(12px) saturate(135%);
-  transition: background-color 180ms ease, border-color 180ms ease;
-}
-
-body[data-page="home"] .theme-toggle::before {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 26px;
-  height: 26px;
-  content: "";
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.12),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.035);
-  transform: translateX(30px);
-  transition: transform 210ms cubic-bezier(.2, .72, .2, 1), background-color 180ms ease;
-}
-
-html[data-theme="dark"] body[data-page="home"] .theme-toggle {
-  border-color: rgba(255, 255, 255, 0.09);
-  background: rgba(8, 10, 14, 0.76);
-  box-shadow:
-    0 5px 16px rgba(0, 0, 0, 0.2),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.035);
-}
-
-html[data-theme="dark"] body[data-page="home"] .theme-toggle::before {
-  background: rgba(42, 45, 53, 0.98);
-  box-shadow:
-    0 2px 9px rgba(0, 0, 0, 0.24),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.055);
-  transform: translateX(0);
-}
-
-body[data-page="home"] .theme-toggle .moon-icon,
-body[data-page="home"] .theme-toggle .sun-icon,
-html[data-theme="dark"] body[data-page="home"] .theme-toggle .moon-icon,
-html[data-theme="dark"] body[data-page="home"] .theme-toggle .sun-icon {
-  position: absolute;
-  top: 8px;
-  z-index: 1;
-  display: block;
-  width: 17px;
-  height: 17px;
-  fill: none;
-  stroke-width: 1.65;
-  transition: color 180ms ease;
-}
-
-body[data-page="home"] .theme-toggle .moon-icon {
-  left: 8px;
-  color: var(--quiet);
-}
-
-body[data-page="home"] .theme-toggle .sun-icon {
-  right: 8px;
-  color: #5f4a18;
-}
-
-html[data-theme="dark"] body[data-page="home"] .theme-toggle .moon-icon {
-  color: #f4f4f7;
-}
-
-html[data-theme="dark"] body[data-page="home"] .theme-toggle .sun-icon {
-  color: #747680;
-}
-
-body[data-page="home"] .theme-toggle:hover,
-body[data-page="home"] .theme-toggle:focus-visible {
-  outline: none;
-  border-color: color-mix(in srgb, var(--text) 17%, transparent);
-}
-
-/* ExpandArrowButton adaptation for the writing archive entry. */
-body[data-page="home"] .all-writing-link.ui-expand-link {
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0;
-  width: 44px;
-  height: 44px;
-  padding: 0 12px;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
-  border-radius: 999px;
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--accent) 20%, transparent), color-mix(in srgb, var(--accent-2) 11%, transparent));
-  color: var(--text);
-  box-shadow:
-    0 8px 22px rgba(0, 0, 0, 0.08),
-    inset 1px 1px 0 rgba(255, 255, 255, 0.11);
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  transition: width 220ms cubic-bezier(.2, .72, .2, 1), transform 160ms ease, border-color 160ms ease;
+  flex-shrink: 0;
+  gap: 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
+  transition: color 300ms ease, box-shadow 300ms ease, transform 300ms ease;
 }
 
-body[data-page="home"] .all-writing-link.ui-expand-link:hover,
-body[data-page="home"] .all-writing-link.ui-expand-link:focus-visible {
-  width: 116px;
-  color: var(--text);
-  transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--accent) 56%, transparent);
+.ui-liquid-button:hover,
+.ui-liquid-button:focus-visible {
+  transform: scale(1.05);
+}
+
+.ui-liquid-button:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.ui-liquid-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.ui-liquid-shadow,
+.ui-liquid-filter-surface {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ui-liquid-shadow {
+  z-index: 0;
+  border-radius: 9999px;
+  box-shadow:
+    0 0 6px rgba(0, 0, 0, 0.03),
+    0 2px 6px rgba(0, 0, 0, 0.08),
+    inset 3px 3px 0.5px -3px rgba(0, 0, 0, 0.9),
+    inset -3px -3px 0.5px -3px rgba(0, 0, 0, 0.85),
+    inset 1px 1px 1px -0.5px rgba(0, 0, 0, 0.6),
+    inset -1px -1px 1px -0.5px rgba(0, 0, 0, 0.6),
+    inset 0 0 6px 6px rgba(0, 0, 0, 0.12),
+    inset 0 0 2px 2px rgba(0, 0, 0, 0.06),
+    0 0 12px rgba(255, 255, 255, 0.15);
+  transition: all 300ms ease;
+}
+
+html[data-theme="dark"] .ui-liquid-shadow {
+  box-shadow:
+    0 0 8px rgba(0, 0, 0, 0.03),
+    0 2px 6px rgba(0, 0, 0, 0.08),
+    inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.09),
+    inset -3px -3px 0.5px -3.5px rgba(255, 255, 255, 0.85),
+    inset 1px 1px 1px -0.5px rgba(255, 255, 255, 0.6),
+    inset -1px -1px 1px -0.5px rgba(255, 255, 255, 0.6),
+    inset 0 0 6px 6px rgba(255, 255, 255, 0.12),
+    inset 0 0 2px 2px rgba(255, 255, 255, 0.06),
+    0 0 12px rgba(0, 0, 0, 0.15);
+}
+
+.ui-liquid-filter-surface {
+  z-index: -1;
+  overflow: hidden;
+  border-radius: 6px;
+  backdrop-filter: url("#container-glass");
+  -webkit-backdrop-filter: url("#container-glass");
+}
+
+.ui-liquid-content {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.ui-liquid-content svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.ui-filter-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ThemeToggle — direct structure/values from theme-toggle.tsx. */
+body[data-page="home"] .ui-theme-toggle {
+  display: flex;
+  width: 64px;
+  height: 32px;
+  padding: 4px;
+  border: 1px solid #e4e4e7;
+  border-radius: 9999px;
+  background: #f4f4f5;
+  cursor: pointer;
+  transition: all 300ms ease;
+}
+
+html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle {
+  border-color: #27272a;
+  background: #09090b;
+}
+
+body[data-page="home"] .ui-theme-toggle:hover,
+body[data-page="home"] .ui-theme-toggle:focus-visible {
   outline: none;
 }
 
-body[data-page="home"] .all-writing-label {
-  max-width: 0;
+body[data-page="home"] .ui-theme-toggle:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.ui-theme-toggle-inner {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ui-theme-toggle-moon,
+.ui-theme-toggle-sun {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  transition: all 300ms ease;
+}
+
+.ui-theme-toggle-moon {
+  background: transparent;
+}
+
+.ui-theme-toggle-sun {
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme="dark"] .ui-theme-toggle-moon {
+  background: #27272a;
+}
+
+html[data-theme="dark"] .ui-theme-toggle-sun {
+  background: transparent;
+  box-shadow: none;
+}
+
+body[data-page="home"] .ui-theme-toggle .moon-icon,
+body[data-page="home"] .ui-theme-toggle .sun-icon,
+html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle .moon-icon,
+html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle .sun-icon {
+  position: static;
+  display: block;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+body[data-page="home"] .ui-theme-toggle .moon-icon {
+  color: #6b7280;
+}
+
+body[data-page="home"] .ui-theme-toggle .sun-icon {
+  color: #18181b;
+}
+
+html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle .moon-icon {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] body[data-page="home"] .ui-theme-toggle .sun-icon {
+  color: #6b7280;
+}
+
+/* ExpandArrowButton — direct port. Only "Visit" is localized to "全部文字". */
+body[data-page="home"] .all-writing-link.ui-expand-button {
+  position: absolute;
+  right: 2%;
+  bottom: 4%;
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  padding: 0;
+  border: 2px solid #656fe2;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #c0c7ff, #4c64ff);
+  color: #e5e5e5;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: all 300ms ease;
+}
+
+html[data-theme="dark"] body[data-page="home"] .all-writing-link.ui-expand-button {
+  background: linear-gradient(to right, #070e41, #263381);
+}
+
+body[data-page="home"] .all-writing-link.ui-expand-button:hover,
+body[data-page="home"] .all-writing-link.ui-expand-button:focus-visible {
+  width: 128px;
+  color: #e5e5e5;
+  transform: none;
+  outline: none;
+}
+
+body[data-page="home"] .all-writing-link.ui-expand-button:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, #656fe2 30%, transparent);
+}
+
+.ui-expand-label {
+  display: inline-flex;
   white-space: nowrap;
   opacity: 0;
-  transform: translateX(7px);
-  transition: max-width 210ms ease, opacity 140ms ease, transform 210ms ease, margin-right 210ms ease;
+  transition: all 200ms ease;
 }
 
-body[data-page="home"] .ui-expand-link:hover .all-writing-label,
-body[data-page="home"] .ui-expand-link:focus-visible .all-writing-label {
-  max-width: 64px;
-  margin-right: 7px;
+.ui-expand-button:hover .ui-expand-label,
+.ui-expand-button:focus-visible .ui-expand-label {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(-12px);
 }
 
-body[data-page="home"] .all-writing-arrow {
-  flex: 0 0 auto;
-  font-size: 1.05rem;
-  line-height: 1;
-  transition: transform 180ms ease;
+.ui-expand-arrow {
+  position: absolute;
+  right: 14px;
 }
 
-body[data-page="home"] .ui-expand-link:hover .all-writing-arrow,
-body[data-page="home"] .ui-expand-link:focus-visible .all-writing-arrow {
-  transform: translateX(2px);
-}
-
-/* Give the existing orbit tooltip the same lightweight glass edge. */
-body[data-page="home"] .orbit-tooltip {
-  border-color: color-mix(in srgb, var(--text) 12%, transparent);
-  background: color-mix(in srgb, var(--cosmos-label-bg) 82%, transparent);
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.12),
-    inset 1px 1px 0 rgba(255, 255, 255, 0.075);
-  backdrop-filter: blur(14px) saturate(145%);
-  -webkit-backdrop-filter: blur(14px) saturate(145%);
-}
-
-@media (max-width: 720px) {
-  body[data-page="home"] .nav-shell {
-    grid-template-columns: auto 1fr auto;
-  }
-
-  body[data-page="home"] .nav-links {
-    justify-self: center;
-  }
-
-  body[data-page="home"] .nav-links a {
-    padding-inline: 9px;
-    font-size: 0.82rem;
-  }
-
-  body[data-page="home"] .theme-toggle {
-    width: 56px;
-  }
-
-  body[data-page="home"] .theme-toggle::before {
-    transform: translateX(22px);
-  }
-
-  html[data-theme="dark"] body[data-page="home"] .theme-toggle::before {
-    transform: translateX(0);
-  }
-
-  body[data-page="home"] .theme-toggle .moon-icon { left: 7px; }
-  body[data-page="home"] .theme-toggle .sun-icon { right: 7px; }
+.ui-expand-arrow svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
 }
 
 @media (max-width: 560px) {
@@ -266,46 +272,18 @@ body[data-page="home"] .orbit-tooltip {
     display: none;
   }
 
-  body[data-page="home"] .nav-actions > .icon-button:not(.theme-toggle) {
+  body[data-page="home"] .ui-liquid-button {
     display: none;
-  }
-
-  body[data-page="home"] .theme-toggle {
-    width: 54px;
-  }
-
-  body[data-page="home"] .theme-toggle::before {
-    transform: translateX(20px);
-  }
-
-  html[data-theme="dark"] body[data-page="home"] .theme-toggle::before {
-    transform: translateX(0);
-  }
-
-  body[data-page="home"] .nav-links a {
-    padding-inline: 8px;
-    font-size: 0.79rem;
-  }
-
-  body[data-page="home"] .all-writing-link.ui-expand-link:hover,
-  body[data-page="home"] .all-writing-link.ui-expand-link:focus-visible {
-    width: 44px;
-  }
-
-  body[data-page="home"] .ui-expand-link:hover .all-writing-label,
-  body[data-page="home"] .ui-expand-link:focus-visible .all-writing-label {
-    max-width: 0;
-    margin-right: 0;
-    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body[data-page="home"] .theme-toggle::before,
-  body[data-page="home"] .all-writing-link.ui-expand-link,
-  body[data-page="home"] .all-writing-label,
-  body[data-page="home"] .all-writing-arrow,
-  body[data-page="home"] .nav-actions > .icon-button:not(.theme-toggle) {
+  .ui-liquid-button,
+  body[data-page="home"] .ui-theme-toggle,
+  .ui-theme-toggle-moon,
+  .ui-theme-toggle-sun,
+  body[data-page="home"] .all-writing-link.ui-expand-button,
+  .ui-expand-label {
     transition: none !important;
   }
 }

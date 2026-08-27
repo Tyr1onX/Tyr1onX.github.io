@@ -21,10 +21,10 @@
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./home-cosmos.css?v=6-static" />
     <link rel="stylesheet" href="./home-texture.css?v=1-static-texture" />
-    <link rel="stylesheet" href="./ui-components.css?v=1-home-ui" />
+    <link rel="stylesheet" href="./ui-components.css?v=2-exact-ports" />
     <script src="./notes-data.js" defer></script>
     <script src="./notes-2026.js?v=2" defer></script>
-    <script src="./site-runtime.js?v=3-lightweight" defer></script>
+    <script src="./site-runtime.js?v=4-switch-state" defer></script>
     <script src="./home-cosmos.js?v=6-static" defer></script>
   </head>
   <body data-page="home">
@@ -42,12 +42,27 @@
           <a href="./knowledge.html">星图</a>
         </nav>
         <div class="nav-actions">
-          <a class="icon-button" href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer" aria-label="打开 Tyr1onX 的 GitHub">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.7a9.5 9.5 0 0 0-3 18.52c.48.1.65-.2.65-.46v-1.83c-2.65.58-3.2-1.12-3.2-1.12-.43-1.1-1.06-1.4-1.06-1.4-.87-.6.07-.59.07-.59.96.07 1.46.99 1.46.99.85 1.46 2.24 1.04 2.79.8.08-.62.33-1.04.6-1.28-2.12-.24-4.35-1.06-4.35-4.7 0-1.04.37-1.89.98-2.56-.1-.24-.43-1.21.09-2.52 0 0 .8-.26 2.61.98A9.1 9.1 0 0 1 12 7.22a9 9 0 0 1 2.38.32c1.81-1.23 2.61-.98 2.61-.98.52 1.31.19 2.28.09 2.52.61.67.98 1.52.98 2.56 0 3.65-2.24 4.46-4.37 4.7.34.3.65.88.65 1.78v2.64c0 .26.17.57.66.46A9.5 9.5 0 0 0 12 2.7Z" /></svg>
+          <a class="ui-liquid-button ui-liquid-icon" href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer" aria-label="打开 Tyr1onX 的 GitHub">
+            <span class="ui-liquid-shadow" aria-hidden="true"></span>
+            <span class="ui-liquid-filter-surface" aria-hidden="true"></span>
+            <span class="ui-liquid-content">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.7a9.5 9.5 0 0 0-3 18.52c.48.1.65-.2.65-.46v-1.83c-2.65.58-3.2-1.12-3.2-1.12-.43-1.1-1.06-1.4-1.06-1.4-.87-.6.07-.59.07-.59.96.07 1.46.99 1.46.99.85 1.46 2.24 1.04 2.79.8.08-.62.33-1.04.6-1.28-2.12-.24-4.35-1.06-4.35-4.7 0-1.04.37-1.89.98-2.56-.1-.24-.43-1.21.09-2.52 0 0 .8-.26 2.61.98A9.1 9.1 0 0 1 12 7.22a9 9 0 0 1 2.38.32c1.81-1.23 2.61-.98 2.61-.98.52 1.31.19 2.28.09 2.52.61.67.98 1.52.98 2.56 0 3.65-2.24 4.46-4.37 4.7.34.3.65.88.65 1.78v2.64c0 .26.17.57.66.46A9.5 9.5 0 0 0 12 2.7Z" /></svg>
+            </span>
           </a>
-          <button class="icon-button theme-toggle" type="button" aria-label="切换到浅色模式">
-            <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.3 15.5A8 8 0 0 1 8.5 4.7 8.6 8.6 0 1 0 19.3 15.5Z" /></svg>
-            <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5" /><path d="M12 2.5v2M12 19.5v2M4.5 12h-2M21.5 12h-2M5.3 5.3 3.9 3.9M20.1 20.1l-1.4-1.4M18.7 5.3l1.4-1.4M3.9 20.1l-1.4-1.4" /></svg>
+          <button class="icon-button theme-toggle ui-theme-toggle" type="button" role="switch" aria-checked="false" aria-label="切换到深色模式">
+            <span class="ui-theme-toggle-inner">
+              <span class="ui-theme-toggle-moon">
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+                </svg>
+              </span>
+              <span class="ui-theme-toggle-sun">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2m-7.07-15.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                </svg>
+              </span>
+            </span>
           </button>
         </div>
       </div>
@@ -79,14 +94,30 @@
               <span class="orbit-tooltip" aria-hidden="true">课刻</span>
             </a>
 
-            <a class="all-writing-link ui-expand-link" href="./notes.html" aria-label="查看全部文字">
-              <span class="all-writing-label">全部文字</span>
-              <span class="all-writing-arrow" aria-hidden="true">→</span>
+            <a class="all-writing-link ui-expand-button" href="./notes.html" aria-label="查看全部文字">
+              <span class="ui-expand-label">全部文字</span>
+              <span class="ui-expand-arrow" aria-hidden="true">
+                <svg viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" />
+                </svg>
+              </span>
             </a>
           </div>
         </div>
       </section>
     </main>
+
+    <svg class="ui-filter-defs" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="container-glass" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.05 0.05" numOctaves="1" seed="1" result="turbulence" />
+          <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise" />
+          <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="70" xChannelSelector="R" yChannelSelector="B" result="displaced" />
+          <feGaussianBlur in="displaced" stdDeviation="4" result="finalBlur" />
+          <feComposite in="finalBlur" in2="finalBlur" operator="over" />
+        </filter>
+      </defs>
+    </svg>
 
     <footer class="site-footer page-width">
       <p>© <span id="current-year">2026</span> Tyr1onX</p>
