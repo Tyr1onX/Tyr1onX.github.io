@@ -1,79 +1,46 @@
 /*
  * Personal-site shell for the formal Knowledge Constellation renderer.
- * Renderer behavior comes from Tyr1onX/knowledge-constellation; this file only
- * integrates that accepted canvas surface with the existing site header/theme.
+ * The site header stays native to Tyr1onX.github.io; everything below it is
+ * the constellation viewport. Renderer behavior remains upstream-owned.
  */
 
+body[data-page="knowledge"] {
+  height: 100svh;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+body[data-page="knowledge"] .site-header {
+  flex: 0 0 66px;
+}
+
 .knowledge-main {
+  width: 100%;
+  height: calc(100svh - 66px);
   min-height: calc(100svh - 66px);
+  overflow: hidden;
 }
 
 .knowledge-stage {
-  padding: 40px 0 34px;
-}
-
-.knowledge-heading,
-.knowledge-caption {
-  width: min(calc(100% - 40px), 1400px);
-  margin-inline: auto;
-}
-
-.knowledge-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 32px;
-  margin-bottom: 22px;
-}
-
-.knowledge-heading > div > p {
-  margin: 0 0 7px;
-  color: var(--accent);
-  font-size: 0.78rem;
-  font-weight: 650;
-  letter-spacing: 0.04em;
-}
-
-.knowledge-heading h1 {
+  width: 100%;
+  height: 100%;
   margin: 0;
-  font-size: clamp(2.05rem, 4.8vw, 4rem);
-  font-weight: 690;
-  letter-spacing: -0.065em;
-  line-height: 1;
-}
-
-.knowledge-freshness {
-  display: grid;
-  gap: 2px;
-  margin: 0 0 3px;
-  color: var(--quiet);
-  font-size: 0.72rem;
-  line-height: 1.45;
-  text-align: right;
-}
-
-.knowledge-freshness time {
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
+  padding: 0;
 }
 
 .knowledge-graph-shell {
   position: relative;
   isolation: isolate;
-  width: min(calc(100% - 32px), 1480px);
-  height: clamp(620px, calc(100svh - 190px), 920px);
-  margin-inline: auto;
+  width: 100%;
+  height: 100%;
+  min-height: calc(100svh - 66px);
+  margin: 0;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--line) 72%, rgba(150, 180, 220, 0.12));
-  border-radius: 26px;
+  border: 0;
+  border-radius: 0;
   background: #01030a;
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.16);
+  box-shadow: none;
   color-scheme: dark;
-}
-
-html[data-theme="dark"] .knowledge-graph-shell {
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 34px 110px rgba(0, 0, 0, 0.42);
 }
 
 #universe {
@@ -104,6 +71,49 @@ html[data-theme="dark"] .knowledge-graph-shell {
 #fatal[hidden],
 .knowledge-graph-shell [hidden] {
   display: none !important;
+}
+
+.knowledge-overlay {
+  position: absolute;
+  z-index: 4;
+  top: 20px;
+  left: 24px;
+  margin: 0;
+  color: rgba(220, 231, 243, 0.48);
+  pointer-events: none;
+  user-select: none;
+}
+
+.knowledge-overlay > p:first-child {
+  margin: 0;
+  color: rgba(180, 202, 228, 0.34);
+  font-size: 0.61rem;
+  font-weight: 620;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.knowledge-overlay h1 {
+  margin: 5px 0 0;
+  color: rgba(231, 239, 248, 0.57);
+  font-size: 0.98rem;
+  font-weight: 570;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.knowledge-freshness {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 7px 0 0;
+  color: rgba(123, 143, 166, 0.33);
+  font-size: 0.54rem;
+  line-height: 1.4;
+}
+
+.knowledge-freshness time {
+  font-variant-numeric: tabular-nums;
 }
 
 .knowledge-graph-shell .tooltip {
@@ -147,7 +157,7 @@ html[data-theme="dark"] .knowledge-graph-shell {
   top: 82px;
   right: 20px;
   width: min(350px, calc(100vw - 40px));
-  max-height: calc(100vh - 104px);
+  max-height: calc(100svh - 104px);
   overflow: auto;
   padding: 20px 19px 18px;
   border: 1px solid rgba(255, 255, 255, 0.065);
@@ -339,51 +349,51 @@ html[data-theme="dark"] .knowledge-graph-shell {
   line-height: 1.6;
 }
 
-.knowledge-hint {
+.knowledge-hint,
+.knowledge-source-overlay {
   position: absolute;
   z-index: 4;
-  left: 20px;
-  bottom: 15px;
+  bottom: 16px;
   margin: 0;
-  color: rgba(146, 164, 186, 0.28);
-  font-size: 0.61rem;
-  letter-spacing: 0.02em;
+  color: rgba(138, 157, 179, 0.27);
+  font-size: 0.58rem;
+  line-height: 1.45;
   pointer-events: none;
   user-select: none;
 }
 
-.knowledge-caption {
-  margin-top: 15px;
-  color: var(--quiet);
-  font-size: 0.72rem;
-  line-height: 1.6;
-  text-align: center;
+.knowledge-hint {
+  left: 24px;
 }
 
-.knowledge-caption a {
-  color: var(--muted);
-  border-bottom: 1px solid var(--line);
+.knowledge-source-overlay {
+  right: 24px;
+  text-align: right;
 }
 
-.knowledge-caption a:hover,
-.knowledge-caption a:focus-visible {
-  color: var(--text);
+.knowledge-source-overlay a {
+  color: rgba(161, 181, 205, 0.38);
+  pointer-events: auto;
+}
+
+.knowledge-source-overlay a:hover,
+.knowledge-source-overlay a:focus-visible {
+  color: rgba(218, 230, 242, 0.72);
   outline: none;
 }
 
-@media (max-width: 820px) {
-  .knowledge-stage {
-    padding-top: 28px;
+@media (max-width: 720px) {
+  .knowledge-overlay {
+    top: 16px;
+    left: 16px;
   }
 
-  .knowledge-heading {
-    align-items: start;
+  .knowledge-overlay h1 {
+    font-size: 0.9rem;
   }
 
-  .knowledge-graph-shell {
-    width: calc(100% - 20px);
-    height: max(620px, calc(100svh - 160px));
-    border-radius: 20px;
+  .knowledge-freshness span {
+    display: none;
   }
 
   .knowledge-graph-shell .detail-card {
@@ -392,46 +402,40 @@ html[data-theme="dark"] .knowledge-graph-shell {
     bottom: 12px;
     left: 12px;
     width: auto;
-    max-height: 48vh;
+    max-height: 48svh;
     padding: 18px 17px 16px;
     border-radius: 14px;
   }
 
   .knowledge-hint {
-    left: 14px;
-    bottom: 12px;
+    left: 16px;
+    bottom: 14px;
+    max-width: 56vw;
+    font-size: 0.54rem;
+  }
+
+  .knowledge-source-overlay {
+    right: 16px;
+    bottom: 14px;
+    font-size: 0.54rem;
+  }
+
+  .knowledge-source-overlay {
+    font-size: 0;
+  }
+
+  .knowledge-source-overlay a {
+    font-size: 0.54rem;
+  }
+
+  .knowledge-source-overlay a::after {
+    content: " · 08.27";
   }
 }
 
-@media (max-width: 560px) {
-  .knowledge-stage {
-    padding-top: 22px;
-  }
-
-  .knowledge-heading,
-  .knowledge-caption {
-    width: calc(100% - 28px);
-  }
-
-  .knowledge-heading {
-    display: block;
-    margin-bottom: 16px;
-  }
-
-  .knowledge-freshness {
-    display: flex;
-    gap: 7px;
-    margin-top: 10px;
-    text-align: left;
-  }
-
-  .knowledge-graph-shell {
-    height: max(600px, calc(100svh - 178px));
-  }
-
+@media (max-width: 460px) {
   .knowledge-hint {
-    max-width: calc(100% - 28px);
-    font-size: 0.56rem;
+    max-width: 62vw;
   }
 }
 
