@@ -40,11 +40,11 @@ html[data-theme="dark"] .github-liquid-button {
   box-shadow: 0 0 0 3px color-mix(in srgb, #656fe2 38%, transparent);
 }
 
-/* The original component has an outer glow container which may bleed outside
- * the button, but the Liquid itself is clipped inside a local rounded box. */
+/* The outer glow is allowed to bleed slightly outside the button, exactly as
+ * in the source component. The actual Liquid canvases below are clipped by
+ * button-sized positioned boxes. */
 .github-liquid-glow {
   position: absolute;
-  z-index: 0;
   top: 8.57%;
   left: 50%;
   display: block;
@@ -71,14 +71,10 @@ html[data-theme="dark"] .github-liquid-button {
   display: block;
   overflow: hidden;
   border-radius: 8px;
-  clip-path: inset(0 round 8px);
-  contain: paint;
-  isolation: isolate;
 }
 
 .github-liquid-shadow-core {
   position: absolute;
-  z-index: 0;
   top: 50%;
   left: 50%;
   display: block;
@@ -91,22 +87,20 @@ html[data-theme="dark"] .github-liquid-button {
   transform: translate(-50%, -40%);
 }
 
-/* Critical: this is a div in the original React component. It must be a real
- * button-sized containing block; otherwise the 443/756px Liquid layers escape
- * into the page because a relative inline span does not establish the intended
- * clipping box. */
+/* This element is a block-level, button-sized clipping container in the React
+ * source. It must not remain an inline span or the giant Liquid layers escape
+ * and paint across the whole page. */
 .github-liquid-main {
   position: absolute;
-  z-index: 1;
   inset: 0;
   display: block;
   overflow: hidden;
   border-radius: 8px;
-  clip-path: inset(0 round 8px);
-  contain: paint;
-  isolation: isolate;
 }
 
+/* Keep these siblings in normal DOM paint order (grey -> black -> Liquid ->
+ * sparks -> inner blur). Do not give the Liquid wrapper its own z-index or
+ * isolation: mix-blend-mode needs the black sibling as its backdrop. */
 .github-liquid-base-grey,
 .github-liquid-base-black,
 .github-liquid-spark,
@@ -118,24 +112,18 @@ html[data-theme="dark"] .github-liquid-button {
 }
 
 .github-liquid-base-grey {
-  z-index: 0;
   border-radius: 8px;
   background: #d9d9d9;
 }
 
 .github-liquid-base-black {
-  z-index: 1;
   border-radius: 8px;
   background: #000;
 }
 
 .github-liquid-flow {
-  z-index: 2;
   overflow: hidden;
   border-radius: 8px;
-  clip-path: inset(0 round 8px);
-  contain: paint;
-  isolation: isolate;
 }
 
 .github-liquid-layer {
@@ -196,11 +184,9 @@ html[data-theme="dark"] .github-liquid-button {
   display: block;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 
 .github-liquid-spark {
-  z-index: 3;
   border: 3px solid rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   mix-blend-mode: overlay;
@@ -222,7 +208,6 @@ html[data-theme="dark"] .github-liquid-button {
 
 .github-liquid-inner-blur {
   position: absolute;
-  z-index: 4;
   top: 50%;
   left: 50%;
   display: block;
