@@ -7,9 +7,13 @@
     <meta name="theme-color" content="#0b1015" />
     <title>Knowledge · Tyr1onX</title>
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
+    <script src="./navigation-first-frame.js?v=2-knowledge-route"></script>
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./transition-sequence-timing.css?v=5-motion-system" />
     <link rel="stylesheet" href="./knowledge.css?v=6-daylight-observatory" />
+    <link rel="stylesheet" href="./knowledge-transition.css?v=1-shared-core" />
     <script src="./site-runtime.js?v=3-lightweight" defer></script>
+    <script src="./knowledge-transition.js?v=1-shared-core" defer></script>
   </head>
   <body data-page="knowledge">
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -42,6 +46,7 @@
         <div class="knowledge-graph-shell" aria-label="个人知识星图，仅使用 Learning 仓库数据">
           <canvas id="universe" aria-label="可交互的 Tyr1onX 知识星图"></canvas>
           <div id="fatal" hidden></div>
+          <div class="knowledge-transition-scrim" aria-hidden="true"></div>
 
           <header class="knowledge-overlay">
             <p>Knowledge</p>
