@@ -8,7 +8,7 @@
     <title>Knowledge · Tyr1onX</title>
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./knowledge.css?v=4-constellation" />
+    <link rel="stylesheet" href="./knowledge.css?v=5-full-viewport" />
     <script src="./site-runtime.js?v=3-lightweight" defer></script>
   </head>
   <body data-page="knowledge">
@@ -39,20 +39,18 @@
 
     <main id="main" class="knowledge-main">
       <section class="knowledge-stage" id="knowledge-stage" aria-labelledby="knowledge-title">
-        <header class="knowledge-heading">
-          <div>
-            <p>Knowledge</p>
-            <h1 id="knowledge-title">知识星图</h1>
-          </div>
-          <p class="knowledge-freshness">
-            Learning snapshot
-            <time datetime="2026-08-27">2026.08.27</time>
-          </p>
-        </header>
-
         <div class="knowledge-graph-shell" aria-label="个人知识星图，仅使用 Learning 仓库数据">
           <canvas id="universe" aria-label="可交互的 Tyr1onX 知识星图"></canvas>
           <div id="fatal" hidden></div>
+
+          <header class="knowledge-overlay">
+            <p>Knowledge</p>
+            <h1 id="knowledge-title">知识星图</h1>
+            <p class="knowledge-freshness">
+              <span>Learning snapshot</span>
+              <time datetime="2026-08-27">2026.08.27</time>
+            </p>
+          </header>
 
           <div class="tooltip" id="tooltip" aria-hidden="true">
             <strong id="tooltip-title"></strong>
@@ -81,18 +79,16 @@
           </aside>
 
           <p class="knowledge-hint" aria-hidden="true">滚轮缩放 · 拖拽探索 · 点击星体查看 · 点击中心归位</p>
+          <p class="knowledge-source-overlay" id="knowledge-source">
+            <a href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer">Learning</a>
+            · discrete learning states
+          </p>
         </div>
-
-        <p class="knowledge-caption" id="knowledge-source">
-          数据基线只来自
-          <a href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer">Learning</a>
-          · 状态采用 learning / understood / review-needed / not-started，不使用数值熟练度
-        </p>
       </section>
     </main>
 
     <script src="./knowledge-data.js?v=4-learning-20260827"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-    <script type="module" src="./knowledge-graph.js?v=4-constellation"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module" src="./knowledge-graph.js?v=5-site-title"></script>
   </body>
 </html>
