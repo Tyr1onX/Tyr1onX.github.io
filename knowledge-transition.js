@@ -74,7 +74,16 @@
     if (!(canvas instanceof HTMLCanvasElement)) return;
 
     for (let frame = 0; frame < 120; frame += 1) {
-      if (canvas.width > 1 && canvas.height > 1) {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      const expectedWidth = Math.round(Math.max(1, rect.width) * dpr);
+      const expectedHeight = Math.round(Math.max(1, rect.height) * dpr);
+      const rendererSizedCanvas = Math.abs(canvas.width - expectedWidth) <= 1
+        && Math.abs(canvas.height - expectedHeight) <= 1
+        && rect.width > 1
+        && rect.height > 1;
+
+      if (rendererSizedCanvas) {
         await nextFrame();
         await nextFrame();
         return;
@@ -116,6 +125,11 @@
     clearState();
   };
 
+  const schedulePressCleanup = (event) => {
+    const pointerId = event?.pointerId;
+    setTimeout(() => cancelPress({ pointerId }), 0);
+  };
+
   const finishPressWindow = async () => {
     if (!pressedAt) {
       pressedAt = performance.now();
@@ -128,14 +142,17 @@
     }
   };
 
-  const prefetch = (link, marker) => {
+  const prefetch = (link, direction) => {
     if (!(link instanceof HTMLAnchorElement)) return;
-    const href = new URL(link.href, location.href).href;
-    if (document.querySelector(`link[data-${marker}-prefetch]`)) return;
+    const attribute = direction === "return"
+      ? "data-knowledge-return-prefetch"
+      : "data-knowledge-forward-prefetch";
+    if (document.querySelector(`link[${attribute}]`)) return;
+
     const preload = document.createElement("link");
     preload.rel = "prefetch";
-    preload.href = href;
-    preload.dataset[`${marker}Prefetch`] = "true";
+    preload.href = new URL(link.href, location.href).href;
+    preload.setAttribute(attribute, "true");
     document.head.append(preload);
   };
 
@@ -151,17 +168,6 @@
     destination.searchParams.set("__return", "knowledge");
     destination.searchParams.set("__t", Date.now().toString(36));
     return destination.href;
-  };
-
-  const resetHomeSource = () => {
-    window.TYR1ONX_COSMOS_MOTION?.resetRetraction();
-    document.querySelectorAll('.site-header .nav-links a[href$="knowledge.html"]').forEach((link) => {
-      link.removeAttribute("aria-disabled");
-    });
-    clearState();
-    pressedAt = 0;
-    pressedPointerId = null;
-    navigating = false;
   };
 
   const beginHomeForward = async (link) => {
@@ -203,9 +209,10 @@
     const link = document.querySelector('.site-header .nav-links a[href$="knowledge.html"]');
     if (!(link instanceof HTMLAnchorElement)) return;
 
-    link.addEventListener("pointerenter", () => prefetch(link, "knowledge"), { passive: true });
-    link.addEventListener("focus", () => prefetch(link, "knowledge"), { passive: true });
+    link.addEventListener("pointerenter", () => prefetch(link, "forward"), { passive: true });
+    link.addEventListener("focus", () => prefetch(link, "forward"), { passive: true });
     link.addEventListener("pointerdown", beginPress, { passive: true });
+    link.addEventListener("pointerup", schedulePressCleanup, { passive: true });
     link.addEventListener("pointercancel", cancelPress, { passive: true });
     link.addEventListener("lostpointercapture", cancelPress, { passive: true });
     link.addEventListener("click", (event) => {
@@ -296,9 +303,10 @@
     const link = document.querySelector('.site-header .brand[href="./"]');
     if (!(link instanceof HTMLAnchorElement)) return;
 
-    link.addEventListener("pointerenter", () => prefetch(link, "knowledgeReturn"), { passive: true });
-    link.addEventListener("focus", () => prefetch(link, "knowledgeReturn"), { passive: true });
+    link.addEventListener("pointerenter", () => prefetch(link, "return"), { passive: true });
+    link.addEventListener("focus", () => prefetch(link, "return"), { passive: true });
     link.addEventListener("pointerdown", beginPress, { passive: true });
+    link.addEventListener("pointerup", schedulePressCleanup, { passive: true });
     link.addEventListener("pointercancel", cancelPress, { passive: true });
     link.addEventListener("lostpointercapture", cancelPress, { passive: true });
     link.addEventListener("click", (event) => {
