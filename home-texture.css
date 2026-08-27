@@ -1,0 +1,93 @@
+/* Static visual texture restored from the original cosmos treatment.
+ * No continuous transforms, physics, wind, or page-transition animation lives here.
+ */
+body[data-page="home"] {
+  --nebula-cool-a: rgba(74, 110, 150, 0.075);
+  --nebula-cool-b: rgba(45, 76, 108, 0.052);
+  --nebula-warm: rgba(205, 154, 67, 0.022);
+  --cosmos-grain-opacity: 0.014;
+  --cosmos-grain-blend: soft-light;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(63, 93, 126, 0.12), transparent 30%),
+    radial-gradient(circle at 18% 12%, rgba(73, 92, 112, 0.10), transparent 26%),
+    radial-gradient(ellipse 46% 40% at 94% 18%, rgba(83, 115, 158, 0.075), transparent 76%),
+    radial-gradient(ellipse 42% 38% at 8% 78%, rgba(173, 130, 68, 0.045), transparent 74%),
+    var(--cosmos-bg);
+}
+
+html[data-theme="light"] body[data-page="home"] {
+  --nebula-cool-a: rgba(118, 149, 181, 0.045);
+  --nebula-cool-b: rgba(156, 176, 195, 0.034);
+  --nebula-warm: rgba(187, 145, 77, 0.012);
+  --cosmos-grain-opacity: 0.007;
+  --cosmos-grain-blend: multiply;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(144, 169, 196, 0.12), transparent 30%),
+    radial-gradient(circle at 18% 12%, rgba(170, 185, 199, 0.14), transparent 26%),
+    radial-gradient(ellipse 46% 40% at 94% 18%, rgba(139, 166, 193, 0.075), transparent 76%),
+    radial-gradient(ellipse 42% 38% at 8% 78%, rgba(195, 159, 108, 0.05), transparent 74%),
+    var(--cosmos-bg);
+}
+
+body[data-page="home"] .cosmos-hero::before,
+body[data-page="home"] .cosmos-hero::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+body[data-page="home"] .cosmos-hero::before {
+  inset: -10%;
+  background:
+    radial-gradient(ellipse 68% 58% at 12% 26%, var(--nebula-cool-a), transparent 76%),
+    radial-gradient(ellipse 64% 56% at 90% 72%, var(--nebula-cool-b), transparent 78%),
+    radial-gradient(ellipse 42% 34% at 68% 10%, var(--nebula-warm), transparent 80%);
+  opacity: 0.72;
+}
+
+body[data-page="home"] .cosmos-hero::after {
+  inset: 0;
+  z-index: 0;
+  opacity: var(--cosmos-grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+  background-size: 176px 176px;
+  background-repeat: repeat;
+  mix-blend-mode: var(--cosmos-grain-blend);
+}
+
+.decorative-star {
+  background: radial-gradient(
+    circle,
+    rgba(255, 249, 224, 0.96) 0 16%,
+    var(--cosmos-dot) 34%,
+    color-mix(in srgb, var(--cosmos-dot) 42%, transparent) 62%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 2px color-mix(in srgb, var(--cosmos-dot) 46%, transparent),
+    0 0 5px color-mix(in srgb, var(--cosmos-dot) 18%, transparent);
+  filter: blur(0.12px);
+}
+
+html[data-theme="light"] .decorative-star {
+  background: radial-gradient(
+    circle,
+    rgba(255, 246, 214, 0.94) 0 14%,
+    var(--cosmos-dot) 34%,
+    color-mix(in srgb, var(--cosmos-dot) 36%, transparent) 60%,
+    transparent 100%
+  );
+}
+
+.note-star-core {
+  filter:
+    drop-shadow(0 0 2.6px color-mix(in srgb, var(--note-star-color, var(--cosmos-star)) 88%, transparent))
+    drop-shadow(0 0 8px var(--note-star-glow, rgba(255, 190, 55, 0.36)))
+    drop-shadow(0 0 15px color-mix(in srgb, var(--note-star-glow, rgba(255, 190, 55, 0.36)) 70%, transparent));
+}
+
+.note-star-label,
+.orbit-tooltip {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
