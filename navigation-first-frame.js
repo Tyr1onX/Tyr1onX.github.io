@@ -4,10 +4,6 @@
   const KEKE_KEY = "tyr1onx:keke-planet-transition";
   const WRITING_KEY = "tyr1onx:writing-transition";
   const RETURN_KEY = "tyr1onx:return-home-transition";
-  const KNOWLEDGE_KEY = "tyr1onx:knowledge-transition";
-  const KNOWLEDGE_FORWARD = "home-to-knowledge";
-  const KNOWLEDGE_RETURN = "knowledge-to-home";
-  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   root.classList.add("js", "theme-initializing");
 
@@ -70,7 +66,6 @@
 
   const routeFromCommittedIntent = (targetPage) => {
     if (currentPage === "home") {
-      if (targetPage === "knowledge" && readJsonMode(KNOWLEDGE_KEY) === KNOWLEDGE_FORWARD) return "home-to-knowledge";
       if (targetPage === "keke" && readSession(KEKE_KEY) === "1") return "home-to-keke";
       const mode = readJsonMode(WRITING_KEY);
       if (targetPage === "notes" && mode === "archive") return "home-to-writing-archive";
@@ -79,7 +74,6 @@
     }
 
     if (targetPage !== "home") return "";
-    if (currentPage === "knowledge" && readJsonMode(KNOWLEDGE_KEY) === KNOWLEDGE_RETURN) return "knowledge-to-home";
     const mode = readJsonMode(RETURN_KEY);
     if (currentPage === "keke" && mode === "keke-return") return "keke-to-home";
     if ((currentPage === "notes" || currentPage === "note")
@@ -94,19 +88,13 @@
   let route = "";
 
   if (currentPage === "home") {
-    const knowledgeMode = readJsonMode(KNOWLEDGE_KEY);
+    const storedMode = readJsonMode(RETURN_KEY);
     const queryMode = url.searchParams.get("__return");
-    if (!reducedMotion && (knowledgeMode === KNOWLEDGE_RETURN || queryMode === "knowledge")) {
-      root.dataset.knowledgeReturnPending = "knowledge-return";
-      route = "knowledge-to-home";
-    } else {
-      const storedMode = readJsonMode(RETURN_KEY);
-      const mode = storedMode
-        || (queryMode === "keke" ? "keke-return" : queryMode === "writing" ? "writing-archive-return" : "");
-      if (mode === "keke-return" || mode === "writing-archive-return" || mode === "writing-note-return") {
-        root.dataset.returnHomePending = mode;
-        route = mode === "keke-return" ? "keke-to-home" : "writing-to-home";
-      }
+    const mode = storedMode
+      || (queryMode === "keke" ? "keke-return" : queryMode === "writing" ? "writing-archive-return" : "");
+    if (mode === "keke-return" || mode === "writing-archive-return" || mode === "writing-note-return") {
+      root.dataset.returnHomePending = mode;
+      route = mode === "keke-return" ? "keke-to-home" : "writing-to-home";
     }
   } else if (currentPage === "keke") {
     if (readSession(KEKE_KEY) === "1") {
@@ -122,18 +110,11 @@
       root.dataset.writingArrivalPending = mode;
       route = mode === "archive" ? "home-to-writing-archive" : "home-to-writing-note";
     }
-  } else if (currentPage === "knowledge") {
-    const mode = readJsonMode(KNOWLEDGE_KEY);
-    const queryMode = url.searchParams.get("__knowledge");
-    if (!reducedMotion && (mode === KNOWLEDGE_FORWARD || queryMode === "home")) {
-      root.dataset.knowledgeArrivalPending = "home";
-      route = "home-to-knowledge";
-    }
   }
 
   if (route) root.dataset.transitionRoute = route;
 
-  const transientKeys = ["__return", "__writing", "__keke", "__knowledge", "__t"];
+  const transientKeys = ["__return", "__writing", "__keke", "__t"];
   if (transientKeys.some((key) => url.searchParams.has(key))) {
     transientKeys.forEach((key) => url.searchParams.delete(key));
     history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`);
@@ -173,11 +154,11 @@
     if (route === "home-to-keke") {
       delete root.dataset.kekeArrivalPending;
       delete root.dataset.transitionRoute;
-      if (reducedMotion) removeSession(KEKE_KEY);
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) removeSession(KEKE_KEY);
     } else if (route === "home-to-writing-archive" || route === "home-to-writing-note") {
       delete root.dataset.writingArrivalPending;
       delete root.dataset.transitionRoute;
-      if (reducedMotion) removeSession(WRITING_KEY);
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) removeSession(WRITING_KEY);
     }
   });
 
@@ -205,9 +186,6 @@
     delete root.dataset.kekeArrivalPending;
     delete root.dataset.writingArrivalPending;
     delete root.dataset.returnHomePending;
-    delete root.dataset.knowledgeArrivalPending;
-    delete root.dataset.knowledgeReturnPending;
-    delete root.dataset.knowledgeMotionState;
     root.classList.remove("theme-initializing");
     root.dataset.themeReady = "true";
 
@@ -232,7 +210,6 @@
       "is-cosmos-retracting",
       "is-cosmos-return-drop"
     );
-    if (document.body) delete document.body.dataset.knowledgeMotionState;
 
     document.querySelectorAll("[style*='view-transition-name']").forEach((element) => {
       element.style.removeProperty("view-transition-name");
@@ -263,7 +240,5 @@
     removeSession(KEKE_KEY);
     removeSession(WRITING_KEY);
     removeSession(RETURN_KEY);
-    // Knowledge route storage is owned by knowledge-transition.js so a BFCache
-    // restore can distinguish a real knowledge return from a normal Back action.
   });
 })();
