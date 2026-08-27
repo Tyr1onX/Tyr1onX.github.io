@@ -3,15 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Tyr1onX 的个人知识星图。" />
+    <meta name="description" content="Tyr1onX 的个人知识星图，数据来自 Learning 仓库。" />
     <meta name="theme-color" content="#0b1015" />
     <title>Knowledge · Tyr1onX</title>
     <link rel="icon" href="./avatar.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./knowledge.css?v=3-nebula" />
-    <script src="./knowledge-data.js?v=3-1-separated" defer></script>
+    <link rel="stylesheet" href="./knowledge.css?v=4-constellation" />
     <script src="./site-runtime.js?v=3-lightweight" defer></script>
-    <script src="./knowledge-graph.js?v=3-nebula" defer></script>
   </head>
   <body data-page="knowledge">
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -42,22 +40,59 @@
     <main id="main" class="knowledge-main">
       <section class="knowledge-stage" id="knowledge-stage" aria-labelledby="knowledge-title">
         <header class="knowledge-heading">
-          <p>Knowledge</p>
-          <h1 id="knowledge-title">知识星图</h1>
+          <div>
+            <p>Knowledge</p>
+            <h1 id="knowledge-title">知识星图</h1>
+          </div>
+          <p class="knowledge-freshness">
+            Learning snapshot
+            <time datetime="2026-08-27">2026.08.27</time>
+          </p>
         </header>
 
-        <div class="knowledge-graph-shell" aria-label="个人知识星图">
-          <div class="knowledge-plane" id="knowledge-plane">
-            <div class="knowledge-galaxies" id="knowledge-galaxies" aria-hidden="true"></div>
-            <svg class="knowledge-edges" id="knowledge-edges" aria-hidden="true"></svg>
-            <div class="knowledge-nodes" id="knowledge-nodes"></div>
+        <div class="knowledge-graph-shell" aria-label="个人知识星图，仅使用 Learning 仓库数据">
+          <canvas id="universe" aria-label="可交互的 Tyr1onX 知识星图"></canvas>
+          <div id="fatal" hidden></div>
+
+          <div class="tooltip" id="tooltip" aria-hidden="true">
+            <strong id="tooltip-title"></strong>
+            <small id="tooltip-subtitle"></small>
           </div>
+
+          <aside class="detail-card" id="detail-card" aria-live="polite">
+            <button class="close" id="detail-close" type="button" aria-label="关闭">×</button>
+            <div class="galaxy" id="detail-galaxy"></div>
+            <h2 id="detail-title"></h2>
+            <div class="subtitle" id="detail-subtitle"></div>
+            <div class="project-row" id="detail-project-row" hidden><span id="detail-project"></span></div>
+            <p class="summary" id="detail-summary"></p>
+            <div class="related-block" id="detail-related-block">
+              <div class="section-label">相关</div>
+              <div class="related-list" id="detail-related"></div>
+            </div>
+            <details id="detail-disclosure">
+              <summary id="detail-evidence-label">查看依据</summary>
+              <div class="evidence-body">
+                <div id="detail-evidence"></div>
+                <div class="sources" id="detail-sources"></div>
+                <p class="footnote" id="detail-evidence-footnote"></p>
+              </div>
+            </details>
+          </aside>
+
+          <p class="knowledge-hint" aria-hidden="true">滚轮缩放 · 拖拽探索 · 点击星体查看 · 点击中心归位</p>
         </div>
 
-        <p class="knowledge-caption">
-          <a href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer">Learning</a> · 2026.08
+        <p class="knowledge-caption" id="knowledge-source">
+          数据基线只来自
+          <a href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer">Learning</a>
+          · 状态采用 learning / understood / review-needed / not-started，不使用数值熟练度
         </p>
       </section>
     </main>
+
+    <script src="./knowledge-data.js?v=4-learning-20260827"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+    <script type="module" src="./knowledge-graph.js?v=4-constellation"></script>
   </body>
 </html>
