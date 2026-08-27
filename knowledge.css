@@ -46,12 +46,24 @@ body[data-page="knowledge"] .site-header {
 #universe {
   position: absolute;
   inset: 0;
+  z-index: 0;
   display: block;
   width: 100%;
   height: 100%;
   background: #01030a;
   cursor: grab;
   touch-action: none;
+}
+
+.knowledge-graph-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
 }
 
 #fatal {
@@ -382,6 +394,171 @@ body[data-page="knowledge"] .site-header {
   outline: none;
 }
 
+/*
+ * Daylight observatory integration.
+ * The Renderer continues to draw the same dark universe; this is only a
+ * low-energy site-level optical tint so the light header meets it naturally.
+ */
+html[data-theme="light"] body[data-page="knowledge"] {
+  background: #09131f;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .site-header {
+  border-bottom-color: rgba(76, 98, 119, 0.08);
+  background: rgba(232, 237, 243, 0.93);
+  box-shadow: 0 10px 30px rgba(42, 62, 82, 0.055);
+  backdrop-filter: blur(18px) saturate(125%);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-main,
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell {
+  background: #07111c;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell::before {
+  background:
+    radial-gradient(78% 44% at 50% -9%, rgba(108, 145, 179, 0.105), transparent 68%),
+    linear-gradient(
+      180deg,
+      rgba(111, 143, 172, 0.13) 0,
+      rgba(66, 94, 121, 0.068) 76px,
+      rgba(24, 43, 62, 0.028) 176px,
+      rgba(7, 17, 28, 0) 292px
+    );
+  opacity: 1;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-overlay {
+  color: rgba(215, 231, 244, 0.58);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-overlay > p:first-child {
+  color: rgba(174, 205, 231, 0.5);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-overlay h1 {
+  color: rgba(231, 240, 248, 0.68);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-freshness {
+  color: rgba(145, 171, 195, 0.44);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-hint,
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-source-overlay {
+  color: rgba(155, 181, 204, 0.38);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-source-overlay a {
+  color: rgba(187, 209, 228, 0.56);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-source-overlay a:hover,
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-source-overlay a:focus-visible {
+  color: rgba(227, 238, 247, 0.82);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .tooltip {
+  border-color: rgba(154, 186, 214, 0.14);
+  background: rgba(12, 25, 38, 0.88);
+  box-shadow: 0 16px 48px rgba(0, 8, 17, 0.34);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .tooltip strong {
+  color: #dce9f4;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .tooltip small {
+  color: #88a1b6;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .detail-card {
+  border-color: rgba(154, 185, 212, 0.13);
+  background: linear-gradient(180deg, rgba(18, 34, 50, 0.91), rgba(7, 18, 30, 0.95));
+  box-shadow: 0 26px 86px rgba(0, 7, 15, 0.42), inset 0 1px 0 rgba(214, 231, 246, 0.025);
+  color: #deebf5;
+  scrollbar-color: rgba(146, 177, 204, 0.2) transparent;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .close {
+  color: #7891a8;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .close:hover,
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .close:focus-visible {
+  background: rgba(157, 186, 211, 0.07);
+  color: #e3edf5;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .galaxy {
+  color: #819ab1;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .detail-card h2 {
+  color: #e8f1f8;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .subtitle {
+  color: #9db0c1;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .project-row {
+  color: #829aaf;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .project-row::before {
+  color: #6e879d;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .summary {
+  color: #bdcbd7;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .related-block,
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell details {
+  border-color: rgba(173, 200, 222, 0.08);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .section-label,
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell details summary {
+  color: #7890a6;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell details summary::after {
+  color: #5d7489;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .related-chip {
+  border-color: rgba(172, 198, 220, 0.09);
+  background: rgba(151, 184, 211, 0.025);
+  color: #91a7ba;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .related-chip:hover,
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .related-chip:focus-visible {
+  border-color: rgba(178, 204, 225, 0.16);
+  background: rgba(157, 189, 216, 0.075);
+  color: #d9e6f0;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .evidence-item {
+  border-color: rgba(175, 202, 224, 0.06);
+  background: rgba(155, 188, 215, 0.022);
+  color: #94a9bb;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .sources {
+  border-color: rgba(175, 202, 224, 0.06);
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .source-item {
+  color: #7890a6;
+}
+
+html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell .footnote {
+  color: #657c91;
+}
+
 @media (max-width: 720px) {
   .knowledge-overlay {
     top: 16px;
@@ -431,6 +608,18 @@ body[data-page="knowledge"] .site-header {
   .knowledge-source-overlay a::after {
     content: " · 08.27";
   }
+
+  html[data-theme="light"] body[data-page="knowledge"] .knowledge-graph-shell::before {
+    background:
+      radial-gradient(108% 40% at 50% -8%, rgba(108, 145, 179, 0.105), transparent 70%),
+      linear-gradient(
+        180deg,
+        rgba(111, 143, 172, 0.125) 0,
+        rgba(66, 94, 121, 0.06) 68px,
+        rgba(24, 43, 62, 0.024) 154px,
+        rgba(7, 17, 28, 0) 250px
+      );
+  }
 }
 
 @media (max-width: 460px) {
@@ -440,6 +629,7 @@ body[data-page="knowledge"] .site-header {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .knowledge-graph-shell::before,
   .knowledge-graph-shell .detail-card,
   .knowledge-graph-shell .tooltip {
     transition: none;
