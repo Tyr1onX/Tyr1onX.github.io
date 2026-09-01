@@ -1687,3 +1687,144 @@ enable_ql_pan_download: 0
 - 直接在新远程线程中调用还存在任务线程/sequence 上下文约束，测试未改变下载状态并导致辅助 Unite 进程重启。
 
 因此后续不再使用跨线程直接注入 BNU export 作为下载控制手段。
+
+
+---
+
+## 二十一、8.7.9 Electron 控制链与 kernel 3.0.20.234 差分
+
+### 21.1 暂停/恢复控制链已经从源码层闭环
+
+当前 Electron `core.asar` 中可以直接看到 BrowserEngine FFI 声明与下载器封装。下载方向使用固定布尔值 `true`，普通个人网盘 `cid/scope` 默认使用字符串 `"0"`，任务 ID 在上层经过 `JSON.stringify()` 后传入。
+
+```text
+browser_engine_enqueue_task(string, bool, string)
+browser_engine_pause_task(string, bool, string)
+browser_engine_enqueue_all_task(string, bool)
+browser_engine_pause_all_task(string, bool)
+
+普通个人下载：
+  enqueueTask(ids, "0") -> browser_engine_enqueue_task("0", true, JSON.stringify(ids))
+  pauseTask(ids, "0")   -> browser_engine_pause_task("0", true, JSON.stringify(ids))
+```
+
+主进程 IPC 注册器会把导出的类名首字母小写后注册到 `ipcMain`，因此实际命令名为：
+
+```text
+enqueueDownloadTask
+pauseDownloadTask
+enqueueAllDownloadTask
+pauseAllDownloadTask
+```
+
+这说明桌面按钮、Electron IPC 与 BrowserEngine ABI 已形成完整控制链，不再需要猜测 task id 的编码格式。单任务参数本质上是类似 `[1788231912]` 的 JSON 数组字符串。
+
+### 21.2 `1000001` 的语义得到源码级纠正
+
+当前客户端常量明确包含：
+
+```text
+TASK_RUNNING = 0
+TASK_WAITING = 1
+TASK_FAILED  = 2
+TASK_PAUSED  = 3
+TASK_CREATE  = 4
+
+CLIENT_ERR_LOCAL_USER_PAUSE = 1000001
+```
+
+因此此前 `status=3 / error_code=1000001` 的大文件不是网络失败，而是“本地用户暂停”。这使这些已有进度任务可以作为后续暂停→恢复 A/B 的稳定样本。
+
+例如当前数据库仍有：
+
+```text
+task_id=1788231912
+status=3
+error_code=1000001
+complete_size=237142016
+file_size=342265426
+```
+
+### 21.3 当前运行内核已自动更新到 3.0.20.234
+
+2026-09-01 21 时段检查时，真正加载下载内核的 `baidunetdiskhost` 为 PID 25940；其加载的根目录 `kernel.dll` 已是：
+
+```text
+version: 3.0.20.234
+size: 55073024 bytes
+write time: 2026-09-01 20:26:55
+SHA-256: 40EB35FCA9316FA2E24AACF18177747295D48B01F852AEA9372E2EDE13E1C5D6
+```
+
+同时本机仍保存两个旧版本，可直接做版本级差分：
+
+```text
+kernel_o.dll   = 3.0.20.223
+kernel.dll.o   = 3.0.20.233
+kernel.dll     = 3.0.20.234
+```
+
+### 21.4 3.0.20.234 仍同时包含两套 limiter 与两套时钟
+
+`.234` 的 import 和真实反汇编调用都仍然包含：
+
+```text
+GetSystemTimeAsFileTime
+QueryPerformanceCounter
+QueryPerformanceFrequency
+GetTickCount
+timeGetTime
+```
+
+Limiter/telemetry 字符串与 RTTI 也仍同时存在：
+
+```text
+TokenBucket
+AccumulateTokenBucket
+qingluan::common::TokenBucket
+qingluan::common::AccumulateTokenBucket
+download_common
+download_common_qingluan
+enable_ql_pan_download
+total_limit_speed
+total_limit_enable
+no qingluan
+use_global_bandwidth_manager
+```
+
+QPC 包装器在 `.234` 中仍呈现标准结构：
+
+```text
+QueryPerformanceFrequency
+    -> QueryPerformanceCounter
+    -> counter / frequency 比例换算
+```
+
+FILETIME 包装路径同样仍然存在：
+
+```text
+GetSystemTimeAsFileTime
+    -> 0xfe624e212ac18000 Windows epoch 常量换算
+    -> duration / baseline conversion
+```
+
+### 21.5 `.233 -> .234` 的 FILETIME 实现是结构保持的
+
+对 `kernel.dll.o` (3.0.20.233) 与 `kernel.dll` (3.0.20.234) 直接反汇编比较后，FILETIME 换算核心块保持同样的指令序列。典型块在两个版本中都具有：
+
+```text
+call GetSystemTimeAsFileTime
+movabs 0xfe624e212ac18000
+add FILETIME
+mul 0xcccccccccccccccd
+...
+时间单位换算
+```
+
+此前已经绑定到 legacy 时间运算的相邻块在 `.234` 中主要表现为地址整体平移，关键算术结构没有改写。
+
+因此目前可以把版本边界推进为：
+
+> 3.0.20.223、3.0.20.233、3.0.20.234 都保留 legacy FILETIME-driven 时间基础；`.234` 同时也保留 qingluan 的 QPC-derived 时间基础。
+
+这仍不等价于“修改系统时间一定可以提高最终下载速度”。最终吞吐还可能同时受 Total / CDN / task / peer token gate、服务端策略和网络能力约束。下一步需要在 `.234` 的真实下载会话中做暂停→恢复生命周期与 telemetry A/B，并只做低风险的时间敏感性验证。
