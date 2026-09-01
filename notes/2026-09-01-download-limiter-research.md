@@ -2833,3 +2833,204 @@ basic_speed 是否只是 P2P 基线/上报参数
 ```
 
 在闭合执行消费者之前，不把 `122880` 本身称为已证实的最终限速 gate。
+
+
+## 28. P2P switch fields and TokenBucket-driven peer-selection threshold
+
+### 28.1 Exact four-field P2P switch layout
+
+The `.234` binary contains a grouped status string:
+
+```text
+get p2p switch|spup_peer=%1%|p2pu_percent=%2%|spup_percent=%3%|basic_speed=%4%
+```
+
+Two async parser callbacks (`0x18036b220-0x18036be62` and `0x18036c330-0x18036cfb7`) independently write the same four consecutive 32-bit fields:
+
+```text
+object + 0x438 = spup_peer
+object + 0x43C = p2pu_percent
+object + 0x440 = spup_percent
+object + 0x444 = basic_speed
+```
+
+The mapping is direct: each value is parsed from its named text field, stored at the corresponding offset, then emitted in the same order by the grouped log.
+
+A small accessor at `0x1803285d0` returns the beginning of this block:
+
+```asm
+lea rax, [rcx+0x438]
+ret
+```
+
+Its known direct caller (`0x1800fcd10-0x1800fd498`) reads all four dwords and packages them into a query/status result. This proves the block is a coherent P2P policy/status structure, but this particular caller is not a byte-gating execution path.
+
+### 28.2 The threshold logs form a P2S/CDN peer-control state machine
+
+The binary contains a consistent family of runtime messages:
+
+```text
+task_download_rate=%1%|download_threshold_speed=%2%
+slow than threshold|using_p2s_peer_count=...
+close p2s peer|task_download_rate=...|download_threshold_speed=...
+connect p2s peer|task_download_rate=...|download_threshold_speed=...
+slow than threshold|connect_ct=...|download_threshold_speed=...|task_download_rate=...
+more than threshold|need_speed=...|download_threshold_speed=...|task_download_rate=...|per_p2s_speed=...
+don't close cdn|global cdn speed=...|global max speed=...|global non cdn rate=...
+```
+
+Important containing functions include:
+
+```text
+0x1801cd7d0-0x1801cefd7  choose_http_server_peer_for_one_task
+0x18107af40-0x18107d5bb  connect / close p2s peer paths
+0x181082d90-0x1810896ed  threshold decision logic
+```
+
+This identifies the subsystem as HTTP/CDN/P2S peer selection and connection-count control.
+
+### 28.3 `download_threshold_speed` comes from a real TokenBucket object
+
+In `0x1801cd7d0`, the code obtains a bucket-like object and calls `0x1800e8280`:
+
+```asm
+mov rcx, <bucket>
+call 0x1800e8280
+```
+
+The result is stored as the second log argument in:
+
+```text
+task_download_rate=%1%|download_threshold_speed=%2%
+```
+
+Thus the mapping is positive:
+
+```text
+first argument  = task_download_rate
+second argument = download_threshold_speed
+```
+
+`0x1800e8280` is simply:
+
+```asm
+mov eax, [rcx+0x08]
+ret
+```
+
+RTTI around this object family identifies:
+
+```text
+FluxBucket
+TokenBucket
+AccumulateTokenBucket
+```
+
+Relevant vtables in this `.234` image are:
+
+```text
+0x18133e198 -> FluxBucket
+0x18133e1c8 -> TokenBucket
+0x18133e1f8 -> AccumulateTokenBucket
+```
+
+### 28.4 TokenBucket field semantics
+
+The TokenBucket constructor and update methods recover the following layout:
+
+```text
++0x08 = bucket capacity
++0x10 = current token count
++0x18 = last timestamp
++0x20 = refill rate
++0x24 = time divisor (1000)
+```
+
+The refill method is structurally:
+
+```text
+elapsed = now - last_time
+tokens += elapsed * rate / 1000
+tokens = min(tokens, capacity)
+```
+
+The setter at `0x1800e82e0` performs:
+
+```text
+rate     = requested
+capacity = max(requested, 16 KiB)
+```
+
+The AccumulateTokenBucket setter at `0x1800e83d0` applies the same rate/capacity relationship for nonzero requested rates, with an additional accumulation/burst field used by its refill path.
+
+Therefore the value logged as `download_threshold_speed` is technically the bucket capacity (`+0x08`). For requested rates at or above 16 KiB/s, its numeric value equals the configured refill rate.
+
+### 28.5 A 0.8 / 1.3 hysteresis band controls peer adjustment
+
+`0x1801cd7d0` contains two double constants:
+
+```text
+0x18134ed60 = 0.8
+0x18134ed88 = 1.3
+```
+
+The function compares the current task rate against the bucket-derived threshold using these factors. The high-level behavior is:
+
+```text
+rate < 0.8 * threshold
+    -> low-side adjustment path
+
+0.8 * threshold <= rate <= 1.3 * threshold
+    -> hold / avoid unnecessary peer churn
+
+rate > 1.3 * threshold
+    -> high-side adjustment path
+```
+
+This is a classic hysteresis pattern for connection/peer control rather than a single hard equality test.
+
+### 28.6 Direct link into P2S decision logic
+
+The larger P2S function `0x18107af40` obtains the relevant bucket through:
+
+```text
+task/network state
+  -> 0x1801b7fa0
+  -> bucket pointer
+  -> 0x1800e8280
+  -> bucket capacity / download_threshold_speed
+  -> 0x181082d90
+  -> connect/close P2S peer decision
+```
+
+Inside `0x181082d90`, several peer-category counts are collected and summed, and the bucket-derived threshold is compared with current aggregate rates/counts before requesting or dropping peers.
+
+### 28.7 Current conclusion and remaining gap
+
+The evidence now supports a more precise model:
+
+```text
+TokenBucket / AccumulateTokenBucket state
+        -> download_threshold_speed
+        -> 0.8 / 1.3 hysteresis
+        -> HTTP/CDN/P2S peer-count selection
+```
+
+This is stronger than treating `download_threshold_speed` as a mere log variable. It is backed by a real bucket object and participates in execution decisions.
+
+However, it is still not evidence that the named P2P config field:
+
+```text
+basic_speed = 122880 B/s
+```
+
+directly sets this bucket or directly gates ordinary PAN download bytes. The missing data-flow edge is still:
+
+```text
+spup_peer / p2pu_percent / spup_percent / basic_speed
+        -> ?
+        -> bucket rate setter
+        -> download_threshold_speed
+```
+
+The next priority is therefore to recover the owner of the bucket returned by `0x1801b7fa0`, find every path that changes its refill rate/capacity, and test whether any of those inputs originate from the four-field P2P switch block.
