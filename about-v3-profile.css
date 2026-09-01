@@ -1,0 +1,48 @@
+.about-v3-profile {
+  grid-template-columns: 104px minmax(0, 1fr);
+}
+
+.about-v3-name-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.about-v3-profile .about-v3-primary-signature {
+  width: 176px;
+  margin: 0 0 3px;
+  color: var(--text);
+  opacity: 0.94;
+  align-self: auto;
+  justify-self: start;
+}
+
+.about-v3-profile .about-v3-primary-signature .signature-mark {
+  width: 176px;
+}
+
+@media (max-width: 650px) {
+  .about-v3-profile .about-v3-primary-signature {
+    width: 150px;
+  }
+
+  .about-v3-profile .about-v3-primary-signature .signature-mark {
+    width: 150px;
+  }
+}
+
+@media (max-width: 380px) {
+  .about-v3-profile .about-v3-primary-signature {
+    width: 142px;
+  }
+
+  .about-v3-profile .about-v3-primary-signature .signature-mark {
+    width: 142px;
+  }
+}
