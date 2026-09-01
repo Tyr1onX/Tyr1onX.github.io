@@ -894,3 +894,165 @@ Task / P2S / Peer 等更细粒度 token gate
 因此不能把 qingluan 描述成“只有一个 Total TokenBucket”。它本身就是分层 QoS 系统。
 
 目前这个 User / Server Total Gate 的正式 C++ 类名尚未确认。二进制里已经能看到 `server_total_sl`、`USER_SPEED_LIMIT`、`TOTAL_DOWNLOAD_SPEED_LIMIT`、`TRY_SPEEDUP_FLAG` 等状态名，但在没有 RTTI 或源码路径直接证据前，不应为了图完整而给它杜撰类名。
+
+
+---
+
+## 十三、把 122880 一直追到活跃 Total Bucket
+
+继续追旧下载栈后，`total_limit_speed` 到真正 `AccumulateTokenBucket` 的最后一段数据流已经闭环。
+
+CMS 配置处理器会读取：
+
+```text
+total_limit_speed
+total_limit_enable
+```
+
+当 Total 限速策略生效时，调用关系可以还原为：
+
+```text
+CMS total_limit_speed
+        ↓
+set_sl(cdn = -1, total = total_limit_speed, source = 1)
+        ↓
+source 1 = enable_cms_total_sl
+        ↓
+更新 current_total_source
+        ↓
+Total live bucket
+        ↓
+AccumulateTokenBucket::set_rate(total_limit_speed)
+```
+
+旧 limiter 对象内部的关键布局也与运行态扫描完全对齐：
+
+```text
+live CDN bucket       + source
+shadow CDN bucket     + source
+live Total bucket     + source
+shadow Total bucket   + source
+...
+```
+
+其中 CDN live 与 Total live 相距两个固定 bucket slot。静态代码里 Total 更新时选择的正是这个第二个 live 位置；运行进程中同一个对象的状态是：
+
+```text
+CDN live   rate = 122880 B/s, source = locatedownload
+Total live rate = 122880 B/s, source = CMS total
+```
+
+因此现在已经不是“CMS 值和实测速度恰好一样”，而是：
+
+> CMS 的 122880 B/s 被真实传入旧带宽管理器，并写进当前 Total `AccumulateTokenBucket` 的 rate 字段。
+
+### total_limit_enable
+
+`total_limit_enable` 非零时，会直接应用 CMS Total cap。
+
+为零时不会直接启用这条 Total cap，而会结合已有 locatedownload/CDN 状态做兼容兜底。因此它不是一个简单的 UI 布尔开关，而是 CMS Total 策略是否直接成为执行限制的门控条件。
+
+---
+
+## 十四、会员变化为什么会重算限速
+
+`set_membership_type` 后面确实存在 `reset_speed_limitor` 路径。
+
+继续拆 helper 后发现，这个 reset 会逐个恢复旧 limiter 的整套 bucket/source 状态，而不是只修改一个会员字段。
+
+大致结构：
+
+```text
+membership change
+      ↓
+reset limiter
+      ↓
+所有 source → default
+      ↓
+恢复 bucket 默认 rate
+      ↓
+CMS / locatedownload / P2P / application
+重新按优先级写入
+```
+
+因此会员状态更准确的职责是：
+
+> 改变策略上下文，并触发下载带宽策略重新计算。
+
+而不是客户端里简单存在一行：
+
+```cpp
+speed = vip ? x : y;
+```
+
+用户手动总限速也已经接到同一个仲裁器：
+
+```text
+set_user_speed_limit
+      ↓
+set_sl(cdn=-1, total=user_limit, source=0)
+```
+
+旧栈 source 的优先级因而可以写成：
+
+```text
+0 user_ctl
+1 enable_cms_total_sl
+2 locatedownload
+3 p2psdk
+4 application
+5 default
+```
+
+同一限速维度上，较高优先级策略不会被后来的低优先级 source 覆盖。
+
+---
+
+## 十五、旧栈的 8 个桶其实是 4 组 live / shadow
+
+继续研究 `try speedup` 后，8 个 `AccumulateTokenBucket` 的结构终于变得清楚。
+
+它们不是八层串行 limiter，而是：
+
+```text
+Live 1   ↔ Shadow 1
+Live 2   ↔ Shadow 2
+Live 3   ↔ Shadow 3
+Live 4   ↔ Shadow 4
+```
+
+进入 speedup 时：
+
+```text
+复制 live rate/source 到 shadow
+        ↓
+保存当前完整 limiter 状态
+        ↓
+把 4 个 live rate 临时放宽
+```
+
+退出 speedup 时则反向把 shadow 整体恢复到 live，恢复内容不只包含 rate，还包含 bucket 的 token、时间状态和 source。
+
+日志明确存在：
+
+```text
+try speedup start
+try speedup end
+cdn_sl
+total_sl
+cdn_src
+total_src
+```
+
+另外一套 speedup 日志还记录：
+
+```text
+total_sl
+user_sl
+cur_server_sl
+pre_server_sl
+```
+
+说明下载器内部的“加速”不是简单删除一个固定 120 KiB/s 常量，而是暂时改变多层限速现场，再在结束时恢复。
+
+这个设计与后来 qingluan `SpeedLimitor` 的 live/shadow 思路非常相似，说明两代实现虽然类结构不同，但设计思想存在明显连续性。
