@@ -16,10 +16,40 @@
     }
   }
 
+  function readSidebarState() {
+    try {
+      const saved = localStorage.getItem('tyr1onx-sidebar');
+      if (saved === 'expanded' || saved === 'collapsed') return saved;
+    } catch {}
+    return 'collapsed';
+  }
+
+  function applySidebar(state, persist = false) {
+    const next = state === 'expanded' ? 'expanded' : 'collapsed';
+    root.dataset.sidebar = next;
+    const expanded = next === 'expanded';
+    document.querySelectorAll('[data-sidebar-toggle]').forEach((button) => {
+      button.setAttribute('aria-expanded', String(expanded));
+      button.setAttribute('aria-label', expanded ? '收起侧边栏' : '展开侧边栏');
+      button.setAttribute('title', expanded ? '收起侧边栏' : '展开侧边栏');
+    });
+    document.querySelectorAll('[data-sidebar-toggle-icon]').forEach((icon) => {
+      icon.textContent = expanded ? '‹' : '›';
+    });
+    if (persist) {
+      try { localStorage.setItem('tyr1onx-sidebar', next); } catch {}
+    }
+  }
+
   document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
     button.addEventListener('click', () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', true));
   });
+  document.querySelectorAll('[data-sidebar-toggle]').forEach((button) => {
+    button.addEventListener('click', () => applySidebar(root.dataset.sidebar === 'expanded' ? 'collapsed' : 'expanded', true));
+  });
+
   applyTheme(root.dataset.theme);
+  applySidebar(readSidebarState());
 
   document.querySelectorAll('[data-current-year]').forEach((node) => {
     node.textContent = String(new Date().getFullYear());
