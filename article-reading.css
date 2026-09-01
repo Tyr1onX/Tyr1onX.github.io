@@ -121,6 +121,24 @@ body[data-page="note"] .article-body-technical code {
   font-size: 0.86em;
 }
 
+body[data-page="note"] .article-body-technical pre {
+  margin: 1.65em 0 1.9em;
+  padding: 1em 1.1em;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 78%, var(--bg));
+  line-height: 1.65;
+}
+
+body[data-page="note"] .article-body-technical pre code {
+  display: block;
+  min-width: max-content;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.84em;
+  white-space: pre;
+}
+
 /* Essays follow Chinese book-style paragraph rhythm instead of Markdown rhythm. */
 body[data-page="note"] .article-body-essay {
   width: min(100%, 680px);

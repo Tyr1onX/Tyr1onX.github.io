@@ -91,6 +91,8 @@ function renderMarkdown(markdown) {
   let paragraph = [];
   let list = [];
   let quote = [];
+  let codeBlock = [];
+  let inCodeBlock = false;
 
   const flushParagraph = () => {
     if (!paragraph.length) return;
@@ -110,6 +112,12 @@ function renderMarkdown(markdown) {
     quote = [];
   };
 
+  const flushCodeBlock = () => {
+    if (!codeBlock.length) return;
+    output.push(`<pre><code>${escapeHtml(codeBlock.join("\n"))}</code></pre>`);
+    codeBlock = [];
+  };
+
   const flushAll = () => {
     flushParagraph();
     flushList();
@@ -118,6 +126,22 @@ function renderMarkdown(markdown) {
 
   lines.forEach((rawLine, index) => {
     const line = rawLine.trim();
+
+    if (line.startsWith("```")) {
+      if (inCodeBlock) {
+        flushCodeBlock();
+        inCodeBlock = false;
+      } else {
+        flushAll();
+        inCodeBlock = true;
+      }
+      return;
+    }
+
+    if (inCodeBlock) {
+      codeBlock.push(rawLine);
+      return;
+    }
     if (index === 0 && line.startsWith("# ")) return;
 
     if (!line) {
