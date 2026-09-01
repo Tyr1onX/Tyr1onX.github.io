@@ -1379,3 +1379,181 @@ FILETIME-derived TokenBucket refill
 > 新启动的 3.0.20.233 普通 PAN 下载一定会选择 legacy 而不是 qingluan。
 
 要回答后一个问题，需要让 host 以 `.233` 重新启动后，再进行同样的只读 telemetry / throughput / live bucket 观察。
+
+---
+
+## 二十一、3.0.20.233 新会话与 Adapter 任务映射
+
+晚间继续验证时，先完成了此前缺失的版本切换实验。
+
+原 `baidunetdiskhost` 会话启动于约 10:26，而当天早些时候磁盘上的 `kernel.dll` 已在 10:32 后更新，因此白天的动态观测严格属于旧的 `.223` 运行 image。
+
+本轮关闭旧会话并重新启动百度网盘后，新 `baidunetdiskhost` 于约 18:55 启动，进程模块明确加载：
+
+```text
+kernel.dll 3.0.20.233
+```
+
+与此同时还发现一个需要额外绑定实验边界的细节：更新器再次写入了同版本号的 `kernel.dll`。新的磁盘文件为：
+
+```text
+version = 3.0.20.233
+size    = 55,056,128 bytes
+SHA-256 = 527AA8734AC7E3A825EDD6869981BDF9BC44A286F6AC27198AF695B44ACE1B44
+```
+
+而本轮开始时磁盘上同样标记为 `3.0.20.233` 的文件大小约 44 MB，hash 也不同。
+
+因此后续逆向记录不能只用 `3.0.20.233` 作为二进制身份，至少还要同时记录：
+
+```text
+version + file size + hash
+```
+
+### 新会话已经成立，但还没有动态栈判别样本
+
+新 host 已经建立多个网络连接，但当时没有实际下载任务运行。
+
+只扫描新 host 的私有提交内存后：
+
+```text
+download_common           : 0
+download_common_qingluan  : 0
+no qingluan               : 0
+enable_ql_pan_download    : 0
+```
+
+因此这里不能把 0 解释为“没有 legacy”或“没有 qingluan”，只能说明当前没有产生可用于判别下载栈的格式化 telemetry。
+
+真正的 `.233` 动态栈判别仍需要在新会话中启动一个普通 PAN 下载后重复采样。
+
+### `enable_ql_pan_download` 的 wrapper 控制流进一步收窄
+
+对当前 hash 的 `.233` 重新做 xref 和函数边界恢复后，`identity_workspace_task`、`enable_ql_pan_download`、`no qingluan` 的调用点集中在同一组任务 wrapper 中。
+
+其中 `set_task_param` 一类 wrapper 的结构可以抽象为：
+
+```text
+Adapter map contains(task_handle)
+        ↓ yes
+identity_workspace_task(adapter task field)
+        ↓ yes
+直接进入 Adapter set_task_param
+
+否则
+        ↓
+查询另一张兼容任务表
+        ↓ exists
+读取 network/enable_ql_pan_download（默认 1）
+        ↓
+把配置值转发到内部配置/网络对象
+        ↓
+记录 "no qingluan|task_handle=..."
+        ↓
+继续 Adapter set_task_param
+```
+
+这里最重要的修正是：
+
+> `enable_ql_pan_download` 的返回值仍然没有直接参与紧邻的条件跳转。
+
+代码先根据任务句柄映射和 workspace 身份决定路径；配置值只在 fallback 分支中被读取并继续转发。
+
+所以仍然不能把双栈 selector 简化为：
+
+```text
+enable_ql_pan_download == 1 -> qingluan
+enable_ql_pan_download == 0 -> legacy
+```
+
+### 第一张任务表已经可以定名为 Adapter task map
+
+此前 `0x18010da80 / 0x18010daf0` 只能描述成“任务句柄表 A”。本轮已经找到直接日志证据，可以进一步定名。
+
+同一对象的 `[object + 8]` 红黑树在 `erase_task` 路径中会打印：
+
+```text
+Adapter task map not have the handle.handle=%1%
+```
+
+而 `0x18010da80` 查的正是同一棵 `[rcx + 8]` 红黑树。
+
+因此可以确认：
+
+```text
+0x18010da80
+    = Adapter task map contains(task_handle)
+```
+
+`0x18010daf0` 则不是简单的另一个 contains。
+
+它找到 Adapter 节点后，会取节点对象中的一个字段（当前偏移约 `+0x120`），再直接进入：
+
+```text
+identity_workspace_task(...)
+```
+
+因此可以把它描述为：
+
+```text
+Adapter task exists
+    +
+该 Adapter task 是否属于 workspace/history 特殊身份
+```
+
+这再次证明：
+
+> workspace/history 特殊任务分流与 qingluan/legacy 双栈选择不是同一个 predicate，后续架构图必须分开画。
+
+### 第二张兼容任务表暂不强行命名
+
+fallback 中还有另一张独立任务句柄树。
+
+目前已经确认它：
+
+- 与 Adapter task map 不是同一对象；
+- 在若干 wrapper 中作为 fallback 资格判断；
+- 存在时才会进入 `enable_ql_pan_download` 配置转发和 `no qingluan` 日志路径。
+
+但当前还没有足够证据证明它到底代表：
+
+```text
+qingluan task registry
+legacy/private task registry
+或其他兼容旁路集合
+```
+
+因此暂时保持“第二张兼容任务表”的中性命名，不因为日志文字就提前把它等同于某个后端。
+
+### 当前更新后的边界
+
+到这里，新的结构可以写成：
+
+```text
+public task wrapper
+        ↓
+Adapter task map contains(handle)?
+        ├─ yes + workspace/history identity
+        │        ↓
+        │   Adapter special path
+        │
+        └─ otherwise
+                 ↓
+          compatibility task table
+                 ↓
+        runtime qingluan-related config forwarding
+                 ↓
+             "no qingluan" fallback log
+                 ↓
+             Adapter operation
+```
+
+下一步最有价值的实验已经非常明确：
+
+1. 在当前新启动的 `.233` host 中开始一个普通 PAN 下载；
+2. 再次只读扫描私有内存 telemetry；
+3. 对比 `download_common` 与 `download_common_qingluan`；
+4. 同时记录长期吞吐与 live policy / execution bucket；
+5. 最终把 `.233` 的真实运行后端与其时钟来源绑定起来。
+
+这一步完成后，才能回答“同一个 8.4.0 客户端的新 `.233` 会话是否仍默认走 legacy”这个目前最后缺失的动态问题。
