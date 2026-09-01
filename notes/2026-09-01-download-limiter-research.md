@@ -1155,3 +1155,171 @@ network request allowed
 此前“当前 120 KiB/s 主要对应一个 CMS Total bucket”的结论需要补充为：
 
 > 当前普通下载策略中，CMS Total 与 locatedownload CDN 都曾明确给出 122880 B/s；CMS Total policy 本身进入 token 获取路径，而 locatedownload 还通过 CDN dispatcher / runtime execution bucket 形成另一条执行链。客户端最终速度来自多层 token gate 的共同结果，而不是单一 bucket。
+
+
+---
+
+## 十八、当前两个限速栈使用不同底层时钟
+
+继续向下追真正参与请求授权的 legacy `AccumulateTokenBucket` 后，已经确认它与 qingluan 新栈并不使用同一个底层时钟 API。
+
+### legacy policy bucket
+
+legacy bucket 的 refill 函数调用一个时间包装器。继续追到底层后，该包装器最终调用：
+
+```text
+GetSystemTimeAsFileTime
+```
+
+随后进行 epoch / duration 换算、与一次性初始化的基准时间做差，并最终得到供 bucket 使用的毫秒级时间量。
+
+bucket 的核心仍然是：
+
+```text
+elapsed_ms × rate / 1000
+        ↓
+refill token
+        ↓
+capacity clamp
+```
+
+其中 CMS Total policy bucket 就属于这一栈，而且前一节已经确认它会实际进入请求 token 获取路径。
+
+### qingluan bucket
+
+此前对 qingluan `TokenBucket / AccumulateTokenBucket` 的还原则确认其时间来源为：
+
+```text
+QueryPerformanceCounter
+        ↓
+QueryPerformanceFrequency
+        ↓
+高精度 duration
+        ↓
+毫秒换算
+        ↓
+elapsed × rate / 1000
+```
+
+因此当前客户端至少同时存在：
+
+```text
+legacy policy limiter   → FILETIME-derived clock
+qingluan limiter        → QPC-derived clock
+```
+
+### 为什么这能解释历史时间加速工具的版本差异
+
+如果某个时间虚拟化工具只改变其中一种时钟的推进速度，那么它最多只会改变依赖该时钟的 bucket refill；其他 Total / CDN / task / peer gate 仍然可以成为瓶颈。
+
+因此不同版本或不同下载路径可能出现：
+
+```text
+旧路径主要受被虚拟化的 clock 驱动
+        → throughput 明显变化
+
+新路径增加另一套 clock / 另一组 token gate
+        → 单一 clock 不再决定最终速度
+```
+
+这比“客户端有没有一个固定 Sleep”更符合目前恢复出的实际架构。
+
+另外，legacy 时钟包装器中存在大量有符号/溢出安全运算，但目前没有看到再使用 QPC 等独立单调时钟去校正 FILETIME 推进速率的逻辑。因此从机制上说，连续改变 FILETIME 的推进速度确实可以影响这一 legacy bucket 对 `elapsed` 的判断；但最终吞吐仍受其他 gate、服务端策略和网络能力共同限制。
+
+
+---
+
+## 十九、运行中的 kernel 与磁盘最新 kernel 并不是同一小版本
+
+本轮进一步核对运行进程、文件时间与代码字节后，发现一个必须修正实验边界的重要事实。
+
+当前 `baidunetdiskhost` 启动时间早于当天 kernel 文件更新：
+
+```text
+running host start     ≈ 10:26
+old kernel revision    = 3.0.20.223
+new kernel revision    = 3.0.20.233
+new kernel write time  ≈ 10:32
+```
+
+运行进程中的手工映射 image 与 `.223` 机器码一致；与磁盘文件相比，仅存在正常的装载重定位差异。这意味着：
+
+> 本文今天实际测得的约 120 KiB/s 普通下载、legacy telemetry、FILETIME-driven policy bucket，严格对应的是客户端外壳 8.4.0 进程中仍在运行的 kernel 3.0.20.223 会话。
+
+磁盘上更新后的 3.0.20.233 尚未被这个已运行 host 热替换。
+
+### 两版都已经包含 qingluan
+
+这并不是“`.223` 没有 qingluan、`.233` 才新增 qingluan”。两版都包含：
+
+```text
+enable_ql_pan_download
+download_common_qingluan
+no qingluan
+use_global_bandwidth_manager
+qingluan-download source paths
+```
+
+因此更准确的模型是：
+
+```text
+kernel .223
+  ├─ legacy download stack
+  └─ qingluan download stack
+
+kernel .233
+  ├─ legacy download stack
+  └─ qingluan download stack
+```
+
+两套实现长期共存，由任务运行时条件选择。
+
+### 当前 .223 会话实际走 legacy
+
+对运行进程私有内存中的已经格式化 telemetry 进行只读搜索：
+
+```text
+legacy download_common          : 29 records
+download_common_qingluan        : 0 records
+```
+
+因此对本次已经实测的普通下载会话，可以把 FILETIME-driven legacy limiter 与约 120 KiB/s 观测直接关联起来；但不能把这个结果未经重启验证就自动外推到磁盘最新 `.233` 的下一次新会话。
+
+### `enable_ql_pan_download` 不是 wrapper 中的单一 if 开关
+
+在任务控制 / 参数设置等 wrapper 中，代码会：
+
+1. 先检查任务句柄是否属于某个内部任务映射；
+2. 再检查与该任务关联的对象/身份状态；
+3. 不满足 qingluan 路径时进入 `no qingluan` fallback；
+4. 读取 `network.enable_ql_pan_download`，默认值为 `1`；
+5. 将该配置值继续转发给内部下载/网络子系统。
+
+值得注意的是，在已经还原的 fallback wrapper 中，这个配置返回值本身没有直接参与紧邻的条件跳转。因此不能简单写成：
+
+```text
+enable_ql_pan_download == 0
+→ legacy
+```
+
+更符合代码的描述是：
+
+```text
+task identity / task-handle ownership / service state
+                  +
+runtime qingluan-related config
+                  ↓
+          choose / configure path
+```
+
+此外，`.223` 与 `.233` 的 `no qingluan` wrapper 结构高度一致，没有看到这个小版本更新把核心双栈选择逻辑简单翻转。
+
+### 一个附带修正
+
+此前分析中的一个前置 predicate 后续已通过内部字符串定名为：
+
+```text
+identity_workspace_task
+```
+
+它用于识别 workspace/history 类任务，而不是“qingluan 是否可用”的通用判断。后续架构图应把 workspace/history 特殊分支与 qingluan/legacy 双栈选择分开描述。
