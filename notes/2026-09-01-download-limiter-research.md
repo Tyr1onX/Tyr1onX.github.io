@@ -2075,3 +2075,238 @@ qingluan limiter：QueryPerformanceCounter / QueryPerformanceFrequency
 这对“本地变速为什么可能有效”非常关键：一个工具若只改变 Windows 墙钟、只改变 `GetTickCount`、或只改变 QPC，受到影响的子系统可能完全不同。
 
 因此不能再把“修改时间”视为单一操作。真正需要回答的是：当前实际 120 KiB/s 的最终 token gate 读取哪一种时钟，以及变速工具实际 hook 了哪些时钟 API。
+
+
+## 二十四、3.0.20.234 活跃下载：RTTI 对象扫描与 120 KiB/s 持久策略结构
+
+### 24.1 用 RTTI/vtable 直接扫描运行对象
+
+为了避免继续依赖可能被释放的日志字符串，本轮从 `kernel.dll` 的 MSVC RTTI 反推出 limiter vtable，然后在 `plugin_id=1000` 的 `baidunetdiskhost.exe` 私有堆中只读扫描对象。
+
+`.234` 中恢复出的主要 vtable：
+
+```text
+legacy::TokenBucket                  RVA 0x133e1c8
+legacy::AccumulateTokenBucket        RVA 0x133e1f8
+qingluan::common::TokenBucket        RVA 0x13bd408
+qingluan::common::AccumulateTokenBucket RVA 0x13bd438
+```
+
+暂停/空闲附近曾观察到：
+
+```text
+legacy TokenBucket                  5
+legacy AccumulateTokenBucket        5
+qingluan TokenBucket                0
+qingluan AccumulateTokenBucket      5
+```
+
+恢复目录下载后，legacy 对象数量迅速膨胀到：
+
+```text
+legacy TokenBucket             103 -> 142（随任务生命周期继续变化）
+legacy AccumulateTokenBucket   20
+qingluan AccumulateTokenBucket 5（保持固定）
+```
+
+这提供了比“二进制包含某类”更强的运行时证据：当前普通下载启动时，大量执行态 limiter 对象来自 legacy 栈；qingluan 的 5 个对象长期保持固定地址和固定状态。
+
+### 24.2 qingluan 四连桶在运行时被直接确认
+
+四个连续对象：
+
+```text
+0x524FB0
+0x524FE8
+0x525020
+0x525058
+```
+
+每个对象相隔 `0x38`，均为：
+
+```text
+qingluan::common::AccumulateTokenBucket
+```
+
+字段当时为：
+
+```text
+rate      = 524288 B/s   (512 KiB/s)
+token     = 1048576
+last_time = 49
+```
+
+另一个 qingluan AccumulateTokenBucket：
+
+```text
+rate = 524288000 B/s     (500 MiB/s)
+```
+
+这与此前静态推断的 Live/Shadow Peer + Live/Shadow Total 四桶布局高度吻合。
+
+更重要的是，在真实下载从数 MB/s 回落到约 125~132 KB/s 时，这四个 qingluan 桶的 `last_time` 仍保持在 `49`，没有像 legacy 活对象那样推进。因此当前这次普通下载的低速平台并不像是由这组 qingluan 四桶直接消耗产生。
+
+### 24.3 TokenBucket 真实对象布局被反汇编闭合
+
+legacy 与 qingluan 的方法实现都确认了相同的核心布局：
+
+```text
++0x00  vtable
++0x08  capacity/burst-related value
++0x10  current token
++0x18  last timestamp
++0x20  rate (B/s)
++0x24  denominator = 1000
+```
+
+refill 逻辑：
+
+```text
+elapsed = now - last_timestamp
+add = elapsed * rate / 1000
+token += add
+token = clamp(token, capacity/burst ceiling)
+```
+
+`AccumulateTokenBucket` 还具有额外的累计容量字段。
+
+### 24.4 活跃 legacy limiter 的特征
+
+普通目录下载恢复后，legacy TokenBucket 大量出现；多数 rate 为宽松值：
+
+```text
+104857600 B/s
+78053454 B/s
+103311760 B/s
+```
+
+legacy AccumulateTokenBucket 观察到：
+
+```text
+16384 B/s       × 5
+91133 B/s       × 1
+104857600 B/s   × 6
+524288000 B/s   × 8
+```
+
+其中 `rate=16384` 的多个对象具有持续推进到约 `2.7e6 ms` 的 timestamp，说明它们不是纯静态垃圾；但实际同时存在多个子下载，单个子任务速度可高于该数值，因此不能把这些低 rate 对象直接等同于最终 Total gate。它们更可能是 peer/source/channel 级预算中的某一层。
+
+### 24.5 当前 `.234` 低速态没有标准 `TokenBucket(rate=122880, denominator=1000)`
+
+当 BrowserEngine 实时总速率回落到：
+
+```text
+download_speed ~= 132000 B/s
+随后 ~= 125621 B/s
+```
+
+对 kernel 私有堆扫描标准 TokenBucket 字段对：
+
+```text
+rate = 122880
+denominator = 1000
+```
+
+结果：
+
+```text
+0 hits
+```
+
+所以 `.234` 不能简单复用 `.223` 的结论“当前 live bucket 本体就是一个 122880 B/s TokenBucket”。
+
+### 24.6 但 `.234` 私有堆确实存在持久的 `122880` 策略结构
+
+继续对私有堆扫描裸 `DWORD 122880`，在低速态最终只剩一个稳定命中：
+
+```text
+0x3826914 = 122880
+```
+
+它附近形成一个明显的长期管理结构，而不是随机字节。关键邻域（按 32-bit 字段观察）包含：
+
+```text
+... dynamic_value ...
+5205568
+state/count
+100000
+40
+860
+122880
+1
+...
+1572864
+5242880
+100
+...
+```
+
+对同一结构做三态差分：
+
+```text
+运行态：state/count = 2, 122880 保持
+暂停态：state/count = 0, 122880 保持
+恢复态：state/count = 2, 122880 保持
+```
+
+同时另一个动态字段在运行/暂停过程中从约：
+
+```text
+122737 -> 124464
+```
+
+发生变化。
+
+因此这个 `122880` 不是一次网络缓冲里的偶然整数，而属于一个跨任务暂停继续保留的持久策略/管理对象；旁边的状态字段又明确跟下载运行生命周期联动。
+
+当前最合理的标记是：
+
+```text
+3.0.20.234 120 KiB/s policy/manager candidate
+```
+
+但尚未证明它直接执行 token acquire，也尚未恢复该结构的具体 C++ 类型。
+
+### 24.7 BrowserEngine 权益层同时暴露普通速度、加速上限和闲时策略
+
+`payDlTip` 组件的运行数据提供了另一条独立证据：
+
+```text
+dlSpeed(history normal peak) = 3199000 B/s
+dlSpeedNow                   ~= 125621 B/s
+speedLimit                    = 307200 B/s
+```
+
+`307200 B/s` 正好等于 300 KiB/s，也与 `get_speedup_info(true)` 返回的：
+
+```text
+speedup_speed_limit = 307200
+```
+
+一致。因此该 `speedLimit` 更像 speedup/权益可用上限，而不是当前普通下载的 120 KiB/s 上限。
+
+同一组件还拿到了明确的服务端闲时下载配置：
+
+```text
+北京时间 01:00-09:00：闲时下载卡可享极速下载
+其他时间：普通速度
+```
+
+这证明 `.234` 前端明确维护“普通速度 / 特权速度 / 时间窗口”的服务端权益策略。
+
+### 24.8 当前模型更新
+
+`.234` 的证据更适合写成：
+
+```text
+服务端账号/权益策略
+  -> BrowserEngine policy/guide state
+  -> kernel persistent 120 KiB/s manager/policy candidate
+  -> legacy runtime execution objects (大量动态 TokenBucket)
+  -> task/source/peer/channel gates
+  -> network requests
+```
+
+当前 120 KiB/s 平台仍与本地策略值高度相关，但“策略值存储对象”和“最终 token 执行对象”在 `.234` 中已经明显分层，不能把二者视为同一个 TokenBucket。
+
+下一步：反查 `0x3826914` 所在 heap allocation 的引用者/写入代码，给这个持久 122880 结构恢复类型和更新函数；再观察它如何向 legacy execution buckets 分发预算。
