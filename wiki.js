@@ -146,6 +146,43 @@
     });
   }
 
+  function renderArchiveLists() {
+    document.querySelectorAll('[data-archive-list]').forEach((container) => {
+      if (!notes.length) {
+        container.innerHTML = '<p class="note-list-empty">这里暂时还没有可归档的文字。</p>';
+        return;
+      }
+
+      const groups = new Map();
+      notes.forEach((note) => {
+        const year = String(note.datetime || note.date || '').slice(0, 4) || '其他';
+        if (!groups.has(year)) groups.set(year, []);
+        groups.get(year).push(note);
+      });
+
+      container.innerHTML = [...groups.entries()].map(([year, yearNotes]) => `
+        <section class="archive-year" aria-labelledby="archive-${escapeHtml(year)}">
+          <h2 id="archive-${escapeHtml(year)}">${escapeHtml(year)}</h2>
+          <div class="archive-items">
+            ${yearNotes.map((note) => {
+              const shortDate = String(note.date || '').replace(/^\d{4}\./, '');
+              return `<a class="archive-item" href="${noteUrl(note)}"><time datetime="${escapeHtml(note.datetime || '')}">${escapeHtml(shortDate)}</time><strong>${escapeHtml(note.title)}</strong></a>`;
+            }).join('')}
+          </div>
+        </section>
+      `).join('');
+    });
+  }
+
+  function alignMobileCurrentNav() {
+    document.querySelectorAll('.mobile-nav').forEach((nav) => {
+      const current = nav.querySelector('[aria-current="page"]');
+      if (!current) return;
+      const target = current.offsetLeft - (nav.clientWidth - current.clientWidth) / 2;
+      nav.scrollLeft = Math.max(0, target);
+    });
+  }
+
   async function readNoteBody(note) {
     if (typeof note?.markdown === 'string') return renderMarkdown(note.markdown);
     if (note?.contentUrl) {
@@ -199,5 +236,7 @@
   }
 
   renderNoteLists();
+  renderArchiveLists();
+  alignMobileCurrentNav();
   void renderArticle();
 })();

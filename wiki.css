@@ -192,10 +192,13 @@ html[data-sidebar="expanded"] .sidebar-nav { display: grid; }
   align-items: center;
   padding: 0 8px 0 14px;
   border-radius: 5px;
+  justify-content: space-between;
+  gap: 10px;
   color: var(--muted);
   font-size: 13.5px;
   white-space: nowrap;
 }
+.sidebar-nav .nav-external { color: var(--faint); font-size: 10.5px; font-weight: 400; }
 
 .sidebar-nav a:hover { background: var(--hover); color: var(--text); }
 .sidebar-nav a[aria-current="page"] { color: var(--text); font-weight: 570; }
@@ -272,6 +275,12 @@ html[data-theme="dark"] .theme-icon-moon { opacity: 1; transform: rotate(0deg) s
 .sidebar-copy { display: none; margin-top: 12px; color: var(--faint); font-size: 10.5px; white-space: nowrap; }
 
 html[data-sidebar="expanded"] .sidebar-bottom { align-items: stretch; }
+html[data-sidebar="expanded"] .sidebar-bottom::before {
+  width: 100%;
+  margin-bottom: 6px;
+  border-top: 1px solid var(--line);
+  content: "";
+}
 html[data-sidebar="expanded"] .sidebar-links { display: grid; }
 html[data-sidebar="expanded"] .theme-toggle { width: auto; justify-content: flex-start; margin-top: 7px; }
 html[data-sidebar="expanded"] .theme-label { display: inline; }
@@ -340,6 +349,85 @@ html[data-sidebar="expanded"] .sidebar-copy { display: block; }
   -webkit-line-clamp: 2;
 }
 .note-list-empty { margin: 0; color: var(--secondary); }
+
+.archive-page .page-heading { margin-bottom: 24px; }
+.archive-list { width: min(100%, 900px); }
+.archive-year + .archive-year { margin-top: 34px; }
+.archive-year h2 {
+  margin: 0 0 8px;
+  font-size: 26px;
+  font-weight: 540;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+.archive-items { border-top: 1px solid var(--line); }
+.archive-item {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 18px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.archive-item time {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.archive-item strong {
+  min-width: 0;
+  font-size: 16.5px;
+  font-weight: 520;
+  line-height: 1.5;
+  letter-spacing: -0.012em;
+}
+.archive-item:hover strong { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+
+.about-page { width: min(100%, 880px); }
+.about-page .page-heading { margin-bottom: 26px; }
+.about-intro {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: 760px;
+}
+.about-avatar {
+  width: 96px;
+  height: 96px;
+  flex: 0 0 96px;
+  border-radius: 50%;
+  background: #ededed;
+  object-fit: cover;
+}
+.about-intro-copy h2 {
+  margin: 0 0 5px;
+  font-size: 26px;
+  font-weight: 560;
+  line-height: 1.25;
+  letter-spacing: -0.028em;
+}
+.about-intro-copy p { margin: 0; color: var(--secondary); font-size: 17px; line-height: 1.78; }
+.about-section { margin-top: 38px !important; }
+.about-facts,
+.about-stack { width: min(100%, 780px); border-top: 1px solid var(--line); }
+.about-fact,
+.about-stack > div {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 22px;
+  align-items: baseline;
+  padding: 11px 0 12px;
+  border-bottom: 1px solid var(--line);
+}
+.about-fact > span,
+.about-stack span { color: var(--muted); font-size: 13.5px; }
+.about-fact p,
+.about-stack p { margin: 0; color: var(--text); font-size: 16px; line-height: 1.65; }
+.about-inline-link { margin-top: 11px; }
+.about-inline-link a { display: inline-flex; min-height: 36px; align-items: center; gap: 6px; color: var(--muted); font-size: 14px; }
+.about-inline-link a:hover { color: var(--text); }
+.about-page .signature-block { margin-top: 46px; }
 
 .simple-list { width: min(100%, 920px); border-top: 1px solid var(--line); }
 .simple-item {
@@ -479,9 +567,11 @@ a.simple-item:hover .simple-title > span { transform: translateX(2px); }
 .mobile-brand:focus-visible,
 .mobile-nav a:focus-visible,
 .note-list-item:focus-visible,
+.archive-item:focus-visible,
 .simple-item:focus-visible,
 .simple-links a:focus-visible,
 .prose-links a:focus-visible,
+.about-inline-link a:focus-visible,
 .article-back:focus-visible,
 .article-body a:focus-visible,
 .article-nav a:focus-visible {
@@ -509,9 +599,10 @@ a.simple-item:hover .simple-title > span { transform: translateX(2px); }
   .mobile-brand { display: inline-flex; min-height: 38px; align-items: center; font-size: 14.5px; font-weight: 650; letter-spacing: -0.02em; }
   .mobile-top .theme-toggle { margin: 0 -8px 0 0; justify-content: center; }
   .mobile-top .theme-label { display: none; }
-  .mobile-nav { display: flex; gap: 4px 18px; overflow-x: auto; padding: 0 0 6px; scrollbar-width: none; }
+  .mobile-nav { display: flex; gap: 15px; overflow-x: auto; padding: 0 0 6px; scrollbar-width: none; }
   .mobile-nav::-webkit-scrollbar { display: none; }
   .mobile-nav a { display: inline-flex; min-height: 34px; align-items: center; flex: 0 0 auto; color: var(--muted); font-size: 12.5px; }
+  .mobile-nav .nav-external { margin-left: 3px; color: var(--faint); font-size: 9.5px; }
   .mobile-nav a[aria-current="page"] { color: var(--text); font-weight: 560; }
   .main { display: block; padding: 22px 0 50px; }
   .content,
@@ -538,6 +629,21 @@ a.simple-item:hover .simple-title > span { transform: translateX(2px); }
   .simple-item { padding-top: 17px; padding-bottom: 18px; }
   .simple-title h2 { font-size: 19.5px; }
   .simple-main p { font-size: 15.25px; }
+  .archive-page .page-heading { margin-bottom: 20px; }
+  .archive-year + .archive-year { margin-top: 28px; }
+  .archive-year h2 { font-size: 23px; }
+  .archive-item { grid-template-columns: 56px minmax(0, 1fr); gap: 12px; padding: 9px 0; }
+  .archive-item time { font-size: 11px; }
+  .archive-item strong { font-size: 15.5px; line-height: 1.45; }
+  .about-page .page-heading { margin-bottom: 22px; }
+  .about-intro { align-items: flex-start; gap: 17px; }
+  .about-avatar { width: 78px; height: 78px; flex-basis: 78px; }
+  .about-intro-copy h2 { font-size: 22px; }
+  .about-intro-copy p { font-size: 16px; line-height: 1.72; }
+  .about-section { margin-top: 32px !important; }
+  .about-fact, .about-stack > div { grid-template-columns: 1fr; gap: 3px; padding: 10px 0 11px; }
+  .about-fact > span, .about-stack span { font-size: 12.5px; }
+  .about-fact p, .about-stack p { font-size: 15.5px; }
   .prose-section h2 { font-size: 18.5px; }
   .prose-section p { font-size: 16.5px; }
   .article-back { margin-bottom: 19px; }
