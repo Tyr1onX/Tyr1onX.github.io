@@ -27,6 +27,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: design-ui/package-lock.json
+
+      - name: Install design library dependencies
+        run: npm ci --prefix design-ui --no-audit --no-fund --ignore-scripts
+
+      - name: Build design library
+        run: npm run build --prefix design-ui
+
+      - name: Remove design build dependencies
+        run: rm -rf design-ui/node_modules design-ui/tsconfig.tsbuildinfo
+
       - name: Refresh About profile stats
         env:
           GH_TOKEN: ${{ github.token }}

@@ -1,0 +1,6 @@
+/assets/design/
+/design-ui/node_modules/
+/design-ui/npm-install.log
+assets/design/
+design-ui/npm-install.log
+design-ui/*.tsbuildinfo

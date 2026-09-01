@@ -1,0 +1,8 @@
+.design-page { width: min(100%, 940px); }
+.design-page > .page-heading { margin-bottom: 0; }
+.design-page > .page-heading p { max-width: 720px; }
+.design-library-boot { margin: 24px 0 0; color: var(--secondary); font-size: 14px; }
+
+@media (max-width: 860px) {
+  .design-page { width: 100%; }
+}
