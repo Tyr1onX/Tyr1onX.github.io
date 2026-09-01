@@ -33,9 +33,6 @@
       button.setAttribute('aria-label', expanded ? '收起侧边栏' : '展开侧边栏');
       button.setAttribute('title', expanded ? '收起侧边栏' : '展开侧边栏');
     });
-    document.querySelectorAll('[data-sidebar-toggle-icon]').forEach((icon) => {
-      icon.textContent = expanded ? '‹' : '›';
-    });
     if (persist) {
       try { localStorage.setItem('tyr1onx-sidebar-v2', next); } catch {}
     }
