@@ -1557,3 +1557,86 @@ Adapter task map contains(handle)?
 5. 最终把 `.233` 的真实运行后端与其时钟来源绑定起来。
 
 这一步完成后，才能回答“同一个 8.4.0 客户端的新 `.233` 会话是否仍默认走 legacy”这个目前最后缺失的动态问题。
+
+## 十九、BrowserEngine 任务控制层与 `.233` 新会话补充
+
+### 19.1 BrowserEngine 明确导出正式任务控制 API
+
+对 `module/BrowserEngine/browserengine.dll` 的 PE export table 检查确认，以下函数为真实导出而非仅日志字符串：
+
+- `browser_engine_pause_task`
+- `browser_engine_pause_all_task`
+- `browser_engine_pause_all_remote_task`
+- `browser_engine_enqueue_task`
+- `browser_engine_enqueue_all_task`
+- `browser_engine_get_task_items`
+- `browser_engine_get_task_count`
+- `browser_engine_delete_task`
+- `browser_engine_top_task`
+
+同时 `bnusdk.dll` 也导出：
+
+- `bnu_sdk_pause_task`
+- `bnu_sdk_start_task`
+- `bnu_sdk_set_speed_limit`
+
+这说明桌面端的暂停/恢复并不依赖 UI 点击本身，而是有稳定的内部 ABI 层。
+
+### 19.2 `pause_task` / `enqueue_task` 不是简单的整数 task_id API
+
+`browser_engine_pause_task` 导出 thunk 最终进入 `browser_transfer.cpp`，再进入 `filetransfer/file_trans_manager.cpp`。
+
+反汇编确认外部参数至少包含：
+
+- 一个布尔/类型参数（经 `DL` 传递）；
+- 两个 C 字符串形态参数（内部均检查空指针/首字节，并按 NUL 结尾扫描）；
+- FileTransManager 自身通过 BrowserEngine 内部 singleton/context 隐式取得。
+
+因此数据库 `download_file.task_id` 不能直接当成唯一参数硬调用。当前没有在签名未完全恢复前直接注入调用，避免误调用导致客户端崩溃。
+
+### 19.3 UI/任务管理与下载后端是明确分层的
+
+当前静态控制流可整理为：
+
+```text
+桌面 UI / WebView
+    ↓
+BrowserEngine export ABI
+    ↓
+browser_transfer.cpp
+    ↓
+FileTransManager
+    ↓
+任务对象 / task map / adapter
+    ↓
+kernel download wrapper
+    ↓
+qingluan / legacy backend
+```
+
+这进一步支持此前结论：`enable_ql_pan_download` 不是 UI 层或任务管理层的直接总开关，而是在任务已经进入 kernel wrapper 后才参与后续分流。
+
+### 19.4 当前新建下载批次不是合格限速样本
+
+`transmission.db` 中新建的一批下载任务处于 `status=3`，大部分 `complete_size=0`；连续 12 秒采样无增长。
+
+其中 4 个约 69 MB 的 m4a 曾短暂写入：
+
+- 212,992 bytes
+- 81,920 bytes
+- 49,152 bytes
+- 49,152 bytes
+
+随后均出现 `error_code=1000001`，目标文件没有稳定落盘。
+
+因此这批任务只证明 BrowserEngine 已完成建任务、取直链和部分连接调度，不能作为稳定吞吐/限速路径样本。
+
+### 19.5 当前动态验证状态
+
+`.233` 新会话仍然成立，kernel host 已建立大量 `80/443/18000/18501/19000/28000` 连接；但在没有稳定数据传输时：
+
+- `download_common` telemetry：未捕获到稳定运行态实例；
+- `download_common_qingluan` telemetry：未捕获到稳定运行态实例；
+- `transmission.db` 完成字节不持续增长。
+
+因此此时仍不能仅凭连接数量断言真实 payload 走哪一套后端。
