@@ -540,3 +540,152 @@ legacy / new backend
 
 1. 把 `enable_ql_pan_download`、特殊任务身份、初始化 readiness 与最终 manager 状态之间的条件关系继续定名；
 2. 在真实大文件下载期间做只读运行态验证，确认当前任务实例落在哪个 backend，以及哪个速率层真正约束长期吞吐。
+
+
+---
+
+## 十三、122880 的数据流终于闭环
+
+继续追 legacy 下载栈后，`120 KiB/s` 已经不再只是“配置值与实测值吻合”，而是可以恢复出完整的数据流。
+
+CMS 处理逻辑会得到 `total_limit_speed`，随后调用统一的 `set_sl(cdn, total, source)`。这次普通下载对应的 source 为：
+
+```text
+source = 1 = enable_cms_total_sl
+```
+
+调用形态等价于：
+
+```cpp
+set_sl(
+    cdn_limit = unchanged,
+    total_limit = 122880,
+    source = enable_cms_total_sl
+);
+```
+
+`set_sl` 内部维护 CDN 与 Total 两套独立 source。Total 的 live bucket 是第二个 live `AccumulateTokenBucket`；当新的 source 优先级足够高时，它会把传入的 Total 值直接交给 bucket 的 `set_rate()`。
+
+因此这条链现在可以写成：
+
+```text
+CMS total_limit_speed = 122880
+            ↓
+source = enable_cms_total_sl
+            ↓
+set_sl(...)
+            ↓
+Total live AccumulateTokenBucket
+            ↓
+set_rate(122880)
+            ↓
+rate = 122880 B/s
+```
+
+旧栈 `set_rate()` 本体也已经还原：
+
+```cpp
+void set_rate(uint32_t rate) {
+    if (rate != 0) {
+        this->rate = rate;
+        this->capacity = max(rate, 16 * 1024);
+    }
+}
+```
+
+运行进程只读扫描又找到唯一一组符合该 manager 布局的 8 个 bucket，当前状态正好是：
+
+```text
+CDN live:
+  rate   = 122880
+  source = 2  (locatedownload)
+
+Total live:
+  rate   = 122880
+  source = 1  (CMS)
+
+其他 bucket:
+  仍处于 default source
+```
+
+因此“CMS 写入的 122880”与“运行时真正持有 122880 的 Total bucket”已经一一对应。
+
+### source 优先级
+
+legacy 的 source 表已经可以可靠还原：
+
+```text
+0  user_ctl
+1  enable_cms_total_sl
+2  locatedownload
+3  p2psdk
+4  application
+5  default
+```
+
+仲裁规则是同一维度内数字越小优先级越高。因此：
+
+```text
+user > CMS > locatedownload > p2psdk > application > default
+```
+
+例如用户主动设置总限速时，会以 source 0 写入 Total limiter；之后 source 1 的 CMS 策略不能覆盖它。普通状态下没有 user limit，因此 CMS source 1 可以覆盖 locatedownload source 2。
+
+### locatedownload 的作用
+
+locatedownload 返回的速度值会先换算为 B/s，然后以 source 2 同时写入 CDN 与 Total 两个维度。没有有效值时使用很大的内部上限，语义更接近“这一层不形成实际瓶颈”。
+
+这解释了为什么当前活体中可以同时看到：
+
+```text
+CDN  source=locatedownload  rate=122880
+Total source=CMS             rate=122880
+```
+
+真正控制长期总吞吐的是更高优先级的 Total CMS bucket。
+
+---
+
+## 十四、会员变化不是直接改速率，而是 reset + reapply
+
+`set_membership_type` 的行为也进一步明确。它不会直接写：
+
+```cpp
+normal ? 122880 : vip ? 409600 : unlimited;
+```
+
+会员状态变化后会调用真正命名为：
+
+```text
+reset_speed_limitor
+```
+
+的函数。
+
+这个 reset 会把整个 legacy limiter 的 8 个 bucket 恢复到默认状态：
+
+```text
+前四个 bucket → 默认约 512 KiB/s
+后四个 bucket → 很大的内部上限
+所有 source    → default
+```
+
+随后由 CMS、locatedownload、P2P、用户设置等策略重新覆盖。
+
+所以更准确的会员模型是：
+
+```text
+membership change
+       ↓
+reset old limiter state
+       ↓
+重新取得 / 重新应用业务策略
+       ↓
+CMS / locatedownload / P2P / user source 仲裁
+       ↓
+最终 Total / CDN rate
+```
+
+这说明本地 membership 枚举本身不是最终速度值。真正的速度决策位于策略层，会员状态只是策略输入和重算触发条件之一。
+
+另外，对正在运行的 `.223` 与磁盘待加载的 `.233` 做对比后，新版本仍保留相同的 `set_sl` 日志、CMS Total 日志、用户限速入口、CDN/Total source 布局以及 Total live bucket 结构。因此这套 legacy limiter 在 `.233` 中仍然是被维护的实际代码，而不是马上要删除的旧残留。
