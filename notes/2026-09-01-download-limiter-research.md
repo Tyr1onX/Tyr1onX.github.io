@@ -1640,3 +1640,50 @@ qingluan / legacy backend
 - `transmission.db` 完成字节不持续增长。
 
 因此此时仍不能仅凭连接数量断言真实 payload 走哪一套后端。
+
+## 二十、干净重启基线与 legacy 运行态证据
+
+### 20.1 重启前下载会话
+
+在 `.233` kernel host 的下载会话中，连续多次私有内存采样稳定观察到：
+
+- `download_common`: 11 个运行态实例；
+- `download_common_qingluan`: 0；
+- `no qingluan`: 2 个运行态实例；
+- `enable_ql_pan_download`: 0。
+
+这些地址在多轮采样中稳定存在。
+
+### 20.2 辅助进程重启后的干净基线
+
+一次不满足线程上下文的 BNU 控制调用导致 `BaiduNetdiskUnite` 辅助进程退出，客户端随后自动拉起全新 Unite/host。数据库 `PRAGMA quick_check` 返回 `ok`，下载任务未丢失；6 个已有进度的大文件恢复为暂停态。
+
+新 kernel host：
+
+- PID: `25940`
+- 启动时间：`2026-09-01 20:25:37`
+- 加载根目录 `.233 kernel.dll`
+
+在未恢复下载的干净新会话中，同一内存扫描结果为：
+
+```text
+download_common: 0
+download_common_qingluan: 0
+no qingluan: 0
+enable_ql_pan_download: 0
+```
+
+因此，重启前观察到的 `11 × download_common` 与 `2 × no qingluan` 不是静态映像字符串或扫描器固定误报，而是与实际下载会话绑定的运行时对象/文本。
+
+这使“该次实际下载走 legacy/common 路径，而非 qingluan telemetry 路径”的证据显著增强。仍需通过一次可控的暂停→开始 A/B 再确认对象随任务生命周期重建。
+
+### 20.3 BNU 控制 API 的边界
+
+进一步反汇编确认：
+
+- `bnu_sdk_pause_task` / `bnu_sdk_start_task` 对外只有一个整数参数；
+- TaskManager 本体把该参数作为 32 位 `cmd(id)`，用于 paused/running/waiting/failed 多棵任务树查找；
+- 但该 DLL 的源码路径属于 `pc-sdk-upload`，不能把 BrowserEngine `download_file.task_id` 直接等同为 BNU upload `cmd(id)`；
+- 直接在新远程线程中调用还存在任务线程/sequence 上下文约束，测试未改变下载状态并导致辅助 Unite 进程重启。
+
+因此后续不再使用跨线程直接注入 BNU export 作为下载控制手段。
