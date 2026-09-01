@@ -46,3 +46,76 @@ This repository contains visual components sourced from or adapted from public u
 - Liquid Glass Card: lightweight reproduction of Ali Imam's 21st liquid-glass card treatment, implemented as a reusable self-contained glass panel for this gallery.
 
 For source-available components, this repository prefers the upstream implementation over dependency-reduced visual rewrites. Adaptations should be limited to gallery containment, build-environment compatibility, replacing framework-only primitives, removal of unrelated external page assets, and other changes required to prevent one demo from affecting the rest of the preview site.
+
+## 2026-09-01 · 21st.dev curated lightweight batch
+
+This batch was selected from 28 reviewed 21st.dev candidates. The selection record is kept in `21ST_CURATION_2026-09-01.md`. Components remain third-party-derived inventory; gallery wrappers and theme containment do not transfer authorship to Tyr1onX.
+
+- **Footer 7 — Shadcnblocks.com**
+  - 21st.dev: https://21st.dev/@shadcnblockscom/components/footer-7
+  - Original source page: https://www.shadcnblocks.com/blocks/footer/basic
+  - Public registry mirror used to verify implementation: https://shadcnregistry.com/shadcnblocks/footer7
+  - Dependencies: `react-icons`; local `cn` helper.
+  - Fidelity: **adapted**. The public registry structure, props, link groups, social row and legal row are retained; only local import/theme/preview sizing compatibility is changed.
+  - License: the 21st.dev page and registry mirror inspected for this migration do not declare a license. Attribution is therefore retained explicitly and no license is inferred.
+
+- **Mini Navbar — Erik / aghasisahakyan1**
+  - 21st.dev: https://21st.dev/@aghasisahakyan1/components/mini-navbar
+  - Dependencies: `lucide-react` for the gallery reproduction's mobile menu icons.
+  - Fidelity: **reproduction**. 21st exposes the preview/usage and describes the minimalist responsive behavior, but a complete trustworthy `Component.tsx` source was not available through the public page during migration.
+  - License: MIT is listed on the 21st.dev component page.
+
+- **Tooltip Icon Button — Serafim**
+  - 21st.dev: https://21st.dev/@serafimcloud/components/tooltip-icon-button
+  - Dependencies: `lucide-react` in the demo.
+  - Fidelity: **reproduction**. Public 21st usage/API and side variants are preserved; the inventory implementation uses a self-contained accessible tooltip surface instead of claiming access to the member-gated source.
+  - License: not declared on the inspected 21st.dev page.
+
+- **Tabs · With Line — Origin UI**
+  - 21st.dev: https://21st.dev/originui/tabs
+  - Original source: https://github.com/shadcn/originui
+  - Dependencies: `@radix-ui/react-tabs`.
+  - Fidelity: **adapted**. It preserves the Origin UI thin-line active-state pattern and Radix tab semantics while exposing the example as reusable item data for gallery isolation.
+  - License: MIT (Origin UI repository).
+
+- **Accordion · Table w/ Chevron — Origin UI**
+  - 21st.dev: https://21st.dev/community/components/originui/accordion/table-w-chevron
+  - Original source: https://github.com/shadcn/originui
+  - Dependencies: `@radix-ui/react-accordion`, `lucide-react`.
+  - Fidelity: **adapted**. Border stacking, compact row treatment, chevron state and Radix behavior are retained; copy/demo text is localized to the inventory preview.
+  - License: MIT (Origin UI repository; also listed on the 21st.dev component page).
+
+- **Copy Code Button — Le Thanh / minhxthanh**
+  - 21st.dev: https://21st.dev/@minhxthanh/components/copy-code-button
+  - Dependencies: `lucide-react` in the reproduction.
+  - Fidelity: **reproduction**. The public page exposes usage and the copy-button interaction but not a complete trustworthy component source. The local implementation keeps clipboard fallback and avoids bundling a syntax-highlighting runtime.
+  - License: not declared on the inspected 21st.dev page.
+
+- **Button · With Number — Origin UI**
+  - 21st.dev: https://21st.dev/community/components/originui/button/button-with-number
+  - Original source: https://github.com/shadcn/originui
+  - Dependencies: `lucide-react`.
+  - Fidelity: **adapted**. The outline button + small numeric badge composition is preserved while removing the need to import the site's full shadcn Button wrapper.
+  - License: MIT (Origin UI repository).
+
+- **Status Badge — Serafim**
+  - 21st.dev: https://21st.dev/@serafimcloud/components/status-badge
+  - Original source reference listed by 21st.dev: https://blocks.tremor.so
+  - Dependencies: `class-variance-authority`, `react-icons` in the gallery reproduction (21st lists `@remixicon/react` + CVA).
+  - Fidelity: **reproduction**. The split status-pill composition and success/error semantics are retained without claiming source fidelity.
+  - License: the inspected 21st.dev page does not declare one for this component; source attribution is retained.
+
+- **Breadcrumb · Chevron — Origin UI**
+  - 21st.dev: https://21st.dev/community/components/originui/breadcrumb/with-chevron-right
+  - Original source: https://github.com/shadcn/originui
+  - Dependencies: `lucide-react`.
+  - Fidelity: **adapted**. The Home → Components → current-page chevron breadcrumb is kept as shown, with a reusable gallery wrapper and no framework-only link dependency.
+  - License: MIT (Origin UI repository).
+
+- **Hyper Text — Magic UI / Dillion Verma**
+  - 21st.dev: https://21st.dev/@dillionverma/components/hyper-text
+  - Original source: https://magicui.design/docs/components/hyper-text
+  - Public registry used for verification: https://magicui.design/r/hyper-text.json
+  - Dependencies: current upstream uses `motion`; the 21st.dev listing still reports `framer-motion`. Both were already present in this Design Library before this batch.
+  - Fidelity: **adapted**. The current Magic UI registry implementation is preserved with only the `cn` import redirected to the local utility and formatting adjusted for this repository.
+  - License: MIT (listed on 21st.dev / Magic UI).
