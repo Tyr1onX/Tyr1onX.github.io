@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Tyr1onX 收集、复刻和改造过的 UI 与交互组件。" />
+  <meta name="description" content="Tyr1onX 喜欢、玩过或会反复回去玩的游戏记录。" />
   <meta name="theme-color" content="#fafafa" />
   <meta name="color-scheme" content="light dark" />
   <link rel="icon" href="./favicon.svg?v=2" type="image/svg+xml" />
-  <title>设计 — Tyr1onX</title>
+  <title>游戏 — Tyr1onX</title>
   <script>(()=>{let t=null;try{t=localStorage.getItem('tyr1onx-theme')}catch{}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})();</script>
   <link rel="stylesheet" href="./wiki.css?v=9" />
-  <link rel="stylesheet" href="./design-page.css?v=1" />
-  <link rel="stylesheet" href="./assets/design/design-library.css" />
+  <link rel="stylesheet" href="./games.css?v=1" />
   <script src="./wiki.js?v=9" defer></script>
-  <script type="module" src="./assets/design/design-library.js"></script>
+  <script src="./games-data.js?v=1" defer></script>
+  <script src="./games.js?v=1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
   <div class="identity-pattern" aria-hidden="true"></div>
-  <div class="mobile-header"><div class="mobile-header-inner"><div class="mobile-top"><a class="mobile-brand" href="./">Tyr1onX</a><button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题"><span class="theme-icon-stack" aria-hidden="true"><svg class="theme-icon theme-icon-sun" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.4"/><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 16 16"><path d="M12.55 10.55A5.1 5.1 0 0 1 5.45 3.45a5.1 5.1 0 1 0 7.1 7.1Z"/></svg></span><span class="theme-label">主题</span></button></div><nav class="mobile-nav" aria-label="主要导航"><a href="./">首页</a><a href="./notes.html">归档</a><a href="./projects.html">作品</a><a href="./design.html" aria-current="page">设计</a><a href="./games.html">游戏</a><a href="./learning.html">学习</a><a href="./about.html">关于</a></nav></div></div>
+  <div class="mobile-header"><div class="mobile-header-inner"><div class="mobile-top"><a class="mobile-brand" href="./">Tyr1onX</a><button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题"><span class="theme-icon-stack" aria-hidden="true"><svg class="theme-icon theme-icon-sun" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.4"/><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 16 16"><path d="M12.55 10.55A5.1 5.1 0 0 1 5.45 3.45a5.1 5.1 0 1 0 7.1 7.1Z"/></svg></span><span class="theme-label">主题</span></button></div><nav class="mobile-nav" aria-label="主要导航"><a href="./">首页</a><a href="./notes.html">归档</a><a href="./projects.html">作品</a><a href="./design.html">设计</a><a href="./games.html" aria-current="page">游戏</a><a href="./learning.html">学习</a><a href="./about.html">关于</a></nav></div></div>
   <div class="wiki-shell">
     <aside class="sidebar" aria-label="个人网站导航">
       <div class="sidebar-head">
@@ -29,8 +29,8 @@
         <a href="./">首页</a>
         <a href="./notes.html">归档</a>
         <a href="./projects.html">作品</a>
-        <a href="./design.html" aria-current="page">设计</a>
-        <a href="./games.html">游戏</a>
+        <a href="./design.html">设计</a>
+        <a href="./games.html" aria-current="page">游戏</a>
         <a href="./learning.html">学习</a>
         <a href="./about.html">关于</a>
       </nav>
@@ -43,7 +43,15 @@
         <div class="sidebar-copy">© <span data-current-year>2026</span> Tyr1onX</div>
       </div>
     </aside>
-    <main class="main" id="main"><div class="content design-page"><header class="page-heading"><h1>设计</h1><p>收集、复刻和改造过的一些 UI 与交互组件。</p></header><div id="design-library-root"><p class="design-library-boot">正在载入组件库……</p></div><noscript><p class="design-library-boot">设计组件预览需要启用 JavaScript。</p></noscript></div></main>
+    <main class="main" id="main">
+      <div class="content games-page">
+        <header class="page-heading">
+          <h1>游戏</h1>
+          <p>一些我喜欢、玩过很久，或者总会重新打开的游戏。</p>
+        </header>
+        <section class="games-list" data-games-list aria-label="游戏记录"></section>
+      </div>
+    </main>
   </div>
   <footer class="mobile-footer">© <span data-current-year>2026</span> Tyr1onX</footer>
 </body>
