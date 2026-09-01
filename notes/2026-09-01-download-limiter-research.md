@@ -2613,3 +2613,233 @@ B. UploadBandwidthDetect
 ```
 
 下一步应追踪 A 的 callback / message consumer，确认 `122880` 最终进入哪一个 manager / scheduler / policy bucket，再判断它是否与 B 汇合。
+
+
+## 二十七、3.0.20.234：固定 `basic_speed=122880` 落入全局 P2P 状态单例
+
+### 27.1 `basic_speed` 的运行时解析值可以直接追到一个 setter
+
+`.234` 中除前述缓存配置对象外，还存在一套按 key 即时读取的运行时配置路径。函数约位于 `0x180a6eca0`，会构造并查找：
+
+```text
+basic_speed
+```
+
+解析成功后整数值被保存到：
+
+```text
+rbp + 0x1F4
+```
+
+对应路径包括：
+
+```text
+call 0x180860f70       ; integer parse helper
+mov  eax, rbp+0x1F4
+```
+
+失败路径则出现明确字符串：
+
+```text
+basic_speed parse error
+```
+
+随后日志 `basic_speed=%1%` 同样引用 `rbp+0x1F4`，因此这里拿到的就是命名配置项本身的整数值，而不是另一个同名局部概念。
+
+### 27.2 直接消费者：全局/单例对象 `+0x600`
+
+解析完成后存在非常直接的数据流：
+
+```text
+0x180a6f9b5  call 0x180b58a80
+0x180a6f9ba  mov  rbp+0x1F4, edx
+0x180a6f9c0  mov  rax, rcx
+0x180a6f9c3  call 0x180b59130
+```
+
+其中：
+
+```text
+0x180b58a80
+```
+
+返回一个全局/单例状态对象，而 `0x180b59130` 只是一个纯 setter：
+
+```text
+0x180b59130:
+    mov edx, [rcx+0x600]
+    ret
+```
+
+语义即：
+
+```text
+singleton + 0x600 = parsed basic_speed
+```
+
+配套 getter 位于：
+
+```text
+0x180b59120:
+    mov eax, [rcx+0x600]
+    ret
+```
+
+因此命名配置 `basic_speed` 在 `.234` 中已经闭合到一个持久的全局 P2P/network 状态字段，而不只是解析器栈变量。
+
+### 27.3 更强的证据：单例构造函数本身就把 `+0x600` 初始化为 120 KiB/s
+
+`0x180b58a80` 在单例尚未建立时会走大型构造函数 `0x180b56e70`。
+
+该构造函数约在 `0x180b57322` 明确执行：
+
+```text
+movl $0x1e000, 0x600(%rax)
+```
+
+即：
+
+```text
+singleton + 0x600 = 0x1E000
+                   = 122880 B/s
+                   = 120 KiB/s
+```
+
+因此 `basic_speed=120 KiB/s` 同时具有两种来源：
+
+```text
+compile-time/member default = 122880
+runtime named config        -> setter -> same +0x600 field
+```
+
+运行时配置可以覆盖构造时默认值。
+
+该单例附近还连续保存大量 P2P/network 调优参数，例如：
+
+```text
++0x5E8 = 30
++0x5EC = 80
++0x5F0 = 100
++0x5F4 = 35
++0x5F8 = 5
++0x5FC = 20
++0x600 = 122880
++0x604 = 32000000
++0x608 = 104857600
+```
+
+这进一步支持它是中央 P2P/network 策略状态，而非一个孤立的 UI 数值。
+
+### 27.4 已确认的 getter 用途是任务统计/报告序列化
+
+目前对 `0x180b59120` 的清晰静态调用出现在 `0x180b8210b`：
+
+```text
+call 0x180b58a80
+call 0x180b59120
+mov  eax, rbp+0xD4
+```
+
+随后代码在 `0x180b82585` 左右明确构造字符串：
+
+```text
+basic_speed
+```
+
+并把 `rbp+0xD4` 作为该字段的值交给序列化 helper。
+
+这与二进制中的长统计日志完全吻合：
+
+```text
+eApiCode=...
+...
+p2puser_percent=%12%
+speedup_percent=%13%
+basic_speed=%14%
+disk_slow=%15%
+```
+
+所以至少有一条已证明的数据链是：
+
+```text
+singleton +0x600 basic_speed
+        ↓
+getter
+        ↓
+task statistics/report serialization
+```
+
+### 27.5 重要纠错：当前仍不能把命名 `basic_speed=122880` 直接画成执行限速桶
+
+本轮没有发现：
+
+```text
+singleton +0x600
+    ↓
+TokenBucket::set_rate / try_acquire
+```
+
+这样的直接执行链。
+
+因此需要修正更早的宽泛表达：
+
+```text
+named basic_speed=122880
+```
+
+与 `UploadBandwidthDetect` 中日志里的 runtime `basic_speed` 是两个不同语境：
+
+```text
+A. named P2P/network config basic_speed
+   default 122880
+   -> singleton +0x600
+   -> 已证明参与报告/状态
+
+B. UploadBandwidthDetect runtime basic_speed
+   detected_upload_speed × percent / cap
+   -> target_speed
+   -> legacy AccumulateTokenBucket
+```
+
+两者目前不能直接等同，也不能据此证明 120 KiB/s 命名配置本身就是普通下载总限速器。
+
+### 27.6 与此前 heap `122880` 候选也是两个不同位置
+
+全局单例位于模块静态数据区，其 `+0x600` 与此前私有 heap 中观察到的：
+
+```text
+0x3826914 = 122880
+```
+
+不是同一个地址/对象。
+
+因此 `.234` 运行时至少可能同时存在：
+
+```text
+1. global P2P state basic_speed = 122880
+2. private-heap persistent 122880 candidate
+```
+
+后者仍需独立恢复类型，不能因为数值相同就合并解释。
+
+### 27.7 下一步
+
+优先继续解析同一运行时配置函数紧随其后的：
+
+```text
+spup_peer
+p2pup_percent
+spup_percent
+basic_speed
+```
+
+分别映射到单例中的 setter/member offset，再从各自 getter/use-site 反推真正的调度消费者。
+
+特别要验证：
+
+```text
+basic_speed 是否只是 P2P 基线/上报参数
+还是会经由其它 subobject / memcpy / QueryInfo 路径间接进入执行调度
+```
+
+在闭合执行消费者之前，不把 `122880` 本身称为已证实的最终限速 gate。
