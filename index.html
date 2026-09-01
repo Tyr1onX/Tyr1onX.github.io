@@ -1,167 +1,81 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Tyr1onX 的个人网站：项目、学习记录和偶尔写下来的文字。" />
-    <meta name="theme-color" content="#faf9f7" />
-    <meta name="color-scheme" content="light dark" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Tyr1onX" />
-    <meta property="og:description" content="项目、学习记录和偶尔写下来的文字。" />
-    <meta property="og:url" content="https://tyr1onx.github.io/" />
-    <link rel="canonical" href="https://tyr1onx.github.io/" />
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <title>Tyr1onX</title>
-    <script>
-      (() => {
-        const root = document.documentElement;
-        let theme = null;
-        try { theme = localStorage.getItem("tyr1onx-theme"); } catch {}
-        if (theme !== "dark" && theme !== "light") {
-          theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        }
-        root.dataset.theme = theme;
-      })();
-    </script>
-    <link rel="stylesheet" href="./home.css?v=3.1" />
-    <script src="./home.js?v=3.1" defer></script>
-  </head>
-  <body>
-    <a class="skip-link" href="#main">跳到主要内容</a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tyr1onX 的 Writing：学习、技术和偶尔留下来的文字。" />
+  <meta name="theme-color" content="#fafafa" />
+  <meta name="color-scheme" content="light dark" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Tyr1onX · Writing" />
+  <meta property="og:description" content="学习、技术和偶尔留下来的文字。" />
+  <meta property="og:url" content="https://tyr1onx.github.io/" />
+  <link rel="canonical" href="https://tyr1onx.github.io/" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <title>Writing — Tyr1onX</title>
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem('tyr1onx-theme'); } catch {}
+      if (theme !== 'dark' && theme !== 'light') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <link rel="stylesheet" href="./wiki.css?v=4" />
+  <script src="./notes-data.js" defer></script>
+  <script src="./notes-2026.js?v=2" defer></script>
+  <script src="./wiki.js?v=4" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
 
-    <div class="site-shell">
-      <header class="site-header">
-        <a class="site-name" href="./" aria-label="Tyr1onX 首页">Tyr1onX</a>
-        <nav class="site-nav" aria-label="主要导航">
-          <a href="#projects">Projects</a>
-          <a href="#writing">Writing</a>
-          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换到深色模式" title="切换到深色模式">
-            <span aria-hidden="true">◐</span>
-          </button>
-        </nav>
-      </header>
-
-      <main id="main">
-        <section class="intro" aria-labelledby="intro-title">
-          <h1 id="intro-title">Tyr1onX</h1>
-          <div class="intro-copy">
-            <p>你好，我是 Tyr1onX。</p>
-            <p>这里放一些正在做的东西，也记录学习和偶尔写下来的文字。</p>
-          </div>
-          <p class="intro-now"><span>现在</span>通信工程在读。Learning 里持续记录 C++、Linux 和全栈学习；最近继续改课刻、RedPalm 和知识星图。</p>
-        </section>
-
-        <section class="content-section" id="projects" aria-labelledby="projects-title">
-          <header class="section-header">
-            <h2 id="projects-title">项目</h2>
-          </header>
-
-          <div class="project-list">
-            <a class="project-item" href="./keke.html">
-              <div class="project-meta">
-                <span>2026</span>
-                <span>进行中</span>
-              </div>
-              <div class="project-content">
-                <div class="project-title-row">
-                  <h3>课刻</h3>
-                  <span aria-hidden="true">→</span>
-                </div>
-                <p>桌面课表、截图识别与本地课程管理。课程和设置保存在本机。</p>
-              </div>
-            </a>
-
-            <a class="project-item" href="https://redpalm.yituan4527.top/" target="_blank" rel="noreferrer noopener">
-              <div class="project-meta">
-                <span>2026</span>
-                <span>进行中</span>
-              </div>
-              <div class="project-content">
-                <div class="project-title-row">
-                  <h3>RedPalm</h3>
-                  <span aria-hidden="true">↗</span>
-                </div>
-                <p>多人互动小游戏与 Web 实验，包含飞行棋、命运卡、轮盘、数字炸弹和扫雷。</p>
-              </div>
-            </a>
-
-            <a class="project-item" href="./knowledge.html">
-              <div class="project-meta">
-                <span>2026</span>
-                <span>持续更新</span>
-              </div>
-              <div class="project-content">
-                <div class="project-title-row">
-                  <h3>知识星图</h3>
-                  <span aria-hidden="true">→</span>
-                </div>
-                <p>把学习资料、知识节点和项目经历整理成可以浏览的知识空间。</p>
-              </div>
-            </a>
-          </div>
-        </section>
-
-        <section class="content-section" id="writing" aria-labelledby="writing-title">
-          <header class="section-header section-header--split">
-            <h2 id="writing-title">文章</h2>
-            <a href="./notes.html">全部文字 →</a>
-          </header>
-
-          <ol class="writing-list">
-            <li>
-              <a class="writing-item" href="./note.html?id=2026-08-01-absence-everywhere">
-                <time datetime="2026-08-01">2026.08.01</time>
-                <div>
-                  <h3>她将以缺席的方式在我的生命里无处不在</h3>
-                  <p>她将以缺席的方式在我的生命里无处不在。</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="writing-item" href="./note.html?id=2026-07-28-ai-tool-stall">
-                <time datetime="2026-07-28">2026.07.28</time>
-                <div>
-                  <h3>当 AI 开始“磨洋工”</h3>
-                  <p>一次 GitHub 工具失效后的排查与复盘：执行型任务最终要看真实、可验证的结果。</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="writing-item" href="./note.html?id=2026-05-28-meeting-yourself">
-                <time datetime="2026-05-28">2026.05.28</time>
-                <div>
-                  <h3>遇见谁，都是在遇见自己</h3>
-                  <p>通过关系里的反应重新看见自己的期待、定义和情绪。</p>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="writing-item" href="./note.html?id=2025-11-11-winter">
-                <time datetime="2025-11-11">2025.11.11</time>
-                <div>
-                  <h3>冬天里，只有人会变得蓬松</h3>
-                  <p>植物在冬天做减法，人却被厚衣服包起来，慢慢变得蓬松。</p>
-                </div>
-              </a>
-            </li>
-          </ol>
-        </section>
-
-        <section class="content-section elsewhere" aria-labelledby="elsewhere-title">
-          <header class="section-header">
-            <h2 id="elsewhere-title">其他地方</h2>
-          </header>
-          <div class="elsewhere-links">
-            <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener"><span>GitHub</span><small>代码与公开仓库</small><span aria-hidden="true">↗</span></a>
-            <a href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer noopener"><span>Learning</span><small>长期学习记录</small><span aria-hidden="true">↗</span></a>
-            <a href="https://tyr1onx.github.io/ui/"><span>UI</span><small>组件与视觉实验</small><span aria-hidden="true">→</span></a>
-            <a href="mailto:yit38331@gmail.com"><span>Email</span><small>给我写信</small><span aria-hidden="true">↗</span></a>
-          </div>
-        </section>
-      </main>
-
-      <footer class="site-footer">© 2026 Tyr1onX</footer>
+  <div class="mobile-header">
+    <div class="mobile-header-inner">
+      <div class="mobile-top">
+        <a class="mobile-brand" href="./" aria-label="Tyr1onX Writing 首页">Tyr1onX</a>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题"><span aria-hidden="true">◐</span></button>
+      </div>
+      <nav class="mobile-nav" aria-label="主要导航">
+        <a href="./" aria-current="page">Writing</a>
+        <a href="./projects.html">Projects</a>
+        <a href="./learning.html">Learning</a>
+        <a href="./about.html">About</a>
+      </nav>
     </div>
-  </body>
+  </div>
+
+  <div class="wiki-shell">
+    <aside class="sidebar" aria-label="个人网站导航">
+      <a class="sidebar-brand" href="./">Tyr1onX</a>
+      <nav class="sidebar-nav" aria-label="主要导航">
+        <a href="./" aria-current="page">Writing</a>
+        <a href="./projects.html">Projects</a>
+        <a href="./learning.html">Learning</a>
+        <a href="./about.html">About</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-rule"></div>
+        <div class="sidebar-links">
+          <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener"><span>GitHub</span><span aria-hidden="true">↗</span></a>
+          <a href="mailto:yit38331@gmail.com"><span>Email</span><span aria-hidden="true">↗</span></a>
+        </div>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题"><span aria-hidden="true">◐</span></button>
+        <div class="sidebar-copy">© <span data-current-year>2026</span> Tyr1onX</div>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="content">
+        <header class="page-heading">
+          <h1>Writing</h1>
+        </header>
+        <section class="note-list" data-note-list aria-label="全部文字" aria-live="polite">
+          <p class="note-list-empty">正在读取文字……</p>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <footer class="mobile-footer">© <span data-current-year>2026</span> Tyr1onX</footer>
+</body>
 </html>
