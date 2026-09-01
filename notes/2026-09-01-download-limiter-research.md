@@ -2418,3 +2418,198 @@ legacy execution limiter
 ### 25.5 仍未闭合的边界
 
 目前仍不能直接审��;ɠ��FW�@��3�#c�B��&6�5�7VVBf�V�B���CCB�� ��K�N�^�;�z�>Z�K��##����Ί��K�����[�nY�Y����K�n[	�iʮ�	���~Z���[�^yJ��Xi�XZ^X{�i[��b;����ǚb��B3����_��ז�{��/�(+��/�������c�#�ꟾ�h((ĸ���8����ͥ�}��������j��&�� callback)��9�j{�Y�h.ZH�h�^iKnik��ɰ�"�Z��i[Nh.ZH�F&vWE�7VVFK��F�v���E�F�&W6���E�7VVFy�Ni[Z�nX[>{;��ɰ�2�Yʎ�C��3�^ۖ�k��7���ꛖ�象中的�yn�9ke���{�&�9l!�)��Z�Z�ג�8�	ɽ�͕��������хͭ}��ݹ����}Ʌѕ���k�B3����^ۦ^Ӗ�5��ɰ�R�i�{��z��NY:�K��FW&�fVB&FR�*�g���N�����������䁕ᕍ�ѥ����Ս��ӎ(
+
+## 二十六、3.0.20.234：确认 `UploadBandwidthDetect`，拆开两种 `basic_speed`
+
+### 26.1 真正的调度对象类名已经由 RTTI 闭环
+
+此前 `0x180909da0` 的调用者会持续操作同一个对象：
+
+```text
+this + 0x30   legacy AccumulateTokenBucket
+this + 0x60   rate meter
+this + 0x168  connection_count / scheduler state
+this + 0x184  detected rate
+```
+
+对应构造函数位于 `0x18054db60`：
+
+```text
+this + 0x30 -> 0x1800e8370   AccumulateTokenBucket constructor
+this + 0x60 -> 0x1800be4c0   byte/time rate-meter constructor
+```
+
+对象 vtable 为 `0x181359248`。其 MSVC Complete Object Locator 指向的 TypeDescriptor 明确为：
+
+```text
+.?AVUploadBandwidthDetect@@
+```
+
+即类名：
+
+```text
+UploadBandwidthDetect
+```
+
+因此这组对象应被解释为“上传带宽探测 / P2P 调度”组件，而不是普通下载总限速器。
+
+### 26.2 `+0x184` 是上传速率观测值，不是静态 `basic_speed`
+
+`0x1800be510` 每收到一批字节就累计 byte count，并通过时间差计算 B/s；`0x1800be770` 会在查询时更新并返回该速率。
+
+运行路径：
+
+```text
+lea this+0x60, rcx
+call 0x1800be770
+mov eax, this+0x184
+```
+
+同时二进制中的同一路径存在日志：
+
+```text
+detect upload rate=%1%
+non detect upload rate=%1%
+```
+
+因此：
+
+```text
+UploadBandwidthDetect + 0x184
+    = detected/current upload rate
+```
+
+这修正了此前把 `+0x184` 猜成固定 `basic_speed` 的假设。
+
+### 26.3 scheduler 默认策略常量
+
+构造函数将 `0x181359120` 的 16 字节常量写入 `this+0xC0`，按四个 32-bit 整数解码为：
+
+```text
+C0 = 1310720   = 1.25 MiB/s
+C4 = 10
+C8 = 50
+CC = 1048576   = 1 MiB/s
+```
+
+`0x180909da0` 中日志：
+
+```text
+max_upload_speed=%1%|basic_speed=%2%|target_speed=%3%|connection_count=%4%
+```
+
+四个参数已经逐项闭合为：
+
+```text
+max_upload_speed = this + 0x184
+basic_speed      = local_dc
+target_speed     = local_fc
+connection_count = this + 0x168
+```
+
+其中 runtime `basic_speed` 的核心公式为：
+
+```text
+basic_speed = min(
+    C0,
+    max_upload_speed * C4 / 100
+)
+```
+
+代入默认值就是：
+
+```text
+basic_speed = min(
+    1.25 MiB/s,
+    detected_upload_speed * 10%
+)
+```
+
+之后还会结合 `C8`、`CC`、随机/扰动逻辑和阈值判断生成 `target_speed`；最终：
+
+```text
+set_rate(this + 0x30, target_speed)
+```
+
+即写入 legacy `AccumulateTokenBucket`。
+
+当检测上传速率不高于约 `CC = 1 MiB/s` 时，代码存在进入更保守 `target_speed = 16384 B/s` 分支的路径，并相应调整 `connection_count`。
+
+因此更准确的模型是：
+
+```text
+upload byte/time meter
+      ↓
+detected upload speed (+0x184)
+      ↓
+min(policy cap C0, detected speed × C4 / 100)
+      ↓
+runtime basic_speed
+      ↓
+C8 / CC / threshold / perturbation
+      ↓
+target_speed
+      ↓
+legacy AccumulateTokenBucket (+0x30)
+      ↓
+P2P/P2S contribution / connection scheduling
+```
+
+### 26.4 `C0 / C4 / CC` 不是死常量，会被外部策略刷新
+
+运行配置更新路径中存在：
+
+```text
+source + 0x08 -> scheduler + 0xC0
+source + 0x04 -> scheduler + 0xC4
+source + 0x0C -> scheduler + 0xCC
+```
+
+也就是说这些只是构造时默认值，之后可以由外部查询/策略结果覆盖。
+
+RTTI 还确认该类存在回调签名：
+
+```text
+UploadBandwidthDetect(... QueryUploadBandwidthDetectInfo ...)
+```
+
+这和动态策略刷新模型一致。
+
+### 26.5 与固定 `basic_speed=122880` 的关系必须暂时拆开
+
+另一路已确认的配置解析器仍然存在：
+
+```text
+spup_peer
+p2pup_percent
+spup_percent
+basic_speed
+```
+
+且缺失 `basic_speed` 时明确默认：
+
+```text
+basic_speed = 122880 B/s = 120 KiB/s
+```
+
+但本节确认 `UploadBandwidthDetect` 日志中的 `basic_speed` 是由“检测到的上传速度 × 百分比 / 上限”实时算出的局部值。
+
+因此目前不能把两者直接等同：
+
+```text
+named config basic_speed = 122880
+        != 已证明
+UploadBandwidthDetect runtime basic_speed
+```
+
+更安全的当前模型是存在两条相关但尚未闭合的数据链：
+
+```text
+A. P2P switch/config parser
+   basic_speed default = 122880
+
+B. UploadBandwidthDetect
+   upload-rate meter -> runtime basic_speed -> target_speed -> legacy bucket
+```
+
+下一步应追踪 A 的 callback / message consumer，确认 `122880` 最终进入哪一个 manager / scheduler / policy bucket，再判断它是否与 B 汇合。
