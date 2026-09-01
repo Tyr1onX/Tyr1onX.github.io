@@ -476,3 +476,67 @@ network / enable_ql_pan_download
 > 一个看似很简单的“为什么下载只有 120 KiB/s”，最后背后连着配置系统、会员策略、令牌桶、时间源、带宽管理器、双下载栈、Adapter 和服务端共同作用。
 
 真正需要学习的不是某个具体限制怎么绕过去，而是怎样把这些层一层层拆开，并且只相信能被不同证据互相验证的结论。
+
+
+---
+
+## 十二、继续追踪：新后端不是“配置一开就立即接管”
+
+继续沿 `create_p2sp_task` 向下追后，下载管理器里出现了一个很关键的布尔状态。它在构造时默认是 `false`，公共创建入口最后会依据它在两套路径之间二选一。
+
+概念上可以写成：
+
+```cpp
+if (new_backend_enabled) {
+    create_via_new_task_state_machine(...);
+} else {
+    create_via_legacy_queue(...);
+}
+```
+
+`false` 路径更像旧任务链表/队列；`true` 路径会出现 `add new task`、`create_task`、`create new task`、`found create task` 等完整任务状态机。
+
+更重要的是，这个状态并不是在构造时直接根据 `enable_ql_pan_download` 赋值。继续追调用链后发现：
+
+```text
+yunp2p_init
+    ↓
+初始化下载/P2P manager
+    ↓
+注册已有任务枚举 callback
+    ↓
+on_enum_task
+    ↓
+处理/迁移已有任务
+    ↓
+atomic enabled = true
+    ↓
+重新投递此前等待的任务
+```
+
+也就是说，`enable_ql_pan_download` 更像“允许新路径”的配置条件，而 manager 自己还有一个运行期 readiness 状态。新后端需要先完成初始化和已有任务枚举，之后才真正切换。
+
+这解释了一个之前看起来矛盾的现象：二进制中 `enable_ql_pan_download` 的默认值可以是开启的，但某个真实任务仍可能暂时或最终走 legacy。
+
+目前更合理的模型是：
+
+```text
+任务类型 / Workspace 分流
+        ↓
+配置是否允许 qingluan
+        ↓
+P2P/download subsystem 是否初始化完成
+        ↓
+已有任务枚举/迁移是否完成
+        ↓
+manager runtime enabled
+        ↓
+legacy / new backend
+```
+
+另外，`no qingluan|task_handle=%1%` 的实际代码路径也确认了：上层会先查询 qingluan 任务注册表；找不到对应任务时，会明确记录 fallback，再继续通过旧任务接口设置参数。这说明两套 backend 并不是完全分离的两个程序模块，而是由兼容层在运行时维护并回退。
+
+到这里，静态结构已经接近闭环。剩下最有价值的工作不再是继续堆字符串，而是把以下两件事做实：
+
+1. 把 `enable_ql_pan_download`、特殊任务身份、初始化 readiness 与最终 manager 状态之间的条件关系继续定名；
+2. 在真实大文件下载期间做只读运行态验证，确认当前任务实例落在哪个 backend，以及哪个速率层真正约束长期吞吐。
