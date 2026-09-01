@@ -1323,3 +1323,59 @@ identity_workspace_task
 ```
 
 它用于识别 workspace/history 类任务，而不是“qingluan 是否可用”的通用判断。后续架构图应把 workspace/history 特殊分支与 qingluan/legacy 双栈选择分开描述。
+
+
+---
+
+## 二十、磁盘最新 3.0.20.233 仍保留 legacy FILETIME 限速链
+
+虽然本次动态实验对应的是仍在运行的 3.0.20.223 image，但对当天更新到磁盘的 3.0.20.233 做静态对照后，可以确认 legacy 限速机制并未被这个小版本删除。
+
+### FILETIME 路径基本保持不变
+
+`.223` 与 `.233` 都存在同构的时间包装器：
+
+```text
+GetSystemTimeAsFileTime
+        ↓
+Windows FILETIME epoch conversion
+        ↓
+duration / baseline conversion
+        ↓
+legacy bucket elapsed time
+```
+
+两个版本对应函数的指令结构高度一致，仅因版本增量导致地址和部分辅助函数位置变化。
+
+### CMS Total policy 链也仍存在
+
+3.0.20.233 仍然解析：
+
+```text
+total_limit_speed
+total_limit_enable
+```
+
+在启用分支中，仍把解析出的 Total 候选以 CMS source 送入 legacy speed-limit policy 仲裁器。
+
+因此 `.233` 静态上仍有：
+
+```text
+CMS config
+   ↓
+legacy Total policy
+   ↓
+FILETIME-derived TokenBucket refill
+```
+
+### 当前证据边界
+
+这能够证明：
+
+> 3.0.20.233 仍包含并可配置 legacy FILETIME-driven limiter。
+
+但不能仅凭静态代码证明：
+
+> 新启动的 3.0.20.233 普通 PAN 下载一定会选择 legacy 而不是 qingluan。
+
+要回答后一个问题，需要让 host 以 `.233` 重新启动后，再进行同样的只读 telemetry / throughput / live bucket 观察。
