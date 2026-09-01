@@ -11,10 +11,10 @@
   <script>
     (() => { let theme = null; try { theme = localStorage.getItem('tyr1onx-theme'); } catch {} if (theme !== 'dark' && theme !== 'light') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; document.documentElement.dataset.theme = theme; })();
   </script>
-  <link rel="stylesheet" href="./wiki.css?v=5" />
+  <link rel="stylesheet" href="./wiki.css?v=6" />
   <script src="./notes-data.js" defer></script>
   <script src="./notes-2026.js?v=2" defer></script>
-  <script src="./wiki.js?v=5" defer></script>
+  <script src="./wiki.js?v=6" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
@@ -22,17 +22,16 @@
   <div class="wiki-shell">
     <aside class="sidebar" aria-label="个人网站导航">
       <div class="sidebar-head">
-        <a class="sidebar-brand" href="./" aria-label="Tyr1onX 首页"><span class="sidebar-brand-mark" aria-hidden="true">T</span><span class="sidebar-brand-label">Tyr1onX</span></a>
-        <button class="sidebar-toggle" type="button" data-sidebar-toggle aria-label="展开侧边栏" aria-expanded="false"><span data-sidebar-toggle-icon aria-hidden="true">›</span></button>
+        <a class="sidebar-brand" href="./">Tyr1onX</a>
+        <button class="sidebar-toggle" type="button" data-sidebar-toggle aria-label="展开侧边栏" aria-expanded="false" aria-controls="desktop-navigation"><span data-sidebar-toggle-icon aria-hidden="true">›</span></button>
       </div>
-      <nav class="sidebar-nav" aria-label="主要导航">
-        <a href="./" aria-current="page"><span class="nav-mark" aria-hidden="true">文</span><span class="nav-label">文章</span></a>
-        <a href="./projects.html"><span class="nav-mark" aria-hidden="true">项</span><span class="nav-label">项目</span></a>
-        <a href="./learning.html"><span class="nav-mark" aria-hidden="true">学</span><span class="nav-label">学习</span></a>
-        <a href="./about.html"><span class="nav-mark" aria-hidden="true">关</span><span class="nav-label">关于</span></a>
+      <nav class="sidebar-nav" id="desktop-navigation" aria-label="主要导航">
+        <a href="./" aria-current="page">文章</a>
+        <a href="./projects.html">项目</a>
+        <a href="./learning.html">学习</a>
+        <a href="./about.html">关于</a>
       </nav>
       <div class="sidebar-bottom">
-        <div class="sidebar-rule"></div>
         <div class="sidebar-links">
           <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener"><span>GitHub</span><span aria-hidden="true">↗</span></a>
           <a href="mailto:yit38331@gmail.com"><span>邮箱</span><span aria-hidden="true">↗</span></a>

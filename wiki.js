@@ -18,7 +18,7 @@
 
   function readSidebarState() {
     try {
-      const saved = localStorage.getItem('tyr1onx-sidebar');
+      const saved = localStorage.getItem('tyr1onx-sidebar-v2');
       if (saved === 'expanded' || saved === 'collapsed') return saved;
     } catch {}
     return 'collapsed';
@@ -37,7 +37,7 @@
       icon.textContent = expanded ? '‹' : '›';
     });
     if (persist) {
-      try { localStorage.setItem('tyr1onx-sidebar', next); } catch {}
+      try { localStorage.setItem('tyr1onx-sidebar-v2', next); } catch {}
     }
   }
 
