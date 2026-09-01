@@ -1012,14 +1012,18 @@ set_sl(cdn=-1, total=user_limit, source=0)
 
 继续研究 `try speedup` 后，8 个 `AccumulateTokenBucket` 的结构终于变得清楚。
 
-它们不是八层串行 limiter，而是：
+它们不是八层串行 limiter，而是四组 live / shadow，而且后续已经把四组职责全部定名：
 
 ```text
-Live 1   ↔ Shadow 1
-Live 2   ↔ Shadow 2
-Live 3   ↔ Shadow 3
-Live 4   ↔ Shadow 4
+Download CDN live    ↔ Download CDN shadow
+Download Total live  ↔ Download Total shadow
+Upload live          ↔ Upload shadow
+Upload Total live    ↔ Upload Total shadow
 ```
+
+后两组的身份来自独立的 `set upload sl` 执行函数：它明确记录 `upload_sl / total_sl / current_upload_src / current_total_src`，并分别更新第三、第四组 live bucket。
+
+因此旧实现实际上把下载与上传的全局速率控制放在同一个 limiter 对象里；qingluan 新架构则已经分别出现 `download::SpeedLimitor` 与 `upload::SpeedLimitor`，职责拆分得更彻底。
 
 进入 speedup 时：
 
@@ -1056,3 +1060,98 @@ pre_server_sl
 说明下载器内部的“加速”不是简单删除一个固定 120 KiB/s 常量，而是暂时改变多层限速现场，再在结束时恢复。
 
 这个设计与后来 qingluan `SpeedLimitor` 的 live/shadow 思路非常相似，说明两代实现虽然类结构不同，但设计思想存在明显连续性。
+
+
+---
+
+## 十七、策略仲裁层与执行 Token 层已经分离确认
+
+继续追 `locatedownload`、CMS 与下载请求的 token 获取路径后，可以把旧下载控制进一步拆成两层，而不是把所有 `AccumulateTokenBucket` 都视为同一种“全局限速桶”。
+
+### 1. 策略仲裁层
+
+这一层长期保存各来源竞争后的策略状态：
+
+```text
+user / CMS / locatedownload / P2P SDK / application / default
+                         ↓
+                   source priority
+                         ↓
+              Download CDN policy
+              Download Total policy
+```
+
+当前进程在空闲状态下仍保留：
+
+```text
+CDN policy   rate = 122880 B/s, source = locatedownload
+Total policy rate = 122880 B/s, source = CMS
+```
+
+这说明策略状态会跨任务/调度周期保留，并不等于当下每个网络请求正在直接消费同一个 bucket。
+
+### 2. CMS Total policy 本身确实进入请求授权路径
+
+`get_download_token()` 的实际执行路径中，会取得当前 Download Total policy bucket，并调用 token 获取逻辑。也就是说：
+
+```text
+CMS total_limit_speed
+      ↓
+Total policy bucket
+      ↓
+try_acquire(requested_len)
+      ↓
+请求是否继续
+```
+
+因此 CMS Total 不只是配置、统计或 UI 展示值，而是真正参与下载额度判断。
+
+### 3. locatedownload 还会同步运行时执行 bucket
+
+locatedownload 更新 CDN / Total policy 后，还会把运行时 Total 候选同步到另一组执行 bucket。下载 token 获取入口会优先尝试从这一执行 bucket 获取额度。
+
+与此同时，`cdn_speed_limit_dispatch` 会读取 CDN policy 上限，再结合当前下载速度、通道状态和任务情况计算执行速率，最终更新一个 CDN 执行 bucket。HTTP/数据请求处理路径会从该 bucket 获取 token。
+
+因此更准确的数据流是：
+
+```text
+locatedownload
+   ├─→ CDN policy ─→ cdn_speed_limit_dispatch ─→ CDN execution bucket ─┐
+   └─→ Total policy / runtime total execution bucket                  │
+                                                                      ├─→ request gating
+CMS ───────────────→ Total policy bucket ──────────────────────────────┘
+```
+
+这也解释了为什么静态上能同时看到多个 120 KiB/s 状态，但运行时并不是“每个 block 从两个完全相同的全局 bucket 各扣一次”。不同 bucket 分别承担策略仲裁、动态分发和实际额度执行。
+
+### 4. 空闲状态下执行 bucket 会恢复宽松值
+
+本轮只读活体检查中，策略层仍保存两个 122880 B/s 状态，但 CDN / locatedownload Total 的执行 bucket 已恢复到约 100 MiB/s 的宽松默认值。
+
+因此可以确认：
+
+> policy bucket 是持久策略状态；execution bucket 是运行期调度状态，会随任务生命周期和 dispatcher 重新配置。
+
+### 5. `no token` 路径是多层联合门控
+
+下载请求失败日志同时记录 `total_token / task_token / peer_token` 等状态；对应执行代码只有在多个额度检查均通过时才继续。
+
+因此最终吞吐更适合表示为：
+
+```text
+policy arbitration
+       ↓
+runtime execution buckets
+       ↓
+global / task / peer token gates
+       ↓
+network request allowed
+```
+
+而不是一个单独的 `speed_limit` 数值直接决定全部下载流量。
+
+### 结论修正
+
+此前“当前 120 KiB/s 主要对应一个 CMS Total bucket”的结论需要补充为：
+
+> 当前普通下载策略中，CMS Total 与 locatedownload CDN 都曾明确给出 122880 B/s；CMS Total policy 本身进入 token 获取路径，而 locatedownload 还通过 CDN dispatcher / runtime execution bucket 形成另一条执行链。客户端最终速度来自多层 token gate 的共同结果，而不是单一 bucket。
