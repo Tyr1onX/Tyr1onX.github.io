@@ -1943,3 +1943,135 @@ BrowserEngine task rate ≈ 120 KiB/s
 仍需继续区分：当前 `.234` 真实普通 PAN 下载最终走 legacy FILETIME limiter、qingluan QPC limiter，还是多个 gate 同时生效。
 
 另外需要注意：`transmission.db` 的 `complete_size` 并不会对每个运行时进度采样即时落盘；BrowserEngine 官方任务 API 的 `finish_size/rate` 是更适合做短窗口动态测量的来源。
+
+
+## 二十三、BrowserEngine SpeedupManager 与多时钟模型
+
+### 23.1 `max_normal_speed` 不是服务端直接下发的固定“正常限速”
+
+继续反查 `browserengine.dll` 中 `get_speedup_info(true)` 的 JSON 生成函数后，可以把关键字段映射到 `SpeedupManager`：
+
+```text
+SpeedupManager + 0x640 = max_normal_speed
+SpeedupManager + 0x638 = max_speedup_speed
+SpeedupManager + 0x648 = speedup-session flag
+SpeedupManager + 0x650 = normal-window baseline tick
+```
+
+采样循环会读取与 `download_speed` 同源的实时速度（查询类型 27）：
+
+```text
+if speedup_flag != 0:
+    if current_speed > max_speedup_speed:
+        max_speedup_speed = current_speed
+else:
+    if GetTickCount() - normal_baseline > 30000 ms:
+        if current_speed > max_normal_speed:
+            max_normal_speed = current_speed
+```
+
+因此当前观察到的：
+
+```text
+max_normal_speed = 3199000 B/s
+```
+
+更准确的含义是：客户端曾在非 speedup 状态、稳定窗口之后记录到约 3.2 MB/s 的实际峰值。它不是当前普通下载的固定策略上限。
+
+这进一步加强了一个判断：当前约 120 KiB/s 并不是客户端认为网络只能达到的物理容量。
+
+### 23.2 speedup flag 的生命周期也被闭合
+
+`SpeedupManager + 0x648` 初始化为 0。开始 speedup 会话的路径会将其设为 1；结束路径会清零，并把当前内部 tick 写入 `+0x650`，从而重新开始普通状态的 30 秒稳定窗口。
+
+附近还保留：
+
+```text
+min_member_speedup_file_size
+min_member_speedup_percent
+system_limit
+timestamp=%lld&token=%s
+```
+
+以及源码路径：
+
+```text
+.../filetransfer/taskmanager/file_download_task_manager.cpp
+```
+
+这说明“普通速度峰值”和“speedup 速度峰值”本来就是 BrowserEngine 设计中两个分离的统计状态。
+
+### 23.3 BrowserEngine 的内部单调时钟已确认是 `GetTickCount`
+
+大量调度/采样代码都通过跳板 `0x180031133` 取得内部 tick。继续追跳板后得到：
+
+```text
+0x180031133
+  -> 0x180b13230
+  -> KERNEL32!GetTickCount
+```
+
+因此 BrowserEngine 的 SpeedupManager、稳定窗口和大量本地调度逻辑使用的是 `GetTickCount`，不是 QPC。
+
+### 23.4 `cur_sys_timestamp` 是 `_time64` + 可选 `GetTickCount` 校准推进
+
+`get_speedup_info` 中 `cur_sys_timestamp` 的实现为：
+
+```text
+raw = _time64(NULL)
+
+if calibration_disabled:
+    return raw
+
+if base_timestamp > 0 and base_tick > 0:
+    return base_timestamp + seconds(GetTickCount() - base_tick)
+
+return raw
+```
+
+对应状态：
+
+```text
+object + 0x488 = calibrated base timestamp
+object + 0x490 = GetTickCount baseline
+object + 0x498 = calibration enabled
+```
+
+setter 位于 `web_url_manager.cpp`：
+
+```text
+if timestamp <= 0:
+    assert/fail
+else:
+    base_timestamp = timestamp
+    calibration_enabled = true
+    base_tick = GetTickCount()
+```
+
+DLL 中还存在真实 JSON 字段：
+
+```text
+server_time
+```
+
+并且其他运行日志明确同时记录：
+
+```text
+local_ts=%lld
+server_time=%lld
+```
+
+因此 BrowserEngine 存在“服务端/外部时间基准 + 本地 GetTickCount 持续推进”的校时设计。当前还不把 `+0x488` 的每一次写入都绝对等同于 `server_time`，但源码位置与字段结构已高度支持这个解释。
+
+### 23.5 当前至少存在四种时间来源，不能混为一谈
+
+```text
+BrowserEngine 会话/速度统计：GetTickCount
+BrowserEngine speedup Unix 时间：_time64，或 base_timestamp + GetTickCount elapsed
+legacy kernel limiter：GetSystemTimeAsFileTime / FILETIME-derived elapsed
+qingluan limiter：QueryPerformanceCounter / QueryPerformanceFrequency
+```
+
+这对“本地变速为什么可能有效”非常关键：一个工具若只改变 Windows 墙钟、只改变 `GetTickCount`、或只改变 QPC，受到影响的子系统可能完全不同。
+
+因此不能再把“修改时间”视为单一操作。真正需要回答的是：当前实际 120 KiB/s 的最终 token gate 读取哪一种时钟，以及变速工具实际 hook 了哪些时钟 API。
