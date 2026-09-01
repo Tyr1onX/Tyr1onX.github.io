@@ -4,8 +4,8 @@
   const metaTheme = document.querySelector('meta[name="theme-color"]');
 
   const themeColor = {
-    light: '#f3f1eb',
-    dark: '#141512',
+    light: '#faf9f7',
+    dark: '#11110f',
   };
 
   const applyTheme = (theme) => {

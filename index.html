@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Tyr1onX 的个人主页：正在做的项目、学习记录与偶尔写下的文字。" />
-    <meta name="theme-color" content="#f3f1eb" />
+    <meta name="description" content="Tyr1onX 的个人网站：项目、学习记录和偶尔写下来的文字。" />
+    <meta name="theme-color" content="#faf9f7" />
     <meta name="color-scheme" content="light dark" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Tyr1onX" />
-    <meta property="og:description" content="做一些我自己真正会用的东西。项目、学习记录与文字。" />
+    <meta property="og:description" content="项目、学习记录和偶尔写下来的文字。" />
     <meta property="og:url" content="https://tyr1onx.github.io/" />
     <link rel="canonical" href="https://tyr1onx.github.io/" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
@@ -24,8 +24,8 @@
         root.dataset.theme = theme;
       })();
     </script>
-    <link rel="stylesheet" href="./home.css?v=3" />
-    <script src="./home.js?v=3" defer></script>
+    <link rel="stylesheet" href="./home.css?v=3.1" />
+    <script src="./home.js?v=3.1" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到主要内容</a>
@@ -34,7 +34,7 @@
       <header class="site-header">
         <a class="site-name" href="./" aria-label="Tyr1onX 首页">Tyr1onX</a>
         <nav class="site-nav" aria-label="主要导航">
-          <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener">GitHub</a>
+          <a href="#projects">Projects</a>
           <a href="#writing">Writing</a>
           <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换到深色模式" title="切换到深色模式">
             <span aria-hidden="true">◐</span>
@@ -43,143 +43,120 @@
       </header>
 
       <main id="main">
-        <section class="hero" aria-labelledby="hero-title">
-          <p class="hero-kicker">Independent developer · Personal space</p>
-          <h1 id="hero-title">Tyr1onX</h1>
-          <p class="hero-statement">做一些我自己真正会用的东西。</p>
-          <p class="hero-meta">通信工程 / Full-stack</p>
-          <p class="hero-copy">正在学习、写代码，也偶尔写下一些文字。</p>
-          <div class="hero-links" aria-label="首页快捷入口">
-            <a class="text-link text-link--strong" href="#work">查看项目 <span aria-hidden="true">↓</span></a>
-            <a class="text-link" href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener">GitHub <span aria-hidden="true">↗</span></a>
+        <section class="intro" aria-labelledby="intro-title">
+          <h1 id="intro-title">Tyr1onX</h1>
+          <div class="intro-copy">
+            <p>你好，我是 Tyr1onX。</p>
+            <p>这里放一些正在做的东西，也记录学习和偶尔写下来的文字。</p>
+          </div>
+          <p class="intro-now"><span>现在</span>通信工程在读。Learning 里持续记录 C++、Linux 和全栈学习；最近继续改课刻、RedPalm 和知识星图。</p>
+        </section>
+
+        <section class="content-section" id="projects" aria-labelledby="projects-title">
+          <header class="section-header">
+            <h2 id="projects-title">项目</h2>
+          </header>
+
+          <div class="project-list">
+            <a class="project-item" href="./keke.html">
+              <div class="project-meta">
+                <span>2026</span>
+                <span>进行中</span>
+              </div>
+              <div class="project-content">
+                <div class="project-title-row">
+                  <h3>课刻</h3>
+                  <span aria-hidden="true">→</span>
+                </div>
+                <p>桌面课表、截图识别与本地课程管理。课程和设置保存在本机。</p>
+              </div>
+            </a>
+
+            <a class="project-item" href="https://redpalm.yituan4527.top/" target="_blank" rel="noreferrer noopener">
+              <div class="project-meta">
+                <span>2026</span>
+                <span>进行中</span>
+              </div>
+              <div class="project-content">
+                <div class="project-title-row">
+                  <h3>RedPalm</h3>
+                  <span aria-hidden="true">↗</span>
+                </div>
+                <p>多人互动小游戏与 Web 实验，包含飞行棋、命运卡、轮盘、数字炸弹和扫雷。</p>
+              </div>
+            </a>
+
+            <a class="project-item" href="./knowledge.html">
+              <div class="project-meta">
+                <span>2026</span>
+                <span>持续更新</span>
+              </div>
+              <div class="project-content">
+                <div class="project-title-row">
+                  <h3>知识星图</h3>
+                  <span aria-hidden="true">→</span>
+                </div>
+                <p>把学习资料、知识节点和项目经历整理成可以浏览的知识空间。</p>
+              </div>
+            </a>
           </div>
         </section>
 
-        <section class="section work-section" id="work" aria-labelledby="work-title">
-          <div class="section-heading">
-            <p class="section-label">Selected Work</p>
-            <h2 id="work-title">正在长期做的东西</h2>
-          </div>
-
-          <div class="work-list">
-            <article class="work-item work-item--lead">
-              <div class="work-index" aria-hidden="true">01</div>
-              <div class="work-body">
-                <p class="work-kind">Windows · Local-first</p>
-                <h3><a href="./keke.html">课刻 <span aria-hidden="true">↗</span></a></h3>
-                <p class="work-description">从学校教务系统导入课表，在 Windows 桌面查看当前课程、下一节与完整周课表。课程和设置留在本机，截图导入仍在 Beta 阶段。</p>
-                <div class="work-footer">
-                  <p>Tauri 2 · Rust · Vanilla TypeScript</p>
-                  <div class="work-links">
-                    <a href="./keke.html">项目页</a>
-                    <a href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="work-item">
-              <div class="work-index" aria-hidden="true">02</div>
-              <div class="work-body">
-                <p class="work-kind">Web · 持续迭代</p>
-                <h3><a href="https://redpalm.yituan4527.top/" target="_blank" rel="noreferrer noopener">RedPalm <span aria-hidden="true">↗</span></a></h3>
-                <p class="work-description">把飞行棋、命运卡、幸运轮盘、数字炸弹和扫雷放在一起的多人互动小游戏与 Web 实验，也在继续完善联机玩法。</p>
-                <div class="work-footer">
-                  <p>Vanilla HTML · CSS · JavaScript</p>
-                  <div class="work-links">
-                    <a href="https://redpalm.yituan4527.top/" target="_blank" rel="noreferrer noopener">打开站点 ↗</a>
-                    <a href="https://github.com/Tyr1onX/RedPalm" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="work-item">
-              <div class="work-index" aria-hidden="true">03</div>
-              <div class="work-body">
-                <p class="work-kind">Learning · Visualization</p>
-                <h3><a href="./knowledge.html">知识星图 <span aria-hidden="true">→</span></a></h3>
-                <p class="work-description">把真实学习资料、知识节点和项目经历组织成可以探索的星图，用来回看自己会什么、做到什么程度，以及下一步最值得学什么。</p>
-                <div class="work-footer">
-                  <p>Codex Skill · Knowledge map</p>
-                  <div class="work-links">
-                    <a href="./knowledge.html">打开星图 →</a>
-                    <a href="https://github.com/Tyr1onX/knowledge-constellation" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="section now-section" aria-labelledby="now-title">
-          <div class="section-heading section-heading--compact">
-            <p class="section-label">Now</p>
-            <h2 id="now-title">现在</h2>
-          </div>
-          <div class="now-content">
-            <time datetime="2026-09">2026.09</time>
-            <div class="now-notes">
-              <div>
-                <h3>Learning</h3>
-                <p>持续记录 C++ / Linux / 全栈学习过程，把路线、知识笔记、进度和复习状态留在同一个长期知识库里。</p>
-              </div>
-              <div>
-                <h3>最近</h3>
-                <p>继续改课刻、RedPalm 和知识星图，也会把新的实验和真正用得上的小工具慢慢留下来。</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section writing-section" id="writing" aria-labelledby="writing-title">
-          <div class="section-heading section-heading--row">
-            <div>
-              <p class="section-label">Writing</p>
-              <h2 id="writing-title">偶尔写下来的文字</h2>
-            </div>
-            <a class="section-more" href="./notes.html">全部文字 <span aria-hidden="true">→</span></a>
-          </div>
+        <section class="content-section" id="writing" aria-labelledby="writing-title">
+          <header class="section-header section-header--split">
+            <h2 id="writing-title">文章</h2>
+            <a href="./notes.html">全部文字 →</a>
+          </header>
 
           <ol class="writing-list">
             <li>
-              <time datetime="2026-08-01">08.01</time>
-              <a href="./note.html?id=2026-08-01-absence-everywhere">她将以缺席的方式在我的生命里无处不在</a>
+              <a class="writing-item" href="./note.html?id=2026-08-01-absence-everywhere">
+                <time datetime="2026-08-01">2026.08.01</time>
+                <div>
+                  <h3>她将以缺席的方式在我的生命里无处不在</h3>
+                  <p>她将以缺席的方式在我的生命里无处不在。</p>
+                </div>
+              </a>
             </li>
             <li>
-              <time datetime="2026-07-28">07.28</time>
-              <a href="./note.html?id=2026-07-28-ai-tool-stall">当 AI 开始“磨洋工”</a>
+              <a class="writing-item" href="./note.html?id=2026-07-28-ai-tool-stall">
+                <time datetime="2026-07-28">2026.07.28</time>
+                <div>
+                  <h3>当 AI 开始“磨洋工”</h3>
+                  <p>一次 GitHub 工具失效后的排查与复盘：执行型任务最终要看真实、可验证的结果。</p>
+                </div>
+              </a>
             </li>
             <li>
-              <time datetime="2026-05-28">05.28</time>
-              <a href="./note.html?id=2026-05-28-meeting-yourself">遇见谁，都是在遇见自己</a>
+              <a class="writing-item" href="./note.html?id=2026-05-28-meeting-yourself">
+                <time datetime="2026-05-28">2026.05.28</time>
+                <div>
+                  <h3>遇见谁，都是在遇见自己</h3>
+                  <p>通过关系里的反应重新看见自己的期待、定义和情绪。</p>
+                </div>
+              </a>
             </li>
             <li>
-              <time datetime="2025-11-11">11.11</time>
-              <a href="./note.html?id=2025-11-11-winter">冬天里，只有人会变得蓬松</a>
+              <a class="writing-item" href="./note.html?id=2025-11-11-winter">
+                <time datetime="2025-11-11">2025.11.11</time>
+                <div>
+                  <h3>冬天里，只有人会变得蓬松</h3>
+                  <p>植物在冬天做减法，人却被厚衣服包起来，慢慢变得蓬松。</p>
+                </div>
+              </a>
             </li>
           </ol>
-          <a class="mobile-more" href="./notes.html">全部文字 <span aria-hidden="true">→</span></a>
         </section>
 
-        <section class="section elsewhere-section" aria-labelledby="elsewhere-title">
-          <div class="section-heading section-heading--compact">
-            <p class="section-label">Elsewhere</p>
-            <h2 id="elsewhere-title">继续了解</h2>
-          </div>
-          <div class="elsewhere-list">
-            <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener">
-              <span><strong>GitHub</strong><small>代码与公开仓库</small></span><span aria-hidden="true">↗</span>
-            </a>
-            <a href="https://tyr1onx.github.io/ui/">
-              <span><strong>UI</strong><small>组件与视觉实验</small></span><span aria-hidden="true">→</span>
-            </a>
-            <a href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer noopener">
-              <span><strong>Learning</strong><small>长期学习知识库</small></span><span aria-hidden="true">↗</span>
-            </a>
-            <a href="mailto:yit38331@gmail.com">
-              <span><strong>Email</strong><small>给我写信</small></span><span aria-hidden="true">↗</span>
-            </a>
+        <section class="content-section elsewhere" aria-labelledby="elsewhere-title">
+          <header class="section-header">
+            <h2 id="elsewhere-title">其他地方</h2>
+          </header>
+          <div class="elsewhere-links">
+            <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener"><span>GitHub</span><small>代码与公开仓库</small><span aria-hidden="true">↗</span></a>
+            <a href="https://github.com/Tyr1onX/Learning" target="_blank" rel="noreferrer noopener"><span>Learning</span><small>长期学习记录</small><span aria-hidden="true">↗</span></a>
+            <a href="https://tyr1onx.github.io/ui/"><span>UI</span><small>组件与视觉实验</small><span aria-hidden="true">→</span></a>
+            <a href="mailto:yit38331@gmail.com"><span>Email</span><small>给我写信</small><span aria-hidden="true">↗</span></a>
           </div>
         </section>
       </main>
