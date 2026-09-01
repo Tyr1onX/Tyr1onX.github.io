@@ -689,3 +689,208 @@ CMS / locatedownload / P2P / user source 仲裁
 这说明本地 membership 枚举本身不是最终速度值。真正的速度决策位于策略层，会员状态只是策略输入和重算触发条件之一。
 
 另外，对正在运行的 `.223` 与磁盘待加载的 `.233` 做对比后，新版本仍保留相同的 `set_sl` 日志、CMS Total 日志、用户限速入口、CDN/Total source 布局以及 Total live bucket 结构。因此这套 legacy limiter 在 `.233` 中仍然是被维护的实际代码，而不是马上要删除的旧残留。
+
+
+---
+
+## 十五、qingluan 新栈也完成了“策略 → live bucket”闭环
+
+在 legacy 的 CMS → Total bucket 数据流确认之后，又对 qingluan `SpeedLimitor` 做了同样的追踪。
+
+新栈的统一入口会记录：
+
+```text
+speed_limit_type
+current_peer_sl_type
+current_peer_sl
+current_total_sl_type
+current_total_sl
+```
+
+控制流确认它先把 source 分成 Total 与 Peer 两组，再分别进行优先级仲裁：
+
+```text
+Total: 0 user_total_ctl
+       1 p2p_total_sl
+       3 p2s_total_sl
+       5 application_total_ctl
+
+Peer:  2 p2p_peer_sl
+       4 p2s_peer_sl
+       6 application_peer_ctl
+```
+
+同一组内数字越小优先级越高。
+
+一旦新 source 可以覆盖当前 source，统一入口会直接调用 qingluan `AccumulateTokenBucket::set_rate(rate)`，因此数据流同样是：
+
+```text
+业务 / 服务端策略
+      ↓
+(rate, speed_limit_type)
+      ↓
+SpeedLimitor::set_speed_limit
+      ↓
+Total / Peer source 仲裁
+      ↓
+live AccumulateTokenBucket::set_rate
+```
+
+qingluan 的 `set_rate()` 与 legacy 很相似，但普通最小 bucket 容量约为 28 KiB：
+
+```cpp
+rate = new_rate;
+capacity = max(new_rate, minimum_bucket);
+```
+
+### 已经确定的直接来源
+
+业务参数入口的映射为：
+
+```text
+业务 type 0 → user_total_ctl        (source 0)
+业务 type 1 → application_peer_ctl  (source 6)
+业务 type 2 → application_total_ctl (source 5)
+```
+
+locatedownload / P2S 响应则会把同一个服务端速度字段换算为 B/s，并分别写入：
+
+```text
+p2s_peer_sl  (source 4)
+p2s_total_sl (source 3)
+```
+
+当服务端返回 0 时，代码会分别使用较大的内部 Peer / Total 上限，语义仍然是“这一策略维度不构成实际瓶颈”。
+
+这说明新旧两代的设计理念是一致的：服务端返回的速度策略不是直接控制 socket，而是先进入本地策略仲裁器，最终变成 TokenBucket 的 refill rate。
+
+### 四个 bucket 的角色
+
+`SpeedLimitor` 的四个 qingluan `AccumulateTokenBucket` 已经可以解释为：
+
+```text
+Live Peer   + Shadow Peer
+Live Total  + Shadow Total
+```
+
+普通策略只更新 Live Peer / Live Total。进入 speedup 时，当前 live bucket 与 source 被复制到 shadow，再临时放宽 live 限制；退出 speedup 时恢复之前的完整 bucket/source 状态。
+
+### P2P source 1/2 的保留疑点
+
+有一个结论需要明确保持“未完全证明”：
+
+```text
+p2p_total_sl = 1
+p2p_peer_sl  = 2
+```
+
+虽然枚举和仲裁逻辑都真实存在，但在 `.223` 和 `.233` 中，统一 qingluan setter 都只有 7 个普通 direct caller，而且这些 caller 只使用 source：
+
+```text
+0, 3, 4, 5, 6
+```
+
+没有 source 1/2；同时也没有找到指向该 setter 的函数指针或 tail-jump。
+
+因此目前不能声称已经知道 P2P source 1/2 的写入路径。可能性包括：
+
+- 当前 Windows 构建预留但未启用；
+- 通过另一种对象状态复制方式生效；
+- 通过目前尚未识别的跨 service / Mojo 间接状态进入；
+- 枚举用于兼容其它平台或实验分支。
+
+这里应保留为开放问题，而不是为了“画完整架构图”强行补全。
+
+### .223 与 .233 的一致性
+
+两版 qingluan `SpeedLimitor::set_speed_limit` 都有完全相同数量的 7 个直接调用入口，source 结构和 Total/Peer 仲裁模型也一致。这再次说明 `.233` 更像小版本迭代，而不是限速核心的重新设计。
+
+
+---
+
+## 十六、qingluan 之外还有一层 User / Server Total Gate
+
+继续追踪新栈后发现，`SpeedLimitor` 并不是唯一的总速率控制器。外围还有一个独立状态对象，同时维护：
+
+```text
+user_sl
+server_sl
+effective_total_sl
+try_speedup_flag
+previous_server_sl
+```
+
+它的核心计算非常直接：
+
+```cpp
+effective_total_sl = min(user_sl, server_sl);
+```
+
+然后把 `effective_total_sl` 写入另一只 `AccumulateTokenBucket`。
+
+当某一侧传入 0 时，内部会替换成一个很大的上限，语义仍然是“这一侧当前不构成实际限制”。
+
+因此这一层更像：
+
+```text
+用户主动限速 ────────┐
+                     ├─ min() → Total Gate Bucket
+服务端总速率策略 ────┘
+```
+
+### speedup 的真实行为
+
+`set_try_speedup_flag` 的控制流显示，进入 speedup 时并不会把所有限制全部抹掉。
+
+它会：
+
+```text
+保存当前 server_sl
+        ↓
+临时把 server_sl 放宽到很大的内部上限
+        ↓
+重新计算 min(user_sl, server_sl)
+        ↓
+更新 Total Gate Bucket
+```
+
+退出 speedup 时再恢复之前的 `server_sl`。
+
+所以如果用户自己设置了较低速度：
+
+```text
+user_sl < speedup 后的 server_sl
+```
+
+最终仍然是：
+
+```text
+effective_total_sl = user_sl
+```
+
+这说明 speedup 的客户端语义不是“无条件突破所有本地限制”，而是“临时放宽服务器侧/业务侧的总速率约束，同时尊重用户主动设置的上限”。
+
+### 新栈因此至少有两层 Total 控制
+
+目前可以确认的新栈结构至少是：
+
+```text
+User / Server Total Gate
+        │
+        │ effective = min(user, server)
+        ▼
+Total Gate TokenBucket
+        │
+        ▼
+qingluan::download::SpeedLimitor
+        │
+        ├─ Live Total
+        └─ Live Peer
+        │
+        ▼
+Task / P2S / Peer 等更细粒度 token gate
+```
+
+因此不能把 qingluan 描述成“只有一个 Total TokenBucket”。它本身就是分层 QoS 系统。
+
+目前这个 User / Server Total Gate 的正式 C++ 类名尚未确认。二进制里已经能看到 `server_total_sl`、`USER_SPEED_LIMIT`、`TOTAL_DOWNLOAD_SPEED_LIMIT`、`TRY_SPEEDUP_FLAG` 等状态名，但在没有 RTTI 或源码路径直接证据前，不应为了图完整而给它杜撰类名。
