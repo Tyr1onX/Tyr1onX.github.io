@@ -1828,3 +1828,118 @@ mul 0xcccccccccccccccd
 > 3.0.20.223、3.0.20.233、3.0.20.234 都保留 legacy FILETIME-driven 时间基础；`.234` 同时也保留 qingluan 的 QPC-derived 时间基础。
 
 这仍不等价于“修改系统时间一定可以提高最终下载速度”。最终吞吐还可能同时受 Total / CDN / task / peer token gate、服务端策略和网络能力约束。下一步需要在 `.234` 的真实下载会话中做暂停→恢复生命周期与 telemetry A/B，并只做低风险的时间敏感性验证。
+
+
+## 二十二、3.0.20.234 活跃任务的官方速率与运行时 122880 证据
+
+### 22.1 通过客户端自己的 Electron IPC 恢复暂停任务
+
+在临时隐藏启动的 Electron 主进程中，仅启用本机 `127.0.0.1` 调试端口用于研究。主 renderer 保留 `require()` / `electron.ipcRenderer` 权限，因此可以走客户端已经存在的正式 IPC：
+
+```text
+ipcRenderer.send("enqueueDownloadTask", [1788231912], "0")
+```
+
+随后通过 `getSubTasksById` 读取 BrowserEngine 自己维护的任务对象，不直接改任务数据库。任务 `1788231912` 进入运行态并继续增加 `finish_size`。
+
+### 22.2 BrowserEngine 自己报告约 120 KiB/s，而不是只有外部观测如此
+
+连续读取任务对象时，当前任务 `rate` 在约 119,932–125,441 B/s 之间波动；典型样本为：
+
+```text
+rate=122856
+rate=125198
+rate=125441
+rate=120191
+rate=122353
+rate=120838
+rate=119932
+```
+
+这与此前外部长期吞吐观测的 `122880 B/s = 120 KiB/s` 高度吻合。小幅上下摆动符合累积 token bucket / 调度窗口造成的短 burst 特征。
+
+同时任务对象明确报告：
+
+```text
+download_slow = false
+network_slow = false
+firewall_ban = false
+is_speedup = 0
+```
+
+因此在客户端自己的诊断语义中，这不是“网络本身被判定为很慢”。
+
+### 22.3 用户设置层没有配置 120 KiB/s 上限
+
+Electron 主进程配置读取结果：
+
+```text
+download_max_speed = ""
+upload_max_speed = ""
+simultaneous_download_task_num = ""
+```
+
+因此当前约 120 KiB/s 不是用户在设置页面手工填写的下载上限。
+
+### 22.4 官方 `get_speedup_info(true)` 暴露了三组不同速度概念
+
+主进程已经把 BrowserEngine 包装器挂为 `app.$getSpeedUpInfo`。只读调用 `app.$getSpeedUpInfo(true)` 返回的 JSON 包含：
+
+```text
+max_normal_speed      = 3199000 B/s
+max_speedup_speed     = 0
+download_speed        ≈ 126000–138000 B/s
+speedup_ticket_using  = false
+speedup_speed_limit   = 307200 B/s
+ticket_end_time       = 0
+cur_sys_timestamp     = current Unix timestamp
+```
+
+其中 `307200 B/s` 精确等于 300 KiB/s。
+
+这个结果说明客户端同时维护：
+
+1. `download_speed`：当前真实下载速度；
+2. `max_normal_speed`：某种正常/历史/能力参考值，当前为约 3.2 MB/s；
+3. `speedup_speed_limit`：加速票场景的独立速率上限，当前为 300 KiB/s。
+
+所以当前约 120 KiB/s 不能简单解释为“客户端认为这条网络的物理上限只有 120 KiB/s”。
+
+### 22.5 3.0.20.234 活跃 kernel 私有堆中大量存在 122880
+
+对 plugin_id=1000 的 `baidunetdiskhost.exe` 做只读 `MEM_PRIVATE` 扫描，不扫描模块映像，以避免把 DLL 静态字符串误判为运行态对象。扫描器先用 `d.pcs.baidu.com` 校验，确认能够命中活跃下载上下文。
+
+结果：
+
+```text
+d.pcs.baidu.com     => 35
+122880              => 215
+total_limit_speed   => 2
+download_common     => 0
+download_common_qingluan => 0
+```
+
+因此 `122880` 不仅存在于静态配置/机器码，也在 `.234` 当前活跃 kernel 的私有运行时内存中大量出现。
+
+但 `total_limit_speed` 与 ASCII `122880` 没有落在同一个 4 KiB 邻近窗口内，所以暂时不能据此宣称这 215 个 `122880` 全都属于同一个 CMS Total 对象。
+
+### 22.6 当前最强模型
+
+目前可支持的模型进一步收敛为：
+
+```text
+网络能力 / 历史正常能力  >> 120 KiB/s
+用户手工 download_max_speed 未设置
+              ↓
+服务端/CMS/场景策略候选
+              ↓
+客户端 limiter policy / runtime bucket
+              ↓
+BrowserEngine task rate ≈ 120 KiB/s
+              ↓
+真实文件增长 ≈ 120 KiB/s
+```
+
+仍需继续区分：当前 `.234` 真实普通 PAN 下载最终走 legacy FILETIME limiter、qingluan QPC limiter，还是多个 gate 同时生效。
+
+另外需要注意：`transmission.db` 的 `complete_size` 并不会对每个运行时进度采样即时落盘；BrowserEngine 官方任务 API 的 `finish_size/rate` 是更适合做短窗口动态测量的来源。
