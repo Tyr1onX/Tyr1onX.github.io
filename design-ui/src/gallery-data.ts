@@ -13,6 +13,7 @@ export type Category =
   | "selectors";
 
 export type Fidelity = "source" | "adapted" | "reproduction";
+export type ComponentWeight = "light" | "medium" | "heavy";
 
 export type GalleryItem = {
   id: string;
@@ -23,16 +24,25 @@ export type GalleryItem = {
   source: string;
   original: string;
   originalLabel?: string;
+  originalSource?: string;
+  license?: string;
+  dependencies: string[];
   fidelity: Fidelity;
+  featuredRank: number;
+  visualWeight: ComponentWeight;
+  runtimeWeight: ComponentWeight;
+  usedInSite: boolean;
   heavy?: boolean;
   loadDemo: () => Promise<{ default: ComponentType }>;
 };
+
+type GalleryItemInput = Omit<GalleryItem, "dependencies" | "featuredRank" | "visualWeight" | "runtimeWeight" | "usedInSite"> & Partial<Pick<GalleryItem, "dependencies" | "featuredRank" | "visualWeight" | "runtimeWeight" | "usedInSite">>;
 
 function namedDemo<T extends Record<string, ComponentType>>(loader: () => Promise<T>, name: keyof T) {
   return async () => ({ default: (await loader())[name] });
 }
 
-export const items: GalleryItem[] = [
+const rawItems: GalleryItemInput[] = [
   { id: "playing-card", name: "Playing Card", author: "maxim.bort.devel", category: "cards", tags: ["Card", "Event", "RedPalm"], source: "components/cards/playing-card.tsx", original: "https://21st.dev/@maxim.bort.devel/components/playing-card", fidelity: "reproduction", loadDemo: namedDemo(() => import("./demos/playing-card-demo"), "PlayingCardDemo") },
   { id: "flipping-card", name: "Flipping Card", author: "aghasisahakyan1", category: "cards", tags: ["Card", "Flip", "RedPalm"], source: "components/cards/flipping-card.tsx", original: "https://21st.dev/@aghasisahakyan1/components/flipping-card", fidelity: "source", loadDemo: namedDemo(() => import("./demos/flipping-card-demo"), "FlippingCardDemo") },
   { id: "card-stack", name: "Card Stack", author: "ruixen.ui", category: "cards", tags: ["Card", "Stack", "Drag", "RedPalm"], source: "components/cards/card-stack.tsx", original: "https://21st.dev/@ruixen.ui/components/card-stack", fidelity: "adapted", loadDemo: namedDemo(() => import("./demos/card-stack-demo"), "CardStackDemo") },
@@ -61,7 +71,35 @@ export const items: GalleryItem[] = [
   { id: "expand-arrow-button", name: "Button 7 · Expand Arrow", author: "uilayout.contact", category: "buttons", tags: ["Hover", "Arrow"], source: "components/buttons/expand-arrow-button.tsx", original: "https://21st.dev/@uilayout.contact/components/button-7", fidelity: "source", loadDemo: namedDemo(() => import("./demos/button-seven-demo"), "ButtonSevenDemo") },
   { id: "tactile-button", name: "Tactile Button", author: "mengto", category: "buttons", tags: ["WebGL", "Tactile"], source: "components/buttons/tactile-button.tsx", original: "https://21st.dev/@mengto/components/tactile-button", fidelity: "adapted", heavy: true, loadDemo: namedDemo(() => import("./demos/tactile-button-demo"), "TactileButtonDemo") },
   { id: "mac-os-dock", name: "Mac OS Dock", author: "dhmnpunit", category: "docks", tags: ["Navigation", "macOS"], source: "components/docks/mac-os-dock.tsx", original: "https://21st.dev/@dhmnpunit/components/mac-os-dock", fidelity: "source", loadDemo: namedDemo(() => import("./demos/mac-os-dock-demo"), "MacOSDockDemo") },
+
+  { id: "footer-7", name: "Footer 7", author: "shadcnblockscom", category: "docks", tags: ["Footer", "Navigation", "Layout", "Minimal"], source: "components/navigation/footer-7.tsx", original: "https://21st.dev/@shadcnblockscom/components/footer-7", originalSource: "https://www.shadcnblocks.com/blocks/footer/basic", license: "Upstream registry does not declare a license; attribution retained", dependencies: ["react-icons"], fidelity: "adapted", featuredRank: 10, visualWeight: "light", runtimeWeight: "light", usedInSite: false, loadDemo: namedDemo(() => import("./demos/footer-7-demo"), "Footer7Demo") },
+  { id: "mini-navbar", name: "Mini Navbar", author: "aghasisahakyan1", category: "docks", tags: ["Navigation", "Minimal", "Responsive", "Pill"], source: "components/navigation/mini-navbar.tsx", original: "https://21st.dev/@aghasisahakyan1/components/mini-navbar", license: "MIT (as listed on 21st.dev)", dependencies: ["lucide-react"], fidelity: "reproduction", featuredRank: 20, visualWeight: "light", runtimeWeight: "light", usedInSite: false, loadDemo: namedDemo(() => import("./demos/mini-navbar-demo"), "MiniNavbarDemo") },
+  { id: "tooltip-icon-button", name: "Tooltip Icon Button", author: "serafimcloud", category: "selectors", tags: ["Tooltip", "Button", "Accessibility", "Interaction"], source: "components/interaction/tooltip-icon-button.tsx", original: "https://21st.dev/@serafimcloud/components/tooltip-icon-button", license: "Not declared on 21st.dev", dependencies: ["lucide-react"], fidelity: "reproduction", featuredRank: 30, visualWeight: "light", runtimeWeight: "light", usedInSite: false, loadDemo: namedDemo(() => import("./demos/tooltip-icon-button-demo"), "TooltipIconButtonDemo") },
+  { id: "line-tabs", name: "Tabs · With Line", author: "originui", category: "selectors", tags: ["Tabs", "Navigation", "Minimal", "Accessibility"], source: "components/interaction/line-tabs.tsx", original: "https://21st.dev/originui/tabs", originalSource: "https://github.com/shadcn/originui", license: "MIT", dependencies: ["@radix-ui/react-tabs"], fidelity: "adapted", featuredRank: 40, visualWeight: "light", runtimeWeight: "light", usedInSite: false, loadDemo: namedDemo(() => import("./demos/line-tabs-demo"), "LineTabsDemo") },
+  { id: "table-accordion", name: "Accordion · Table w/ Chevron", author: "originui", category: "selectors", tags: ["Accordion", "Disclosure", "Minimal", "Accessibility"], source: "components/interaction/table-accordion.tsx", original: "https://21st.dev/community/components/originui/accordion/table-w-chevron", originalSource: "https://github.com/shadcn/originui", license: "MIT", dependencies: ["@radix-ui/react-accordion", "lucide-react"], fidelity: "adapted", featuredRank: 50, visualWeight: "light", runtimeWeight: "light", usedInSite: false, loadDemo: namedDemo(() => import("./demos/table-accordion-demo"), "TableAccordionDemo") },
+  { id: "copy-code-button", name: "Copy Code Button", author: "minhxthanh", category: "selectors", tags: ["Code", "Copy", "Clipboard", "Interaction"], source: "components/interaction/copy-code-button.tsx", original: "https://21st.dev/@minhxthanh/components/copy-code-button", license: "Not declared on 21st.dev", dependencies: ["lucide-react"], fidelity: "reproduction", featuredRank: 60, visualWeight: "light", runtimeWeight: "light", usedInSite: false, loadDemo: namedDemo(() => import("./demos/copy-code-button-demo"), "CopyCodeButtonDemo") },
+  { id: "button-with-number", name: "Button · With Number", author: "originui", category: "buttons", tags: ["Button", "Badge", "Count", "Minimal"], source: "components/buttons/button-with-number.tsx", original: "https://21st.dev/community/components/originui/button/button-with-number", originalSource: "https://github.com/shadcn/originui", license: "MIT", dependencies: ["lucide-react"], fidelity: "adapted", featuredRank: 70, visualWeight: "light", runtimeWeight: "light", usedInSite: false, loadDemo: namedDemo(() => import("./demos/button-with-number-demo"), "ButtonWithNumberDemo") },
+  { id: "status-badge", name: "Status Badge", author: "serafimcloud", category: "status", tags: ["Status", "Badge", "Indicator", "Minimal"], source: "components/status/status-badge.tsx", original: "https://21st.dev/@serafimcloud/components/status-badge", originalSource: "https://blocks.tremor.so", license: "Source attribution retained; 21st.dev page does not declare a license", dependencies: ["class-variance-authority", "react-icons"], fidelity: "reproduction", featuredRank: 80, visualWeight: "light", runtimeWeight: "light", usedInSite: false, loadDemo: namedDemo(() => import("./demos/status-badge-demo"), "StatusBadgeDemo") },
+  { id: "breadcrumb-chevron", name: "Breadcrumb · Chevron", author: "originui", category: "docks", tags: ["Navigation", "Breadcrumb", "Minimal", "Accessibility"], source: "components/navigation/breadcrumb-chevron.tsx", original: "https://21st.dev/community/components/originui/breadcrumb/with-chevron-right", originalSource: "https://github.com/shadcn/originui", license: "MIT", dependencies: ["lucide-react"], fidelity: "adapted", featuredRank: 90, visualWeight: "light", runtimeWeight: "light", usedInSite: false, loadDemo: namedDemo(() => import("./demos/breadcrumb-chevron-demo"), "BreadcrumbChevronDemo") },
+  { id: "hyper-text", name: "Hyper Text", author: "dillionverma / Magic UI", category: "text", tags: ["Typography", "Text", "Hover", "Motion"], source: "components/text/hyper-text.tsx", original: "https://21st.dev/@dillionverma/components/hyper-text", originalSource: "https://magicui.design/docs/components/hyper-text", license: "MIT", dependencies: ["motion"], fidelity: "adapted", featuredRank: 100, visualWeight: "medium", runtimeWeight: "medium", usedInSite: false, loadDemo: namedDemo(() => import("./demos/hyper-text-demo"), "HyperTextDemo") },
 ];
+
+const weightScore: Record<ComponentWeight, number> = { light: 0, medium: 1, heavy: 2 };
+
+export const items: GalleryItem[] = rawItems.map((value, index) => ({
+  ...value,
+  dependencies: value.dependencies ?? [],
+  featuredRank: value.featuredRank ?? 500 + index,
+  visualWeight: value.visualWeight ?? (value.heavy ? "heavy" : "medium"),
+  runtimeWeight: value.runtimeWeight ?? (value.heavy ? "heavy" : "medium"),
+  usedInSite: value.usedInSite ?? false,
+})).sort((a, b) => {
+  if (a.usedInSite !== b.usedInSite) return a.usedInSite ? -1 : 1;
+  const aWeight = weightScore[a.visualWeight] + weightScore[a.runtimeWeight];
+  const bWeight = weightScore[b.visualWeight] + weightScore[b.runtimeWeight];
+  if (aWeight !== bWeight) return aWeight - bWeight;
+  return a.featuredRank - b.featuredRank;
+});
 
 export const categoryLabels: Record<Category | "all", string> = {
   all: "全部",
@@ -84,4 +122,4 @@ export const fidelityLabels: Record<Fidelity | "all", string> = {
   reproduction: "复刻待核对",
 };
 
-export const priorityTags = ["RedPalm", "Motion", "Theme", "Glass", "WebGL", "Canvas", "SVG", "Liquid", "Card", "Navigation", "Particles", "Typography"];
+export const priorityTags = ["Minimal", "Navigation", "Interaction", "Tooltip", "Tabs", "Accordion", "Code", "Badge", "Typography", "Motion", "Theme", "Glass", "WebGL", "Canvas"];

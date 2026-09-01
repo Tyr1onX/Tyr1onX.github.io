@@ -5,11 +5,22 @@
 @source "./";
 
 @theme inline {
+  --color-background: var(--bg, #fafafa);
+  --color-foreground: var(--text, #171717);
+  --color-muted: var(--hover, rgba(0, 0, 0, 0.035));
+  --color-muted-foreground: var(--muted, #666);
+  --color-border: var(--line, #e5e5e5);
+  --color-primary: var(--text, #171717);
+  --color-primary-foreground: var(--bg, #fafafa);
+  --color-accent: var(--hover, rgba(0, 0, 0, 0.035));
+  --color-accent-foreground: var(--text, #171717);
   --animate-aurora: aurora 60s linear infinite;
   @keyframes aurora {
     from { background-position: 50% 50%, 50% 50%; }
     to { background-position: 350% 50%, 350% 50%; }
   }
+  @keyframes accordion-down { from { height: 0; } to { height: var(--radix-accordion-content-height); } }
+  @keyframes accordion-up { from { height: var(--radix-accordion-content-height); } to { height: 0; } }
 }
 
 .design-library-app,

@@ -142,7 +142,7 @@ export default function App() {
       if (tag !== "all" && !item.tags.includes(tag)) return false;
       if (fidelity !== "all" && item.fidelity !== fidelity) return false;
       if (!keyword) return true;
-      return [item.name, item.author, item.source, ...item.tags].some((value) => value.toLowerCase().includes(keyword));
+      return [item.name, item.author, item.source, ...item.tags, ...item.dependencies].some((value) => value.toLowerCase().includes(keyword));
     });
   }, [category, fidelity, query, tag]);
 
@@ -277,8 +277,8 @@ export default function App() {
       </section>
 
       <p className="design-provenance-note">
-        内容迁自 <a href="https://github.com/Tyr1onX/ui" target="_blank" rel="noreferrer">Tyr1onX/ui ↗</a>；第三方作者、原始来源与 fidelity 标记沿用历史库记录。
-        <a href="https://github.com/Tyr1onX/ui/blob/main/THIRD_PARTY_COMPONENTS.md" target="_blank" rel="noreferrer">来源说明 ↗</a>
+        初始库存迁自 <a href="https://github.com/Tyr1onX/ui" target="_blank" rel="noreferrer">Tyr1onX/ui ↗</a>；新增库存继续保留第三方作者、21st.dev 链接、上游来源与 fidelity。
+        <a href="https://github.com/Tyr1onX/Tyr1onX.github.io/blob/main/design-ui/THIRD_PARTY_COMPONENTS.md" target="_blank" rel="noreferrer">来源说明 ↗</a>
       </p>
 
       <section className="design-component-grid" aria-label="UI 组件列表">
@@ -331,13 +331,17 @@ export default function App() {
               </div>
               <div className="design-modal-links">
                 <button type="button" onClick={() => void copySelectedSource()} disabled={sourceLoading}>{copied ? "已复制" : sourceLoading ? "读取中…" : "Copy source"}</button>
-                <a href={`https://github.com/Tyr1onX/ui/blob/main/${selectedItem.source}`} target="_blank" rel="noreferrer">UI 源码 ↗</a>
-                <a href={selectedItem.original} target="_blank" rel="noreferrer">{selectedItem.originalLabel ?? "Original"} ↗</a>
+                <a href={`https://github.com/Tyr1onX/Tyr1onX.github.io/blob/main/design-ui/${selectedItem.source}`} target="_blank" rel="noreferrer">库存源码 ↗</a>
+                <a href={selectedItem.original} target="_blank" rel="noreferrer">21st.dev ↗</a>
+                {selectedItem.originalSource ? <a href={selectedItem.originalSource} target="_blank" rel="noreferrer">Original source ↗</a> : null}
               </div>
             </div>
 
             <div className="design-modal-meta">
               <span>{categoryLabels[selectedItem.category]}</span>
+              <span>visual: {selectedItem.visualWeight}</span>
+              <span>runtime: {selectedItem.runtimeWeight}</span>
+              {selectedItem.dependencies.length ? <span>deps: {selectedItem.dependencies.join(", ")}</span> : <span>deps: none</span>}
               {selectedItem.tags.map((name) => <em key={name}>{name}</em>)}
               <code>{selectedItem.source}</code>
             </div>
