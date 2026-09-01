@@ -2687,48 +2687,38 @@ singleton + 0x600 = parsed basic_speed
 
 因此命名配置 `basic_speed` 在 `.234` 中已经闭合到一个持久的全局 P2P/network 状态字段，而不只是解析器栈变量。
 
-### 27.3 更强的证据：单例构造函数本身就把 `+0x600` 初始化为 120 KiB/s
+### 27.3 Correction: only `+0x600` is the confirmed 120 KiB/s scalar
 
-`0x180b58a80` 在单例尚未建立时会走大型构造函数 `0x180b56e70`。
-
-该构造函数约在 `0x180b57322` 明确执行：
+A re-check of constructor `0x180b56e70` corrects an earlier layout interpretation. Around `0x180b572c8` / `0x180b57310`, the fields are not a continuous sequence of integer tuning parameters. Instead:
 
 ```text
-movl $0x1e000, 0x600(%rax)
++0x5E0 / +0x5E8 = shared_ptr pair #1
++0x5F0 / +0x5F8 = shared_ptr pair #2
++0x600          = 0x1E000 = 122880 B/s = 120 KiB/s
++0x604          = start of another embedded object
 ```
 
-即：
+The constructor evidence is direct:
 
 ```text
-singleton + 0x600 = 0x1E000
-                   = 122880 B/s
-                   = 120 KiB/s
+0x180b572c8  mov rsi, [rcx+0x5E0]
+0x180b572cf  mov rax, [rcx+0x5E8]
+0x180b57310  mov rsi, [rax+0x5F0]
+0x180b5731b  mov rcx, [rax+0x5F8]
+0x180b57322  mov dword ptr [rax+0x600], 0x1E000
+0x180b5732c  lea rcx, [rax+0x604]
+0x180b57333  call 0x1800d5290
 ```
 
-因此 `basic_speed=120 KiB/s` 同时具有两种来源：
+So the strong conclusion that survives is:
 
 ```text
-compile-time/member default = 122880
-runtime named config        -> setter -> same +0x600 field
+named basic_speed
+  -> singleton +0x600
+  -> default 122880 B/s
 ```
 
-运行时配置可以覆盖构造时默认值。
-
-该单例附近还连续保存大量 P2P/network 调优参数，例如：
-
-```text
-+0x5E8 = 30
-+0x5EC = 80
-+0x5F0 = 100
-+0x5F4 = 35
-+0x5F8 = 5
-+0x5FC = 20
-+0x600 = 122880
-+0x604 = 32000000
-+0x608 = 104857600
-```
-
-这进一步支持它是中央 P2P/network 策略状态，而非一个孤立的 UI 数值。
+The previously listed values at `+0x5E8..+0x5FC` must not be treated as adjacent integer policy parameters. They were a structure-layout misread and are explicitly withdrawn here.
 
 ### 27.4 已确认的 getter 用途是任务统计/报告序列化
 
