@@ -4996,3 +4996,133 @@ official OpenSpeedy speedpatch64.dll
 For the **legacy global AccumulateTokenBucket component**, the earlier source-model uncertainty is now removed: this test executes the same `.234` machine code, object layout, vtable, clock helper, rate, divisor and accumulation ceiling observed in the live Baidu process.
 
 The remaining non-equivalence is above/below this component, not inside it: the standalone harness does not reproduce the full Baidu network stack (`set_sl` arbitration, Peer, CDN dispatcher, EntityTask, NetGrid, HTTP/P2P/CDN server behavior). Therefore this is binary-level proof for the core limiter component, not a claim that a complete real Baidu download would necessarily scale by the same factor after another bottleneck becomes active.
+
+#### 29.17.29 Original `set_sl` arbitration rehost reproduces the live dual-source state
+
+The rehost was extended above the individual bucket level to the original legacy global speed-policy object itself.
+
+Original functions used:
+
+```text
+global state accessor  0x1800C2AA0 -> 0x1817C0118
+whole-policy reset     0x1800EE960
+set_sl                 0x1800EF110
+```
+
+`set_sl` ABI is confirmed as:
+
+```text
+RCX = global policy state
+EDX = cdn_sl
+R8D = total_sl
+R9D = source
+```
+
+A new standalone probe executes the original reset/arbitration sequence:
+
+```text
+experiments/baidu-original-setsl-probe.cpp
+```
+
+Observed state transitions:
+
+```text
+initial / reset:
+  CDN   = 524288 B/s, source=5 default
+  TOTAL = 524288 B/s, source=5 default
+  locatedownload_active=0
+
+set_sl(122880,122880,2 locatedownload):
+  CDN   = 122880, source=2
+  TOTAL = 122880, source=2
+  locatedownload_active=1
+
+set_sl(-1,122880,1 CMS):
+  CDN   = 122880, source=2 locatedownload
+  TOTAL = 122880, source=1 CMS
+  locatedownload_active=1
+
+set_sl(999999,999999,4 application):
+  no change; the lower-priority source cannot override either active gate
+```
+
+This reproduces the **same source/rate combination observed read-only in the real paused Baidu process**:
+
+```text
+CDN   source=2 locatedownload, rate=122880
+TOTAL source=1 CMS,            rate=122880
+locatedownload_active=1
+```
+
+The source arbitration therefore no longer depends only on static control-flow interpretation; the original `.234` arbitration machine code has been executed independently and reproduces the live state.
+
+#### 29.17.30 Binary-level dual-gate OpenSpeedy proof
+
+The rehost was then extended one level further:
+
+```text
+experiments/baidu-original-dual-gate-openspeedy-proof.cpp
+```
+
+The harness does **not** manually call `set(122880)` on a test bucket. Instead it:
+
+```text
+1. loads original kernel.dll 3.0.20.234
+2. establishes the original relative FILETIME clock baseline
+3. calls original whole-policy reset
+4. calls original set_sl as locatedownload:
+      cdn_sl=122880, total_sl=122880, source=2
+5. calls original set_sl as CMS total policy:
+      cdn_sl=-1, total_sl=122880, source=1
+6. obtains the two original global AccumulateTokenBucket objects in the policy state
+7. loads official OpenSpeedy speedpatch64.dll into the harness itself
+8. sets the requested speed factor
+9. drains any startup accumulation using original `consume` only
+10. transfers 3 MiB through **both** original gates using original refill + original consume
+```
+
+The post-hook drain step is important for rehost fidelity. Two startup artifacts were discovered and deliberately characterized:
+
+- Re-basing the kernel relative clock after the DLL's static bucket construction can make the first refill see a large synthetic elapsed interval and fill the accumulation ceiling.
+- Loading OpenSpeedy after draining also takes real time; if the bucket timestamp is left behind, the first N-times refill scales that DLL-load interval and creates another startup burst.
+
+Neither is representative of the steady-state real Baidu process. Draining with the original `consume` **after OpenSpeedy is loaded and the factor is set**, immediately before measurement, removes these rehost-only startup artifacts without directly modifying token fields.
+
+Final steady-state results:
+
+```text
+factor  Baidu-kernel elapsed  real elapsed  kernel/real  real throughput
+1x      25.763 s              25.763 s      1.000        119.24 KiB/s
+2x      25.671 s              12.835 s      2.000        239.35 KiB/s
+5x      25.609 s               5.122 s      5.000        599.77 KiB/s
+```
+
+Throughout all three runs the original policy state remained:
+
+```text
+CDN raw rate   = 122880 B/s
+CDN source     = 2 locatedownload
+TOTAL raw rate = 122880 B/s
+TOTAL source   = 1 CMS
+locatedownload_active = 1
+```
+
+This is now stronger than the single-component test. The following pieces are all original `.234` machine code in the same self-owned process:
+
+```text
+legacy global policy singleton
+  -> original reset
+  -> original set_sl source arbitration
+  -> original locatedownload/CDN gate state
+  -> original CMS/TOTAL gate state
+  -> two original AccumulateTokenBucket objects
+  -> original FILETIME-derived relative clock
+  -> original refill
+  -> original consume
+```
+
+and the only external perturbation is the official OpenSpeedy `GetSystemTimeAsFileTime` hook loaded into the harness itself.
+
+The measured 1x/2x/5x values match the theoretical 120/240/600 KiB/s almost exactly. Thus the **legacy global limiter subsystem through `set_sl` and the dual CDN/TOTAL gates** has now been reproduced at binary level outside `baidunetdiskhost.exe`.
+
+The remaining gap to a full-client equivalence is now downstream/upstream of this subsystem: Peer/CDN adaptive dispatch, EntityTask/NetGrid scheduling, actual HTTP/P2P transport, and remote server/CDN behavior are not part of this standalone proof.
