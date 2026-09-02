@@ -13,6 +13,7 @@
   --pattern-c: rgba(75, 128, 103, 0.72);
   --pattern-d: rgba(122, 96, 151, 0.68);
   --identity-strip-height: 8px;
+  --context-header-height: 52px;
   --sidebar-collapsed: 44px;
   --sidebar-expanded: 188px;
   --sidebar-width: var(--sidebar-collapsed);
@@ -674,6 +675,137 @@ a.simple-item:hover .simple-title > span { transform: translateX(2px); }
   .mobile-header-inner,
   .mobile-footer { width: min(100% - 26px, 380px); }
   .mobile-nav { gap: 13px; }
+}
+
+
+/* Persistent site identity + current-page context for primary wiki pages. */
+.context-header {
+  position: sticky;
+  z-index: 60;
+  top: var(--identity-strip-height);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.context-header-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  gap: var(--shell-gap);
+  width: min(calc(100% - 56px), 1480px);
+  min-height: var(--context-header-height);
+  margin: 0 auto;
+  transition: grid-template-columns 160ms ease, gap 160ms ease;
+}
+
+.context-identity {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: max-content;
+  min-width: 0;
+  min-height: var(--context-header-height);
+  align-items: center;
+  gap: 6px;
+}
+
+.context-page {
+  min-width: 0;
+}
+
+.context-page-inner {
+  display: flex;
+  width: min(100%, 940px);
+  min-height: var(--context-header-height);
+  align-items: center;
+  margin: 0 auto;
+}
+
+.context-title {
+  overflow: hidden;
+  color: var(--secondary);
+  font-size: 13.5px;
+  font-weight: 550;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.context-theme-toggle,
+.context-mobile-nav {
+  display: none;
+}
+
+.has-context-header .wiki-shell {
+  min-height: calc(100vh - var(--identity-strip-height) - var(--context-header-height));
+}
+
+.has-context-header .sidebar {
+  top: calc(var(--identity-strip-height) + var(--context-header-height));
+  height: calc(100vh - var(--identity-strip-height) - var(--context-header-height));
+  padding-top: 24px;
+}
+
+@media (min-width: 861px) and (max-width: 1180px) {
+  html:not([data-sidebar="expanded"]) .context-page-inner { padding-left: 54px; }
+}
+
+@media (max-width: 860px) {
+  .context-header-shell {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 12px;
+    width: min(100% - 36px, 760px);
+    min-height: 48px;
+  }
+
+  .context-identity {
+    width: auto;
+    min-height: 48px;
+  }
+
+  .context-brand {
+    min-height: 38px;
+    font-size: 14.5px;
+  }
+
+  .context-sidebar-toggle { display: none; }
+
+  .context-page-inner {
+    width: 100%;
+    min-height: 48px;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+  }
+
+  .context-title {
+    max-width: 100%;
+    font-size: 12.5px;
+  }
+
+  .context-theme-toggle {
+    display: flex;
+    margin: 0 -8px 0 0;
+  }
+
+  .context-theme-toggle .theme-label { display: none; }
+
+  .context-mobile-nav {
+    display: block;
+    width: min(100% - 36px, 760px);
+    margin: 0 auto;
+  }
+
+  .has-context-header .wiki-shell { min-height: 0; }
+}
+
+@media (max-width: 560px) {
+  .context-header-shell,
+  .context-mobile-nav { width: min(100% - 30px, 560px); }
+}
+
+@media (max-width: 380px) {
+  .context-header-shell,
+  .context-mobile-nav { width: min(100% - 26px, 380px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
