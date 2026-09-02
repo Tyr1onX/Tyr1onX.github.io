@@ -43,6 +43,9 @@ jobs:
       - name: Remove design build dependencies
         run: rm -rf design-ui/node_modules design-ui/tsconfig.tsbuildinfo
 
+      - name: Prepare music artwork and previews
+        run: python scripts/generate-music-assets.py
+
       - name: Refresh About profile stats
         env:
           GH_TOKEN: ${{ github.token }}
