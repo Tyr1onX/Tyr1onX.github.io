@@ -118,3 +118,83 @@ The build blocker was only a local variable-name collision between a list sentin
 The OpenSpeedy portion of this full-chain harness has **not** been rerun in this session because the previously used official `speedpatch64.dll` package is no longer present in the currently searched local paths. Existing archived results remain stronger than a pure model: the official OpenSpeedy hook has already produced approximately linear 1x/2x/5x scaling against both a source-level FILETIME bucket reproduction and the original Baidu `.234` bucket/dual-global-gate machine code in a self-owned harness.
 
 This does not upgrade the claim to a real Baidu download speedup: no time hook has been installed into `baidunetdiskhost.exe`, and no end-to-end production-network A/B has been performed.
+
+## 2026-09-02 Level 5 full original-chain A/B + Level 6 paused gate capture
+
+A new read-only observer, `experiments/legacy-global-gate-lifecycle-observer.cpp`, reads the two legacy global limiter objects directly from the `.234` image-global policy state (`kernel_base + 0x17C0118`). This closes a blind spot in the older generic bucket scanner, which intentionally scanned only `MEM_PRIVATE` and therefore could not see the image-resident global CDN/TOTAL gate objects.
+
+Current BrowserEngine state is still genuinely paused:
+
+```text
+running=0
+paused=1
+rate=0
+finish_size=22413312 / 200307093
+native task id=b9583c2d733809b9349644679acc6d4a
+```
+
+A 60-second, 20 ms read-only sample of PID 27188 produced 1922 samples with no gate-field or process-read activity from the transfer:
+
+```text
+CDN   effective/raw = 122880 / 122880 B/s
+      source        = 2 locatedownload
+      token         = 0 for all 1922 samples
+
+TOTAL effective/raw = 122880 / 122880 B/s
+      source        = 1 enable_cms_total_sl
+      token         = 13480 for all 1922 samples
+
+cdn_ts_changes=0
+total_ts_changes=0
+cdn_token_changes=0
+total_token_changes=0
+process read_bytes_delta=0
+```
+
+This proves the paused state freezes the live global gate state rather than allowing a hidden background transfer. The frozen endpoint is also suggestive: the CDN gate stopped at zero tokens while TOTAL retained 13,480 bytes. That is consistent with CDN being the tighter gate at the instant execution stopped, but a single frozen endpoint is not enough to mark continuous running-state binding as VERIFIED.
+
+The paused object-lifecycle result was also reconfirmed: the native task id still appears in the legacy `EntityTask` shells, their `EntityTask+0x108` NetGrid pointers are null, and Qingluan download `EntityTask` / `NetGrid` control-block live counts remain zero.
+
+### Full original offline chain is now executed end-to-end
+
+The previously restored `experiments/baidu-original-offline-limiter-openspeedy-proof.cpp` now builds and runs. It executes only in a self-owned harness and loads the local original `kernel.dll` 3.0.20.234 plus the official signed OpenSpeedy 3.3.8 `speedpatch64.dll` into the harness process itself. It does not inject into or modify `baidunetdiskhost.exe`.
+
+The OpenSpeedy package was re-downloaded through WinGet and independently matched the previously recorded ZIP hash:
+
+```text
+SHA256 8B95AF6706C826D3E9BC53F8A97998B40ED0F526C03AA72263B81CC6FA411AAC
+```
+
+Each run executes this original-machine-code chain:
+
+```text
+locatedownload response parser (sl=120)
+  -> copied completion state
+  -> original locatedownload policy slice
+  -> raw_sl=120
+  -> global CDN=122880 B/s, source=2
+  -> global TOTAL=122880 B/s, source=2 in the isolated locatedownload-only rehost
+  -> original CDN dispatcher with 8 EntityTask entries
+  -> each EntityTask -> NetGrid CDN gate = 16384 B/s
+  -> original refill/consume on global CDN + global TOTAL + task NetGrid CDN gate
+```
+
+Measured results for a 256 KiB transfer:
+
+```text
+factor  kernel/real  effective real throughput
+1x      1.000        15.68 KiB/s
+2x      2.000        31.30 KiB/s
+5x      4.998        79.18 KiB/s
+```
+
+The active minimum gate in this particular synthetic eight-task dispatcher state is the original per-EntityTask NetGrid CDN gate at 16 KiB/s, so the expected throughput is approximately `16 KiB/s * time_factor`. The measured values match that prediction closely.
+
+This is stronger than the prior dual-global-gate proof: time dilation now demonstrably propagates through the original locatedownload policy, original dispatcher allocation, original EntityTask/NetGrid task gate, and original three-gate refill/consume path. It shows that the downstream execution gate is time-driven as well; the effect is not confined to the two global 120 KiB/s buckets.
+
+### Current evidence grade
+
+- Level 5 (full original-chain offline replay): **VERIFIED**.
+- Level 6 (real running task: show CDN/TOTAL token pressure continuously while official task rate stays around 120 KiB/s): **PARTIAL / NOT YET VERIFIED**.
+
+Historical running evidence remains strong: the same real task produced official progress rates of 119,995-124,308 B/s, only legacy runtime bucket objects appeared during running, and Qingluan stayed invariant. The remaining decisive capture is a running-state sample of the image-resident global CDN/TOTAL token/timestamp fields with the new observer. Programmatic UI resume is intentionally not bypassed after the earlier execution-layer block; the task must be resumed through the normal client UI before that final read-only sample can be collected.
