@@ -3764,3 +3764,85 @@ NetGrid CDN download token  :     16384 B/s  (16 KiB/s)
 This explains why a single `122880 B/s` total bucket was not present in the run-only set. A plausible model is that the final ~120 KiB/s plateau is composed above/beside the per-NetGrid CDN token through multiple active HTTP/CDN peers or another scheduler layer. That composition is not yet proven; the next step is to trace the virtual callers of `set_cdn_download_token` and recover how the 16 KiB/s argument is produced.
 
 The `set_cdn_download_token` function is present as a virtual method in the primary `NetGrid` vtable. Static byte-pattern scanning for the corresponding vtable slot found two candidate indirect-call sites, with the short function around `0x1801B8DD0-0x1801B8E51` selected as the first target for follow-up because it is small enough to recover completely without broad disassembly scans.
+
+#### 29.17.4 `locatedownload.sl = 120` is converted directly to `122880 B/s`
+
+The most important remaining question was why the live SELF transfer converged near 120 KiB/s even though no run-only legacy bucket was initialized directly with `122880 B/s`.
+
+A parameter-application path in `0x18026B530-0x18026EA9D` closes this gap. The response/state object used by this function stores an integer at `+0xD8`. The function takes a pointer to that field and performs the following logic around `0x18026D4D6`:
+
+```asm
+mov    (%r15), %eax        ; raw = object+0xD8
+mov    %eax, %ecx
+shl    $0xa, %ecx          ; scaled = raw * 1024
+test   %eax, %eax
+mov    $0x1f400000, %ebx   ; 500 MiB/s fallback
+cmovne %ecx, %ebx
+mov    $0x06400000, %esi   ; 100 MiB/s fallback
+cmovne %ecx, %esi
+```
+
+The same unscaled value is subsequently passed into a NetGrid state setter (`vtable +0x170`), which is the setter for `NetGrid+0xD0`:
+
+```asm
+mov    (%r15), %edx
+...
+call   *0x170(%rax)
+```
+
+The read-only runtime probe observed `NetGrid+0xD0 = 120` on the relevant limited NetGrid instances. Therefore the conversion performed by the client is exactly:
+
+```text
+120 << 10
+= 120 * 1024
+= 122880 B/s
+= 120 KiB/s
+```
+
+This numerically matches the real transfer plateau observed in `onDownloadTaskProgress` (`119995-124308 B/s`). The 120 value is therefore not merely correlated with the speed cap; the client explicitly converts it into the byte-per-second limit used by downstream speed-control configuration.
+
+#### 29.17.5 The `+0xD8` and `+0xDC` response fields are named `sl` and `fsl`
+
+The same function emits the format string:
+
+```text
+|cdn_urls_finish|fid=%8%|handle=%9%|urls=%1%|err=%2%|sl=%3%|pcs_error=%4%|error_msg=%5%|consume_time=%6%|fsl=%7%|
+```
+
+Recovering the formatter insertion order maps the response/state fields as follows:
+
+```text
+%1  +0x18   urls
+%2  +0x128  err
+%3  +0xD8   sl
+%4  +0x140  pcs_error
+%5  +0x148  error_msg
+%6          local consume_time
+%7  +0xDC   fsl
+%8/%9       fid / handle
+```
+
+Thus the raw value converted by `<< 10` is formally the locatedownload/CDN-result `sl` field, while `fsl` is a separate field at `+0xDC`.
+
+At the end of the same path, `fsl` is forwarded as the fourth argument to `0x18038B1F0`, whose log operation is `on_cdn_return_urls`. That function stores the value at its object offset `+0x1AC`, showing that `fsl` remains a distinct downstream URL/peer-level policy value rather than being folded into `sl`.
+
+A separate static log exists in the binary:
+
+```text
+task_handle=%1%|file_speed_limit=%2%|total_speed_limit=%3%|
+```
+
+Together with telemetry fields such as `locatedownload_sl`, `total_speed_limit`, and `cdn_speed_limit`, this strongly suggests that `sl/fsl` participate in the total/file speed-limit policy hierarchy. However, until the parser/storage fields are connected explicitly to that log, this note keeps the conservative names `sl` and `fsl` rather than equating them unconditionally with `total_speed_limit` and `file_speed_limit`.
+
+#### 29.17.6 The 16 KiB/s CDN bucket is an override, not the stored default
+
+A one-shot read-only probe of live NetGrid objects showed that limited instances commonly retain:
+
+```text
+NetGrid+0xC8 = 104857600 B/s   (100 MiB/s backing/default)
+NetGrid+0xCC = 0xFFFFFFFF      (override state)
+NetGrid+0x90 bucket = 16384 B/s
+NetGrid+0xD0 = 120
+```
+
+When the override is inactive, instances with `+0xCC = 0` retain the broad `+0x90 = 100 MiB/s` CDN rate. Therefore the observed 16 KiB/s CDN token is a runtime override applied on top of the stored default, while the higher-level locatedownload `sl=120` is separately retained in NetGrid state and converted to the exact 120 KiB/s byte rate in the policy application path.
