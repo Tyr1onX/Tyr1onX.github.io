@@ -7,6 +7,7 @@
   const coverImage = root.querySelector("[data-music-cover]");
   const placeholder = root.querySelector("[data-cover-placeholder]");
   const coverIndex = root.querySelector("[data-cover-index]");
+  const vinylLabelImage = root.querySelector("[data-vinyl-label]");
   const position = root.querySelector("[data-music-position]");
   const title = root.querySelector("[data-music-title]");
   const artist = root.querySelector("[data-music-artist]");
@@ -23,6 +24,12 @@
 
   const pad = (value) => String(value).padStart(2, "0");
   const valueOrDash = (value) => value || "—";
+
+  tracks.forEach((track) => {
+    if (!track.cover) return;
+    const image = new Image();
+    image.src = track.cover;
+  });
 
   tracks.forEach((track, index) => {
     const button = document.createElement("button");
@@ -47,15 +54,18 @@
     coverIndex.textContent = pad(index + 1);
 
     if (track.cover) {
+      const coverAlt = `${track.title || `Collection Slot ${pad(index + 1)}`} 的本地 demo 专辑封面`;
       coverImage.src = track.cover;
-      coverImage.alt = `${track.album || track.title} 专辑封面`;
+      coverImage.alt = coverAlt;
       coverImage.hidden = false;
       placeholder.hidden = true;
+      vinylLabelImage.src = track.cover;
     } else {
       coverImage.removeAttribute("src");
       coverImage.alt = "";
       coverImage.hidden = true;
       placeholder.hidden = false;
+      vinylLabelImage.removeAttribute("src");
     }
 
     nav.querySelectorAll(".music-index-button").forEach((button, buttonIndex) => {
@@ -75,7 +85,7 @@
     if (normalized === current || stage.classList.contains("is-switching")) return;
     clearTimeout(timer);
     stage.classList.add("is-switching");
-    const delay = reduceMotion.matches ? 40 : 220;
+    const delay = reduceMotion.matches ? 40 : 180;
     timer = window.setTimeout(() => completeSwitch(normalized), delay);
   }
 

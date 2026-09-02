@@ -1,35 +1,32 @@
 window.TYR1ONX_MUSIC = [
   {
-    id: "slot-01",
-    title: "收藏位 01",
+    id: "demo-01",
+    title: "Collection Slot 01",
     artist: "",
     album: "",
     year: "",
-    cover: "",
+    cover: "./assets/music/demo-01/cover.webp",
     note: "等待补充真实歌曲与个人备注。",
-    accent: "#8a6f5b",
-    placeholder: true
+    accent: "#8a8175"
   },
   {
-    id: "slot-02",
-    title: "收藏位 02",
+    id: "demo-02",
+    title: "Collection Slot 02",
     artist: "",
     album: "",
     year: "",
-    cover: "",
+    cover: "./assets/music/demo-02/cover.webp",
     note: "等待补充真实歌曲与个人备注。",
-    accent: "#5f7587",
-    placeholder: true
+    accent: "#7c8a86"
   },
   {
-    id: "slot-03",
-    title: "收藏位 03",
+    id: "demo-03",
+    title: "Collection Slot 03",
     artist: "",
     album: "",
     year: "",
-    cover: "",
+    cover: "./assets/music/demo-03/cover.webp",
     note: "等待补充真实歌曲与个人备注。",
-    accent: "#687a66",
-    placeholder: true
+    accent: "#81779a"
   }
 ];

@@ -10,10 +10,10 @@
   <title>音乐 — Tyr1onX</title>
   <script>(()=>{let t=null;try{t=localStorage.getItem('tyr1onx-theme')}catch{}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})();</script>
   <link rel="stylesheet" href="./wiki.css?v=9" />
-  <link rel="stylesheet" href="./music.css?v=1" />
+  <link rel="stylesheet" href="./music.css?v=2" />
   <script src="./wiki.js?v=9" defer></script>
-  <script src="./music-data.js?v=1" defer></script>
-  <script src="./music.js?v=1" defer></script>
+  <script src="./music-data.js?v=2" defer></script>
+  <script src="./music.js?v=2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
@@ -51,11 +51,11 @@
           <p>一些会反复听，或者在某个阶段留下过印象的歌。</p>
         </header>
         <section class="music-feature" data-music-player aria-label="音乐收藏唱片机">
-          <div class="music-stage" data-music-stage aria-hidden="true">
-            <div class="vinyl-carrier"><div class="vinyl-disc"></div></div>
+          <div class="music-stage" data-music-stage>
+            <div class="vinyl-carrier" aria-hidden="true"><div class="vinyl-disc"><div class="vinyl-label"><img data-vinyl-label alt="" decoding="async" /></div></div></div>
             <div class="music-sleeve">
               <img class="music-cover-image" data-music-cover hidden alt="" decoding="async" />
-              <div class="music-cover-placeholder" data-cover-placeholder>
+              <div class="music-cover-placeholder" data-cover-placeholder aria-hidden="true">
                 <span class="music-cover-kicker">Tyr1onX / Music Archive</span>
                 <strong class="music-cover-index" data-cover-index>01</strong>
                 <span class="music-cover-foot">Collection slot</span>
@@ -64,7 +64,7 @@
           </div>
           <div class="music-copy">
             <p class="music-position" data-music-position>01 / 03</p>
-            <h2 class="music-title" data-music-title>收藏位 01</h2>
+            <h2 class="music-title" data-music-title>Collection Slot 01</h2>
             <dl class="music-meta">
               <div class="music-meta-row"><dt>Artist</dt><dd data-music-artist>—</dd></div>
               <div class="music-meta-row"><dt>Album</dt><dd data-music-album>—</dd></div>
