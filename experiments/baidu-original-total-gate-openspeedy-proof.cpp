@@ -32,6 +32,7 @@ int main(int argc,char**argv){
     const double factor=std::strtod(argv[3],nullptr);
     const uint64_t target=argc>=5?std::strtoull(argv[4],nullptr,10):3ULL*1024ULL*1024ULL;
     const uint64_t liveResidual=argc>=6?std::strtoull(argv[5],nullptr,10):18ULL;
+    const int32_t rateBps=argc>=7?std::strtol(argv[6],nullptr,10):122880;
 
     HMODULE k=LoadLibraryA(argv[1]);
     if(!k)return 3;
@@ -47,8 +48,8 @@ int main(int argc,char**argv){
     init();
     auto*s=(unsigned char*)getState();
     reset(s);
-    setsl(s,122880,122880,2);   // locatedownload
-    setsl(s,-1,122880,1);       // CMS total-only override
+    setsl(s,rateBps,rateBps,2);   // locatedownload
+    setsl(s,-1,rateBps,1);       // CMS total-only override
     auto*total=s+0x70;
     refill(total);
 
@@ -90,6 +91,7 @@ int main(int argc,char**argv){
       <<"enabled="<<(isEnabled()?1:0)
       <<" factor="<<std::fixed<<std::setprecision(2)<<getSpeed()
       <<" bytes="<<target
+      <<" rate_bps="<<rateBps
       <<" seed_token="<<seed
       <<" kernel_elapsed_ms="<<km
       <<" real_nt_ms="<<rm

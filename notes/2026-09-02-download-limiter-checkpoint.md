@@ -558,3 +558,221 @@ SELF-OWNED REPLAY, original signed binary:
 - Level 7: alter the real Baidu process clock and observe production-network throughput: **NOT PERFORMED**.
 
 The Level 6.5 result is the strongest non-injection proof obtained so far. It does not claim that the production process itself was time-modified; it demonstrates that the real process's identified binding component has the measured causal behavior when the same original component is replayed outside the production process.
+
+## 2026-09-02 mechanism matrix + live CMS runtime-history corroboration
+
+The non-injection causal result was tested beyond the single 122880 B/s operating point, and the real process's retained runtime diagnostics were mined read-only for repeated historical behavior.
+
+### Original TOTAL gate obeys a two-dimensional rate x perceived-time law
+
+`experiments/baidu-original-total-gate-openspeedy-proof.cpp` was parameterized so the original `.234` `set_sl` path can be replayed at different TOTAL rates while preserving the same source fingerprint and the same 18-byte seed residual.
+
+Using a 256 KiB target, the original signed Baidu TOTAL `AccumulateTokenBucket` produced:
+
+```text
+configured TOTAL    time factor    real throughput
+ 61440 B/s ( 60K)      1x          59.56 KiB/s
+ 61440 B/s ( 60K)      2x         119.07 KiB/s
+ 61440 B/s ( 60K)      5x         299.77 KiB/s
+
+122880 B/s (120K)      1x         119.13 KiB/s
+122880 B/s (120K)      2x         239.25 KiB/s
+122880 B/s (120K)      5x         598.13 KiB/s
+
+245760 B/s (240K)      1x         239.48 KiB/s
+245760 B/s (240K)      2x         479.40 KiB/s
+245760 B/s (240K)      5x        1196.26 KiB/s
+```
+
+Both independent dimensions scale the result: doubling configured rate approximately doubles throughput, and doubling perceived-time slope approximately doubles throughput. The measured behavior is therefore consistent with:
+
+```text
+steady real-time allowance ~= configured_rate * perceived_time_factor
+```
+
+The causal direction was also tested below real-time speed for the exact 122880 B/s gate:
+
+```text
+factor  real throughput
+0.25x    29.79 KiB/s
+0.50x    59.56 KiB/s
+1.00x   119.13 KiB/s
+2.00x   239.25 KiB/s
+5.00x   598.13 KiB/s
+```
+
+A linear fit across these five factor points gives approximately:
+
+```text
+slope     = 119.68 KiB/s per factor
+intercept = -0.27 KiB/s
+R^2       = 0.9999994
+```
+
+So the effect is bidirectional and nearly perfectly linear over 0.25x-5x. It is not an acceleration-only special case.
+
+### Real process contains the CMS policy transition itself
+
+A focused read-only runtime tool was added:
+
+```text
+experiments/cms-runtime-evidence-probe.cpp
+```
+
+It scans only committed `MEM_PRIVATE` regions of the `baidunetdiskhost.exe` instance that loaded `kernel.dll`, using `PROCESS_QUERY_INFORMATION | PROCESS_VM_READ` only.
+
+The current process retains a fresh CMS response/config context with:
+
+```text
+total_limit_enable = 0
+total_limit_speed  = 81920
+server_time         = 1788345685
+```
+
+`server_time=1788345685` corresponds to 2026-09-02 18:41:25 UTC+8, so this is from the current client session rather than an ancient installation artifact.
+
+The structured probe finds three private-memory contexts/copies containing the 81920 CMS config combination and one retained computed-policy fragment:
+
+```text
+CMS_RAW_81920_CONTEXTS=3
+CMS_COMPUTED_122880_HITS=1
+```
+
+The computed fragment is:
+
+```text
+total_limit_enable=0|total_max_speed=122880|
+```
+
+This resolves the apparent mismatch between raw `81920` and the live TOTAL `122880`. The already recovered original `handle_config_data` branch behaves as follows when `total_limit_enable == 0`:
+
+```text
+read current CDN effective rate
+read locatedownload-active flag
+if locatedownload is active and CMS candidate is below current CDN:
+    substitute current CDN as the CMS TOTAL candidate
+```
+
+The current locatedownload CDN rate is 122880 B/s, so the observed transition is internally consistent:
+
+```text
+raw CMS:
+  enable=0
+  candidate=81920
+
+locatedownload active:
+  CDN=122880
+
+compatibility guard:
+  computed total_max_speed=122880
+
+real runtime set_sl log:
+  set sl|cdn_sl=-1|total_sl=122880|src=enable_cms_total_sl|
+```
+
+The real process also retains the complete arbitrator result:
+
+```text
+current_cdn_src=locatedownload
+current_cdn_sl=122880
+current_total_src=enable_cms_total_sl
+current_total_sl=122880
+```
+
+A second retained runtime log shows P2P-SDK attempting:
+
+```text
+cdn_sl=4194304
+total_sl=122880
+src=p2psdk
+```
+
+but the current state remains:
+
+```text
+CDN   = locatedownload:122880
+TOTAL = enable_cms_total_sl:122880
+```
+
+This is a real-process confirmation of the static/original-code source priority ordering: P2P-SDK cannot override the higher-priority locatedownload CDN or CMS TOTAL source in this state.
+
+### Repeated real runtime telemetry converges to the CMS TOTAL rate
+
+The focused probe deduplicated retained `download_common` telemetry by the tuple of duration, flux, average/current/sample speeds, total limit, CDN limit and task-count state. This produced 21 unique runtime diagnostic records. These are unique retained telemetry records, not claimed to be 21 independent files or 21 statistically independent experiments.
+
+Of those records:
+
+```text
+20 records: total_speed_limit=enable_cms_total_sl:122880
+ 1 record : total_speed_limit=enable_cms_total_sl:204800
+```
+
+For the 122880 group, restricting to records with duration >= 100 seconds gives:
+
+```text
+records          = 11
+combined duration= 18244 s
+combined flux    = 2241389812 bytes
+weighted average = 122856 B/s
+```
+
+The weighted average differs from 122880 B/s by only 24 B/s (~0.02%).
+
+This is especially useful because the retained telemetry includes natural cases where the CDN limit is higher than the TOTAL limit. Four long records have:
+
+```text
+TOTAL = 122880 B/s
+CDN   = 204800 B/s
+```
+
+Across those records:
+
+```text
+combined duration = 2484 s
+combined flux     = 303200784 bytes
+weighted average  = 122062 B/s
+```
+
+So even when the locatedownload CDN policy is approximately 200 KiB/s, long-run aggregate speed still stays near the 120 KiB/s CMS TOTAL ceiling. This is an independent historical/runtime corroboration that TOTAL, not CDN, is the binding aggregate policy in those states.
+
+### Short-run burst telemetry matches the recovered accumulation cap
+
+The same telemetry contains four short records (<=60 s) whose average speed exceeds the 122880 B/s steady rate by more than 20%. For each record, the implied one-time excess data above steady refill is:
+
+```text
+excess_bytes = (average_speed - 122880) * duration
+```
+
+The observed range is:
+
+```text
+1,335,282 .. 1,802,232 bytes
+~= 1.27 .. 1.72 MiB
+```
+
+The original live bucket's recovered accumulation ceiling is:
+
+```text
+2,115,584 bytes ~= 2.02 MiB
+```
+
+Every inferred transient excess is below that ceiling. The pattern is therefore consistent with a partially/full pre-accumulated token burst followed by convergence to the sustained 122880 B/s refill rate. This also explains why very short telemetry windows can temporarily report averages above the long-run cap without contradicting the limiter model.
+
+### Current evidence interpretation
+
+The non-injection evidence is now redundant across several independent surfaces:
+
+```text
+fresh CMS config retained in real process
+  -> raw enable=0 / candidate=81920
+  -> real compatibility computation reaches 122880
+  -> real set_sl source=CMS, TOTAL=122880
+  -> real running TOTAL bucket is token-starved while transfer runs
+  -> pause freezes the same gate and removes execution NetGrid
+  -> long-run retained telemetry converges to ~122880 even when CDN>122880
+  -> short-run excess stays below recovered accumulation cap
+  -> same original signed TOTAL gate obeys rate * perceived-time-factor
+     from 0.25x through 5x with near-perfect linearity
+```
+
+This substantially strengthens Level 6/6.5 without modifying the production Baidu process clock or limiter state.
