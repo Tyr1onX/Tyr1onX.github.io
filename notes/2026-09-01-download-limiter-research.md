@@ -4440,3 +4440,112 @@ call 0x1800C0BC0
 This is the alternative `p2psdk` source (`src=3`) feeding both sides of the same arbitration layer.
 
 The CMS TOTAL candidate at local `[rbp+0x288]` is not hard-coded. It is parsed as a signed integer from a string/config-tree node immediately before the `src=1` call. The exact config key is the next item to decode; the nearby key constructor uses a literal length of `0x11` bytes, which is compatible with `total_limit_speed` but this note does not call that proven until the RIP-relative literal itself is decoded.
+
+#### 29.17.18 CMS fields are explicitly `total_limit_speed` and `total_limit_enable`
+
+The config keys consumed by the `src=1` path have now been decoded from their RIP-relative literals rather than inferred from string length.
+
+At `0x1802B018B` the 17-byte key is exactly:
+
+```text
+total_limit_speed
+```
+
+At `0x1802B02D9` the 18-byte key is exactly:
+
+```text
+total_limit_enable
+```
+
+The enclosing function advertises itself with the literal operation name:
+
+```text
+handle_config_data
+```
+
+and contains multiple CMS-specific logs/keys, including:
+
+```text
+cms time|membership=%1%|
+ss_strategy_version
+cms time|ss_strategy_version=%1%|current ver=%2%
+cms time|no ss_strategy|
+cms time|ss_strategy=%1%|
+the user all task rooback in cms config
+cms time|ttl=%1%|
+cms time|p2s_limit_speed=%1%|
+cms time|cms_max_speed=%1%|total_limit_enable=%2%|total_max_speed=%3%|
+cms time|total_limit_speed=%1%|current_sl=%2%|
+```
+
+Therefore the source enum name `enable_cms_total_sl` corresponds to an actual CMS configuration handler, not merely a misleading local label.
+
+`total_limit_speed` is parsed as a signed integer into local `[rbp+0x288]` and is then passed directly as `R8D=total_sl` to the `src=1` `set_sl` call. There is no `<<10` conversion between the integer parse and the call.
+
+Consequently the two current 120 KiB/s policy values have different source units:
+
+```text
+locatedownload: sl = 120 KiB/s -> client shifts <<10 -> 122880 B/s
+CMS: total_limit_speed = 122880 -> used directly as B/s
+```
+
+The current runtime equality is therefore an explicit convergence of two independently sourced policy layers, not one shared integer field being reused everywhere.
+
+#### 29.17.19 The live 122880 global gates are exactly legacy `AccumulateTokenBucket` objects and refill from FILETIME
+
+A second read-only runtime snapshot of the same global bandwidth-policy object showed that both embedded rate states have the same live vptr:
+
+```text
+runtime vptr  = 0x7FF97D4AE1F8
+preferred VA  = 0x18133E1F8
+```
+
+MSVC RTTI for `0x18133E1F8` resolves exactly to:
+
+```text
+.?AVAccumulateTokenBucket@@
+```
+
+The global object's stored raw locatedownload field at `+0xAD8` also still equals:
+
+```text
+120
+```
+
+So the live object graph itself matches the static chain:
+
+```text
+raw locatedownload sl = 120
+CDN AccumulateTokenBucket rate = 122880 B/s
+TOTAL AccumulateTokenBucket rate = 122880 B/s
+```
+
+The primary `AccumulateTokenBucket` vtable contains:
+
+```text
++0x08 -> 0x1800E83D0  set_rate
++0x10 -> 0x1800E8300  get_raw/requested_rate
++0x18 -> 0x1800E83F0  refill/update
+```
+
+`0x1800E83F0` obtains its current timestamp through `0x1800DDAD0`. That function calls `0x1800B0680`, whose import call at `0x181478EF0` resolves through the PE import table to:
+
+```text
+KERNEL32.dll!GetSystemTimeAsFileTime
+```
+
+`0x1800B0680` then performs FILETIME/Windows-epoch arithmetic using the constant:
+
+```text
+0xFE624E212AC18000
+```
+
+The refill implementation computes elapsed time from successive values returned by that clock, multiplies elapsed time by the bucket rate, divides by the bucket timebase, adds the result to the token balance, and clamps the accumulated balance to the bucket capacity/effective ceiling.
+
+This is the strongest timing result so far: the exact two global buckets that currently hold the 120 KiB/s policy are not merely members of a codebase that somewhere uses FILETIME. Their actual refill path is directly driven by `GetSystemTimeAsFileTime`.
+
+Architecture-only implication:
+
+- a one-time forward wall-clock discontinuity can at most create an unusually large refill followed by the normal capacity clamp, so it is naturally bounded as a transient burst;
+- a process-local mechanism that continuously changes the perceived progression of `GetSystemTimeAsFileTime` is conceptually different, because this refill formula is proportional to perceived elapsed time;
+- this does not by itself prove an end-to-end sustained speed increase, because other task/peer/server/network gates can still become limiting, and no clock hook or limiter modification has been applied in this research.
