@@ -4549,3 +4549,105 @@ Architecture-only implication:
 - a one-time forward wall-clock discontinuity can at most create an unusually large refill followed by the normal capacity clamp, so it is naturally bounded as a transient burst;
 - a process-local mechanism that continuously changes the perceived progression of `GetSystemTimeAsFileTime` is conceptually different, because this refill formula is proportional to perceived elapsed time;
 - this does not by itself prove an end-to-end sustained speed increase, because other task/peer/server/network gates can still become limiting, and no clock hook or limiter modification has been applied in this research.
+
+#### 29.17.20 Current `AccumulateTokenBucket` burst capacity explains one-shot clock-jump behavior
+
+A read-only snapshot of the two live global 120 KiB/s buckets also recovered their current refill constants:
+
+```text
+CDN bucket:
+  raw rate        = 122880 B/s
+  time divisor    = 1000
+  accumulate cap  = 2115584 bytes
+  current tokens  = 0
+
+TOTAL bucket:
+  raw rate        = 122880 B/s
+  time divisor    = 1000
+  accumulate cap  = 2115584 bytes
+  current tokens  = 13480
+```
+
+The `AccumulateTokenBucket::refill/update` implementation therefore behaves, for this live configuration, approximately as:
+
+```text
+added_tokens = perceived_elapsed_ms * 122880 / 1000
+new_tokens   = min(old_tokens + added_tokens, 2115584)
+```
+
+At the current rate, filling an empty bucket to the accumulation ceiling requires about:
+
+```text
+2115584 / 122880 = 17.216667 seconds
+```
+
+of perceived elapsed time.
+
+This makes the difference between two time experiments concrete:
+
+- a one-time large forward discontinuity in perceived wall time can fill the bucket, but the refill is bounded by the ~2.1 MB accumulation ceiling and therefore naturally becomes a transient burst;
+- a continuously accelerated perceived clock changes the refill slope on every update rather than merely filling the bucket once.
+
+No clock manipulation was performed; these values were recovered by read-only inspection of the current paused process.
+
+#### 29.17.21 OpenSpeedy current source hooks the exact wall-clock API used by the live Baidu legacy gates
+
+The current OpenSpeedy public source (`game1024/OpenSpeedy`, `src-bridge/speedpatch/speedpatch.cpp`, observed 2026-09-02) explicitly hooks:
+
+```text
+GetSystemTimeAsFileTime
+GetSystemTimePreciseAsFileTime
+QueryPerformanceCounter
+GetTickCount / GetTickCount64
+...and other wait/timer APIs
+```
+
+Its `Hook_GetSystemTimeAsFileTime` maintains real and virtual base points and computes the returned FILETIME using the same conceptual relationship:
+
+```text
+virtual_delta = SpeedFactor * (real_now - real_base)
+virtual_now   = virtual_base + virtual_delta
+```
+
+When the factor changes, OpenSpeedy rebases from its last real/virtual values before continuing, so it changes the *slope* of process-perceived time while preserving continuity rather than applying a single discontinuous system-clock jump.
+
+Public source reference:
+
+```text
+https://github.com/game1024/OpenSpeedy/blob/master/src-bridge/speedpatch/speedpatch.cpp
+```
+
+This is architecturally significant because the current Baidu global CDN/TOTAL gates call `KERNEL32!GetSystemTimeAsFileTime` through the normal imported API path during every token refill. Thus the two projects' timing mechanisms match at the API boundary:
+
+```text
+Baidu live legacy AccumulateTokenBucket
+    -> GetSystemTimeAsFileTime
+
+OpenSpeedy process-time virtualization
+    -> hooks GetSystemTimeAsFileTime
+    -> changes perceived elapsed-time slope
+```
+
+OpenSpeedy also hooks `QueryPerformanceCounter`, which is the clock family previously identified in the separate Qingluan limiter implementation. Therefore its published clock coverage includes both clock families discovered statically in Baidu's current `.234` kernel, although the current ordinary SELF sample is specifically evidenced on the legacy FILETIME-driven global buckets.
+
+This is still an architecture result, not an end-to-end bypass result: no hook was installed into `baidunetdiskhost.exe`, no limiter value was modified, and other downstream/network/server constraints could become the bottleneck if the global refill gate ceased to be limiting.
+
+#### 29.17.22 CMS configuration source is a real remote config subsystem
+
+The current kernel contains the production CMS config endpoint:
+
+```text
+https://pan.baidu.com/cms/config?method=query
+```
+
+and retains server-proxy source/type artifacts including:
+
+```text
+H:\baidu\netdisk\qingluan-download\project\src\server_proxy\cms_config_server.cpp
+CmsConfigServer
+qingluan::download::CmsConfigServer
+```
+
+The legacy `handle_config_data` path that parses `total_limit_speed` / `total_limit_enable` also handles membership, strategy version, TTL and P2S speed policy and emits `cms time|...` logs. Together these artifacts establish that `enable_cms_total_sl` is part of a genuine CMS remote-configuration subsystem rather than a purely local user setting.
+
+Static presence of the endpoint alone does not prove that a particular request was emitted at the instant of the snapshot. The stronger per-session fact remains the live arbitrator state: TOTAL source is currently `enable_cms_total_sl` with rate 122880 B/s.
