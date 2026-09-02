@@ -5954,3 +5954,52 @@ process exit = 0
 The isolated synthetic server did not run the full production server constructor. To make the original deep-copy routine's ordinary empty-container preconditions valid, the harness supplies empty sentinels for the otherwise-unused `bakurls` list and a third list-like return-item member using the original kernel allocator and the recovered MSVC-list layout. These sentinels are host-lifecycle scaffolding only: they do not initialize, rewrite, or influence `sl`, `fsl`, policy source, rates, or token-bucket state.
 
 This also corrects the earlier wording that implied a semantic conversion between `server+0x1B0` and completion `+0xD8`: the values are the same fields in a nested return-item, deep-copied under a 16-byte completion header.
+
+## 2026-09-02: original locatedownload policy arithmetic and set_sl slice executed directly
+
+The last rewritten arithmetic in the offline limiter proof has now been removed.
+
+The relevant original `.234` instructions are the contiguous block `0x18026D4D6-0x18026D517` inside the legacy completion routine. That block reads the raw `sl` through `R15`, performs the original `SHL 10`, calls the original global raw-sl setter, then calls the original source-2 `set_sl` path. The next instruction at `0x18026D518` starts unrelated follow-up policy/task work.
+
+A self-owned isolated harness executes this exact original instruction block in place. To enter/leave a mid-function block without fabricating the much larger URL/FGID/task owner graph used by the preceding completion code, the harness uses a tiny ABI trampoline and installs a one-shot breakpoint on the first instruction *after* the tested block (`0x18026D518`). The breakpoint byte is restored immediately by the exception handler. No byte inside `0x18026D4D6-0x18026D517` is modified.
+
+Standalone original-slice output for `sl=120`:
+
+```text
+breakpoint_hit=1
+raw_sl=120
+CDN   raw=122880 source=2
+TOTAL raw=122880 source=2
+locatedownload_active=1
+process exit=0
+```
+
+A second combined harness, `experiments/baidu-original-locatedownload-original-policy-proof.cpp`, takes its input directly from the already-proven original parser/deep-copy chain rather than from a harness integer:
+
+```text
+synthetic locatedownload JSON
+  -> original 0x1807554E0 handle_response
+  -> return_item +0xC8 = 120
+  -> original 0x18023A0C0 deep-copy
+  -> completion +0xD8 = 120
+  -> original 0x18026D4D6-0x18026D517 policy slice
+       SHL 10
+       original raw-sl setter
+       original source=2 set_sl
+  -> original global CDN/TOTAL AccumulateTokenBucket state
+```
+
+Observed combined output:
+
+```text
+after handler: sl=120 fsl=-1
+return-item:   sl@+C8=120 fsl@+CC=-1
+completion:    sl@+D8=120 fsl@+DC=-1
+policy slice:  hit=1 raw_sl=120
+               CDN raw=122880 src=2
+               TOTAL raw=122880 src=2
+               locatedownload_active=1
+process exit=0
+```
+
+Therefore the offline causal limiter chain no longer contains a harness implementation of `sl << 10`, raw-sl publication, source arbitration, or bucket mutation. Those operations are executed by the original `.234` instructions/functions. Remaining synthetic scaffolding is limited to host-object lifecycle, local response input, and controlled entry/exit around the isolated original mid-function policy block. This still should not be described as a byte-for-byte execution of every unrelated instruction in the full `0x18026B530` completion routine.
