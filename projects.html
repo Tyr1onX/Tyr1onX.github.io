@@ -14,7 +14,6 @@
   <link rel="stylesheet" href="./projects-compact.css?v=1" />
   <link rel="stylesheet" href="./projects-source-showcase.css?v=1" />
   <script src="./wiki.js?v=10" defer></script>
-  <script src="./projects-carousel.js?v=2" defer></script>
 </head>
 <body class="has-context-header">
   <a class="skip-link" href="#main">跳到主要内容</a>
@@ -41,9 +40,12 @@
         <header class="page-heading projects-heading"><h1>作品</h1></header>
         <article class="work-showcase work-showcase--compact" aria-labelledby="keke-title">
           <figure class="work-screenshot work-screenshot--first">
-            <div class="work-gallery" data-work-gallery tabindex="0" aria-label="课刻界面预览，可使用左右方向键或下方圆点切换">
-              <div class="work-gallery-stage" aria-live="polite"></div>
-              <div class="work-gallery-nav" role="tablist" aria-label="切换课刻界面预览"></div>
+            <div class="work-gallery work-gallery--single" aria-label="课刻桌面 Widget 源码预览">
+              <div class="work-gallery-stage">
+                <div class="work-gallery-slide work-gallery-slide--source is-active" aria-hidden="false">
+                  <iframe class="work-gallery-frame" src="./keke-source-showcase.html?view=widget" title="课刻桌面 Widget 源码演示" loading="eager" tabindex="-1" aria-hidden="true"></iframe>
+                </div>
+              </div>
             </div>
           </figure>
           <div class="work-summary">
