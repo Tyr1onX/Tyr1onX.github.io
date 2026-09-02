@@ -4044,3 +4044,105 @@ cdn_speed_limit_dispatch
 This closes the origin and execution path of the live 16384 B/s NetGrid CDN token without relying on a guessed vtable slot or runtime proximity correlation.
 
 The next unresolved architectural question is composition: locatedownload supplies `sl=120` (122880 B/s total policy), while the local dispatcher may assign an individual NetGrid CDN token of 16384 B/s. The number/scope of simultaneously active EntityTask/NetGrid instances or peer lanes must be established before claiming how those local 16 KiB/s limits sum to the observed ~120 KiB/s task rate.
+
+#### 29.17.11 The 16 KiB/s value is a CDN fill-budget allocation, not the final 120 KiB/s cap
+
+The same legacy dispatcher (`0x180333300-0x180339319`) identifies itself with the literal operation name `cdn_speed_limit_dispatch` and exposes its global inputs in a grouped log:
+
+```text
+global_p2p_dl_speed=%1%|
+global_onecloud_dl_speed=%2%|
+global_onecloud_http_dl_speed=%3%|
+global_third_http_dl_speed=%4%|
+global_http_dl_speed=%5%|
+global_pop_speed=%6%|
+history_global_max_download_speed=%7%|
+sl=%8%|
+cdn_speed_limit_count=%9%|
+set_cdn_speed_limit=%10%|
+current_dl_speed=%11%|
+global_max_download_speed=%12%
+```
+
+The formatter/data-flow mapping is now sufficiently recovered to identify the important fields:
+
+```text
+%1  global P2P download speed
+%2  global OneCloud download speed
+%3  global OneCloud HTTP download speed
+%4  another third/non-CDN HTTP lane
+%5  ordinary global HTTP/CDN speed
+%6  global POP speed
+%7  historical global maximum download speed
+%8  sl policy scalar
+%9  cdn_speed_limit_count policy/state field
+%10 dispatcher output local+0x128 = set_cdn_speed_limit
+%11 current aggregate download speed
+%12 effective global maximum download speed used by the dispatcher
+```
+
+The `sl` getter used here (`0x1800C3530 -> 0x1800F0830 -> 0x1800E8280`) ultimately reads a 32-bit rate/capacity field from a local policy object. It is not a live throughput measurement.
+
+In the low-rate branch, the dispatcher compares the current aggregate contribution against `sl`. If the aggregate has not reached `sl`, it computes a remaining budget and divides that budget across the task/list population represented by the dispatcher. The resulting candidate is clamped upward to 16 KiB/s:
+
+```text
+remaining = sl - aggregate_speed
+candidate = remaining / dispatcher_task_count
+set_cdn_speed_limit = max(candidate, 16384 B/s)
+```
+
+The `dispatcher_task_count` wording is structural rather than a source-level symbol: the code iterates the list rooted at manager `+0x50` and uses manager `+0x58` as the divisor, matching the MSVC list head/size pair layout. A literal manual increment of `+0x58` was not separately observed, so that detail should not be overstated.
+
+This explains the apparently contradictory runtime observations:
+
+```text
+higher-level sl target          = 120 KiB/s
+per-EntityTask NetGrid CDN rate = 16 KiB/s in the observed low-rate state
+```
+
+The 16 KiB/s value is a per-task CDN execution allocation/floor used to fill a remaining bandwidth budget. It is not the final total task cap.
+
+The dispatcher is adaptive rather than a single fixed divider. The binary contains three double thresholds used by adjacent CDN allocation branches:
+
+```text
+0.4
+0.6
+0.8
+```
+
+Different branches scale the remaining bandwidth differently depending on the current/global-speed regime, and may raise the CDN allocation into larger tiers (32 KiB/s, 256 KiB/s, 512 KiB/s or a computed value).
+
+#### 29.17.12 Legacy peer selection explicitly separates non-CDN and CDN contribution
+
+The already identified legacy function `choose_http_server_peer_for_one_task` (`0x1801CD7D0-0x1801CEFD7`) contains the exact log:
+
+```text
+don't close cdn|
+global_cdn_speed=%1%|
+history_global_max_speed=%2%|
+global_non_cdn_rate=%3%|
+cdn_connect_count=%4%|
+task_cdn_download_rate=%5%|
+need_cdn_speed=%6%|
+history_max_http_speed=%7%|
+remaining_block=%8%
+```
+
+This function explicitly sums several P2P/OneCloud/non-CDN lane speeds into `global_non_cdn_rate`, while the ordinary HTTP lane is reported separately as `global_cdn_speed`. It then uses `need_cdn_speed` and connection-count state to decide whether CDN contribution should remain active.
+
+So the current `.234` ordinary SELF model is no longer "16 KiB/s times N connections happens to look like 120 KiB/s". The code supports a budget-composition model instead:
+
+```text
+remote/local higher-level target (`sl`)
+        |
+        +-- current non-CDN contribution (P2P / OneCloud / related lanes)
+        +-- current CDN/HTTP contribution
+        |
+        +-- adaptive CDN dispatcher allocates remaining budget
+                 |
+                 +-- per EntityTask -> NetGrid CDN token
+```
+
+This is also consistent with the 0.8 / 1.3 hysteresis already recovered in `choose_http_server_peer_for_one_task`: connection-count changes are deliberately damped rather than oscillating on every small speed fluctuation.
+
+The remaining high-value edge is now narrower: trace the local `sl` scalar consumed by `cdn_speed_limit_dispatch` back to the locatedownload/CMS application path, so the current legacy chain can be written end-to-end without relying only on matching value/name semantics.
