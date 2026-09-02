@@ -3064,3 +3064,83 @@ P2P switch four-field block
         -> download_threshold_speed
         -> P2S/CDN peer-selection hysteresis
 ```
+
+
+## 29. Qingluan task-download token path from locatedownload
+
+### 29.1 `owner + 0xE0` is the task download token bucket
+
+The method-name cluster around the same owner contains `get_download_token`, `set_cdn_download_token`, and `set_task_download_token`.
+
+The `get_download_token` path at `0x18109b280-0x18109c9a8` obtains the embedded object through `0x1801b7fa0` (`owner + 0xE0`) and immediately invokes a token query/consume routine on it. Therefore `+0xE0` is not merely a peer-selection threshold snapshot; it participates in the real download-token path.
+
+`set_task_download_token` is `0x180ecaa60-0x180ecb630`. It forms `owner + 0xE0`, reads the previous rate, then applies the new rate to that same embedded bucket.
+
+### 29.2 The implementation is explicitly Qingluan
+
+The final bucket setter used by `set_task_download_token` is `0x180d01e20`. RTTI for its class hierarchy identifies:
+
+```text
+qingluan::common::FluxBucket
+qingluan::common::AccumulateTokenBucket
+```
+
+The setter performs:
+
+```text
+rate     = requested
+capacity = max(requested, 0x7000)
+```
+
+The refill/update path uses `QueryPerformanceCounter` and `QueryPerformanceFrequency`, confirming that this task-token bucket belongs to the Qingluan clock domain.
+
+### 29.3 `notify_speed_limit` bridges KiB/s into the Qingluan task token
+
+`set_task_download_token` has one direct business caller: `0x180d245c0-0x180d25500`, whose embedded method name is `notify_speed_limit`.
+
+Its third argument is stored as a KiB/s value. At the final dispatch it performs:
+
+```asm
+mov edx, <third argument>
+shl edx, 0xA
+call set_task_download_token
+```
+
+Therefore:
+
+```text
+notify_speed_limit(speed_kib)
+        -> speed_kib * 1024
+        -> set_task_download_token(speed_bps)
+        -> owner + 0xE0 qingluan::common::AccumulateTokenBucket
+```
+
+A facade thunk at `0x180ecaa20` forwards to `notify_speed_limit` after loading its backend from `this + 0x10`.
+
+### 29.4 The meaningful nonzero input comes from `handle_locatedownload_finish`
+
+One caller resets the notification with `(0, 0)`. The meaningful caller is `0x181044e20-0x1810451fa`, which forwards:
+
+```text
+third argument  = locatedownload_result + 0xD8
+second argument = locatedownload_result + 0xDC
+```
+
+The function containing that call is reached only from a larger handler carrying the literal method name `handle_locatedownload_finish` (`0x1810422c0-0x1810446fa`). The result structure is the handler's original second argument.
+
+The same `+0xD8` field is also shifted left by 10 and passed to a separate `set_speed_limit` path before the task-token notification.
+
+Thus the currently recovered active data flow is:
+
+```text
+locatedownload result + 0xD8   (KiB/s)
+        -> set_speed_limit(..., value * 1024, ...)
+        -> notify_speed_limit(..., value)
+        -> value * 1024
+        -> set_task_download_token
+        -> Qingluan task download AccumulateTokenBucket
+```
+
+This is the strongest static evidence so far that the `.234` ordinary download control path feeds a Qingluan task token from locatedownload policy/result state.
+
+The remaining question is the provenance of `locatedownload_result + 0xD8`: direct response field, locally decoded limit, P2P-switch override, or a combination. The next target is `decode_speed_limit` and the locatedownload response parser.
