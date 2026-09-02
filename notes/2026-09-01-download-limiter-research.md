@@ -4237,3 +4237,108 @@ locatedownload/CMS `sl=120`
 ```
 
 A first scan for the trivial pattern `shl 10` immediately followed by an indirect call through vtable `+0x80/+0x88` found no hit. This suggests the value crosses at least one stored field, helper/wrapper, callback, or delayed policy-application stage rather than being passed directly from the locatedownload parser into the Peer setter.
+
+#### 29.17.15 Legacy locatedownload `sl` directly programs both global CDN and total speed-limit buckets
+
+The unresolved gap between the legacy locatedownload result and the final ~120 KiB/s plateau is now closed at the global bandwidth-policy layer.
+
+In the legacy locatedownload completion/application function `0x18026B530-0x18026EA9D`, the already identified `sl` value is read through the pointer held in `r15` and converted at `0x18026D4D6`:
+
+```asm
+mov eax, [r15]          ; raw locatedownload sl, KiB/s
+mov ecx, eax
+shl ecx, 0xA            ; sl * 1024 -> B/s
+test eax, eax
+mov ebx, 0x1F400000     ; 500 MiB/s fallback/default
+cmovne ebx, ecx
+mov esi, 0x06400000     ; 100 MiB/s fallback/default
+cmovne esi, ecx
+```
+
+Therefore a nonzero `sl=120` produces:
+
+```text
+ECX = 120 << 10 = 122880 B/s
+ESI = 122880 B/s
+EBX = 122880 B/s
+```
+
+The same path first preserves the raw KiB/s value in the global policy singleton:
+
+```text
+0x1800C2AA0() -> global policy/bandwidth state at 0x1817C0118
+0x1800C9990(state, raw_sl) -> state+0xAD8 = raw_sl
+```
+
+It then calls:
+
+```text
+0x1800C0BC0(state, ESI, EBX, 2)
+    -> 0x1800EF110
+```
+
+The business log embedded in `0x1800EF110` is exact:
+
+```text
+set sl|cdn_sl=%1%|total_sl=%2%|src=%3%|
+current_cdn_src=%4%|current_cdn_sl=%5%|
+current_total_src=%6%|current_total_sl=%7%|
+```
+
+The entry argument mapping is:
+
+```text
+EDX = cdn_sl
+R8D = total_sl
+R9D = source enum
+```
+
+The static source-name table at `0x181776030` resolves as:
+
+```text
+0 = user_ctl
+1 = enable_cms_total_sl
+2 = locatedownload
+3 = p2psdk
+4 = application
+5 = default
+```
+
+So the call made by the legacy locatedownload path is formally:
+
+```text
+set_sl(
+    cdn_sl   = sl << 10,
+    total_sl = sl << 10,
+    src      = locatedownload
+)
+```
+
+For `sl=120`, both requested limits are exactly 122880 B/s.
+
+`0x1800EF110` maintains two independent priority-controlled rate states. Near its tail it applies the selected values through the legacy `AccumulateTokenBucket::set_rate` routine `0x1800E83D0`:
+
+```text
+state + 0x00 bucket  <- selected cdn_sl
+state + 0x70 bucket  <- selected total_sl
+```
+
+The code reads their current effective rates with `0x1800E8280`, keeps separate source-priority fields at `+0x30` and `+0xA0`, and then updates the corresponding bucket only when the incoming source/value wins the local arbitration.
+
+This changes the interpretation of the live ~120 KiB/s result materially. It is no longer necessary to explain the plateau as a sum of multiple 16 KiB/s NetGrid limits. The client has an explicit global legacy gate that receives the locatedownload value directly:
+
+```text
+remote locatedownload response
+    -> sl = 120 KiB/s
+    -> legacy completion applies sl << 10
+    -> set sl(cdn_sl=122880, total_sl=122880, src=locatedownload)
+    -> global CDN AccumulateTokenBucket
+    -> global TOTAL AccumulateTokenBucket
+    -> downstream Peer/CDN scheduling
+    -> EntityTask
+    -> NetGrid / HTTP execution
+```
+
+The adaptive CDN dispatcher and its 16 KiB/s per-EntityTask floor therefore sit *below* (or alongside downstream allocation under) a concrete 120 KiB/s global policy gate. The 16 KiB/s value remains important for distributing/filling CDN budget, but it is not required to explain the total observed plateau.
+
+This also explains why the earlier run-only object scan did not need to find a `NetGrid` bucket whose own rate was 122880 B/s: the exact 122880 B/s cap is installed in the global legacy bandwidth state before the per-task NetGrid allocation layer.
