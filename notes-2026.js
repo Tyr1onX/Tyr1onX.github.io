@@ -3,9 +3,9 @@ window.TYR1ONX_NOTES = [
     id: "2026-09-02-baidu-download-limiter",
     date: "2026.09.02",
     datetime: "2026-09-02T22:54:00+08:00",
-    title: "百度网盘 Windows 客户端限速机制逆向：从 sl=120 到 FILETIME Token Bucket",
+    title: "百度网盘为什么会卡在 120 KiB/s？我把客户端限速链拆开看了一遍",
     kind: "work",
-    excerpt: "从真实运行态、原始机器码到 OpenSpeedy 受控进程实验，追完整个 120 KiB/s 客户端限速链。",
+    excerpt: "从一个 sl=120 开始，追到真正卡住下载的客户端限速器，再用原始机器码和受控网络实验验证为什么时间变快会让它更快放行数据。",
     contentUrl: "./notes/2026-09-02-baidu-download-limiter.md",
   },
   {
