@@ -5823,3 +5823,51 @@ This is the same integer conversion function called by `handle_response` immedia
 An ABI correction was also established. The stack storage at handler local `+0x5F0` is reused. An earlier cloned ptree object is destroyed by `0x1800B2C40`; before scalar conversion the handler calls `0x18112E0B0(1)` and stores the returned conversion-interface pointer at local `+0x5F8`, exactly the `context+0x08` pointer dereferenced by `0x180117590`. Treating the prior ptree clone itself as the conversion context is therefore incorrect.
 
 No Baidu process was modified and no network request was made; all input was synthetic inside an isolated test process loading the original `.234` DLL.
+
+## 2026-09-02: complete original legacy locatedownload response handler rehosted
+
+The Level-4 replay was extended from isolated scalar parsing to the complete original legacy `handle_response` implementation at `0x1807554E0-0x18075D0D3`.
+
+The self-owned harness loads the local original `kernel.dll 3.0.20.234`, supplies a synthetic local HTTP-response object, and calls the original handler directly. No Baidu process is modified and no network request is made.
+
+Two host-lifecycle dependencies had to be supplied outside the original handler:
+
+1. the server object's `+0xE8` URL list must start as a valid empty MSVC-list state. Its layout was recovered from the original insertion routine `0x180770140`; the harness allocates only the empty sentinel through the original kernel allocator and sets `next/prev` self-links plus size zero;
+2. the two host notification `boost::function` members at server `+0x48` and `+0x70` must be non-empty. The harness binds no-op invokers because these callbacks notify the surrounding owner and do not implement response parsing or speed-policy calculations.
+
+The original auxiliary locatedownload singleton also required its normal configuration subtree `cfg.network.update_server`; an empty node is sufficient for this isolated path. Exception decoding established this dependency directly from the original `boost::property_tree::ptree_bad_path` message rather than by guessing.
+
+A minimal accepted synthetic response contains a normal URL entry and the locatedownload policy fields, including `sl=120` and `fsl=-1`. The complete original handler then exits normally:
+
+```text
+before sl=0 fsl=0
+after  sl=120 fsl=-1 body_size=0
+exit=0
+```
+
+Immediately before the host callbacks, an independent exception-time probe also observed:
+
+```text
+sl   = 120
+fsl  = -1
+sr   = 0
+urls = 1
+```
+
+Therefore the following Level-4 segment is now dynamically reproduced with original `.234` machine code rather than a rewritten parser:
+
+```text
+synthetic locatedownload JSON
+  -> original response-body acquisition
+  -> original property-tree parse
+  -> original `urls` traversal
+  -> original URL-item construction/list insertion
+  -> original scalar conversion
+  -> original LocatedownloadReturnItem fields
+       sl=120
+       fsl=-1
+       urls=1
+  -> original finish-notification wrapper
+```
+
+One structural correction also became explicit. The return item passed by the handler's finish notification begins at server `+0xE8`; the later download-pool policy function uses another task/deferred structure whose `sl` is at `+0xD8`. A conversion/copy layer therefore exists between the handler return item and the already-proven `sl << 10 -> global set_sl` path. That glue remains the next Level-4 target and should not be collapsed into a direct pointer equivalence.
