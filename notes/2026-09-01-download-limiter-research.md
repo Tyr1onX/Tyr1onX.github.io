@@ -5871,3 +5871,19 @@ synthetic locatedownload JSON
 ```
 
 One structural correction also became explicit. The return item passed by the handler's finish notification begins at server `+0xE8`; the later download-pool policy function uses another task/deferred structure whose `sl` is at `+0xD8`. A conversion/copy layer therefore exists between the handler return item and the already-proven `sl << 10 -> global set_sl` path. That glue remains the next Level-4 target and should not be collapsed into a direct pointer equivalence.
+
+## 2026-09-02: complete original locatedownload handle_response rehosted
+
+The full legacy locatedownload response handler now executes successfully in an isolated self-owned harness using the original `kernel.dll 3.0.20.234` machine code. No live Baidu process is modified and no network request is made.
+
+The harness supplies a synthetic local response object plus the minimum original config/auxiliary lifecycle required by `0x1807554E0` (`handle_response`). Synthetic JSON includes a normal locatedownload response with `sl=120` and `fsl=-1`.
+
+Observed original-code transition:
+
+```text
+before sl=0   fsl=0
+after  sl=120 fsl=-1
+process exit=0
+```
+
+This closes the gap left by the earlier scalar-parser proof: the values are now produced by the complete original `handle_response`, not by directly invoking the scalar conversion function. The response wrapper/config dependencies required for the handler were also satisfied using original `.234` helpers in the isolated process.
