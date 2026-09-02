@@ -44,7 +44,7 @@
       yearSection.className = 'learning-year';
       yearSection.setAttribute('aria-labelledby', `learning-year-${year}`);
 
-      const yearHeading = document.createElement('h3');
+      const yearHeading = document.createElement('h2');
       yearHeading.id = `learning-year-${year}`;
       yearHeading.textContent = year;
       yearSection.append(yearHeading);
@@ -58,7 +58,7 @@
       monthSection.className = 'learning-month';
       monthSection.setAttribute('aria-labelledby', `learning-month-${year}-${monthText}`);
 
-      const monthHeading = document.createElement('h4');
+      const monthHeading = document.createElement('h3');
       monthHeading.id = `learning-month-${year}-${monthText}`;
       monthHeading.textContent = monthName;
 
@@ -89,7 +89,7 @@
       area.className = 'learning-area';
       area.textContent = entry.area;
 
-      const title = document.createElement('h5');
+      const title = document.createElement('h4');
       title.textContent = entry.title;
 
       const summary = document.createElement('p');

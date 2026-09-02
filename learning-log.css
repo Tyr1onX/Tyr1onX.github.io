@@ -3,26 +3,15 @@
 }
 
 .learning-page .page-heading {
-  margin-bottom: 30px;
-}
-
-.learning-page .page-heading p {
-  max-width: 660px;
+  margin-bottom: 18px;
 }
 
 .learning-current {
-  display: grid;
-  grid-template-columns: 112px minmax(0, 1fr);
-  gap: 20px;
-  align-items: baseline;
   width: min(100%, 760px);
-  padding: 16px 0 18px;
-  border-top: 1px solid var(--line);
+  padding: 0 0 18px;
   border-bottom: 1px solid var(--line);
 }
 
-.learning-current h2,
-.learning-log-head h2,
 .learning-repo-label {
   margin: 0;
   color: var(--muted);
@@ -50,30 +39,14 @@
 }
 
 .learning-log {
-  margin-top: 46px;
-}
-
-.learning-log-head {
-  display: grid;
-  grid-template-columns: 112px minmax(0, 1fr);
-  gap: 20px;
-  align-items: baseline;
-  width: min(100%, 760px);
-  margin-bottom: 28px;
-}
-
-.learning-log-head p {
-  margin: 0;
-  color: var(--secondary);
-  font-size: 14.5px;
-  line-height: 1.65;
+  margin-top: 34px;
 }
 
 .learning-year + .learning-year {
   margin-top: 58px;
 }
 
-.learning-year > h3 {
+.learning-year > h2 {
   margin: 0 0 24px;
   font-size: 31px;
   font-weight: 520;
@@ -85,7 +58,7 @@
   margin-top: 42px;
 }
 
-.learning-month > h4 {
+.learning-month > h3 {
   margin: 0 0 4px 132px;
   color: var(--secondary);
   font-size: 17px;
@@ -143,7 +116,7 @@
   letter-spacing: 0.015em;
 }
 
-.learning-entry h5 {
+.learning-entry h4 {
   margin: 0;
   font-size: 18px;
   font-weight: 560;
@@ -204,11 +177,9 @@
 
 @media (max-width: 560px) {
   .learning-page .page-heading {
-    margin-bottom: 24px;
+    margin-bottom: 15px;
   }
 
-  .learning-current,
-  .learning-log-head,
   .learning-repo {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -235,7 +206,7 @@
     margin-bottom: 23px;
   }
 
-  .learning-year > h3 {
+  .learning-year > h2 {
     margin-bottom: 20px;
     font-size: 27px;
   }
@@ -244,7 +215,7 @@
     margin-top: 36px;
   }
 
-  .learning-month > h4 {
+  .learning-month > h3 {
     margin: 0 0 7px;
     font-size: 16px;
   }
@@ -270,7 +241,7 @@
     gap: 20px;
   }
 
-  .learning-entry h5 {
+  .learning-entry h4 {
     font-size: 17px;
   }
 
