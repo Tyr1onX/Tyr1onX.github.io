@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Tyr1onX 正在做和持续维护的作品。" />
+  <meta name="description" content="Tyr1onX 的作品展示。目前展示 Windows 本地桌面课表应用「课刻」。" />
   <meta name="theme-color" content="#fafafa" />
   <meta name="color-scheme" content="light dark" />
   <link rel="icon" href="./favicon.svg?v=2" type="image/svg+xml" />
   <title>作品 — Tyr1onX</title>
   <script>(()=>{let t=null;try{t=localStorage.getItem('tyr1onx-theme')}catch{}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})();</script>
   <link rel="stylesheet" href="./wiki.css?v=9" />
+  <link rel="stylesheet" href="./projects-showcase.css?v=1" />
   <script src="./wiki.js?v=9" defer></script>
 </head>
 <body>
@@ -41,12 +42,115 @@
         <div class="sidebar-copy">© <span data-current-year>2026</span> Tyr1onX</div>
       </div>
     </aside>
-    <main class="main" id="main"><div class="content"><header class="page-heading"><h1>作品</h1><p>一些正在做、也会继续维护的东西。</p></header><section class="simple-list" aria-label="作品列表">
-      <a class="simple-item" href="./keke.html"><div class="simple-meta"><span>2026</span><span>进行中</span></div><div class="simple-main"><div class="simple-title"><h2>课刻</h2><span aria-hidden="true">→</span></div><p>桌面课表、截图识别与本地课程管理。课程和设置保存在本机。</p></div></a>
-      <a class="simple-item" href="https://redpalm.yituan4527.top/" target="_blank" rel="noreferrer noopener"><div class="simple-meta"><span>2026</span><span>进行中</span></div><div class="simple-main"><div class="simple-title"><h2>RedPalm</h2><span aria-hidden="true">↗</span></div><p>多人互动小游戏与 Web 实验，包含飞行棋、命运卡、轮盘、数字炸弹和扫雷。</p></div></a>
-      <a class="simple-item" href="./knowledge.html"><div class="simple-meta"><span>2026</span><span>持续更新</span></div><div class="simple-main"><div class="simple-title"><h2>知识星图</h2><span aria-hidden="true">→</span></div><p>把学习资料、知识节点和项目经历整理成可以浏览的知识空间。</p></div></a>
-    </section></div></main>
+
+    <main class="main" id="main">
+      <div class="content projects-page">
+        <header class="page-heading">
+          <h1>作品</h1>
+          <p>一些真正做出来、自己也在使用的东西。</p>
+        </header>
+
+        <article class="work-showcase" aria-labelledby="keke-title">
+          <div class="work-kicker" aria-label="作品时间与类型">
+            <span>2026 — 至今</span>
+            <span>Windows App</span>
+          </div>
+
+          <header class="work-header">
+            <div class="work-title-row">
+              <h2 id="keke-title">课刻</h2>
+              <span>Desktop Course Widget</span>
+            </div>
+            <p class="work-lead">让一天在桌面上缓慢流动。</p>
+            <p class="work-description">
+              从学校教务系统导入课表，在 Windows 桌面直接查看当前课程、下一节课程和今天剩余的安排；完整周课表、课程与作息则在独立窗口里继续管理。无需账号，课表文件与设置都留在本机。
+            </p>
+            <p class="work-period">持续开发中 · 最新稳定版 v0.4.0</p>
+          </header>
+
+          <section class="work-metrics" aria-label="课刻产品属性">
+            <div class="work-metric">
+              <strong>Windows 10 / 11</strong>
+              <span>支持平台</span>
+            </div>
+            <div class="work-metric">
+              <strong>Local-first</strong>
+              <span>无需账号 · 数据保存在本机</span>
+            </div>
+            <div class="work-metric">
+              <strong>Excel .xlsx</strong>
+              <span>本地解析并预览后导入</span>
+            </div>
+          </section>
+
+          <nav class="work-actions" aria-label="课刻项目入口">
+            <a class="work-action work-action-primary" href="./keke.html" aria-label="查看课刻产品介绍">查看产品</a>
+            <a class="work-action" href="https://github.com/Tyr1onX/desktop-course-widget/releases/latest" target="_blank" rel="noreferrer noopener" aria-label="下载课刻最新 Windows 版本">下载 Windows 版 <span aria-hidden="true">↗</span></a>
+            <a class="work-action" href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer noopener" aria-label="在 GitHub 查看课刻源码">GitHub <span aria-hidden="true">↗</span></a>
+          </nav>
+
+          <figure class="work-screenshot">
+            <a class="work-screenshot-link" href="./keke.html" aria-label="查看课刻产品介绍">
+              <img src="./assets/keke/current-class.jpg" alt="课刻桌面课表应用界面" loading="eager" decoding="async" />
+            </a>
+            <figcaption>
+              <span>当前课程状态</span>
+              <span>来自课刻仓库的真实界面截图</span>
+            </figcaption>
+          </figure>
+
+          <section class="work-section" aria-labelledby="keke-features-title">
+            <div class="work-section-head">
+              <h3 id="keke-features-title">Capabilities</h3>
+              <p>把最常看的“今天”留在桌面，把需要编辑和整理的内容放进独立课表窗口。</p>
+            </div>
+
+            <div class="feature-list">
+              <article class="feature-item">
+                <h4>桌面时间流</h4>
+                <p>突出当前课程、下一节课程与当天剩余安排，不必反复打开教务系统。</p>
+              </article>
+              <article class="feature-item">
+                <h4>完整周课表</h4>
+                <p>查看星期一至星期日，并直接新增、修改或删除课程。</p>
+              </article>
+              <article class="feature-item">
+                <h4>Excel 导入</h4>
+                <p>在本机解析教务系统导出的 .xlsx，先预览确认，再写入课表。</p>
+              </article>
+              <article class="feature-item">
+                <h4>多课表管理</h4>
+                <p>保存不同学期或不同版本的课表，并快速切换当前使用的课表。</p>
+              </article>
+              <article class="feature-item">
+                <h4>动态作息</h4>
+                <p>按实际课程安排配置 1～24 节课的开始与结束时间。</p>
+              </article>
+              <article class="feature-item">
+                <h4>桌面常驻</h4>
+                <p>支持系统托盘、开机启动、单实例、窗口位置恢复与多显示器适配。</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="work-section" aria-labelledby="keke-stack-title">
+            <div class="work-section-head">
+              <h3 id="keke-stack-title">Built with</h3>
+              <p>保持桌面端与 Web 界面足够轻，核心数据与文件解析放在本地完成。</p>
+            </div>
+            <p class="work-stack" aria-label="课刻技术栈">
+              <span>Tauri 2</span>
+              <span>Rust</span>
+              <span>TypeScript</span>
+              <span>Vite</span>
+            </p>
+            <p class="work-footnote">Excel 解析使用 Calamine。课刻目前仅支持 Windows 10 / 11。</p>
+          </section>
+        </article>
+      </div>
+    </main>
   </div>
+
   <footer class="mobile-footer">© <span data-current-year>2026</span> Tyr1onX</footer>
 </body>
 </html>
