@@ -5916,3 +5916,41 @@ process exit=0
 ```
 
 This is deliberately described as an end-to-end offline causal proof rather than a byte-for-byte rehost of the whole `0x18026B530` completion routine. That completion routine performs substantial unrelated task/URL/FGID lifecycle work. The only harness glue in the limiter path is the exact recovered `sl << 10` conversion visible at `0x18026D4D6-0x18026D4ED`; parsing, source arbitration, state mutation and both global bucket implementations are original `.234` code.
+
+## 2026-09-02: original return-item to completion deep-copy reproduced
+
+The remaining structural offset gap between the legacy locatedownload handler and the download-pool completion object is now closed with original `.234` machine code.
+
+The handler's finish notification at `0x18075CE02-0x18075CE3D` passes `server+0xE8` as its return-item argument. In that subobject:
+
+```text
+return_item + 0xC8 = server + 0x1B0 = sl
+return_item + 0xCC = server + 0x1B4 = fsl
+```
+
+The original callback binder (`0x180274230`) forwards that return item as `R9` to the business callback `0x1802293B0`. That callback uses original deep-copy helper `0x18023A0C0` with the destination placed at `completion+0x10`. The helper explicitly copies `src+0xC8 -> dst+0xC8` and `src+0xCC -> dst+0xCC`. Therefore the outer completion layout is mechanically:
+
+```text
+completion + 0xD8 = completion+0x10+0xC8 = sl
+completion + 0xDC = completion+0x10+0xCC = fsl
+```
+
+A new isolated harness, `experiments/baidu-original-locatedownload-returnitem-copy-proof.cpp`, dynamically executes the complete original `handle_response` followed by original `0x18023A0C0`. Synthetic response input still uses `sl=120` and `fsl=-1`.
+
+Observed:
+
+```text
+handler return-item:
+    src + 0xC8 = 120
+    src + 0xCC = -1
+
+original deep-copy output:
+    completion + 0xD8 = 120
+    completion + 0xDC = -1
+
+process exit = 0
+```
+
+The isolated synthetic server did not run the full production server constructor. To make the original deep-copy routine's ordinary empty-container preconditions valid, the harness supplies empty sentinels for the otherwise-unused `bakurls` list and a third list-like return-item member using the original kernel allocator and the recovered MSVC-list layout. These sentinels are host-lifecycle scaffolding only: they do not initialize, rewrite, or influence `sl`, `fsl`, policy source, rates, or token-bucket state.
+
+This also corrects the earlier wording that implied a semantic conversion between `server+0x1B0` and completion `+0xD8`: the values are the same fields in a nested return-item, deep-copied under a 16-byte completion header.
