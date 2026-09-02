@@ -5221,3 +5221,100 @@ original EntityTask vtable +0x50
 ```
 
 The remaining Level-3 component is the upstream `cdn_speed_limit_dispatch` calculation and its task-list/Peer inputs.
+
+#### 29.17.33 Level-3 dispatcher rehost: corrected manager input and restored NetGrid ownership lifecycle
+
+The isolated Level-3 rehost exposed and corrected an earlier over-strong type assumption. `cdn_speed_limit_dispatch` does **not** treat `manager+0x250` as the previously recovered Peer object. The pointer stored at `manager+0x250` is consumed by the legacy/global speed-policy API family (`0x1800C35xx`, `0x1800C38xx`, etc.) and exposes the global CDN/TOTAL gates together with multiple embedded rate statistics.
+
+The original Peer rehost remains valid as an independent result, but the earlier conceptual edge:
+
+```text
+manager+0x250 -> Peer
+```
+
+is withdrawn. The dispatcher input is instead the global speed/policy state already used by `set_sl`.
+
+Two original Peer constructors were nevertheless rehosted successfully in isolation:
+
+```text
+base Peer ctor    -> default rate states 100 MiB/s / 100 MiB/s
+vfunc +0x80       -> first rate state setter
+vfunc +0x88       -> second rate state setter
+
+derived Peer ctor -> installs derived vtable and initializes its internal list/state
+```
+
+The derived constructor's configuration argument was recovered as a structure containing four consecutive MSVC strings followed by a 16-byte POD block and a dword. Empty valid strings are sufficient for isolated construction.
+
+The more important Level-3 fix was restoring the **real NetGrid shared ownership lifecycle**. Real EntityTask creation does not merely store a raw NetGrid pointer. After `NetGrid::ctor (0x1801A7E20)`, the caller invokes:
+
+```text
+0x1802A8320(EntityTask+0x108, raw_netgrid)
+```
+
+This function allocates the shared_ptr control block and calls the library's shared-from-this/weak initialization helper on `NetGrid+0x20`. Consequently the following fields become valid through original machine code rather than manual field synthesis:
+
+```text
+NetGrid+0x20/+0x28  = self weak/shared ownership state
+EntityTask+0x108    = NetGrid shared_ptr object pointer
+EntityTask+0x110    = NetGrid shared_ptr control block
+```
+
+Immediately afterwards the real client calls NetGrid primary-vtable slot `+0x250`, resolved to `0x1801A8810`. This is a second-stage backend initializer. It consults the abstract owner at `NetGrid+0x240/+0x248`, calls owner vfunc `+0x70` for a backend type, and has concrete branches for at least types `0`, `1`, and `7`.
+
+For the isolated harness, a self-owned owner stub was used. It implements only read-only capabilities exercised by initialization:
+
+```text
+owner vfunc +0x70 -> backend type
+owner vfunc +0x08 -> empty vector-like configuration view
+```
+
+No Baidu process is modified and the stub performs no network I/O. Backend type `7` is sufficient to let the original NetGrid second-stage initializer complete and create its secondary lane object.
+
+The dispatcher also expects an EntityTask statistics aggregate returned through EntityTask vfunc `+0x140`. The original direct rate getters used by `cdn_speed_limit_dispatch` cover these embedded statistics:
+
+```text
++0x000
++0x050
++0x0A0
++0x0F0
++0x140
++0x190
++0x1E0
++0x230
++0x280
++0x2D0
++0x370
+```
+
+Each statistic was initialized and sampled through the original `0x1800BE4C0` constructor and `0x1800BE510` add-bytes method. This avoids manually fabricating the average-rate fields and prevents the cold-start integer-divide-by-zero behavior of `0x1800BE770`.
+
+With a one-task manager, original `.234` machine code now completes the full isolated chain:
+
+```text
+set_sl(locatedownload/CMS state)
+    -> global CDN gate   = 122880 B/s
+    -> global TOTAL gate = 122880 B/s
+    -> original global/task rate statistics
+    -> cdn_speed_limit_dispatch (0x180333300)
+    -> original EntityTask vtable
+    -> original NetGrid vtable
+    -> original CDN token bucket setter
+```
+
+Observed result:
+
+```text
+before dispatcher:
+  global CDN       = 122880 B/s
+  global TOTAL     = 122880 B/s
+  NetGrid CDN      = 104857600 B/s
+
+after dispatcher:
+  NetGrid CDN      = 122880 B/s
+  global CDN       = 122880 B/s
+  global TOTAL     = 122880 B/s
+  active task count = 1
+```
+
+Therefore the complete single-task downstream allocation path is now experimentally rehosted using the original Baidu `.234` implementation. The next isolated check is multi-task allocation: use the same original lifecycle with enough EntityTask entries to determine whether the statically recovered 16 KiB/s per-task floor is emitted by the original dispatcher when `122880 / task_count` falls below 16384 B/s.
