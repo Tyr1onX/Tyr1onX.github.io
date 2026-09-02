@@ -3917,3 +3917,50 @@ locatedownload HTTP response
 ```
 
 The separate `fsl` value is forwarded into the downstream CDN URL handling path (`on_cdn_return_urls`) and stored independently. A paused-state memory scan did not retain a trustworthy adjacent `sl=120/fsl=16` response object, so the observed 16 KiB/s NetGrid CDN override is deliberately NOT equated with `fsl` yet. That relationship remains a separate question.
+
+#### 29.17.9 CDN scheduler has a 16 KiB/s floor and applies the computed limit
+
+A local CDN scheduling function at `0x180333300-0x180339319` contains the explicit log format:
+
+```text
+|set speed limit|cdn_speed_limit=%1%|set_cdn_speed_limit=%2%|...|task_rate=%5%|...|http_peer_ct=%8%:%9%|http_speed=%10%|...|p2p_speed=%13%|...
+```
+
+Inside this function, the working CDN speed-limit value is kept in local `+0x128`. One branch initializes the candidate to `0x4000` and clamps a computed quotient upward to that value:
+
+```asm
+mov    $0x4000, %esi
+...
+cmp    $0x4000, %eax
+mov    $0x4000, %esi
+cmova  %rax, %rsi
+mov    %rsi, local+0x128
+```
+
+So that branch implements a minimum of exactly:
+
+```text
+0x4000 B/s = 16384 B/s = 16 KiB/s
+```
+
+Related scheduler branches can raise the selected value to `0x8000` (32 KiB/s), `0x40000` (256 KiB/s), or use a minimum/maximum involving `0x80000` (512 KiB/s), depending on task/peer state. Therefore the live 16 KiB/s value observed in the NetGrid CDN bucket is consistent with the scheduler's explicit lowest tier rather than a rewritten 100 MiB/s default field.
+
+The working value is not logging-only. Near the end of the same function the code loads local `+0x128` into `EDX` and invokes a task object's virtual method at vtable offset `+0x50`:
+
+```asm
+mov    local+0x128, %edx
+mov    (%r15), %rax
+mov    %r15, %rcx
+call   *0x50(%rax)
+```
+
+Thus the scheduler-computed CDN speed limit is actively forwarded to a task/backend object. The exact identity of that `vfunc+0x50` is still being traced; it should not yet be equated with the already identified `NetGrid::set_cdn_download_token` until the receiving object's RTTI/vtable is proven.
+
+This also strengthens the separation between two mechanisms:
+
+```text
+locatedownload sl=120 -> total/task-level 122880 B/s policy
+local CDN scheduler -> per-CDN execution limit with explicit 16 KiB/s floor
+```
+
+The relationship between response `fsl` and the live 16 KiB/s scheduler result remains deliberately unclaimed.
