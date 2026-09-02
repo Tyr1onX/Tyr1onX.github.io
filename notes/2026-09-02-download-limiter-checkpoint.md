@@ -353,3 +353,99 @@ NetGrid execution object removed
 ```
 
 This strengthens the Level 6 interpretation: the observed TOTAL-bucket activity is coupled to the actual lifecycle of the same real transfer, rather than being unrelated background activity in the global policy object.
+
+## 2026-09-02 arbitration replay + reproducible Level 6 capture tooling
+
+The original `set_sl` arbitration probe was rerun against the same local `kernel.dll` 3.0.20.234. It uses the original global state accessor, reset routine and `set_sl` implementation in a self-owned process. The exact transition was:
+
+```text
+initial / reset:
+  CDN   = 524288 B/s, source=5 default
+  TOTAL = 524288 B/s, source=5 default
+
+locatedownload set_sl(122880, 122880, 2):
+  CDN   = 122880 B/s, source=2 locatedownload
+  TOTAL = 122880 B/s, source=2 locatedownload
+  locatedownload_active=1
+
+CMS set_sl(-1, 122880, 1):
+  CDN   = 122880 B/s, source=2 locatedownload
+  TOTAL = 122880 B/s, source=1 enable_cms_total_sl
+
+lower-priority application set_sl(999999, 999999, 4):
+  CDN/TOTAL state remains unchanged
+```
+
+A read-only real-process sample taken immediately afterwards still showed the exact final arbitration fingerprint:
+
+```text
+CDN   raw/effective=122880, source=2
+TOTAL raw/effective=122880, source=1
+```
+
+This makes the live `CDN source=locatedownload / TOTAL source=CMS` combination an exact reproduction of original `set_sl` arbitration semantics, not merely an interpretation of source-number labels.
+
+### Sparse-file disk cross-check
+
+The Baidu temporary download file is preallocated to the full logical size and is marked sparse:
+
+```text
+logical length = 200307093 bytes
+file suffix    = .baiduyun.p.downloading
+sparse flag    = set
+```
+
+`fsutil sparse queryrange` reported two allocated extents in the current paused state:
+
+```text
+offset 0x00000000 length 0x04c00000
+offset 0x0a800000 length 0x01600000
+```
+
+Their allocated-byte total is:
+
+```text
+102760448 bytes
+```
+
+while BrowserEngine reports:
+
+```text
+finish_size = 104284160 bytes
+```
+
+The values are close but not identical, which is expected for sparse/chunked writes and buffering. The important methodological correction is that normal file `Length` cannot be used as a progress signal because it is preallocated to the final size. Sparse allocated ranges are the usable independent disk-side signal.
+
+### Reusable read-only capture tool
+
+A permanent orchestration tool was added:
+
+```text
+experiments/legacy-level6-capture.js
+```
+
+It performs read-only BrowserEngine CDP sampling and combines it with the existing native observers. It can:
+
+- wait for the selected task to genuinely enter running state;
+- collect official task rate / finish_size statistics;
+- collect the real legacy task NetGrid and global TOTAL gate summary;
+- sample sparse allocated bytes at the beginning/end of the window;
+- optionally wait for the normal paused state and capture a paused global-gate baseline;
+- run in `--paused-only` mode for an isolated stop-state proof.
+
+The current paused task validated the tool end-to-end:
+
+```text
+status start/end = 3
+rate start/end   = 0
+finishDelta      = 0
+sparse fileDelta = 0
+TOTAL token      = 18 for all 321 samples
+TOTAL ts changes = 0
+TOTAL token changes = 0
+process read bytes delta = 0
+```
+
+`legacy-live-task-gate-observer.cpp` was also extended to report target-process read/write/other byte deltas during future running captures, giving another independent activity measure alongside BrowserEngine progress and sparse-file allocation.
+
+The desktop Electron window exposes only a top-level Chromium Pane through Windows UI Automation and no named internal buttons/list items. Therefore no coordinate-blind or hidden-IPC resume action was attempted; future automatic capture can wait for a normal UI resume without modifying the client.
