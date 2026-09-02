@@ -5412,3 +5412,58 @@ The important architectural distinction is now experimentally supported:
 ```
 
 The remaining semantic work is to name the exact business meaning of the task participation/identity state and the scheduler modes around `global_state+0x91C` / `+0x1C0`; the arithmetic and downstream machine-code behavior are now closed.
+
+## 2026-09-02: membership, try-VIP flag, and EntityTask FGID semantics
+
+This closes three previously ambiguous fields used around the legacy CDN dispatcher.
+
+### Global state +0x91C is MembershipType
+
+Function `0x1800C5E00-0x1800C6248` parses the membership string and stores the result at global policy state `+0x91C`:
+
+- `normal` -> `1`
+- `vip` -> `2`
+- `svip` -> `3`
+
+The previous value is retained at `+0x920`; when membership changes, the function invokes the global limiter reset (`0x1800EE960`) before copying the new value into `+0x920`.
+
+Predicate `0x1800C98B0` explicitly checks `state+0x91C == 3`, so the value `3` used by the CDN strategy is the SVIP membership case rather than a generic scheduler mode.
+
+### Global state +0x1C0 is the try-VIP / normal-speed-up active flag
+
+Getter `0x1800F1E30` reads `state+0x1C0`; wrapper `0x1800C35D0` exposes it to the legacy download control path.
+
+Setter wrapper `0x1800C3560` enters `0x1800F0960`. That function reads the previous `+0x1C0` value, applies the associated speed-state transition, and finally writes the requested boolean back to `state+0x1C0`.
+
+The upstream caller `0x18036E4E0-0x18036EB88` logs exactly:
+
+`set try vip speed up|cur flag=%1%|set flag=%2%|membership=%3%`
+
+It obtains the current flag through `0x1800C35D0` and applies the new flag through `0x1800C3560`. Therefore `+0x1C0` is not a generic scheduler mode; it is the active try-VIP / normal-speed-up state. Telemetry also uses the names `normal_speed_up_flag` and `try_speed_up_flag`.
+
+In `0x1800C98B0`, either actual SVIP membership (`MembershipType == 3`) or this try-VIP flag can satisfy the membership/speed-up side of the strategy predicate, subject to the other strategy-enable conditions.
+
+### EntityTask +0x24 is the 128-bit binary FGID
+
+The `EntityTask` constructor `0x18027F5F0` installs the EntityTask vtable and copies the first 16 bytes of its task config into `EntityTask+0x24` using `0x1800D52A0`.
+
+The helper family establishes the representation:
+
+- `0x1800D52A0`: raw 16-byte copy
+- `0x1800D54B0`: returns true only when all 16 bytes are zero
+- `0x1800D52C0`: accepts a string only when its length is exactly 16 and converts it into the 16-byte task key
+- `0x1800D52F0`: formats the 16-byte value through `0x1800D6EA0`
+- `0x1800D6EA0`: converts every input byte into two hexadecimal characters, so 16 bytes become a 32-character hexadecimal string
+
+The direct naming proof is `EntityTask` release logging. Function `0x180281820-0x180281D9B` emits:
+
+`entitytask release|fgid=%1%|status=%2%`
+
+Immediately before formatting `%1`, it executes:
+
+- `lea rcx, [EntityTask+0x24]`
+- `call 0x1800D52F0`
+
+Therefore `EntityTask+0x24` is the binary 16-byte/128-bit FGID, and the externally logged/database form is its 32-character hexadecimal representation. This also matches the legacy `t_download_task` schema, where `fgid` is stored as `CHAR(32)`.
+
+The dispatcher-side identity predicate (`EntityTask` vfunc `+0x1B8`) checks whether this FGID is all zero. The multi-task rehost proved that nonzero FGIDs participate in the normal `122880 / N` CDN allocation path, while synthetic all-zero FGIDs trigger a different fallback/gate. The exact business meaning of the zero-FGID case remains separate from the now-closed field identity.
