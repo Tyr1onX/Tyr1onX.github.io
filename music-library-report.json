@@ -7,11 +7,1560 @@
   },
   "qqRecognized": 193,
   "qqUnresolved": 5,
-  "unique": 333,
-  "mergedDuplicates": 61,
+  "beforeUnique": 333,
+  "afterUnique": 325,
+  "unique": 325,
+  "newlyMerged": 8,
+  "mergedDuplicates": 69,
+  "crossPlatformGroups": {
+    "qq+netease": 9,
+    "qq+qishui": 14,
+    "netease+qishui": 11,
+    "qq+netease+qishui": 10
+  },
+  "highConfidenceMergeEvents": 69,
+  "reviewCandidates": 0,
   "featured": 12,
-  "artworkMatched": 52,
-  "artworkPlaceholder": 260,
-  "artworkAmbiguous": 21,
-  "previewAvailable": 52
+  "sourceEntries": 394,
+  "artworkBefore": {
+    "matched": 52,
+    "placeholder": 260,
+    "ambiguous": 21
+  },
+  "artworkAfter": {
+    "matched": 286,
+    "placeholder": 39,
+    "ambiguous": 0
+  },
+  "artworkMatched": 286,
+  "artworkPlaceholder": 39,
+  "artworkAmbiguous": 0,
+  "artworkSources": {
+    "itunes": 24,
+    "musicbrainz": 11,
+    "netease": 24,
+    "qq": 227,
+    "resolver": 39
+  },
+  "previewAvailable": 24,
+  "mergeEvents": [
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "カタオモイ (5th Anniversary Live ver.)",
+        "rawArtist": "Aimer",
+        "rawAlbum": "Akane Sasu Everlasting Show",
+        "sourceIndex": 8,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qishui",
+        "rawTitle": "カタオモイ (単相思)",
+        "rawArtist": "Aimer",
+        "rawAlbum": "daydream",
+        "sourceIndex": 13,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "天天 (2003 Version)",
+        "rawArtist": "陶喆",
+        "rawAlbum": "乐之路",
+        "sourceIndex": 54,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qishui",
+        "rawTitle": "天天",
+        "rawArtist": "陶喆",
+        "rawAlbum": "Soul Power (Live Concert)",
+        "sourceIndex": 55,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "有些",
+        "rawArtist": "颜人中",
+        "rawAlbum": "失眠症候群",
+        "sourceIndex": 29,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qishui",
+        "rawTitle": "有些",
+        "rawArtist": "颜人中",
+        "rawAlbum": "失眠症候群",
+        "sourceIndex": 65,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "讨厌红楼梦",
+        "rawArtist": "陶喆",
+        "rawAlbum": "Soul Power (Live Concert)",
+        "sourceIndex": 74,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qishui",
+        "rawTitle": "讨厌红楼梦",
+        "rawArtist": "陶喆",
+        "rawAlbum": "黑色柳丁",
+        "sourceIndex": 90,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "天天 (2003 Version)",
+        "rawArtist": "陶喆",
+        "rawAlbum": "乐之路",
+        "sourceIndex": 54,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qishui",
+        "rawTitle": "天天",
+        "rawArtist": "陶喆",
+        "rawAlbum": "I'm O.K.",
+        "sourceIndex": 96,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "普通朋友",
+        "rawArtist": "陶喆",
+        "rawAlbum": "Soul Power (Live Concert)",
+        "sourceIndex": 38,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qishui",
+        "rawTitle": "普通朋友",
+        "rawArtist": "陶喆",
+        "rawAlbum": "I'm O.K.",
+        "sourceIndex": 100,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "Anxiety",
+        "rawArtist": "Doechii",
+        "rawAlbum": "Anxiety",
+        "sourceIndex": 9,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "Anxiety",
+        "rawArtist": "Doechii",
+        "rawAlbum": "Anxiety",
+        "sourceIndex": 1,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "Love Story (Taylor’s Version)",
+        "rawArtist": "Taylor Swift",
+        "rawAlbum": "Love Story (Taylor’s Version)",
+        "sourceIndex": 92,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "Love Story",
+        "rawArtist": "Taylor Swift",
+        "rawAlbum": "Fearless",
+        "sourceIndex": 4,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "空心",
+        "rawArtist": "光泽",
+        "rawAlbum": "空心",
+        "sourceIndex": 33,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "空心",
+        "rawArtist": "光泽",
+        "rawAlbum": "光泽",
+        "sourceIndex": 10,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "就是爱你",
+        "rawArtist": "陶喆",
+        "rawAlbum": "太平盛世",
+        "sourceIndex": 40,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "就是爱你（Love Can）",
+        "rawArtist": "陶喆",
+        "rawAlbum": "太平盛世",
+        "sourceIndex": 11,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "思念是一种病",
+        "rawArtist": "张震岳, 蔡健雅",
+        "rawAlbum": "OK",
+        "sourceIndex": 26,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "思念是一种病",
+        "rawArtist": "张震岳 / 蔡健雅",
+        "rawAlbum": "OK",
+        "sourceIndex": 13,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "小宇",
+        "rawArtist": "张震岳",
+        "rawAlbum": "OK",
+        "sourceIndex": 28,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "小宇",
+        "rawArtist": "张震岳",
+        "rawAlbum": "OK",
+        "sourceIndex": 17,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "玻璃",
+        "rawArtist": "Gareth.T",
+        "rawAlbum": "玻璃",
+        "sourceIndex": 50,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "玻璃",
+        "rawArtist": "Gareth.T",
+        "rawAlbum": "玻璃",
+        "sourceIndex": 24,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "不将就",
+        "rawArtist": "李荣浩",
+        "rawAlbum": "有理想",
+        "sourceIndex": 57,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "不将就（电影《何以笙箫默》片尾主题曲）",
+        "rawArtist": "李荣浩",
+        "rawAlbum": "有理想",
+        "sourceIndex": 26,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "我的美丽",
+        "rawArtist": "费宇清",
+        "rawAlbum": "魔力歌先生 第七期",
+        "sourceIndex": 35,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "我的美丽 (Live版)",
+        "rawArtist": "费宇清",
+        "rawAlbum": "魔力歌先生 第七期",
+        "sourceIndex": 29,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "怎么了（What's Wrong）",
+        "rawArtist": "周兴哲",
+        "rawAlbum": "终于了解自由 (Deluxe)",
+        "sourceIndex": 38,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "怎么了（What's Wrong）",
+        "rawArtist": "周兴哲",
+        "rawAlbum": "终于了解自由",
+        "sourceIndex": 42,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "爱我还是他",
+        "rawArtist": "陶喆",
+        "rawAlbum": "太平盛世",
+        "sourceIndex": 58,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "爱我还是他（Who Do You Love?）",
+        "rawArtist": "陶喆",
+        "rawAlbum": "太平盛世",
+        "sourceIndex": 43,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "普通朋友",
+        "rawArtist": "陶喆",
+        "rawAlbum": "Soul Power (Live Concert)",
+        "sourceIndex": 38,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "普通朋友（Regular Friends）",
+        "rawArtist": "陶喆",
+        "rawAlbum": "I'm OK",
+        "sourceIndex": 44,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "拆穿",
+        "rawArtist": "小霞",
+        "rawAlbum": "小霞",
+        "sourceIndex": 25,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "拆穿",
+        "rawArtist": "小霞",
+        "rawAlbum": "小霞",
+        "sourceIndex": 50,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "刻在我心底的名字",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "刻在我心底的名字",
+        "sourceIndex": 18,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "刻在我心底的名字",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "刻在我心底的名字",
+        "sourceIndex": 68,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "我的名字",
+        "rawArtist": "焦迈奇",
+        "rawAlbum": "我的名字",
+        "sourceIndex": 10,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "我的名字",
+        "rawArtist": "焦迈奇",
+        "rawAlbum": "我的名字",
+        "sourceIndex": 69,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "温柔",
+        "rawArtist": "五月天",
+        "rawAlbum": "爱情万岁",
+        "sourceIndex": 80,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "温柔",
+        "rawArtist": "五月天",
+        "rawAlbum": "我们是五月天",
+        "sourceIndex": 70,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "遇上你之前的我",
+        "rawArtist": "Gareth.T",
+        "rawAlbum": "遇上你之前的我",
+        "sourceIndex": 41,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "遇上你之前的我",
+        "rawArtist": "Gareth.T",
+        "rawAlbum": "遇上你之前的我",
+        "sourceIndex": 71,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "太阳与地球 (Sun & Earth)",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "HeartBreakFast 伤心早餐店",
+        "sourceIndex": 17,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "太阳与地球（Sun & Earth）",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "HeartBreakFast 伤心早餐店",
+        "sourceIndex": 73,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "日落大道 (Live版)",
+        "rawArtist": "梁博",
+        "rawAlbum": "Yoyo岑宁儿&梁博·专场",
+        "sourceIndex": 12,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "日落大道",
+        "rawArtist": "梁博",
+        "rawAlbum": "迷藏",
+        "sourceIndex": 79,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "淘汰",
+        "rawArtist": "陈奕迅",
+        "rawAlbum": "LOVE 07情歌集压轴篇",
+        "sourceIndex": 32,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "淘汰",
+        "rawArtist": "陈奕迅",
+        "rawAlbum": "认了吧",
+        "sourceIndex": 83,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "出现又离开(live)",
+        "rawArtist": "梁博",
+        "rawAlbum": "我是唱作人第1季第2期",
+        "sourceIndex": 11,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "出现又离开 (Live)",
+        "rawArtist": "梁博",
+        "rawAlbum": "我是唱作人 第2期",
+        "sourceIndex": 85,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "不说",
+        "rawArtist": "周公",
+        "rawAlbum": "不说",
+        "sourceIndex": 85,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "netease",
+        "rawTitle": "不说（原来是不说）",
+        "rawArtist": "周公",
+        "rawAlbum": "不说",
+        "sourceIndex": 92,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "有点甜（电视剧《微微一笑很倾城》插曲）",
+        "rawArtist": "汪苏泷 / By2",
+        "rawAlbum": "万有引力",
+        "sourceIndex": 22,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "有点甜",
+        "rawArtist": "汪苏泷 / BY2",
+        "rawAlbum": "万有引力",
+        "sourceIndex": 3,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "玻璃",
+        "rawArtist": "Gareth.T",
+        "rawAlbum": "玻璃",
+        "sourceIndex": 50,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "玻璃",
+        "rawArtist": "Gareth.T",
+        "rawAlbum": "玻璃",
+        "sourceIndex": 5,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "玻璃",
+        "rawArtist": "Gareth.T",
+        "rawAlbum": "玻璃",
+        "sourceIndex": 50,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "玻璃（试听版）",
+        "rawArtist": "Gareth.T",
+        "rawAlbum": "",
+        "sourceIndex": 6,
+        "confidence": "medium",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "几分之几（You Complete Me）",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "几分之几 (You Complete Me)",
+        "sourceIndex": 75,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "几分之几",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "几分之几",
+        "sourceIndex": 12,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "该不该（韩剧《明成皇后》片尾曲）",
+        "rawArtist": "张学友",
+        "rawAlbum": "他在那里",
+        "sourceIndex": 49,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "该不该",
+        "rawArtist": "张学友",
+        "rawAlbum": "他在那里",
+        "sourceIndex": 13,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "老爸（电影《父子雄兵》片尾曲）",
+        "rawArtist": "常石磊",
+        "rawAlbum": "老爸",
+        "sourceIndex": 48,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "老爸",
+        "rawArtist": "常石磊",
+        "rawAlbum": "老爸",
+        "sourceIndex": 14,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "危险",
+        "rawArtist": "梁博",
+        "rawAlbum": "迷藏",
+        "sourceIndex": 76,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "危险",
+        "rawArtist": "梁博",
+        "rawAlbum": "迷藏",
+        "sourceIndex": 15,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "颠倒梦想（电影《像素大战》宣传曲）",
+        "rawArtist": "梁博",
+        "rawAlbum": "迷藏",
+        "sourceIndex": 84,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "颠倒梦想",
+        "rawArtist": "梁博",
+        "rawAlbum": "迷藏",
+        "sourceIndex": 16,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "太阳与地球 (Sun & Earth)",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "HeartBreakFast 伤心早餐店",
+        "sourceIndex": 17,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "太阳与地球 (Sun & Earth)",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "HeartBreakFast 伤心早餐店",
+        "sourceIndex": 18,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "拆穿",
+        "rawArtist": "小霞",
+        "rawAlbum": "小霞",
+        "sourceIndex": 25,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "拆穿",
+        "rawArtist": "小霞",
+        "rawAlbum": "小霞",
+        "sourceIndex": 20,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "Baby",
+        "rawArtist": "Justin Bieber, Ludacris",
+        "rawAlbum": "My Worlds - International Version",
+        "sourceIndex": 23,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "Baby",
+        "rawArtist": "Justin Bieber / Ludacris",
+        "rawAlbum": "Baby",
+        "sourceIndex": 24,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "Peaches",
+        "rawArtist": "Justin Bieber, Daniel Caesar, Giveon",
+        "rawAlbum": "Justice",
+        "sourceIndex": 22,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "Peaches (Explicit)",
+        "rawArtist": "Justin Bieber / Daniel Caesar / Giveon",
+        "rawAlbum": "Justice（中国豪华特别版）",
+        "sourceIndex": 26,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "需要人陪",
+        "rawArtist": "王力宏",
+        "rawAlbum": "十八般武艺",
+        "sourceIndex": 31,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "需要人陪",
+        "rawArtist": "王力宏",
+        "rawAlbum": "十八般武艺",
+        "sourceIndex": 33,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "大城小爱",
+        "rawArtist": "王力宏",
+        "rawAlbum": "盖世英雄",
+        "sourceIndex": 30,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "大城小爱",
+        "rawArtist": "王力宏",
+        "rawAlbum": "盖世英雄",
+        "sourceIndex": 35,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "不将就",
+        "rawArtist": "李荣浩",
+        "rawAlbum": "有理想",
+        "sourceIndex": 57,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "不将就",
+        "rawArtist": "李荣浩",
+        "rawAlbum": "有理想",
+        "sourceIndex": 36,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "打火机",
+        "rawArtist": "Penny",
+        "rawAlbum": "打火机",
+        "sourceIndex": 60,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "打火机",
+        "rawArtist": "Penny",
+        "rawAlbum": "打火机",
+        "sourceIndex": 45,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "Love Story (Taylor’s Version)",
+        "rawArtist": "Taylor Swift",
+        "rawAlbum": "Love Story (Taylor’s Version)",
+        "sourceIndex": 92,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "Love Story (Taylor's Version)",
+        "rawArtist": "Taylor Swift",
+        "rawAlbum": "Fearless (Taylor's Version)",
+        "sourceIndex": 50,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "小宇",
+        "rawArtist": "张震岳",
+        "rawAlbum": "OK",
+        "sourceIndex": 28,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "小宇",
+        "rawArtist": "张震岳",
+        "rawAlbum": "OK",
+        "sourceIndex": 52,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "唯一",
+        "rawArtist": "G.E.M.邓紫棋",
+        "rawAlbum": "T.I.M.E.",
+        "sourceIndex": 94,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "唯一",
+        "rawArtist": "G.E.M.邓紫棋",
+        "rawAlbum": "T.I.M.E.",
+        "sourceIndex": 57,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "一点",
+        "rawArtist": "Muyoi / Pezzi",
+        "rawAlbum": "一点",
+        "sourceIndex": 93,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "一点",
+        "rawArtist": "Muyoi / Pezzi",
+        "rawAlbum": "一点",
+        "sourceIndex": 58,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "你不知道的事",
+        "rawArtist": "王力宏",
+        "rawAlbum": "十八般武艺",
+        "sourceIndex": 82,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "你不知道的事",
+        "rawArtist": "王力宏",
+        "rawAlbum": "火力全开",
+        "sourceIndex": 59,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "netease",
+        "rawTitle": "愿与愁",
+        "rawArtist": "林俊杰",
+        "rawAlbum": "愿与愁",
+        "sourceIndex": 72,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "愿与愁",
+        "rawArtist": "林俊杰",
+        "rawAlbum": "重拾_快乐",
+        "sourceIndex": 60,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "爱我还是他",
+        "rawArtist": "陶喆",
+        "rawAlbum": "太平盛世",
+        "sourceIndex": 58,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "爱我还是他",
+        "rawArtist": "陶喆",
+        "rawAlbum": "太平盛世",
+        "sourceIndex": 62,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qq",
+        "rawTitle": "世界末日 (Live)",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "范特西PLUS",
+        "sourceIndex": 82,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "世界末日 (Live)",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "范特西PLUS",
+        "sourceIndex": 90,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "就是爱你",
+        "rawArtist": "陶喆",
+        "rawAlbum": "太平盛世",
+        "sourceIndex": 40,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "就是爱你",
+        "rawArtist": "陶喆",
+        "rawAlbum": "太平盛世",
+        "sourceIndex": 93,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "爱错",
+        "rawArtist": "王力宏",
+        "rawAlbum": "心中的日月",
+        "sourceIndex": 53,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "爱错",
+        "rawArtist": "王力宏",
+        "rawAlbum": "心中的日月",
+        "sourceIndex": 96,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "你不知道的事",
+        "rawArtist": "王力宏",
+        "rawAlbum": "十八般武艺",
+        "sourceIndex": 82,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "你不知道的事",
+        "rawArtist": "王力宏",
+        "rawAlbum": "十八般武艺",
+        "sourceIndex": 101,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "天天 (2003 Version)",
+        "rawArtist": "陶喆",
+        "rawAlbum": "乐之路",
+        "sourceIndex": 54,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "天天",
+        "rawArtist": "陶喆",
+        "rawAlbum": "I'm OK",
+        "sourceIndex": 103,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "找自己",
+        "rawArtist": "陶喆",
+        "rawAlbum": "I'm O.K.",
+        "sourceIndex": 75,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "找自己",
+        "rawArtist": "陶喆",
+        "rawAlbum": "I'm OK",
+        "sourceIndex": 104,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "普通朋友",
+        "rawArtist": "陶喆",
+        "rawAlbum": "Soul Power (Live Concert)",
+        "sourceIndex": 38,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "普通朋友",
+        "rawArtist": "陶喆",
+        "rawAlbum": "I'm OK",
+        "sourceIndex": 105,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qq",
+        "rawTitle": "不爱我就拉倒",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "不爱我就拉倒",
+        "sourceIndex": 73,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "不爱我就拉倒",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "最伟大的作品",
+        "sourceIndex": 116,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "手写的从前",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "",
+        "sourceIndex": 79,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "手写的从前",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "哎呦，不错哦",
+        "sourceIndex": 118,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qq",
+        "rawTitle": "我是如此相信",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "我是如此相信",
+        "sourceIndex": 77,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "我是如此相信",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "最伟大的作品",
+        "sourceIndex": 121,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qq",
+        "rawTitle": "说好不哭 (with 五月天阿信)",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "说好不哭 (with 五月天阿信)",
+        "sourceIndex": 87,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "说好不哭 (with 五月天阿信)",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "最伟大的作品",
+        "sourceIndex": 123,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qq",
+        "rawTitle": "一路向北",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "J III MP3 Player",
+        "sourceIndex": 79,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "一路向北",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "十一月的萧邦",
+        "sourceIndex": 131,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "刻在我心底的名字",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "刻在我心底的名字",
+        "sourceIndex": 18,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "刻在我心底的名字",
+        "rawArtist": "卢广仲",
+        "rawAlbum": "刻在我心底的名字",
+        "sourceIndex": 158,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "晴天",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "",
+        "sourceIndex": 78,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "晴天",
+        "rawArtist": "周杰伦",
+        "rawAlbum": "叶惠美",
+        "sourceIndex": 166,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "Love Yourself",
+        "rawArtist": "Justin Bieber",
+        "rawAlbum": "Purpose - Deluxe",
+        "sourceIndex": 83,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "Love Yourself",
+        "rawArtist": "Justin Bieber",
+        "rawAlbum": "Purpose",
+        "sourceIndex": 175,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qq",
+        "rawTitle": "Closer",
+        "rawArtist": "The Chainsmokers / Halsey",
+        "rawAlbum": "Closer",
+        "sourceIndex": 160,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "Closer",
+        "rawArtist": "The Chainsmokers / Halsey",
+        "rawAlbum": "Collage EP",
+        "sourceIndex": 178,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "STAY",
+        "rawArtist": "The Kid LAROI, Justin Bieber",
+        "rawAlbum": "STAY",
+        "sourceIndex": 20,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "STAY (Explicit)",
+        "rawArtist": "The Kid LAROI / Justin Bieber",
+        "rawAlbum": "STAY (Explicit)",
+        "sourceIndex": 184,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "天外来物",
+        "rawArtist": "薛之谦",
+        "rawAlbum": "天外来物",
+        "sourceIndex": 101,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "天外来物",
+        "rawArtist": "薛之谦",
+        "rawAlbum": "天外来物",
+        "sourceIndex": 189,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    }
+  ]
 }

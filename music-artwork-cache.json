@@ -1,1165 +1,4651 @@
 {
-  "archive-012-d2a39c0b": {
+  "archive-001-0f5021b8": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/49/ee/ad/49eead62-dc85-d18d-c8c2-6ac99b1abba9/193017040173.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview122/v4/12/57/78/125778cc-94c7-8285-12ac-3d321131ac61/mzaf_3156921671407934904.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%97%A5%E8%90%BD%E5%A4%A7%E9%81%93-live%E7%89%88/1655051093?i=1655051176&uo=4",
-    "year": "2018",
-    "appleTrackId": 1655051176
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003Pfd2m3OSRIs.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002Ync0G1DxmXT",
+    "year": "2010",
+    "qqSongId": 702452,
+    "qqSongMid": "002Ync0G1DxmXT",
+    "qqAlbumMid": "003Pfd2m3OSRIs",
+    "matchedTitle": "骂醒我",
+    "matchedArtist": "周汤豪 NICKTHEREAL",
+    "matchedAlbum": "周汤豪 同名专辑",
+    "score": 10
   },
   "archive-002-e6f929f8": {
-    "status": "ambiguous"
-  },
-  "archive-008-3517b4a3": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/32/a4/d2/32a4d2ec-92e1-7f46-f3f8-750b8a5c3f6e/4547366279450.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3e/e2/5f/3ee25f28-f8f4-4b64-c4f6-e537930bef3b/mzaf_5989385910414396516.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E3%82%AB%E3%82%BF%E3%82%AA%E3%83%A2%E3%82%A4-5th-anniversary-live-ver/1538258966?i=1538258969&uo=4",
-    "year": "2016",
-    "appleTrackId": 1538258969
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/b2/c3/c0/b2c3c015-03e7-2999-22f9-051bfaa70afc/dj.hevugpsa.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ef/96/4d/ef964dd4-51be-5d8f-53b6-1b70b5bbc45e/mzaf_9050556053109212510.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E5%BD%A2%E5%AE%B9/1561754072?i=1561754074&uo=4",
+    "year": "2021",
+    "appleTrackId": 1561754074,
+    "matchedTitle": "形容",
+    "matchedArtist": "沈以诚",
+    "matchedAlbum": "形容 - Single",
+    "score": 11
   },
-  "archive-011-8584a6ac": {
-    "status": "ambiguous"
-  },
-  "archive-014-00515c6e": {
+  "archive-003-759a47b8": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/42/91/b6/4291b6b4-dfe5-43c8-c3bc-26006eabc5d3/cover.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a0/b2/54/a0b2542c-34cc-2106-d73b-cd41dd7f8dc2/mzaf_430172878874019549.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%B4%8B%E8%91%B1/1445132257?i=1445132452&uo=4",
-    "year": "2008",
-    "appleTrackId": 1445132452
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/fd/36/6b/fd366b00-bd68-b9ac-ca36-967f46ad8d5c/20UM1IM14768.rgb.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d0/a3/e5/d0a3e540-d5e4-07f3-ab42-92bb7764335c/mzaf_15447935497344980474.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/jp/album/%E5%98%98%E6%9C%88/1546186120?i=1546186126&uo=4",
+    "year": "2021",
+    "appleTrackId": 1546186126,
+    "matchedTitle": "嘘月",
+    "matchedArtist": "ヨルシカ",
+    "matchedAlbum": "創作 - EP",
+    "score": 10
   },
-  "archive-010-a7c30488": {
-    "status": "ambiguous"
+  "archive-f0e2b153e169": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/b8/d5/15/b8d51548-be43-ff39-8bdb-3c4db928a4af/4547366593532.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f2/1c/06/f21c06f9-053d-8fcf-5b52-33c34784efc7/mzaf_12420951159366837574.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/jp/album/%E3%82%AB%E3%82%BF%E3%82%AA%E3%83%A2%E3%82%A4-from-the-first-take/1652643090?i=1652643100&uo=4",
+    "year": "2022",
+    "appleTrackId": 1652643100,
+    "matchedTitle": "カタオモイ - From THE FIRST TAKE",
+    "matchedArtist": "Aimer",
+    "matchedAlbum": "Deep down",
+    "score": 13
+  },
+  "archive-005-f041670d": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-006-c3253f05": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/Z9nAiJ_7Cyefrh0Fl_JmBw==/109951166929773363.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=1911281594",
+    "year": "2022",
+    "neteaseSongId": 1911281594,
+    "neteaseAlbumId": 138745508,
+    "matchedTitle": "どうして",
+    "matchedArtist": "高瀬統也 / 野田愛実",
+    "matchedAlbum": "どうして (feat. 野田愛実)",
+    "score": 12
   },
   "archive-007-86d52b6b": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/b0/09/04/b009043f-f576-54ce-5b1f-d7896d6933c0/9555150772273.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/1d/bc/5c1dbc23-bde6-7276-a97b-78f5c325fa59/mzaf_1879729394428684960.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%BC%94%E5%91%98/1787929894?i=1787930244&uo=4",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003y8dsH2wBHlo.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001Qu4I30eVFYb",
     "year": "2015",
-    "appleTrackId": 1787930244
+    "qqSongId": 102636799,
+    "qqSongMid": "001Qu4I30eVFYb",
+    "qqAlbumMid": "003y8dsH2wBHlo",
+    "matchedTitle": "演员",
+    "matchedArtist": "薛之谦",
+    "matchedAlbum": "绅士",
+    "score": 10
   },
-  "archive-004-422f508e": {
+  "archive-010-a7c30488": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/b8/d5/15/b8d51548-be43-ff39-8bdb-3c4db928a4af/4547366593532.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f2/1c/06/f21c06f9-053d-8fcf-5b52-33c34784efc7/mzaf_12420951159366837574.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E3%82%AB%E3%82%BF%E3%82%AA%E3%83%A2%E3%82%A4-from-the-first-take/1652643090?i=1652643100&uo=4",
-    "year": "2022",
-    "appleTrackId": 1652643100
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/Ppzb5LV4l9R-yki1BQQB0A==/109951166267072680.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=554241732",
+    "year": "2019",
+    "neteaseSongId": 554241732,
+    "neteaseAlbumId": 78720135,
+    "matchedTitle": "我的名字",
+    "matchedArtist": "焦迈奇",
+    "matchedAlbum": "我的名字",
+    "score": 13
+  },
+  "archive-011-8584a6ac": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003XTEH14BO10s.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000O6XU33cypmn",
+    "year": "2019",
+    "qqSongId": 239357805,
+    "qqSongMid": "000O6XU33cypmn",
+    "qqAlbumMid": "003XTEH14BO10s",
+    "matchedTitle": "出现又离开 (Live)",
+    "matchedArtist": "梁博",
+    "matchedAlbum": "2019尖叫之夜 Live",
+    "score": 10
+  },
+  "archive-012-d2a39c0b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002zaHdb1vJWSQ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001WLjx03vdk3v",
+    "year": "2015",
+    "qqSongId": 104895477,
+    "qqSongMid": "001WLjx03vdk3v",
+    "qqAlbumMid": "002zaHdb1vJWSQ",
+    "matchedTitle": "日落大道",
+    "matchedArtist": "梁博",
+    "matchedAlbum": "迷藏",
+    "score": 13
+  },
+  "archive-014-00515c6e": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002BvmMD3KqaWi.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003if7SP4fhnJd",
+    "year": "2008",
+    "qqSongId": 416764,
+    "qqSongMid": "003if7SP4fhnJd",
+    "qqAlbumMid": "002BvmMD3KqaWi",
+    "matchedTitle": "洋葱",
+    "matchedArtist": "杨宗纬",
+    "matchedAlbum": "鸽子",
+    "score": 13
   },
   "archive-015-fa853190": {
-    "status": "ambiguous"
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/LI3duoHIZyyLawRJLY51kA==/109951172024569374.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=108242",
+    "year": "2010",
+    "neteaseSongId": 108242,
+    "neteaseAlbumId": 10755,
+    "matchedTitle": "她说",
+    "matchedArtist": "林俊杰",
+    "matchedAlbum": "她说 概念自选辑",
+    "score": 13
   },
   "archive-016-f7d2dfca": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/05/7a/97/057a9723-2dbd-873b-81e0-5090879b2942/825646245352.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/10/c9/e1/10c9e1e8-3b60-24ab-b66d-0304e547c979/mzaf_6531172121075294780.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/melody/914664926?i=914664940&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001mvhPh0qevad.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0001loOV0GSHDS",
     "year": "2002",
-    "appleTrackId": 914664940
+    "qqSongId": 804224,
+    "qqSongMid": "0001loOV0GSHDS",
+    "qqAlbumMid": "001mvhPh0qevad",
+    "matchedTitle": "Melody",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "黑色柳丁",
+    "score": 13
   },
   "archive-019-b681d71f": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/07/64/7c/07647c3b-8864-7d39-1823-dd993e7cd69f/825646871223.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/0b/32/11/0b3211ab-a7e7-ffa8-b12e-716836bcc5f5/mzaf_16087280212447962050.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E5%AF%82%E5%AF%9E%E7%9A%84%E5%AD%A3%E8%8A%82/1372031877?i=1372032069&uo=4",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003TxsNg02BzE5.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003DyaNJ0GbsrD",
     "year": "2003",
-    "appleTrackId": 1372032069
+    "qqSongId": 4966006,
+    "qqSongMid": "003DyaNJ0GbsrD",
+    "qqAlbumMid": "003TxsNg02BzE5",
+    "matchedTitle": "寂寞的季节",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "Ultrasound 乐之路 1997-2003",
+    "score": 10
   },
   "archive-020-c7d27faa": {
-    "status": "ambiguous"
-  },
-  "archive-026-4b69514b": {
-    "status": "ambiguous"
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/e5cvcdgeosDKTDrkTfZXnQ==/109951166155165682.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=1859245776",
+    "year": "2021",
+    "neteaseSongId": 1859245776,
+    "neteaseAlbumId": 130016223,
+    "matchedTitle": "STAY",
+    "matchedArtist": "The Kid LAROI / Justin Bieber",
+    "matchedAlbum": "STAY",
+    "score": 13
   },
   "archive-021-b8d8ea9a": {
-    "status": "ambiguous"
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/lbgbkMsVvSt_7GmZ9pqRbQ==/109951173480281688.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=18637990",
+    "year": "2012",
+    "neteaseSongId": 18637990,
+    "neteaseAlbumId": 1709604,
+    "matchedTitle": "Beauty And A Beat",
+    "matchedArtist": "Justin Bieber / Nicki Minaj",
+    "matchedAlbum": "Believe (Deluxe Edition)",
+    "score": 13
+  },
+  "archive-022-9bd65546": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e0/92/da/e092da2d-9f6d-11dc-7843-2021e95a2b61/21UMGIM17518.rgb.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c9/6d/b1/c96db138-df15-d3d1-ef9d-98ef9d350960/mzaf_9411021956242812289.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/peaches-feat-daniel-caesar-giv%C4%93on/1556169567?i=1556170101&uo=4",
+    "year": "2021",
+    "appleTrackId": 1556170101,
+    "matchedTitle": "Peaches (feat. Daniel Caesar & GIVĒON)",
+    "matchedArtist": "Justin Bieber",
+    "matchedAlbum": "Justice",
+    "score": 13
+  },
+  "archive-023-d361f0bc": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002ZaXPK37LR4X.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0033XOQN2AS28z",
+    "year": "2010",
+    "qqSongId": 100901201,
+    "qqSongMid": "0033XOQN2AS28z",
+    "qqAlbumMid": "002ZaXPK37LR4X",
+    "matchedTitle": "Baby",
+    "matchedArtist": "Justin Bieber / Ludacris",
+    "matchedAlbum": "My Worlds",
+    "score": 11
+  },
+  "archive-024-4b0ad1ed": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/XJrVVaSG_H0PITbdUMcFPw==/109951169006384670.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=21038564",
+    "year": "2008",
+    "neteaseSongId": 21038564,
+    "neteaseAlbumId": 1947165,
+    "matchedTitle": "Poker Face",
+    "matchedArtist": "Lady Gaga",
+    "matchedAlbum": "The Fame",
+    "score": 13
+  },
+  "archive-026-4b69514b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000044oT0A0isMzR.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003ilXfl3EWxcV",
+    "year": "2007",
+    "qqSongId": 103697658,
+    "qqSongMid": "003ilXfl3EWxcV",
+    "qqAlbumMid": "0044oT0A0isMzR",
+    "matchedTitle": "思念是一种病",
+    "matchedArtist": "张震岳 / 蔡健雅",
+    "matchedAlbum": "OK",
+    "score": 13
+  },
+  "archive-027-1c83b3bf": {
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-028-c61ae5a7": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/4e/d7/3a/4ed73a4f-5d88-dab0-edd1-ad54cd0e418a/RD-1796.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1c/a3/12/1ca3120f-8386-55a4-217b-aaaacd27bd16/mzaf_1548322799087773.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E5%B0%8F%E5%AE%87/661608562?i=661608710&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000044oT0A0isMzR.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000VPWYA0RaRqq",
     "year": "2007",
-    "appleTrackId": 661608710
-  },
-  "archive-023-d361f0bc": {
-    "status": "ambiguous"
-  },
-  "archive-024-4b0ad1ed": {
-    "status": "ambiguous"
-  },
-  "archive-032-95f9caa6": {
-    "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/de/19/cb/de19cb0b-0f65-818d-ed7f-0285daeb8896/07UMGIM18180.rgb.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/02/49/1f/02491f29-9a45-5711-d7d2-550de85b275f/mzaf_1545774660820295684.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%B7%98%E6%B1%B0/1568640664?i=1568640883&uo=4",
-    "year": "2007",
-    "appleTrackId": 1568640883
+    "qqSongId": 399639,
+    "qqSongMid": "000VPWYA0RaRqq",
+    "qqAlbumMid": "0044oT0A0isMzR",
+    "matchedTitle": "小宇",
+    "matchedArtist": "张震岳",
+    "matchedAlbum": "OK",
+    "score": 13
   },
   "archive-029-46517d78": {
-    "status": "ambiguous"
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/4a/23/0c/4a230c1b-47b1-bb45-bede-32dcd30cd6ca/3617660132438.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8b/58/87/8b588757-ed19-2f68-991a-dd609ba677d1/mzaf_11855298417294420092.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E6%9C%89%E4%BA%9B/1861245871?i=1861245877&uo=4",
+    "year": "2019",
+    "appleTrackId": 1861245877,
+    "matchedTitle": "有些",
+    "matchedArtist": "颜人中",
+    "matchedAlbum": "失眠症候群 - EP",
+    "score": 11
   },
   "archive-030-78adbfbc": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/f9/82/88/f98288eb-ea32-6c8c-7919-357c31a4b437/1400X1400.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d2/76/2a/d2762a44-5372-2765-e4e4-2b4d62b8ed3d/mzaf_14732069843267269757.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E5%A4%A7%E5%9F%8E%E5%B0%8F%E7%88%B1/1134353291?i=1134353955&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001a0Dts37jw2M.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004O1DHG4MjYOi",
     "year": "2005",
-    "appleTrackId": 1134353955
-  },
-  "archive-001-0f5021b8": {
-    "status": "placeholder"
+    "qqSongId": 105905352,
+    "qqSongMid": "004O1DHG4MjYOi",
+    "qqAlbumMid": "001a0Dts37jw2M",
+    "matchedTitle": "大城小爱",
+    "matchedArtist": "王力宏",
+    "matchedAlbum": "盖世英雄",
+    "score": 13
   },
   "archive-031-f54fda6f": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/3e/94/01/3e94013b-17f0-09e9-69ce-4ab94e1507da/18_Material_arts.png/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/89/5d/d1/895dd152-8e9d-80ef-0cdd-6ba56c2ede5b/mzaf_6475957844386151519.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E9%9C%80%E8%A6%81%E4%BA%BA%E9%99%AA/1528146376?i=1528146384&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002iWU6B2ZvA8V.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004AeIvh4ML0Bz",
     "year": "2010",
-    "appleTrackId": 1528146384
+    "qqSongId": 740366,
+    "qqSongMid": "004AeIvh4ML0Bz",
+    "qqAlbumMid": "002iWU6B2ZvA8V",
+    "matchedTitle": "需要人陪",
+    "matchedArtist": "王力宏",
+    "matchedAlbum": "十八般武艺",
+    "score": 13
   },
-  "archive-034-d6cac113": {
+  "archive-032-95f9caa6": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/cd/fd/91/cdfd9186-7873-4575-c953-f8186af24a24/5054197684074.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ef/10/6b/ef106bc5-a50f-ea56-924b-98b370e44b99/mzaf_12572758099875271542.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%8C%9A%E5%8F%8B/1687085292?i=1687085293&uo=4",
-    "year": "2023",
-    "appleTrackId": 1687085293
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003yQidc3s7P65.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0029dqHX0nuawd",
+    "year": "2007",
+    "qqSongId": 1313988,
+    "qqSongMid": "0029dqHX0nuawd",
+    "qqAlbumMid": "003yQidc3s7P65",
+    "matchedTitle": "淘汰",
+    "matchedArtist": "陈奕迅",
+    "matchedAlbum": "认了吧",
+    "score": 10
   },
   "archive-033-be85ab15": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/e9/8d/14/e98d147e-99d3-3342-461e-1009227034e1/cover.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f6/74/f9/f674f94f-d64d-6067-8722-bde4405e9e52/mzaf_10789789679924760957.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E7%A9%BA%E5%BF%83/1662492572?i=1662493126&uo=4",
-    "year": "2016",
-    "appleTrackId": 1662493126
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001vjIoV01nThA.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002WW9dA4RYnHm",
+    "year": "2017",
+    "qqSongId": 200390803,
+    "qqSongMid": "002WW9dA4RYnHm",
+    "qqAlbumMid": "001vjIoV01nThA",
+    "matchedTitle": "空心",
+    "matchedArtist": "光泽",
+    "matchedAlbum": "光泽",
+    "score": 10
   },
-  "archive-005-f041670d": {
-    "status": "placeholder"
-  },
-  "archive-003-759a47b8": {
-    "status": "placeholder"
-  },
-  "archive-039-d1780512": {
+  "archive-034-d6cac113": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/1d/4d/5e/1d4d5eb9-d4ef-c6b3-5315-268d2a704f2f/196872535372.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c5/7f/ed/c57fedd4-06b9-23d7-8f63-46fbaf0ca8f7/mzaf_17390531617883213951.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%81%8B%E4%BA%BA/1773340156?i=1773340251&uo=4",
-    "year": "2024",
-    "appleTrackId": 1773340251
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000aZDQm0luORm.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004aaJOG0qcS6d",
+    "year": "2023",
+    "qqSongId": 412871719,
+    "qqSongMid": "004aaJOG0qcS6d",
+    "qqAlbumMid": "000aZDQm0luORm",
+    "matchedTitle": "挚友",
+    "matchedArtist": "Eric周兴哲",
+    "matchedAlbum": "挚友",
+    "score": 10
   },
-  "archive-040-dcb08dde": {
-    "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/fe/ad/e7/feade7c8-826b-0379-fbf4-e59606db8e4c/825646245406.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/70/7d/e0/707de0a0-0b72-5e58-3cba-52effeddce4c/mzaf_14020004723301697019.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E5%B0%B1%E6%98%AF%E7%88%B1%E4%BD%A0/905206649?i=905206657&uo=4",
-    "year": "2005",
-    "appleTrackId": 905206657
-  },
-  "archive-041-5e4b62c8": {
-    "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ce/9e/32/ce9e3294-4374-3437-b099-4de59ea7855b/5021732275516.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/53/fc/79/53fc79e9-65f9-d505-eb08-9f268a502cdf/mzaf_12151662141562736369.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E9%81%87%E4%B8%8A%E4%BD%A0%E4%B9%8B%E5%89%8D%E7%9A%84%E6%88%91/1739779100?i=1739779101&uo=4",
-    "year": "2024",
-    "appleTrackId": 1739779101
-  },
-  "archive-027-1c83b3bf": {
-    "status": "placeholder"
+  "archive-035-6bfc9418": {
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-036-72ab544c": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/33/aa/3f/33aa3f72-fe03-27ff-d7a1-7950ba7c75db/4710149701749_cover.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c8/19/89/c8198931-4372-32c0-326b-5060df79cd0d/mzaf_14799796831186133511.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E7%88%B1%E6%88%91%E5%88%AB%E8%B5%B0/1692284273?i=1692284282&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003gYHoY2OVRDu.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0017WG0F4B5EO0",
     "year": "1998",
-    "appleTrackId": 1692284282
+    "qqSongId": 4830093,
+    "qqSongMid": "0017WG0F4B5EO0",
+    "qqAlbumMid": "003gYHoY2OVRDu",
+    "matchedTitle": "爱我别走",
+    "matchedArtist": "张震岳",
+    "matchedAlbum": "秘密基地",
+    "score": 13
   },
-  "archive-006-c3253f05": {
-    "status": "placeholder"
+  "archive-037-454686bd": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-039-d1780512": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004HaG7p4ZkhXA.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001auUcH4WQs2V",
+    "year": "2024",
+    "qqSongId": 496054946,
+    "qqSongMid": "001auUcH4WQs2V",
+    "qqAlbumMid": "004HaG7p4ZkhXA",
+    "matchedTitle": "恋人",
+    "matchedArtist": "李荣浩",
+    "matchedAlbum": "黑马",
+    "score": 13
+  },
+  "archive-040-dcb08dde": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003ofGzS3C23Ow.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004W7UED0x3pqD",
+    "year": "2005",
+    "qqSongId": 5110,
+    "qqSongMid": "004W7UED0x3pqD",
+    "qqAlbumMid": "003ofGzS3C23Ow",
+    "matchedTitle": "就是爱你",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "太平盛世",
+    "score": 13
+  },
+  "archive-041-5e4b62c8": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001gTWA416UWji.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004ecUAq1JmOIZ",
+    "year": "2024",
+    "qqSongId": 482552400,
+    "qqSongMid": "004ecUAq1JmOIZ",
+    "qqAlbumMid": "001gTWA416UWji",
+    "matchedTitle": "遇上你之前的我",
+    "matchedArtist": "Gareth.T",
+    "matchedAlbum": "遇上你之前的我",
+    "score": 13
+  },
+  "archive-042-598a441f": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-043-78c982fe": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000kvBiV3v6j86.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002nkvp33dDC8X",
+    "year": "2023",
+    "qqSongId": 444481979,
+    "qqSongMid": "002nkvp33dDC8X",
+    "qqAlbumMid": "000kvBiV3v6j86",
+    "matchedTitle": "M3",
+    "matchedArtist": "Les Apollo",
+    "matchedAlbum": "M3",
+    "score": 13
+  },
+  "archive-f52e1313d9e7": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000gCFdl3eJirA.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003topLD0uCPzu",
+    "year": "2019",
+    "qqSongId": 226808103,
+    "qqSongMid": "003topLD0uCPzu",
+    "qqAlbumMid": "000gCFdl3eJirA",
+    "matchedTitle": "怎么了",
+    "matchedArtist": "Eric周兴哲",
+    "matchedAlbum": "终于了解自由",
+    "score": 13
+  },
+  "archive-045-735344e4": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/6Vd1hbi_EVJNVvcaqmVq2w==/109951173608427390.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=3332771263",
+    "year": "2025",
+    "neteaseSongId": 3332771263,
+    "neteaseAlbumId": 356182382,
+    "matchedTitle": "unhappy",
+    "matchedArtist": "s0rrow",
+    "matchedAlbum": "unhappy",
+    "score": 13
+  },
+  "archive-046-4fc1e74f": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002uRZiY3Oy8C3.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004BoFvG4OYBVI",
+    "year": "2023",
+    "qqSongId": 436862335,
+    "qqSongMid": "004BoFvG4OYBVI",
+    "qqAlbumMid": "002uRZiY3Oy8C3",
+    "matchedTitle": "Memories 2",
+    "matchedArtist": "G Sounds",
+    "matchedAlbum": "RJ Pasin Samples 7",
+    "score": 13
+  },
+  "archive-047-bd61557f": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-fce974a977c8": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001AUA3j1qmdKv.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001jw3UA06n9H7",
+    "year": "2026",
+    "qqSongId": 664979040,
+    "qqSongMid": "001jw3UA06n9H7",
+    "qqAlbumMid": "001AUA3j1qmdKv",
+    "matchedTitle": "感官过载",
+    "matchedArtist": "残像音阶 / M3mo",
+    "matchedAlbum": "感官过载",
+    "score": 10
+  },
+  "archive-512e0ff0e7b6": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-051-0d7618f6": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/Sc3wx1BGHRz5mqw7NnCAhg==/109951163737194148.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=1334295035",
+    "year": "2018",
+    "neteaseSongId": 1334295035,
+    "neteaseAlbumId": 74935622,
+    "matchedTitle": "Patience",
+    "matchedArtist": "TRA$H",
+    "matchedAlbum": "AWAKE Vol. 2",
+    "score": 13
+  },
+  "archive-052-d61132d6": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/ae/fe/97/aefe975b-08f9-4bdb-d05a-491ade09a926/dj.emhqpwbp.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/12/84/19/12841985-c8ac-88a4-45d8-889bfc5ef0d9/mzaf_9040487815672316612.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E5%A6%82%E6%9E%9C%E5%BD%93%E6%97%B6/1071359379?i=1071359780&uo=4",
+    "year": "2006",
+    "appleTrackId": 1071359780,
+    "matchedTitle": "如果当时",
+    "matchedArtist": "许嵩",
+    "matchedAlbum": "自定义",
+    "score": 13
+  },
+  "archive-053-266be3f3": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/be/4a/77/be4a7730-c144-a39e-c7b6-9d26ea0ebff3/1400X1400.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ce/56/e0/ce56e06c-498b-b424-a7b6-079ebd0154c6/mzaf_9100749884298557907.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E7%88%B1%E9%94%99/1134344345?i=1134344911&uo=4",
+    "year": "2004",
+    "appleTrackId": 1134344911,
+    "matchedTitle": "爱错",
+    "matchedArtist": "王力宏",
+    "matchedAlbum": "心中的日月",
+    "score": 13
+  },
+  "archive-054-62d5464b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002PjDkE14OUkV.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001fG3BI0ffL2G",
+    "year": "1999",
+    "qqSongId": 4966551,
+    "qqSongMid": "001fG3BI0ffL2G",
+    "qqAlbumMid": "002PjDkE14OUkV",
+    "matchedTitle": "天天",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "I'm OK",
+    "score": 13
+  },
+  "archive-056-c460b757": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music/bc/e0/e5/mzi.mzfgcpgj.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e8/2a/8a/e82a8a24-8bc5-4d23-232f-419785aa9777/mzaf_3240385700705023975.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E9%9B%A8%E7%88%B1/347295255?i=347295290&uo=4",
+    "year": "2009",
+    "appleTrackId": 347295290,
+    "matchedTitle": "雨爱",
+    "matchedArtist": "杨丞琳",
+    "matchedAlbum": "雨爱",
+    "score": 13
+  },
+  "archive-059-ae5d0016": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002apirq425EZr.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0008aOkA3v4X0Q",
+    "year": "2006",
+    "qqSongId": 145881,
+    "qqSongMid": "0008aOkA3v4X0Q",
+    "qqAlbumMid": "002apirq425EZr",
+    "matchedTitle": "今天你要嫁给我",
+    "matchedArtist": "陶喆 / 蔡依林",
+    "matchedAlbum": "太美丽",
+    "score": 13
+  },
+  "archive-060-eb74c274": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/QHZZ7ScaKidDk1w5WGKxMg==/109951172451672738.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=2712265619",
+    "year": "2025",
+    "neteaseSongId": 2712265619,
+    "neteaseAlbumId": 274246407,
+    "matchedTitle": "打火机",
+    "matchedArtist": "Penny",
+    "matchedAlbum": "打火机",
+    "score": 13
+  },
+  "archive-061-39e4190a": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/a8/95/20/a89520f5-e00f-37ee-7fd2-41f64d11847f/mzm.owngijbk.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/25/bd/37/25bd37fd-4299-ba7e-0e3d-9a713d0f473b/mzaf_13874654866479513766.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E4%B8%8B%E4%B8%AA-%E8%B7%AF%E5%8F%A3-%E8%A7%81/1058749390?i=1058750653&uo=4",
+    "year": "2009",
+    "appleTrackId": 1058750653,
+    "matchedTitle": "下个,路口,见",
+    "matchedArtist": "李宇春",
+    "matchedAlbum": "李宇春",
+    "score": 13
+  },
+  "archive-062-1d36c345": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/58/be/1c/58be1cf6-8260-bafb-ae50-664ee9f3ec31/Heart_Beat.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/73/69/37/73693730-f826-7290-64c6-47c3257d5fb1/mzaf_8548099153364454964.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E5%BF%83%E8%B7%B3/1797076418?i=1797076420&uo=4",
+    "year": "2008",
+    "appleTrackId": 1797076420,
+    "matchedTitle": "心跳",
+    "matchedArtist": "王力宏",
+    "matchedAlbum": "心跳",
+    "score": 13
+  },
+  "archive-063-c347f924": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Features115/v4/91/41/8c/91418cce-4b5b-a7a7-cf54-858af87966e3/dj.munrszcb.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/13/1a/8d/131a8dbf-bdcb-5275-eb07-47e007513fc3/mzaf_4529628661499066205.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E5%85%B3%E4%BA%8E%E7%88%B1%E7%9A%84%E5%AE%9A%E4%B9%89/577983280?i=577983296&uo=4",
+    "year": "2012",
+    "appleTrackId": 577983296,
+    "matchedTitle": "关于爱的定义",
+    "matchedArtist": "方大同",
+    "matchedAlbum": "回到未来",
+    "score": 13
+  },
+  "archive-064-6358902a": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/68/b3/c9/68b3c9aa-6812-b52f-ea2a-de23762c65e5/8800320196863_cover.png/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9d/f8/f0/9df8f0b8-0b0a-0648-a1de-31e093d7dcc3/mzaf_8670158862275476523.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/jiggy-boogy/1820854133?i=1820854136&uo=4",
+    "year": "2024",
+    "appleTrackId": 1820854136,
+    "matchedTitle": "jiggy boogy",
+    "matchedArtist": "study group",
+    "matchedAlbum": "study ukulele trap clouds vol.2 - Single",
+    "score": 10
+  },
+  "archive-065-9b2b7b20": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/04/94/7a/04947a1c-f2ee-420b-9b63-cd6a9c185d18/cover.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview112/v4/38/91/f3/3891f3b2-e657-dae9-4330-3c52dbd57018/mzaf_15766752478726774731.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E6%98%9F%E8%8C%B6%E4%BC%9A/1645563299?i=1645563628&uo=4",
+    "year": "2017",
+    "appleTrackId": 1645563628,
+    "matchedTitle": "星茶会",
+    "matchedArtist": "灰澈",
+    "matchedAlbum": "星茶会 - Single",
+    "score": 11
+  },
+  "archive-066-43af252a": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-067-859113ba": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/90/14/eb/9014eb2d-2c66-51e8-c3f7-030002c1c2b4/cover.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/08/b1/7f/08b17fe2-a3dc-432f-0068-37882fbb0234/mzaf_12528423692976329182.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/flying-bird-ins/1720417728?i=1720417735&uo=4",
+    "year": "2023",
+    "appleTrackId": 1720417735,
+    "matchedTitle": "Flying Bird (Ins.)",
+    "matchedArtist": "S087",
+    "matchedAlbum": "Flying Bird (Ins.) - Single",
+    "score": 11
+  },
+  "archive-068-60f8dad7": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-069-04b5b91b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003FBC9b4XV8i9.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002ZmSyB2zTqE6",
+    "year": "2008",
+    "qqSongId": 447623,
+    "qqSongMid": "002ZmSyB2zTqE6",
+    "qqAlbumMid": "003FBC9b4XV8i9",
+    "matchedTitle": "Where Did U Go (Album Version)",
+    "matchedArtist": "G.E.M. 邓紫棋",
+    "matchedAlbum": "G.E.M.",
+    "score": 13
+  },
+  "archive-070-0201010e": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-072-a038062a": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002C0kX720gMQi.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002E8ebM3TFWmA",
+    "year": "2009",
+    "qqSongId": 648231,
+    "qqSongMid": "002E8ebM3TFWmA",
+    "qqAlbumMid": "002C0kX720gMQi",
+    "matchedTitle": "背对背拥抱",
+    "matchedArtist": "林俊杰",
+    "matchedAlbum": "100天",
+    "score": 10
+  },
+  "archive-073-b49d7506": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/05/7a/97/057a9723-2dbd-873b-81e0-5090879b2942/825646245352.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/66/e6/1b/66e61bda-254d-60e0-efb0-542df05ba10e/mzaf_18168632639197546545.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E8%AE%A8%E5%8E%8C%E7%BA%A2%E6%A5%BC%E6%A2%A6/914664926?i=914664936&uo=4",
+    "year": "2002",
+    "appleTrackId": 914664936,
+    "matchedTitle": "讨厌红楼梦",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "黑色柳丁",
+    "score": 13
+  },
+  "archive-074-e1edb1e8": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002PjDkE14OUkV.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003uKKf71WF3v1",
+    "year": "1999",
+    "qqSongId": 4966543,
+    "qqSongMid": "003uKKf71WF3v1",
+    "qqAlbumMid": "002PjDkE14OUkV",
+    "matchedTitle": "找自己",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "I'm OK",
+    "score": 13
+  },
+  "archive-075-a6dcdbf9": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music/v4/32/d0/10/32d01050-5a87-e1a9-edbd-bf98c5a747c9/Goodbye_Hello_1400x1400.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/94/69/53/94695302-7dc8-64fd-de97-27dd6dae9887/mzaf_575315514205013024.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E8%B6%8A%E6%9D%A5%E8%B6%8A%E4%B8%8D%E6%87%82/672617526?i=672617606&uo=4",
+    "year": "2007",
+    "appleTrackId": 672617606,
+    "matchedTitle": "越来越不懂",
+    "matchedArtist": "蔡健雅",
+    "matchedAlbum": "Goodbye & Hello",
+    "score": 10
+  },
+  "archive-076-8f1782a2": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/tnptLhv4Ni0rCcJKHuH99w==/109951168073189447.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=1958150862",
+    "year": "2022",
+    "neteaseSongId": 1958150862,
+    "neteaseAlbumId": 145976397,
+    "matchedTitle": "下一个天亮",
+    "matchedArtist": "颜人中",
+    "matchedAlbum": "月光、背影与海",
+    "score": 13
+  },
+  "archive-077-f85913a7": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000MkMni19ClKG.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0039MnYb0qxYhV",
+    "year": "2003",
+    "qqSongId": 97773,
+    "qqSongMid": "0039MnYb0qxYhV",
+    "qqAlbumMid": "000MkMni19ClKG",
+    "matchedTitle": "晴天",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "叶惠美",
+    "score": 13
+  },
+  "archive-078-aef8e781": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001uqejs3d6EID.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002u8ZOM4C7QF4",
+    "year": "2014",
+    "qqSongId": 101787870,
+    "qqSongMid": "002u8ZOM4C7QF4",
+    "qqAlbumMid": "001uqejs3d6EID",
+    "matchedTitle": "手写的从前",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "哎呦，不错哦",
+    "score": 13
+  },
+  "archive-080-a904fa06": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000dcZ9I1nzO62.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004VBMk71TdUuR",
+    "year": "2016",
+    "qqSongId": 107439472,
+    "qqSongMid": "004VBMk71TdUuR",
+    "qqAlbumMid": "000dcZ9I1nzO62",
+    "matchedTitle": "我好像在哪见过你",
+    "matchedArtist": "薛之谦",
+    "matchedAlbum": "初学者",
+    "score": 13
+  },
+  "archive-081-21f46ddc": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002iWU6B2ZvA8V.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004OhZs82CZXfA",
+    "year": "2010",
+    "qqSongId": 740362,
+    "qqSongMid": "004OhZs82CZXfA",
+    "qqAlbumMid": "002iWU6B2ZvA8V",
+    "matchedTitle": "你不知道的事",
+    "matchedArtist": "王力宏",
+    "matchedAlbum": "十八般武艺",
+    "score": 13
+  },
+  "archive-082-8f3e0e46": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004J17sv3iqNkK.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001tcKlc0yHWkc",
+    "year": "2015",
+    "qqSongId": 105088510,
+    "qqSongMid": "001tcKlc0yHWkc",
+    "qqAlbumMid": "004J17sv3iqNkK",
+    "matchedTitle": "Love Yourself",
+    "matchedArtist": "Justin Bieber",
+    "matchedAlbum": "Purpose",
+    "score": 11
+  },
+  "archive-083-c3f14b10": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000HZzEx0QIMNM.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002O1ZfK1pIVK2",
+    "year": "2009",
+    "qqSongId": 680055,
+    "qqSongMid": "002O1ZfK1pIVK2",
+    "qqAlbumMid": "000HZzEx0QIMNM",
+    "matchedTitle": "写不完的温柔",
+    "matchedArtist": "G.E.M. 邓紫棋",
+    "matchedAlbum": "18...",
+    "score": 13
+  },
+  "archive-084-8ed31674": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/4mN_bQBA73s7i6uQxIFAbA==/109951169297707016.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=1436117704",
+    "year": "2020",
+    "neteaseSongId": 1436117704,
+    "neteaseAlbumId": 87190814,
+    "matchedTitle": "不说 (原来是不说)",
+    "matchedArtist": "周公",
+    "matchedAlbum": "不说",
+    "score": 13
+  },
+  "archive-085-4123d67e": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/CDhYcShQKH2VAMENuCxWWQ==/109951164166513349.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=1397345903",
+    "year": "2020",
+    "neteaseSongId": 1397345903,
+    "neteaseAlbumId": 79886335,
+    "matchedTitle": "悬溺",
+    "matchedArtist": "葛东琪",
+    "matchedAlbum": "第二街区",
+    "score": 13
+  },
+  "archive-086-d5d9a4d6": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-087-c7a3d250": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001Pj9F21SiHNx.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001U2GJO2hSzQW",
+    "year": "2019",
+    "qqSongId": 243750328,
+    "qqSongMid": "001U2GJO2hSzQW",
+    "qqAlbumMid": "001Pj9F21SiHNx",
+    "matchedTitle": "冬眠",
+    "matchedArtist": "司南",
+    "matchedAlbum": "冬眠",
+    "score": 13
+  },
+  "archive-088-ef564c85": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/lmCtt6-3fOPSdA1uwGCY5Q==/109951164567402626.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=1410647903",
+    "year": "2019",
+    "neteaseSongId": 1410647903,
+    "neteaseAlbumId": 84219287,
+    "matchedTitle": "带我去找夜生活",
+    "matchedArtist": "告五人",
+    "matchedAlbum": "带我去找夜生活",
+    "score": 13
+  },
+  "archive-090-a003b176": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000GROwE30lDMA.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000lLNgb0rXKi2",
+    "year": "2016",
+    "qqSongId": 108751408,
+    "qqSongMid": "000lLNgb0rXKi2",
+    "qqAlbumMid": "000GROwE30lDMA",
+    "matchedTitle": "多远都要在一起 (Dub Mix)",
+    "matchedArtist": "G.E.M. 邓紫棋",
+    "matchedAlbum": "25LOOKS",
+    "score": 10
+  },
+  "archive-092-437ada55": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000q5U9S2OLNg4.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002UJg1T3tbCsK",
+    "year": "2003",
+    "qqSongId": 13413,
+    "qqSongMid": "002UJg1T3tbCsK",
+    "qqAlbumMid": "000q5U9S2OLNg4",
+    "matchedTitle": "说爱你",
+    "matchedArtist": "蔡依林",
+    "matchedAlbum": "看我72变",
+    "score": 13
+  },
+  "archive-093-318de6cc": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-094-ed5ac6c0": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000022ANm11dQfRY.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004IM0wx49gYJq",
+    "year": "2004",
+    "qqSongId": 4830648,
+    "qqSongMid": "004IM0wx49gYJq",
+    "qqAlbumMid": "0022ANm11dQfRY",
+    "matchedTitle": "倒带",
+    "matchedArtist": "蔡依林",
+    "matchedAlbum": "城堡",
+    "score": 13
+  },
+  "archive-096-88b7d1ad": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002dOge41xlS8x.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003IGhQO0JdnuC",
+    "year": "2009",
+    "qqSongId": 624649,
+    "qqSongMid": "003IGhQO0JdnuC",
+    "qqAlbumMid": "002dOge41xlS8x",
+    "matchedTitle": "红色高跟鞋",
+    "matchedArtist": "蔡健雅",
+    "matchedAlbum": "若你碰到他",
+    "score": 13
+  },
+  "archive-097-cb2620af": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004JKN2t36l0Ts.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003H6ZXJ2uZwsd",
+    "year": "2024",
+    "qqSongId": 510732522,
+    "qqSongMid": "003H6ZXJ2uZwsd",
+    "qqAlbumMid": "004JKN2t36l0Ts",
+    "matchedTitle": "爱你 (1.1x)",
+    "matchedArtist": "徐俊雅",
+    "matchedAlbum": "爱你",
+    "score": 10
+  },
+  "archive-098-4a133619": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-100-004cd8a2": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000K9Zp13TZp5s.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0013WPvt4fQH2b",
+    "year": "2020",
+    "qqSongId": 272125057,
+    "qqSongMid": "0013WPvt4fQH2b",
+    "qqAlbumMid": "000K9Zp13TZp5s",
+    "matchedTitle": "天外来物",
+    "matchedArtist": "薛之谦",
+    "matchedAlbum": "天外来物",
+    "score": 13
+  },
+  "archive-101-5a2ba61c": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004XEwud03XB6I.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000JBhKO1SmePi",
+    "year": "2017",
+    "qqSongId": 201190803,
+    "qqSongMid": "000JBhKO1SmePi",
+    "qqAlbumMid": "004XEwud03XB6I",
+    "matchedTitle": "One More Light",
+    "matchedArtist": "Linkin Park",
+    "matchedAlbum": "One More Light (Explicit)",
+    "score": 10
+  },
+  "archive-102-750e9987": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/8P1W00PwAVwLD_d-7vvxZw==/109951173007905115.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=297839",
+    "year": "2004",
+    "neteaseSongId": 297839,
+    "neteaseAlbumId": 29562,
+    "matchedTitle": "爱你",
+    "matchedArtist": "王心凌",
+    "matchedAlbum": "爱你",
+    "score": 13
+  },
+  "archive-104-a768c840": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/W7U-97tyEDERnBedrOTrJQ==/109951166990333187.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=1915796767",
+    "year": "2022",
+    "neteaseSongId": 1915796767,
+    "neteaseAlbumId": 139591346,
+    "matchedTitle": "Numb Little Bug",
+    "matchedArtist": "Em Beihold",
+    "matchedAlbum": "Numb Little Bug",
+    "score": 13
+  },
+  "archive-105-733580b4": {
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "https://coverartarchive.org/release/b322b58f-4673-48a5-ba37-1206ac1c9a62/33938194515-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/b322b58f-4673-48a5-ba37-1206ac1c9a62",
+    "year": "2022",
+    "musicBrainzRecordingId": "6219a82f-bbb4-48ff-acbd-5f7d1b610ac4",
+    "musicBrainzReleaseId": "b322b58f-4673-48a5-ba37-1206ac1c9a62",
+    "matchedTitle": "Travelers’ Encore",
+    "matchedArtist": "Andrew Prahlow",
+    "matchedAlbum": "Outer Wilds: Echoes of the Eye: The Lost Reels",
+    "score": 100
+  },
+  "archive-831aaa6ee887": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003DrCiP1NOGGG.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002t8SDp46XxaA",
+    "year": "2016",
+    "qqSongId": 105528531,
+    "qqSongMid": "002t8SDp46XxaA",
+    "qqAlbumMid": "003DrCiP1NOGGG",
+    "matchedTitle": "迷途羔羊",
+    "matchedArtist": "张震岳 / 大渊(顽童MJ116)",
+    "matchedAlbum": "天兵",
+    "score": 13
+  },
+  "archive-107-bf194cac": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/pLn35sx61-IXRYfCbfPnCA==/109951171415600711.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=385965",
+    "year": "2005",
+    "neteaseSongId": 385965,
+    "neteaseAlbumId": 38247,
+    "matchedTitle": "知足",
+    "matchedArtist": "五月天",
+    "matchedAlbum": "知足 最真杰作选",
+    "score": 13
+  },
+  "archive-108-ecb2aa9f": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/RAx2Tw3soJDTBLKqE5F63w==/109951170915743256.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=185634",
+    "year": "2011",
+    "neteaseSongId": 185634,
+    "neteaseAlbumId": 18871,
+    "matchedTitle": "有一天",
+    "matchedArtist": "张震岳",
+    "matchedAlbum": "我想要的感觉",
+    "score": 13
+  },
+  "archive-048-af3f2d4f": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001AUA3j1qmdKv.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001jw3UA06n9H7",
+    "year": "2026",
+    "qqSongId": 664979040,
+    "qqSongMid": "001jw3UA06n9H7",
+    "qqAlbumMid": "001AUA3j1qmdKv",
+    "matchedTitle": "感官过载",
+    "matchedArtist": "残像音阶 / M3mo",
+    "matchedAlbum": "感官过载",
+    "score": 13
+  },
+  "archive-110-3c748b4d": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000040tHnB3aooYd.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001kHWyL1t2UYG",
+    "year": "2025",
+    "qqSongId": 618598473,
+    "qqSongMid": "001kHWyL1t2UYG",
+    "qqAlbumMid": "0040tHnB3aooYd",
+    "matchedTitle": "Sinos De Natal",
+    "matchedArtist": "MGD / MXZHPHXNK",
+    "matchedAlbum": "Sinos De Natal",
+    "score": 13
+  },
+  "archive-111-5692c069": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/EnZUt_s-k2i2HrZglyMmUA==/109951169314600333.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=2124115505",
+    "year": "2024",
+    "neteaseSongId": 2124115505,
+    "neteaseAlbumId": 185138722,
+    "matchedTitle": "忘记时间",
+    "matchedArtist": "杜宣达",
+    "matchedAlbum": "忘记时间",
+    "score": 13
+  },
+  "archive-112-6c1fd80b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000025EtOV1iSgne.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0044oIlP0mnsRh",
+    "year": "2005",
+    "qqSongId": 106719244,
+    "qqSongMid": "0044oIlP0mnsRh",
+    "qqAlbumMid": "0025EtOV1iSgne",
+    "matchedTitle": "凤凰花开的路口",
+    "matchedArtist": "林志炫",
+    "matchedAlbum": "熟情歌",
+    "score": 13
+  },
+  "archive-113-ff4aa773": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002fRO0N4FftzY.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0022QuVR1LcRHN",
+    "year": "2016",
+    "qqSongId": 107709592,
+    "qqSongMid": "0022QuVR1LcRHN",
+    "qqAlbumMid": "002fRO0N4FftzY",
+    "matchedTitle": "后来的我们",
+    "matchedArtist": "五月天",
+    "matchedAlbum": "自传",
+    "score": 13
+  },
+  "archive-114-bfbbc972": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000011Yc4W16sj49.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002SBiWt3Q77YJ",
+    "year": "2011",
+    "qqSongId": 4830377,
+    "qqSongMid": "002SBiWt3Q77YJ",
+    "qqAlbumMid": "0011Yc4W16sj49",
+    "matchedTitle": "我想要的感觉",
+    "matchedArtist": "张震岳",
+    "matchedAlbum": "我想要的感觉",
+    "score": 13
+  },
+  "archive-115-814b547e": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003R9Xf144uZHr.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004VTvr34B5c06",
+    "year": "2026",
+    "qqSongId": 436741402,
+    "qqSongMid": "004VTvr34B5c06",
+    "qqAlbumMid": "003R9Xf144uZHr",
+    "matchedTitle": "答案",
+    "matchedArtist": "冒海飞 / 徐丽东",
+    "matchedAlbum": "答案 (《嫌疑人X的献身》音乐剧OST)",
+    "score": 10
+  },
+  "archive-116-d5b1ec84": {
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "https://coverartarchive.org/release/99191065-ec83-4dad-955a-af3e2945b93a/43298059596-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/99191065-ec83-4dad-955a-af3e2945b93a",
+    "year": "2021",
+    "musicBrainzRecordingId": "fa5ca54d-1705-4828-89e8-7b7d2950217e",
+    "musicBrainzReleaseId": "99191065-ec83-4dad-955a-af3e2945b93a",
+    "matchedTitle": "不遗憾",
+    "matchedArtist": "李荣浩",
+    "matchedAlbum": "你的婚礼 电影原声带",
+    "score": 100
+  },
+  "archive-117-911cb7c5": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001HUiKw0QsiUb.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001bdYk41BCfRi",
+    "year": "2012",
+    "qqSongId": 4830766,
+    "qqSongMid": "001bdYk41BCfRi",
+    "qqAlbumMid": "001HUiKw0QsiUb",
+    "matchedTitle": "有点甜",
+    "matchedArtist": "汪苏泷 / BY2",
+    "matchedAlbum": "万有引力",
+    "score": 13
+  },
+  "archive-118-256278b9": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/57/56/0a/57560aa1-2afb-0e0b-9c2c-ae780ab24603/886448229452.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5f/ad/09/5fad09b9-fc4c-473d-f64d-c6ea8bdc2604/mzaf_10296022020416048487.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E6%88%91%E5%BE%88%E5%BF%AB%E4%B9%90/1492999748?i=1492999760&uo=4",
+    "year": "2020",
+    "appleTrackId": 1492999760,
+    "matchedTitle": "我很快乐",
+    "matchedArtist": "周兴哲",
+    "matchedAlbum": "小时候的我们",
+    "score": 13
+  },
+  "archive-119-eff95664": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003Wo8jn2xZexC.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002dwsB71yTm6L",
+    "year": "2017",
+    "qqSongId": 201040845,
+    "qqSongMid": "002dwsB71yTm6L",
+    "qqAlbumMid": "003Wo8jn2xZexC",
+    "matchedTitle": "你就不要想起我 (Live)",
+    "matchedArtist": "张杰",
+    "matchedAlbum": "歌手 第8期",
+    "score": 10
+  },
+  "archive-120-80504db3": {
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "http://coverartarchive.org/release/eb9db394-2a3d-4215-9f1e-0582affbdef2/36604986390-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/eb9db394-2a3d-4215-9f1e-0582affbdef2",
+    "year": "2009",
+    "musicBrainzRecordingId": "3abd4460-b788-4cf9-80c7-104b0239b048",
+    "musicBrainzReleaseId": "eb9db394-2a3d-4215-9f1e-0582affbdef2",
+    "matchedTitle": "想你的夜",
+    "matchedArtist": "关喆",
+    "matchedAlbum": "永远的永远",
+    "score": 100
+  },
+  "archive-121-048c1f7a": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-123-f6307900": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004U2Cn83dZlWt.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0028QB2G0OPEPT",
+    "year": "2001",
+    "qqSongId": 5651,
+    "qqSongMid": "0028QB2G0OPEPT",
+    "qqAlbumMid": "004U2Cn83dZlWt",
+    "matchedTitle": "绿光",
+    "matchedArtist": "孙燕姿",
+    "matchedAlbum": "风筝",
+    "score": 10
+  },
+  "archive-124-67ee7565": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-125-90ce4299": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000049MVh824D7bM.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000wocYU11tSzS",
+    "year": "2019",
+    "qqSongId": 234824638,
+    "qqSongMid": "000wocYU11tSzS",
+    "qqAlbumMid": "0049MVh824D7bM",
+    "matchedTitle": "差不多姑娘",
+    "matchedArtist": "G.E.M. 邓紫棋",
+    "matchedAlbum": "摩天动物园",
+    "score": 13
+  },
+  "archive-126-786c0615": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000049MVh824D7bM.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003XCSJ32AN5od",
+    "year": "2019",
+    "qqSongId": 248413020,
+    "qqSongMid": "003XCSJ32AN5od",
+    "qqAlbumMid": "0049MVh824D7bM",
+    "matchedTitle": "透明",
+    "matchedArtist": "G.E.M. 邓紫棋",
+    "matchedAlbum": "摩天动物园",
+    "score": 13
+  },
+  "archive-127-1893cea1": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000CLxSh3wxvBt.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001wUvAV1Cyx2C",
+    "year": "2022",
+    "qqSongId": 370869786,
+    "qqSongMid": "001wUvAV1Cyx2C",
+    "qqAlbumMid": "000CLxSh3wxvBt",
+    "matchedTitle": "HELL",
+    "matchedArtist": "G.E.M. 邓紫棋",
+    "matchedAlbum": "启示录",
+    "score": 13
+  },
+  "archive-128-2c9a4c4b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000Qy6FL03pkEU.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000zBURs2OgW6n",
+    "year": "2018",
+    "qqSongId": 218269406,
+    "qqSongMid": "000zBURs2OgW6n",
+    "qqAlbumMid": "000Qy6FL03pkEU",
+    "matchedTitle": "那一夜",
+    "matchedArtist": "G.E.M. 邓紫棋",
+    "matchedAlbum": "毒苹果",
+    "score": 13
+  },
+  "archive-129-5f27c7fa": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000CLxSh3wxvBt.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003FFiYw1DMdnm",
+    "year": "2022",
+    "qqSongId": 370870352,
+    "qqSongMid": "003FFiYw1DMdnm",
+    "qqAlbumMid": "000CLxSh3wxvBt",
+    "matchedTitle": "GLORIA",
+    "matchedArtist": "G.E.M. 邓紫棋",
+    "matchedAlbum": "启示录",
+    "score": 13
+  },
+  "archive-130-2262bed6": {
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-044-72a440d3": {
     "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
     "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/8e/09/41/8e094142-5823-909d-1b6d-0e8a65dd49d0/886448206125.jpg/600x600bb.jpg",
     "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ca/b9/0a/cab90aa5-2b03-a992-bf18-9767ed0604ef/mzaf_15172787603311427647.plus.aac.p.m4a",
     "listenUrl": "https://music.apple.com/cn/album/%E6%80%8E%E4%B9%88%E4%BA%86/1491155040?i=1491155045&uo=4",
     "year": "2019",
-    "appleTrackId": 1491155045
+    "appleTrackId": 1491155045,
+    "matchedTitle": "怎么了",
+    "matchedArtist": "周兴哲",
+    "matchedAlbum": "终于了解自由 (Deluxe)",
+    "score": 13
   },
-  "archive-043-78c982fe": {
+  "archive-131-4b6990c1": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a2/15/5c/a2155c01-5cd8-cbe4-fdb2-0da2e780e705/cover_198093329709.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c2/bf/37/c2bf37c5-a41d-24b7-d656-34e7f7fcedd6/mzaf_1775691085727559550.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/m3/1807298893?i=1807298895&uo=4",
-    "year": "2023",
-    "appleTrackId": 1807298895
-  },
-  "archive-045-735344e4": {
-    "status": "ambiguous"
-  },
-  "archive-037-454686bd": {
-    "status": "placeholder"
-  },
-  "archive-049-a7ffba2b": {
-    "status": "ambiguous"
-  },
-  "archive-022-9bd65546": {
-    "status": "ambiguous"
-  },
-  "archive-035-6bfc9418": {
-    "status": "placeholder"
-  },
-  "archive-038-deb38677": {
-    "status": "placeholder"
-  },
-  "archive-047-bd61557f": {
-    "status": "placeholder"
-  },
-  "archive-042-598a441f": {
-    "status": "placeholder"
-  },
-  "archive-051-0d7618f6": {
-    "status": "placeholder"
-  },
-  "archive-048-af3f2d4f": {
-    "status": "placeholder"
-  },
-  "archive-046-4fc1e74f": {
-    "status": "placeholder"
-  },
-  "archive-052-d61132d6": {
-    "status": "placeholder"
-  },
-  "archive-053-266be3f3": {
-    "status": "placeholder"
-  },
-  "archive-054-62d5464b": {
-    "status": "placeholder"
-  },
-  "archive-055-5ccc0591": {
-    "status": "placeholder"
-  },
-  "archive-056-c460b757": {
-    "status": "placeholder"
-  },
-  "archive-059-ae5d0016": {
-    "status": "placeholder"
-  },
-  "archive-060-eb74c274": {
-    "status": "placeholder"
-  },
-  "archive-072-a038062a": {
-    "status": "ambiguous"
-  },
-  "archive-062-1d36c345": {
-    "status": "placeholder"
-  },
-  "archive-061-39e4190a": {
-    "status": "placeholder"
-  },
-  "archive-063-c347f924": {
-    "status": "placeholder"
-  },
-  "archive-065-9b2b7b20": {
-    "status": "placeholder"
-  },
-  "archive-064-6358902a": {
-    "status": "placeholder"
-  },
-  "archive-067-859113ba": {
-    "status": "placeholder"
-  },
-  "archive-068-60f8dad7": {
-    "status": "placeholder"
-  },
-  "archive-066-43af252a": {
-    "status": "placeholder"
-  },
-  "archive-069-04b5b91b": {
-    "status": "placeholder"
-  },
-  "archive-070-0201010e": {
-    "status": "placeholder"
-  },
-  "archive-081-21f46ddc": {
-    "status": "ambiguous"
-  },
-  "archive-074-e1edb1e8": {
-    "status": "placeholder"
-  },
-  "archive-073-b49d7506": {
-    "status": "placeholder"
-  },
-  "archive-077-f85913a7": {
-    "status": "placeholder"
-  },
-  "archive-076-8f1782a2": {
-    "status": "placeholder"
-  },
-  "archive-075-a6dcdbf9": {
-    "status": "placeholder"
-  },
-  "archive-078-aef8e781": {
-    "status": "placeholder"
-  },
-  "archive-080-a904fa06": {
-    "status": "placeholder"
-  },
-  "archive-083-c3f14b10": {
-    "status": "placeholder"
-  },
-  "archive-082-8f3e0e46": {
-    "status": "placeholder"
-  },
-  "archive-085-4123d67e": {
-    "status": "placeholder"
-  },
-  "archive-086-d5d9a4d6": {
-    "status": "placeholder"
-  },
-  "archive-084-8ed31674": {
-    "status": "placeholder"
-  },
-  "archive-088-ef564c85": {
-    "status": "placeholder"
-  },
-  "archive-087-c7a3d250": {
-    "status": "placeholder"
-  },
-  "archive-100-004cd8a2": {
-    "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/09/8c/a7/098ca759-9752-fe44-ca39-a58ea4fcf4b7/6941636700824.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/9e/bd/08/9ebd0814-3daf-04f1-2da3-ba0ff3417063/mzaf_9527436016886142791.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E5%A4%A9%E5%A4%96%E6%9D%A5%E7%89%A9/1787447447?i=1787447448&uo=4",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/57/56/0a/57560aa1-2afb-0e0b-9c2c-ae780ab24603/886448229452.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6a/95/27/6a952749-0bf2-3129-7844-82d034246db6/mzaf_2985326775797727133.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/thats-why-i-like-you/1492999748?i=1492999753&uo=4",
     "year": "2020",
-    "appleTrackId": 1787447448
+    "appleTrackId": 1492999753,
+    "matchedTitle": "That's Why I Like You",
+    "matchedArtist": "周兴哲",
+    "matchedAlbum": "小时候的我们",
+    "score": 13
   },
-  "archive-089-69e32a6c": {
-    "status": "placeholder"
+  "archive-132-f951fe1e": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/ee/b7/a0/eeb7a06e-b3d1-5b5e-1743-370c5b8fe71f/24UM1IM26637.rgb.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/25/4f/e7/254fe711-b5a0-31a1-c145-b674474f8853/mzaf_16689920026395360005.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E6%83%B3%E5%BF%B5%E4%BD%A0%E6%83%B3%E6%88%91-%E5%86%AC%E8%87%B3-%E5%BD%B1%E8%A7%86%E5%89%A7%E4%B8%BB%E9%A2%98%E6%9B%B2/1778636678?i=1778636682&uo=4",
+    "year": "2024",
+    "appleTrackId": 1778636682,
+    "matchedTitle": "想念你想我 (《冬至》影视剧主题曲)",
+    "matchedArtist": "周兴哲",
+    "matchedAlbum": "想念你想我 (《冬至》影视剧主题曲) - Single",
+    "score": 10
   },
-  "archive-090-a003b176": {
-    "status": "placeholder"
+  "archive-133-c8fbedab": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003ROVwj4PqLPa.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001yZ7Tf0kudte",
+    "year": "1997",
+    "qqSongId": 7090,
+    "qqSongMid": "001yZ7Tf0kudte",
+    "qqAlbumMid": "003ROVwj4PqLPa",
+    "matchedTitle": "爱，很简单",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "陶喆同名专辑",
+    "score": 10
   },
-  "archive-093-318de6cc": {
-    "status": "placeholder"
+  "archive-134-da3db3cf": {
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "http://coverartarchive.org/release/b5188196-0e4b-4fb4-8121-534c5431c1d0/24490728409-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/b5188196-0e4b-4fb4-8121-534c5431c1d0",
+    "year": "2018",
+    "musicBrainzRecordingId": "84e0d6cd-170c-4e11-9317-dcc4fa940cf4",
+    "musicBrainzReleaseId": "b5188196-0e4b-4fb4-8121-534c5431c1d0",
+    "matchedTitle": "光",
+    "matchedArtist": "陈粒",
+    "matchedAlbum": "如也",
+    "score": 100
   },
-  "archive-094-ed5ac6c0": {
-    "status": "placeholder"
-  },
-  "archive-092-437ada55": {
-    "status": "placeholder"
-  },
-  "archive-095-76593b40": {
-    "status": "placeholder"
-  },
-  "archive-096-88b7d1ad": {
-    "status": "placeholder"
-  },
-  "archive-097-cb2620af": {
-    "status": "placeholder"
-  },
-  "archive-098-4a133619": {
-    "status": "placeholder"
-  },
-  "archive-102-750e9987": {
-    "status": "placeholder"
-  },
-  "archive-101-5a2ba61c": {
-    "status": "placeholder"
-  },
-  "archive-103-9703ebfe": {
-    "status": "placeholder"
-  },
-  "archive-104-a768c840": {
-    "status": "placeholder"
-  },
-  "archive-106-20d61213": {
-    "status": "placeholder"
-  },
-  "archive-107-bf194cac": {
-    "status": "placeholder"
-  },
-  "archive-108-ecb2aa9f": {
-    "status": "placeholder"
-  },
-  "archive-105-733580b4": {
-    "status": "placeholder"
-  },
-  "archive-109-41ff8294": {
-    "status": "placeholder"
-  },
-  "archive-111-5692c069": {
-    "status": "placeholder"
-  },
-  "archive-110-3c748b4d": {
-    "status": "placeholder"
-  },
-  "archive-112-6c1fd80b": {
-    "status": "placeholder"
-  },
-  "archive-114-bfbbc972": {
-    "status": "placeholder"
-  },
-  "archive-113-ff4aa773": {
-    "status": "placeholder"
-  },
-  "archive-115-814b547e": {
-    "status": "placeholder"
-  },
-  "archive-118-256278b9": {
-    "status": "placeholder"
-  },
-  "archive-116-d5b1ec84": {
-    "status": "placeholder"
-  },
-  "archive-117-911cb7c5": {
-    "status": "placeholder"
-  },
-  "archive-121-048c1f7a": {
-    "status": "placeholder"
-  },
-  "archive-119-eff95664": {
-    "status": "placeholder"
-  },
-  "archive-120-80504db3": {
-    "status": "placeholder"
-  },
-  "archive-122-2c5eac10": {
-    "status": "placeholder"
-  },
-  "archive-124-67ee7565": {
-    "status": "placeholder"
+  "archive-5a1716b2c469": {
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-135-acdd6c61": {
-    "status": "placeholder"
+    "status": "placeholder",
+    "source": "resolver"
   },
-  "archive-126-786c0615": {
-    "status": "placeholder"
+  "archive-136-1913fa05": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002QXVEW0dYaNm.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001dCuN547PYWR",
+    "year": "2017",
+    "qqSongId": 203362270,
+    "qqSongMid": "001dCuN547PYWR",
+    "qqAlbumMid": "002QXVEW0dYaNm",
+    "matchedTitle": "老爸",
+    "matchedArtist": "常石磊",
+    "matchedAlbum": "老爸",
+    "score": 13
   },
-  "archive-125-90ce4299": {
-    "status": "placeholder"
+  "archive-137-82b8b443": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002ScvG93XR4rU.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004DOpki1dJGoC",
+    "year": "2002",
+    "qqSongId": 4944990,
+    "qqSongMid": "004DOpki1dJGoC",
+    "qqAlbumMid": "002ScvG93XR4rU",
+    "matchedTitle": "该不该",
+    "matchedArtist": "张学友",
+    "matchedAlbum": "他在那里",
+    "score": 13
   },
-  "archive-123-f6307900": {
-    "status": "placeholder"
+  "archive-138-a5f3fce3": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004ERWXc3hTAi3.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001Ri3pF1cqs80",
+    "year": "2022",
+    "qqSongId": 378154915,
+    "qqSongMid": "001Ri3pF1cqs80",
+    "qqAlbumMid": "004ERWXc3hTAi3",
+    "matchedTitle": "拆穿 (Live)",
+    "matchedArtist": "周菲戈",
+    "matchedAlbum": "2022中国好声音 第12期",
+    "score": 13
   },
-  "archive-127-1893cea1": {
-    "status": "placeholder"
+  "archive-139-60a90852": {
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "http://coverartarchive.org/release/bd35efe3-c684-4b3e-8c4b-a3a13ff0ea4e/24491021841-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/bd35efe3-c684-4b3e-8c4b-a3a13ff0ea4e",
+    "year": "2016",
+    "musicBrainzRecordingId": "0b36da78-a937-4764-a52b-6cf1f91c4e7c",
+    "musicBrainzReleaseId": "bd35efe3-c684-4b3e-8c4b-a3a13ff0ea4e",
+    "matchedTitle": "虚拟",
+    "matchedArtist": "陈粒",
+    "matchedAlbum": "小梦大半 (Reams of Dream)",
+    "score": 100
   },
   "archive-140-73e5c7d6": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/af/f8/ab/aff8abed-e8f5-1c4b-67a7-860eceb15c59/cover.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/03/6c/c5/036cc551-f691-6029-1a21-7c17f3ddd4f8/mzaf_17487889852424646220.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E5%B0%8F%E5%8D%8A/1421692907?i=1421693331&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004fAhFe0fdHYF.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001hs89m3C5p3g",
     "year": "2016",
-    "appleTrackId": 1421693331
-  },
-  "archive-129-5f27c7fa": {
-    "status": "placeholder"
-  },
-  "archive-130-2262bed6": {
-    "status": "placeholder"
-  },
-  "archive-132-f951fe1e": {
-    "status": "placeholder"
-  },
-  "archive-131-4b6990c1": {
-    "status": "placeholder"
-  },
-  "archive-133-c8fbedab": {
-    "status": "placeholder"
-  },
-  "archive-128-2c9a4c4b": {
-    "status": "placeholder"
-  },
-  "archive-134-da3db3cf": {
-    "status": "placeholder"
-  },
-  "archive-136-1913fa05": {
-    "status": "placeholder"
-  },
-  "archive-137-82b8b443": {
-    "status": "placeholder"
-  },
-  "archive-139-60a90852": {
-    "status": "placeholder"
-  },
-  "archive-138-a5f3fce3": {
-    "status": "placeholder"
+    "qqSongId": 107762070,
+    "qqSongMid": "001hs89m3C5p3g",
+    "qqAlbumMid": "004fAhFe0fdHYF",
+    "matchedTitle": "小半",
+    "matchedArtist": "陈粒",
+    "matchedAlbum": "小梦大半",
+    "score": 13
   },
   "archive-141-b3b06ef0": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004789lA4cH3Kq.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002ev1QN1mwSYJ",
+    "year": "2008",
+    "qqSongId": 103970682,
+    "qqSongMid": "002ev1QN1mwSYJ",
+    "qqAlbumMid": "004789lA4cH3Kq",
+    "matchedTitle": "同花顺",
+    "matchedArtist": "林倛玉",
+    "matchedAlbum": "12莲花 原著电影原声带 (Original Motion Picture Soundtrack)",
+    "score": 10
   },
   "archive-142-326c0f7b": {
-    "status": "placeholder"
-  },
-  "archive-145-5586ab1a": {
-    "status": "placeholder"
-  },
-  "archive-148-54c094ff": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000Otvp417HX53.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001dpuxL317n2W",
+    "year": "2018",
+    "qqSongId": 251881112,
+    "qqSongMid": "001dpuxL317n2W",
+    "qqAlbumMid": "000Otvp417HX53",
+    "matchedTitle": "ハレハレヤ (朗朗晴天) (朗朗晴天)",
+    "matchedArtist": "v flower / 羽生まゐご",
+    "matchedAlbum": "MEiSTER",
+    "score": 13
   },
   "archive-143-96acdeb3": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001MF3De3s2eUS.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004U4TUC0mqItn",
+    "year": "2021",
+    "qqSongId": 332395876,
+    "qqSongMid": "004U4TUC0mqItn",
+    "qqAlbumMid": "001MF3De3s2eUS",
+    "matchedTitle": "好きだから。 (因为我喜欢你。)",
+    "matchedArtist": "『ユイカ』",
+    "matchedAlbum": "好きだから。",
+    "score": 10
+  },
+  "archive-144-3bee2cff": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001Wvtto4BEn6t.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002E0Azd2HOHHH",
+    "year": "2019",
+    "qqSongId": 127230824,
+    "qqSongMid": "002E0Azd2HOHHH",
+    "qqAlbumMid": "001Wvtto4BEn6t",
+    "matchedTitle": "嗜好",
+    "matchedArtist": "颜人中",
+    "matchedAlbum": "嗜好",
+    "score": 13
+  },
+  "archive-145-5586ab1a": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000tXk9a4Jnf2G.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002iuMFp4IQ8bN",
+    "year": "2003",
+    "qqSongId": 3337,
+    "qqSongMid": "002iuMFp4IQ8bN",
+    "qqAlbumMid": "000tXk9a4Jnf2G",
+    "matchedTitle": "泪桥",
+    "matchedArtist": "伍佰 & China Blue",
+    "matchedAlbum": "泪桥",
+    "score": 13
+  },
+  "archive-146-56b54800": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003WBcyJ1siUkh.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003JOgMV1LeXOC",
+    "year": "2021",
+    "qqSongId": 330977131,
+    "qqSongMid": "003JOgMV1LeXOC",
+    "qqAlbumMid": "003WBcyJ1siUkh",
+    "matchedTitle": "如果可以",
+    "matchedArtist": "韦礼安",
+    "matchedAlbum": "如果可以",
+    "score": 13
   },
   "archive-147-c8334854": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001gn7g54ZEIKb.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0011nEwm2XPayS",
+    "year": "1998",
+    "qqSongId": 1255742,
+    "qqSongMid": "0011nEwm2XPayS",
+    "qqAlbumMid": "001gn7g54ZEIKb",
+    "matchedTitle": "红豆",
+    "matchedArtist": "王菲",
+    "matchedAlbum": "唱游",
+    "score": 13
+  },
+  "archive-148-54c094ff": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001qvyI10urb5z.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0040SY053uSb7r",
+    "year": "2023",
+    "qqSongId": 422061155,
+    "qqSongMid": "0040SY053uSb7r",
+    "qqAlbumMid": "001qvyI10urb5z",
+    "matchedTitle": "瞬",
+    "matchedArtist": "郑润泽",
+    "matchedAlbum": "瞬",
+    "score": 13
+  },
+  "archive-149-1d0031fe": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000007TXxe3EPUKD.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002OFu881VF9ip",
+    "year": "2025",
+    "qqSongId": 566426475,
+    "qqSongMid": "002OFu881VF9ip",
+    "qqAlbumMid": "0007TXxe3EPUKD",
+    "matchedTitle": "我爱你但是我要回家 (女声纯享)",
+    "matchedArtist": "无面小生 / 口古口古",
+    "matchedAlbum": "我爱你但是我要回家 (女声纯享)",
+    "score": 10
+  },
+  "archive-150-f1244d37": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000KoPeI484qGg.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003KrJNS0lGgUf",
+    "year": "2021",
+    "qqSongId": 334473919,
+    "qqSongMid": "003KrJNS0lGgUf",
+    "qqAlbumMid": "000KoPeI484qGg",
+    "matchedTitle": "别怕变老",
+    "matchedArtist": "王以太 / 艾热AIR",
+    "matchedAlbum": "幸存者的负罪感 (Explicit)",
+    "score": 10
+  },
+  "archive-151-c1088dc9": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000003IE692pdr5p.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002D44qb27hkqS",
+    "year": "2020",
+    "qqSongId": 269003673,
+    "qqSongMid": "002D44qb27hkqS",
+    "qqAlbumMid": "0003IE692pdr5p",
+    "matchedTitle": "Freezing",
+    "matchedArtist": "Bren Joy",
+    "matchedAlbum": "Freezing",
+    "score": 10
+  },
+  "archive-152-69bf0167": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004Ltlyo3ypAyR.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000rtRxI2BtrBf",
+    "year": "2023",
+    "qqSongId": 411724495,
+    "qqSongMid": "000rtRxI2BtrBf",
+    "qqAlbumMid": "004Ltlyo3ypAyR",
+    "matchedTitle": "From The Start",
+    "matchedArtist": "Laufey / Spencer Stewart",
+    "matchedAlbum": "From The Start",
+    "score": 13
+  },
+  "archive-153-d48cfc99": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001DViXn26rVwz.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0002N65N3iBcJK",
+    "year": "2019",
+    "qqSongId": 244143411,
+    "qqSongMid": "0002N65N3iBcJK",
+    "qqAlbumMid": "001DViXn26rVwz",
+    "matchedTitle": "有我呢",
+    "matchedArtist": "郭一凡",
+    "matchedAlbum": "重返地球",
+    "score": 13
+  },
+  "archive-154-fae783fc": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002AYtB5468qEQ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001jhr6L1XH8fN",
+    "year": "2017",
+    "qqSongId": 202814513,
+    "qqSongMid": "001jhr6L1XH8fN",
+    "qqAlbumMid": "002AYtB5468qEQ",
+    "matchedTitle": "谁 (Live)",
+    "matchedArtist": "廖俊涛",
+    "matchedAlbum": "明日之子 第2期",
+    "score": 10
+  },
+  "archive-155-f9ff5fb1": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004ZOIop1doXru.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003N7EbT2mUdPG",
+    "year": "2023",
+    "qqSongId": 405007729,
+    "qqSongMid": "003N7EbT2mUdPG",
+    "qqAlbumMid": "004ZOIop1doXru",
+    "matchedTitle": "愿与愁",
+    "matchedArtist": "林俊杰",
+    "matchedAlbum": "重拾_快乐",
+    "score": 10
   },
   "archive-156-d472757a": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/2f/46/dc/2f46dc80-3bd6-c03c-3741-769a59c7e64d/RD1772-_-_KISSING_THE_FUTURE_OF_LOVE.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/56/50/f6/5650f6f9-6536-74d9-67e3-44f5b882dc14/mzaf_9227155918379831165.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%9A%96%E6%9A%96/1095245171?i=1095245179&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004R8LFN08EGAD.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003Sn9Rg4N3oNq",
     "year": "2006",
-    "appleTrackId": 1095245179
+    "qqSongId": 169763,
+    "qqSongMid": "003Sn9Rg4N3oNq",
+    "qqAlbumMid": "004R8LFN08EGAD",
+    "matchedTitle": "暖暖",
+    "matchedArtist": "梁静茹",
+    "matchedAlbum": "亲亲",
+    "score": 13
   },
-  "archive-146-56b54800": {
-    "status": "placeholder"
+  "archive-157-a186d3d0": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002lsrMk3W1ORB.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001aAgOE1RvXKg",
+    "year": "2018",
+    "qqSongId": 213015059,
+    "qqSongMid": "001aAgOE1RvXKg",
+    "qqAlbumMid": "002lsrMk3W1ORB",
+    "matchedTitle": "几分之几",
+    "matchedArtist": "卢广仲",
+    "matchedAlbum": "几分之几",
+    "score": 11
   },
-  "archive-144-3bee2cff": {
-    "status": "placeholder"
+  "archive-158-523ff270": {
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "http://coverartarchive.org/release/f82ec15e-994e-4e52-a3ce-ec480e2ae65c/33313321520-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/f82ec15e-994e-4e52-a3ce-ec480e2ae65c",
+    "year": "2018",
+    "musicBrainzRecordingId": "2c1878d2-a46a-4963-802a-ed94a1641e8d",
+    "musicBrainzReleaseId": "f82ec15e-994e-4e52-a3ce-ec480e2ae65c",
+    "matchedTitle": "危险",
+    "matchedArtist": "梁博",
+    "matchedAlbum": "迷藏",
+    "score": 100
   },
   "archive-159-624def0c": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/87/b2/89/87b289ae-5728-6133-88a8-2a2658a535aa/196872064728.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/54/31/07/54310782-dc59-4bce-066b-89672fa57806/mzaf_13025939666591323965.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%A8%A1%E7%89%B9/1743353783?i=1743353794&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004AhJHV3slLjN.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002FRBul05dgjC",
     "year": "2013",
-    "appleTrackId": 1743353794
+    "qqSongId": 5016169,
+    "qqSongMid": "002FRBul05dgjC",
+    "qqAlbumMid": "004AhJHV3slLjN",
+    "matchedTitle": "模特",
+    "matchedArtist": "李荣浩",
+    "matchedAlbum": "模特",
+    "score": 13
   },
-  "archive-150-f1244d37": {
-    "status": "placeholder"
+  "archive-160-4827c06d": {
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "http://coverartarchive.org/release/80157238-6801-4450-b6e2-1fd19820cf16/38257568790-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/80157238-6801-4450-b6e2-1fd19820cf16",
+    "year": "2023",
+    "musicBrainzRecordingId": "ddd1d589-e975-4002-bd1d-8f69f3e7e13d",
+    "musicBrainzReleaseId": "80157238-6801-4450-b6e2-1fd19820cf16",
+    "matchedTitle": "雪 Distance",
+    "matchedArtist": "Capper / 罗言",
+    "matchedAlbum": "Uniconfication",
+    "score": 100
   },
-  "archive-152-69bf0167": {
-    "status": "placeholder"
+  "archive-162-b7148237": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003CNvSO1Vx2iY.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003Gqgy22qoF7T",
+    "year": "2017",
+    "qqSongId": 201428089,
+    "qqSongMid": "003Gqgy22qoF7T",
+    "qqAlbumMid": "003CNvSO1Vx2iY",
+    "matchedTitle": "男孩 (Live)",
+    "matchedArtist": "梁博",
+    "matchedAlbum": "歌手 第10期",
+    "score": 13
+  },
+  "archive-163-ba98a6ea": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004RZwia4aBTHJ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001wBpgw3jBCnm",
+    "year": "2019",
+    "qqSongId": 231911714,
+    "qqSongMid": "001wBpgw3jBCnm",
+    "qqAlbumMid": "004RZwia4aBTHJ",
+    "matchedTitle": "曾经是情侣 (Live)",
+    "matchedArtist": "梁博",
+    "matchedAlbum": "我是唱作人 第4期",
+    "score": 13
   },
   "archive-164-0984c577": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/99/e8/4f/99e84f72-3c26-0617-86a7-8e3f250f8c98/fengmain.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a5/a3/d5/a5a3d5e4-1cde-212a-5930-f290db7864ea/mzaf_9383174299278610056.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/always-online/1071752047?i=1071752119&uo=4",
-    "year": "2007",
-    "appleTrackId": 1071752119
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002g6zv02X7SNi.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001N8e5Q4Gjxda",
+    "year": "2008",
+    "qqSongId": 447257,
+    "qqSongMid": "001N8e5Q4Gjxda",
+    "qqAlbumMid": "002g6zv02X7SNi",
+    "matchedTitle": "Always Online",
+    "matchedArtist": "林俊杰",
+    "matchedAlbum": "JJ陆",
+    "score": 13
   },
-  "archive-153-d48cfc99": {
-    "status": "placeholder"
-  },
-  "archive-149-1d0031fe": {
-    "status": "placeholder"
-  },
-  "archive-154-fae783fc": {
-    "status": "placeholder"
-  },
-  "archive-151-c1088dc9": {
-    "status": "placeholder"
-  },
-  "archive-155-f9ff5fb1": {
-    "status": "placeholder"
-  },
-  "archive-168-cfe48462": {
-    "status": "ambiguous"
-  },
-  "archive-158-523ff270": {
-    "status": "placeholder"
-  },
-  "archive-169-cf932f2d": {
+  "archive-165-980d2346": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/0d/25/f8/0d25f8aa-df75-0b69-00eb-5f5e7cd7c0f5/067003046657.png/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/43/da/9a/43da9a75-782e-6571-386e-a88a1dbd2b47/mzaf_9142546683306645545.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/gotta-have-you/102807420?i=102807182&uo=4",
-    "year": "2006",
-    "appleTrackId": 102807182
-  },
-  "archive-160-4827c06d": {
-    "status": "placeholder"
-  },
-  "archive-161-163d3526": {
-    "status": "placeholder"
-  },
-  "archive-162-b7148237": {
-    "status": "placeholder"
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002zaHdb1vJWSQ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004Qx67L2vLwUT",
+    "year": "2015",
+    "qqSongId": 104895471,
+    "qqSongMid": "004Qx67L2vLwUT",
+    "qqAlbumMid": "002zaHdb1vJWSQ",
+    "matchedTitle": "颠倒梦想",
+    "matchedArtist": "梁博",
+    "matchedAlbum": "迷藏",
+    "score": 13
   },
   "archive-166-3e471a26": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/bf/f0/11/bff01142-f4f0-f9c4-f497-007f43e42783/BD0018-_-_Fall_In_Love_Songs.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/72/be/1c/72be1ca1-8236-1167-acf0-a2f7e0eb2f59/mzaf_14824218466385830524.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%83%85%E6%AD%8C/1095630068?i=1095630246&uo=4",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002E4IXe1ESUij.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0010BrWk2SucQr",
     "year": "2009",
-    "appleTrackId": 1095630246
-  },
-  "archive-157-a186d3d0": {
-    "status": "placeholder"
-  },
-  "archive-163-ba98a6ea": {
-    "status": "placeholder"
+    "qqSongId": 462188,
+    "qqSongMid": "0010BrWk2SucQr",
+    "qqAlbumMid": "002E4IXe1ESUij",
+    "matchedTitle": "情歌",
+    "matchedArtist": "梁静茹",
+    "matchedAlbum": "静茹 & 情歌 别再为他流泪",
+    "score": 10
   },
   "archive-167-ccecaba6": {
-    "status": "placeholder"
+    "status": "placeholder",
+    "source": "resolver"
   },
-  "archive-165-980d2346": {
-    "status": "placeholder"
+  "archive-168-cfe48462": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/b4/2f/e7/b42fe748-37a5-9e0e-9119-9469e7cb61ca/xianhau.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9c/08/7c/9c087c7c-9106-8c42-3f58-e39f48cb99ff/mzaf_8899647555562320759.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/cn/album/%E9%B2%9C%E8%8A%B1/1718158528?i=1718158529&uo=4",
+    "year": "2023",
+    "appleTrackId": 1718158529,
+    "matchedTitle": "鲜花",
+    "matchedArtist": "回春丹",
+    "matchedAlbum": "鲜花 - Single",
+    "score": 10
+  },
+  "archive-169-cf932f2d": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004LyGNp4cmkcn.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003Z0Xme0NkKKW",
+    "year": "2006",
+    "qqSongId": 506433935,
+    "qqSongMid": "003Z0Xme0NkKKW",
+    "qqAlbumMid": "004LyGNp4cmkcn",
+    "matchedTitle": "Gotta Have You",
+    "matchedArtist": "The Weepies",
+    "matchedAlbum": "Alles Is Liefde",
+    "score": 10
   },
   "archive-170-e61e6976": {
-    "status": "placeholder"
-  },
-  "archive-172-c9a2973c": {
-    "status": "placeholder"
-  },
-  "archive-176-9f5b5c4e": {
-    "status": "placeholder"
-  },
-  "archive-174-573d6d1d": {
-    "status": "placeholder"
-  },
-  "archive-175-693597d2": {
-    "status": "placeholder"
-  },
-  "archive-185-19c95244": {
-    "status": "ambiguous"
-  },
-  "archive-173-a467febd": {
-    "status": "placeholder"
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-171-969020a6": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b2/39/a6/b239a6fd-b97a-bac7-c08b-17075b5ea1b6/chunxue.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/18/3d/f4/183df404-7b25-589a-a29f-1f46fa410e33/mzaf_10388663383176323005.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/hk/album/%E6%98%A5%E9%9B%AA/1809891063?i=1809891065&uo=4",
+    "year": "2025",
+    "appleTrackId": 1809891065,
+    "matchedTitle": "春雪",
+    "matchedArtist": "裘德",
+    "matchedAlbum": "春雪 - Single",
+    "score": 10
   },
-  "archive-186-693d78a0": {
-    "status": "ambiguous"
+  "archive-172-c9a2973c": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000qqdrZ2kxqgR.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002XKiVk0rCUee",
+    "year": "2024",
+    "qqSongId": 539114463,
+    "qqSongMid": "002XKiVk0rCUee",
+    "qqAlbumMid": "000qqdrZ2kxqgR",
+    "matchedTitle": "一点",
+    "matchedArtist": "Muyoi / Pezzi",
+    "matchedAlbum": "一点",
+    "score": 13
   },
-  "archive-178-017ed686": {
-    "status": "placeholder"
+  "archive-173-a467febd": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p1.music.126.net/aJWtwvdYRXvKUpAE2C6NoA==/109951168919708423.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=2083785152",
+    "year": "2023",
+    "neteaseSongId": 2083785152,
+    "neteaseAlbumId": 174925713,
+    "matchedTitle": "唯一",
+    "matchedArtist": "G.E.M.邓紫棋",
+    "matchedAlbum": "T.I.M.E.",
+    "score": 13
+  },
+  "archive-174-573d6d1d": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001rQkdz0VrcDi.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003mBwPi4EIECz",
+    "year": "2019",
+    "qqSongId": 263726121,
+    "qqSongMid": "003mBwPi4EIECz",
+    "qqAlbumMid": "001rQkdz0VrcDi",
+    "matchedTitle": "Daylight",
+    "matchedArtist": "Acyanxi / Seredris",
+    "matchedAlbum": "Daylight",
+    "score": 13
+  },
+  "archive-175-693597d2": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000anHZA2CuwxK.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001xXUin4eaeA4",
+    "year": "2011",
+    "qqSongId": 1067128,
+    "qqSongMid": "001xXUin4eaeA4",
+    "qqAlbumMid": "000anHZA2CuwxK",
+    "matchedTitle": "老男孩",
+    "matchedArtist": "筷子兄弟",
+    "matchedAlbum": "父亲",
+    "score": 13
+  },
+  "archive-176-9f5b5c4e": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001LB0Mp3zyU1Z.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0011HJEz1KxzDp",
+    "year": "2004",
+    "qqSongId": 140269,
+    "qqSongMid": "0011HJEz1KxzDp",
+    "qqAlbumMid": "001LB0Mp3zyU1Z",
+    "matchedTitle": "夏天的风",
+    "matchedArtist": "温岚",
+    "matchedAlbum": "温式效应",
+    "score": 13
   },
   "archive-177-c62b6272": {
-    "status": "placeholder"
-  },
-  "archive-181-d36b0197": {
-    "status": "placeholder"
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-179-664e9c2e": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000041WVfh2vtlJE.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003WPrjL4dimFE",
+    "year": "2026",
+    "qqSongId": 649556366,
+    "qqSongMid": "003WPrjL4dimFE",
+    "qqAlbumMid": "0041WVfh2vtlJE",
+    "matchedTitle": "爱琴海",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "太阳之子",
+    "score": 13
+  },
+  "archive-180-dcc26c51": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/F0-_GPKLP8yJ6VE29DwrRA==/109951170565878273.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=82486",
+    "year": "2005",
+    "neteaseSongId": 82486,
+    "neteaseAlbumId": 8134,
+    "matchedTitle": "春风吹",
+    "matchedArtist": "方大同",
+    "matchedAlbum": "Soulboy",
+    "score": 13
+  },
+  "archive-181-d36b0197": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000007x7yv1fsysP.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002gwMe73BPRVM",
+    "year": "2024",
+    "qqSongId": 486315823,
+    "qqSongMid": "002gwMe73BPRVM",
+    "qqAlbumMid": "0007x7yv1fsysP",
+    "matchedTitle": "蘑菇蘑菇（躲在市场的角落）",
+    "matchedArtist": "Kiki",
+    "matchedAlbum": "蘑菇蘑菇（躲在市场的角落）",
+    "score": 13
+  },
+  "archive-182-c48f16d0": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003ufArf4TkxBr.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0034Etaa3kFVkn",
+    "year": "2011",
+    "qqSongId": 106678068,
+    "qqSongMid": "0034Etaa3kFVkn",
+    "qqAlbumMid": "003ufArf4TkxBr",
+    "matchedTitle": "一点点喜欢",
+    "matchedArtist": "邓福如 AFÜ / 费聿锋",
+    "matchedAlbum": "原来如此",
+    "score": 13
+  },
+  "archive-183-20d28d15": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003B9av31nbbow.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000fMo6K26DAlB",
+    "year": "2026",
+    "qqSongId": 633773823,
+    "qqSongMid": "000fMo6K26DAlB",
+    "qqAlbumMid": "003B9av31nbbow",
+    "matchedTitle": "几分之几（我算什么）",
+    "matchedArtist": "小特ovo",
+    "matchedAlbum": "几分之几（我算什么）",
+    "score": 13
+  },
+  "archive-184-516dcc96": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000x8atm4EJhpQ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004GBv1c0bnEyq",
+    "year": "2014",
+    "qqSongId": 5176008,
+    "qqSongMid": "004GBv1c0bnEyq",
+    "qqAlbumMid": "000x8atm4EJhpQ",
+    "matchedTitle": "安眠药 (Live)",
+    "matchedArtist": "张禄籴",
+    "matchedAlbum": "中国好歌曲第一季 第5期",
+    "score": 13
+  },
+  "archive-185-19c95244": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/G8tO19vYa6DdLj6qo7kNBg==/109951165625494109.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=109995",
+    "year": "2001",
+    "neteaseSongId": 109995,
+    "neteaseAlbumId": 10889,
+    "matchedTitle": "离人",
+    "matchedArtist": "林志炫",
+    "matchedAlbum": "擦声而过",
+    "score": 13
+  },
+  "archive-186-693d78a0": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002RMF8P0YolOi.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000ofRJ546eWDe",
+    "year": "2006",
+    "qqSongId": 130244,
+    "qqSongMid": "000ofRJ546eWDe",
+    "qqAlbumMid": "002RMF8P0YolOi",
+    "matchedTitle": "黄昏晓",
+    "matchedArtist": "王心凌",
+    "matchedAlbum": "微笑Pasta 电视剧原声带",
+    "score": 13
+  },
+  "archive-187-9a543220": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/34YW1QtKxJ_3YnX9ZzKhzw==/2946691234868155.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=436514312",
+    "year": "2016",
+    "neteaseSongId": 436514312,
+    "neteaseAlbumId": 34930257,
+    "matchedTitle": "成都",
+    "matchedArtist": "赵雷",
+    "matchedAlbum": "成都",
+    "score": 13
+  },
+  "archive-188-a786fe60": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003hWPug4RE4s1.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0043GhBu28XOfZ",
+    "year": "2020",
+    "qqSongId": 254302897,
+    "qqSongMid": "0043GhBu28XOfZ",
+    "qqAlbumMid": "003hWPug4RE4s1",
+    "matchedTitle": "Eenie Meenie (Radio Version)",
+    "matchedArtist": "Sean Kingston / Justin Bieber",
+    "matchedAlbum": "Eenie Meenie EP",
+    "score": 13
+  },
+  "archive-189-2656c578": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004MberL40XF3u.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001N0rdu14tJma",
+    "year": "2009",
+    "qqSongId": 1458802,
+    "qqSongMid": "001N0rdu14tJma",
+    "qqAlbumMid": "004MberL40XF3u",
+    "matchedTitle": "Traveling Light",
+    "matchedArtist": "Joel Hanson",
+    "matchedAlbum": "What If It Is",
+    "score": 13
+  },
+  "archive-191-8f690470": {
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/XPPeIZu7wgcGXZ0666mfFg==/109951164640697307.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=1411558182",
+    "year": "2020",
+    "neteaseSongId": 1411558182,
+    "neteaseAlbumId": 83823905,
+    "matchedTitle": "东北民谣",
+    "matchedArtist": "毛不易",
+    "matchedAlbum": "小王",
+    "score": 13
+  },
+  "archive-192-92be7992": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001iPnra4UvCM2.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001LOdfF0Nt8iM",
+    "year": "2013",
+    "qqSongId": 4736098,
+    "qqSongMid": "001LOdfF0Nt8iM",
+    "qqAlbumMid": "001iPnra4UvCM2",
+    "matchedTitle": "过我的生活",
+    "matchedArtist": "萧煌奇",
+    "matchedAlbum": "好好先生",
+    "score": 13
+  },
+  "archive-193-003ce8c7": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002PukKI4OM2nz.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001roYzo1BZPNa",
+    "year": "2002",
+    "qqSongId": 2552494,
+    "qqSongMid": "001roYzo1BZPNa",
+    "qqAlbumMid": "002PukKI4OM2nz",
+    "matchedTitle": "青春日记",
+    "matchedArtist": "沙宝亮",
+    "matchedAlbum": "爱上一条鱼",
+    "score": 13
   },
   "archive-194-96d6534f": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/be/4a/77/be4a7730-c144-a39e-c7b6-9d26ea0ebff3/1400X1400.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d5/48/04/d548040c-0737-93f5-fe8a-c7cb737053c7/mzaf_9648909706004333173.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E5%BF%83%E4%B8%AD%E7%9A%84%E6%97%A5%E6%9C%88/1134344345?i=1134344903&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002ElVxf43rOue.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0010pO163d2ozK",
     "year": "2004",
-    "appleTrackId": 1134344903
+    "qqSongId": 105905408,
+    "qqSongMid": "0010pO163d2ozK",
+    "qqAlbumMid": "002ElVxf43rOue",
+    "matchedTitle": "心中的日月",
+    "matchedArtist": "王力宏",
+    "matchedAlbum": "心中的日月",
+    "score": 13
   },
-  "archive-182-c48f16d0": {
-    "status": "placeholder"
-  },
-  "archive-180-dcc26c51": {
-    "status": "placeholder"
-  },
-  "archive-183-20d28d15": {
-    "status": "placeholder"
+  "archive-195-9d38cb6c": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001z1OuX41cBAx.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004NXwuk36ixAW",
+    "year": "2017",
+    "qqSongId": 109181039,
+    "qqSongMid": "004NXwuk36ixAW",
+    "qqAlbumMid": "001z1OuX41cBAx",
+    "matchedTitle": "缘分一道桥",
+    "matchedArtist": "王力宏 / 谭维维",
+    "matchedAlbum": "A.I. 爱",
+    "score": 13
   },
   "archive-196-f3e7d45c": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/d6/d1/bb/d6d1bb74-e2d3-743e-f514-5668390c4d67/gaibianziji_fengmian.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5b/dd/69/5bdd69af-856d-04ee-fdaf-6903f4b1765d/mzaf_1738023553735527523.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E8%90%BD%E5%8F%B6%E5%BD%92%E6%A0%B9/1691044816?i=1691044819&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002Zwh5p4HgecI.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003qRkRB0VMFkU",
     "year": "2007",
-    "appleTrackId": 1691044819
-  },
-  "archive-184-516dcc96": {
-    "status": "placeholder"
+    "qqSongId": 9061928,
+    "qqSongMid": "003qRkRB0VMFkU",
+    "qqAlbumMid": "002Zwh5p4HgecI",
+    "matchedTitle": "落叶归根",
+    "matchedArtist": "王力宏",
+    "matchedAlbum": "改变自己",
+    "score": 13
   },
   "archive-197-86d040c2": {
-    "status": "ambiguous"
-  },
-  "archive-187-9a543220": {
-    "status": "placeholder"
-  },
-  "archive-188-a786fe60": {
-    "status": "placeholder"
-  },
-  "archive-190-db3c1d90": {
-    "status": "placeholder"
-  },
-  "archive-189-2656c578": {
-    "status": "placeholder"
-  },
-  "archive-191-8f690470": {
-    "status": "placeholder"
-  },
-  "archive-192-92be7992": {
-    "status": "placeholder"
-  },
-  "archive-205-8bec5e5f": {
-    "status": "ambiguous"
-  },
-  "archive-193-003ce8c7": {
-    "status": "placeholder"
-  },
-  "archive-199-9dbd4904": {
-    "status": "placeholder"
-  },
-  "archive-195-9d38cb6c": {
-    "status": "placeholder"
-  },
-  "archive-200-02ea9a2b": {
-    "status": "placeholder"
-  },
-  "archive-202-520f200a": {
-    "status": "placeholder"
-  },
-  "archive-213-73178aa2": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000D1ceU2ibOvS.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0031tvqb2vMdXU",
+    "year": "2001",
+    "qqSongId": 1121156,
+    "qqSongMid": "0031tvqb2vMdXU",
+    "qqAlbumMid": "000D1ceU2ibOvS",
+    "matchedTitle": "唯一",
+    "matchedArtist": "王力宏",
+    "matchedAlbum": "唯一",
+    "score": 13
   },
   "archive-198-46962f30": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "netease",
+    "confidence": "exact",
+    "cover": "https://p2.music.126.net/yoxDYFnoCq_gFmsdwyYkiQ==/109951168205342389.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.163.com/#/song?id=518686034",
+    "year": "2017",
+    "neteaseSongId": 518686034,
+    "neteaseAlbumId": 36796018,
+    "matchedTitle": "戒烟",
+    "matchedArtist": "李荣浩",
+    "matchedAlbum": "戒烟",
+    "score": 13
+  },
+  "archive-199-9dbd4904": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002cBXbw3DXd3s.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0040ZKt52jxJ6Y",
+    "year": "2005",
+    "qqSongId": 95410,
+    "qqSongMid": "0040ZKt52jxJ6Y",
+    "qqAlbumMid": "002cBXbw3DXd3s",
+    "matchedTitle": "如果的事",
+    "matchedArtist": "范玮琪 / 张韶涵",
+    "matchedAlbum": "一比一",
+    "score": 13
+  },
+  "archive-200-02ea9a2b": {
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-201-1ebf4dbc": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000CLxSh3wxvBt.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0020Up9L200lGB",
+    "year": "2022",
+    "qqSongId": 370869851,
+    "qqSongMid": "0020Up9L200lGB",
+    "qqAlbumMid": "000CLxSh3wxvBt",
+    "matchedTitle": "冰河时代",
+    "matchedArtist": "G.E.M. 邓紫棋",
+    "matchedAlbum": "启示录",
+    "score": 13
+  },
+  "archive-202-520f200a": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001L7UIu3GXVtT.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003v4UL61IYlTY",
+    "year": "2017",
+    "qqSongId": 201697348,
+    "qqSongMid": "003v4UL61IYlTY",
+    "qqAlbumMid": "001L7UIu3GXVtT",
+    "matchedTitle": "暧昧",
+    "matchedArtist": "薛之谦",
+    "matchedAlbum": "渡 The Crossing",
+    "score": 13
   },
   "archive-203-57e4ce73": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004CSyAN1oc97b.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001GOlCd2HImcY",
+    "year": "2020",
+    "qqSongId": 253383943,
+    "qqSongMid": "001GOlCd2HImcY",
+    "qqAlbumMid": "004CSyAN1oc97b",
+    "matchedTitle": "离开我的依赖",
+    "matchedArtist": "王艳薇",
+    "matchedAlbum": "离开我的依赖",
+    "score": 13
+  },
+  "archive-204-ecb70633": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002Zwh5p4HgecI.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000NqZLy2lfXjT",
+    "year": "2007",
+    "qqSongId": 102193483,
+    "qqSongMid": "000NqZLy2lfXjT",
+    "qqAlbumMid": "002Zwh5p4HgecI",
+    "matchedTitle": "我们的歌",
+    "matchedArtist": "王力宏",
+    "matchedAlbum": "改变自己",
+    "score": 13
+  },
+  "archive-205-8bec5e5f": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000hTTJN3oScZr.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0031PqYN0sj8K3",
+    "year": "1999",
+    "qqSongId": 4830345,
+    "qqSongMid": "0031PqYN0sj8K3",
+    "qqAlbumMid": "000hTTJN3oScZr",
+    "matchedTitle": "阴天",
+    "matchedArtist": "莫文蔚",
+    "matchedAlbum": "You Can",
+    "score": 13
+  },
+  "archive-206-dd434e83": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000FuESN2WPonO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000KD4yP3lvzqR",
+    "year": "1998",
+    "qqSongId": 108401497,
+    "qqSongMid": "000KD4yP3lvzqR",
+    "qqAlbumMid": "000FuESN2WPonO",
+    "matchedTitle": "Duvet",
+    "matchedArtist": "Various Artists",
+    "matchedAlbum": "Race of a Thousand Camels",
+    "score": 13
+  },
+  "archive-207-dd736067": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-208-1ab2e47a": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000hlHZh0Y0QDA.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002mJvgf1dmovc",
+    "year": "2020",
+    "qqSongId": 265724528,
+    "qqSongMid": "002mJvgf1dmovc",
+    "qqAlbumMid": "000hlHZh0Y0QDA",
+    "matchedTitle": "Into You (Matvey Emerson Remix)",
+    "matchedArtist": "DubVision",
+    "matchedAlbum": "Into You (Matvey Emerson Remix)",
+    "score": 13
+  },
+  "archive-209-2c57d9cd": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004UnhxH4dmAyM.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003gF69b45zSVs",
+    "year": "2021",
+    "qqSongId": 299239898,
+    "qqSongMid": "003gF69b45zSVs",
+    "qqAlbumMid": "004UnhxH4dmAyM",
+    "matchedTitle": "八小时时差",
+    "matchedArtist": "郑鱼",
+    "matchedAlbum": "八小时时差",
+    "score": 13
+  },
+  "archive-210-2c32fb7a": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003Ow85E3pnoqi.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002tNzue0g8xQA",
+    "year": "2012",
+    "qqSongId": 3586263,
+    "qqSongMid": "002tNzue0g8xQA",
+    "qqAlbumMid": "003Ow85E3pnoqi",
+    "matchedTitle": "爱你没差",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十二新作",
+    "score": 13
+  },
+  "archive-211-88c7f284": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000015rUVB2OUdGA.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003FFWnA3AIczD",
+    "year": "2018",
+    "qqSongId": 214182478,
+    "qqSongMid": "003FFWnA3AIczD",
+    "qqAlbumMid": "0015rUVB2OUdGA",
+    "matchedTitle": "怪咖",
+    "matchedArtist": "薛之谦",
+    "matchedAlbum": "怪咖",
+    "score": 13
+  },
+  "archive-212-15727c45": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004MGitN0zEHpb.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000HafPI0dzzwp",
+    "year": "2002",
+    "qqSongId": 97769,
+    "qqSongMid": "000HafPI0dzzwp",
+    "qqAlbumMid": "004MGitN0zEHpb",
+    "matchedTitle": "最后的战役",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "八度空间",
+    "score": 13
+  },
+  "archive-213-73178aa2": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-049-a7ffba2b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000KrDC019mc82.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001P6YOB0eXLlj",
+    "year": "2025",
+    "qqSongId": 560063927,
+    "qqSongMid": "001P6YOB0eXLlj",
+    "qqAlbumMid": "000KrDC019mc82",
+    "matchedTitle": "第57次取消发送",
+    "matchedArtist": "菲菲公主（陆绮菲）",
+    "matchedAlbum": "第57次取消发送",
+    "score": 13
   },
   "archive-214-3e08a3b0": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/3d/d8/71/3dd8711e-41ec-29ee-72b6-0a2a480031d0/4711720281483.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5f/49/b8/5f49b821-247b-af57-2bae-58c4886567b3/mzaf_12579894677612203670.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E4%B8%8D%E4%B8%BA%E8%B0%81%E8%80%8C%E4%BD%9C%E7%9A%84%E6%AD%8C/1871400633?i=1871400637&uo=4",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003nbc0602Tgfx.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002K4xqW4A7m7q",
     "year": "2015",
-    "appleTrackId": 1871400637
-  },
-  "archive-204-ecb70633": {
-    "status": "placeholder"
-  },
-  "archive-208-1ab2e47a": {
-    "status": "placeholder"
-  },
-  "archive-207-dd736067": {
-    "status": "placeholder"
-  },
-  "archive-209-2c57d9cd": {
-    "status": "placeholder"
-  },
-  "archive-206-dd434e83": {
-    "status": "placeholder"
-  },
-  "archive-210-2c32fb7a": {
-    "status": "placeholder"
-  },
-  "archive-211-88c7f284": {
-    "status": "placeholder"
-  },
-  "archive-216-a49770e8": {
-    "status": "placeholder"
-  },
-  "archive-212-15727c45": {
-    "status": "placeholder"
+    "qqSongId": 105095766,
+    "qqSongMid": "002K4xqW4A7m7q",
+    "qqAlbumMid": "003nbc0602Tgfx",
+    "matchedTitle": "不为谁而作的歌",
+    "matchedArtist": "林俊杰",
+    "matchedAlbum": "不为谁而作的歌",
+    "score": 10
   },
   "archive-215-d1a7bd69": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003bSL0v4bpKAx.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001J5QJL1pRQYB",
+    "year": "2018",
+    "qqSongId": 212877900,
+    "qqSongMid": "001J5QJL1pRQYB",
+    "qqAlbumMid": "003bSL0v4bpKAx",
+    "matchedTitle": "等你下课 (with 杨瑞代)",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "等你下课",
+    "score": 10
+  },
+  "archive-216-a49770e8": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003RMaRI1iFoYd.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000sxzol11raSd",
+    "year": "2016",
+    "qqSongId": 107192076,
+    "qqSongMid": "000sxzol11raSd",
+    "qqAlbumMid": "003RMaRI1iFoYd",
+    "matchedTitle": "不该 (with aMEI)",
+    "matchedArtist": "周杰伦 / 张惠妹",
+    "matchedAlbum": "周杰伦的床边故事",
+    "score": 13
   },
   "archive-217-cffad947": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001uqejs3d6EID.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001zqHER0WFQvO",
+    "year": "2014",
+    "qqSongId": 101787867,
+    "qqSongMid": "001zqHER0WFQvO",
+    "qqAlbumMid": "001uqejs3d6EID",
+    "matchedTitle": "怎么了",
+    "matchedArtist": "周杰伦 / 袁咏琳",
+    "matchedAlbum": "哎呦，不错哦",
+    "score": 13
   },
   "archive-218-a66f9a7c": {
-    "status": "placeholder"
-  },
-  "archive-221-56335ae6": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003KNcyk0t3mwg.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001CiqFG20FOXg",
+    "year": "2011",
+    "qqSongId": 1026968,
+    "qqSongMid": "001CiqFG20FOXg",
+    "qqAlbumMid": "003KNcyk0t3mwg",
+    "matchedTitle": "疗伤烧肉粽",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "惊叹号",
+    "score": 13
   },
   "archive-219-d0cdf1a0": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002eFUFm2XYZ7z.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003O5GaP1SYe94",
+    "year": "2007",
+    "qqSongId": 410314,
+    "qqSongMid": "003O5GaP1SYe94",
+    "qqAlbumMid": "002eFUFm2XYZ7z",
+    "matchedTitle": "牛仔很忙",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "我很忙",
+    "score": 13
   },
   "archive-220-52773765": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000f01724fd7TH.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0006rBfE3htPqG",
+    "year": "2000",
+    "qqSongId": 97755,
+    "qqSongMid": "0006rBfE3htPqG",
+    "qqAlbumMid": "000f01724fd7TH",
+    "matchedTitle": "黑色幽默",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "Jay",
+    "score": 13
+  },
+  "archive-221-56335ae6": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001mvhPh0qevad.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001HIGQO2CrXJb",
+    "year": "2002",
+    "qqSongId": 804567,
+    "qqSongMid": "001HIGQO2CrXJb",
+    "qqAlbumMid": "001mvhPh0qevad",
+    "matchedTitle": "蝴蝶",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "黑色柳丁",
+    "score": 13
+  },
+  "archive-222-69e34226": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002ehzTm0TxXC2.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001xJbdb2MBaaz",
+    "year": "2003",
+    "qqSongId": 8145,
+    "qqSongMid": "001xJbdb2MBaaz",
+    "qqAlbumMid": "002ehzTm0TxXC2",
+    "matchedTitle": "遇见",
+    "matchedArtist": "孙燕姿",
+    "matchedAlbum": "The Moment",
+    "score": 13
+  },
+  "archive-223-2c647f18": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000MkMni19ClKG.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0037FWzg2csDmh",
+    "year": "2003",
+    "qqSongId": 97779,
+    "qqSongMid": "0037FWzg2csDmh",
+    "qqAlbumMid": "000MkMni19ClKG",
+    "matchedTitle": "爱情悬崖",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "叶惠美",
+    "score": 13
+  },
+  "archive-224-6f1ade76": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000042cH172YJ0mz.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001RtHic1PivYc",
+    "year": "2022",
+    "qqSongId": 361947422,
+    "qqSongMid": "001RtHic1PivYc",
+    "qqAlbumMid": "0042cH172YJ0mz",
+    "matchedTitle": "错过的烟火",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "最伟大的作品",
+    "score": 13
+  },
+  "archive-225-5d5d6ed0": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001CnPE31iJ899.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0031TAKo0095np",
+    "year": "2018",
+    "qqSongId": 213922043,
+    "qqSongMid": "0031TAKo0095np",
+    "qqAlbumMid": "001CnPE31iJ899",
+    "matchedTitle": "不爱我就拉倒",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "不爱我就拉倒",
+    "score": 13
+  },
+  "archive-226-bdcd9af4": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000042cH172YJ0mz.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000EqWxe275Yd2",
+    "year": "2022",
+    "qqSongId": 361947426,
+    "qqSongMid": "000EqWxe275Yd2",
+    "qqAlbumMid": "0042cH172YJ0mz",
+    "matchedTitle": "粉色海洋",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "最伟大的作品",
+    "score": 13
+  },
+  "archive-227-887789e0": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003RMaRI1iFoYd.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002lW4Yl3ylM02",
+    "year": "2016",
+    "qqSongId": 107192073,
+    "qqSongMid": "002lW4Yl3ylM02",
+    "qqAlbumMid": "003RMaRI1iFoYd",
+    "matchedTitle": "一点点",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "周杰伦的床边故事",
+    "score": 13
+  },
+  "archive-228-4d2899c6": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000024bjiL2aocxT.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001K0AjL2huSxx",
+    "year": "2005",
+    "qqSongId": 718486,
+    "qqSongMid": "001K0AjL2huSxx",
+    "qqAlbumMid": "0024bjiL2aocxT",
+    "matchedTitle": "珊瑚海",
+    "matchedArtist": "周杰伦 / Lara梁心颐",
+    "matchedAlbum": "十一月的萧邦",
+    "score": 13
+  },
+  "archive-229-b786e4c7": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001hGx1Z0so1YX.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001PLl3C4gPSCI",
+    "year": "2019",
+    "qqSongId": 247261229,
+    "qqSongMid": "001PLl3C4gPSCI",
+    "qqAlbumMid": "001hGx1Z0so1YX",
+    "matchedTitle": "我是如此相信",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "我是如此相信",
+    "score": 13
   },
   "archive-230-434f3429": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/9e/35/ad/9e35ad1e-749e-75b6-0539-1e80cea1817b/JAY11.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/49/d9/63/49d96370-e197-5629-b8bb-bdd954c1b576/mzaf_217123187122990137.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E5%A4%9C%E6%9B%B2/536009641?i=536009642&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000024bjiL2aocxT.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001zMQr71F1Qo8",
     "year": "2005",
-    "appleTrackId": 536009642
+    "qqSongId": 718477,
+    "qqSongMid": "001zMQr71F1Qo8",
+    "qqAlbumMid": "0024bjiL2aocxT",
+    "matchedTitle": "夜曲",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十一月的萧邦",
+    "score": 13
   },
-  "archive-223-2c647f18": {
-    "status": "placeholder"
+  "archive-231-902c60d9": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002MAeob3zLXwZ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001xd0HI0X9GNq",
+    "year": "2005",
+    "qqSongId": 5105986,
+    "qqSongMid": "001xd0HI0X9GNq",
+    "qqAlbumMid": "002MAeob3zLXwZ",
+    "matchedTitle": "一路向北",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "J III MP3 Player",
+    "score": 13
   },
   "archive-232-543dddea": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/b8/83/7f/b8837f2a-324a-f6ad-ff5a-0805e9210181/JAY.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3a/15/ff/3a15ff0b-ee24-a863-db04-8a489be66397/mzaf_1259240667288251806.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E9%9D%92%E8%8A%B1%E7%93%B7/536030690?i=536030695&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002eFUFm2XYZ7z.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002qU5aY3Qu24y",
     "year": "2007",
-    "appleTrackId": 536030695
-  },
-  "archive-222-69e34226": {
-    "status": "placeholder"
-  },
-  "archive-224-6f1ade76": {
-    "status": "placeholder"
-  },
-  "archive-228-4d2899c6": {
-    "status": "placeholder"
-  },
-  "archive-226-bdcd9af4": {
-    "status": "placeholder"
-  },
-  "archive-227-887789e0": {
-    "status": "placeholder"
-  },
-  "archive-225-5d5d6ed0": {
-    "status": "placeholder"
-  },
-  "archive-229-b786e4c7": {
-    "status": "placeholder"
+    "qqSongId": 410316,
+    "qqSongMid": "002qU5aY3Qu24y",
+    "qqAlbumMid": "002eFUFm2XYZ7z",
+    "matchedTitle": "青花瓷",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "我很忙",
+    "score": 13
   },
   "archive-233-bc9c751c": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000f01724fd7TH.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001Zi7Ly4ZtVQk",
+    "year": "2000",
+    "qqSongId": 97752,
+    "qqSongMid": "001Zi7Ly4ZtVQk",
+    "qqAlbumMid": "000f01724fd7TH",
+    "matchedTitle": "星晴",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "Jay",
+    "score": 13
   },
   "archive-234-ae0ca043": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003dAEX43IElBh.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001Q28XA0zApEm",
+    "year": "2001",
+    "qqSongId": 718272,
+    "qqSongMid": "001Q28XA0zApEm",
+    "qqAlbumMid": "003dAEX43IElBh",
+    "matchedTitle": "世界末日 (Live)",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "范特西PLUS",
+    "score": 13
   },
   "archive-235-533d0e82": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002eFUFm2XYZ7z.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001bnNGN127Kbq",
+    "year": "2007",
+    "qqSongId": 102204538,
+    "qqSongMid": "001bnNGN127Kbq",
+    "qqAlbumMid": "002eFUFm2XYZ7z",
+    "matchedTitle": "阳光宅男",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "我很忙",
+    "score": 13
   },
   "archive-236-ec6c032c": {
-    "status": "placeholder"
-  },
-  "archive-231-902c60d9": {
-    "status": "placeholder"
-  },
-  "archive-238-dc4974de": {
-    "status": "placeholder"
-  },
-  "archive-239-06633f62": {
-    "status": "placeholder"
-  },
-  "archive-242-718c4a90": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002jLGWe16Tf1H.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000DdOAF0ED7i4",
+    "year": "2006",
+    "qqSongId": 102320103,
+    "qqSongMid": "000DdOAF0ED7i4",
+    "qqAlbumMid": "002jLGWe16Tf1H",
+    "matchedTitle": "白色风车",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "依然范特西",
+    "score": 13
   },
   "archive-237-ce92c813": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002jLGWe16Tf1H.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002hXDfk0LX9KO",
+    "year": "2006",
+    "qqSongId": 102066257,
+    "qqSongMid": "002hXDfk0LX9KO",
+    "qqAlbumMid": "002jLGWe16Tf1H",
+    "matchedTitle": "听妈妈的话",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "依然范特西",
+    "score": 13
   },
-  "archive-241-6c1e63d6": {
-    "status": "placeholder"
+  "archive-238-dc4974de": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002Neh8l0uciQZ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004BhQke4adHcf",
+    "year": "2008",
+    "qqSongId": 101091484,
+    "qqSongMid": "004BhQke4adHcf",
+    "qqAlbumMid": "002Neh8l0uciQZ",
+    "matchedTitle": "给我一首歌的时间",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "魔杰座",
+    "score": 13
+  },
+  "archive-239-06633f62": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002gBTVk4JEE2T.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001qvvgF38HVc4",
+    "year": "2019",
+    "qqSongId": 237773700,
+    "qqSongMid": "001qvvgF38HVc4",
+    "qqAlbumMid": "002gBTVk4JEE2T",
+    "matchedTitle": "说好不哭 (with 五月天阿信)",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "说好不哭（with 五月天阿信）",
+    "score": 13
   },
   "archive-240-93961240": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001UP7mW458ipG.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002MXZNu1GToOk",
+    "year": "2007",
+    "qqSongId": 403778,
+    "qqSongMid": "002MXZNu1GToOk",
+    "qqAlbumMid": "001UP7mW458ipG",
+    "matchedTitle": "不能说的秘密",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "不能说的秘密 电影原声带",
+    "score": 13
   },
-  "archive-244-6bbb1232": {
-    "status": "placeholder"
+  "archive-241-6c1e63d6": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000bviBl4FjTpO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004emQMs09Z1lz",
+    "year": "2010",
+    "qqSongId": 680279,
+    "qqSongMid": "004emQMs09Z1lz",
+    "qqAlbumMid": "000bviBl4FjTpO",
+    "matchedTitle": "烟花易冷",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "跨时代",
+    "score": 13
   },
-  "archive-246-1c1798cd": {
-    "status": "placeholder"
+  "archive-242-718c4a90": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000bviBl4FjTpO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002zouNc0L8Llg",
+    "year": "2010",
+    "qqSongId": 680282,
+    "qqSongMid": "002zouNc0L8Llg",
+    "qqAlbumMid": "000bviBl4FjTpO",
+    "matchedTitle": "雨下一整晚",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "跨时代",
+    "score": 13
   },
   "archive-243-f23de3d6": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000f01724fd7TH.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004VR0Hn3bkqqE",
+    "year": "2000",
+    "qqSongId": 97750,
+    "qqSongMid": "004VR0Hn3bkqqE",
+    "qqAlbumMid": "000f01724fd7TH",
+    "matchedTitle": "可爱女人",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "Jay",
+    "score": 13
+  },
+  "archive-244-6bbb1232": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000049UwoJ2fey1j.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000L8lFG0tU3yw",
+    "year": "2018",
+    "qqSongId": 216124830,
+    "qqSongMid": "000L8lFG0tU3yw",
+    "qqAlbumMid": "0049UwoJ2fey1j",
+    "matchedTitle": "请先说你好",
+    "matchedArtist": "贺一航",
+    "matchedAlbum": "请先说你好",
+    "score": 13
   },
   "archive-245-4e28d9ad": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000021brYM11q58W.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001z4tFZ2VvIoX",
+    "year": "2020",
+    "qqSongId": 276499661,
+    "qqSongMid": "001z4tFZ2VvIoX",
+    "qqAlbumMid": "0021brYM11q58W",
+    "matchedTitle": "执迷不悟",
+    "matchedArtist": "小乐哥（王唯乐）",
+    "matchedAlbum": "执迷不悟",
+    "score": 13
+  },
+  "archive-246-1c1798cd": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001V8OuV35LJe5.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/00195m0A3lsdoe",
+    "year": "2010",
+    "qqSongId": 667022,
+    "qqSongMid": "00195m0A3lsdoe",
+    "qqAlbumMid": "001V8OuV35LJe5",
+    "matchedTitle": "凑热闹",
+    "matchedArtist": "BY2",
+    "matchedAlbum": "成人礼",
+    "score": 13
   },
   "archive-247-d393fa9e": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000032ezFm3F53yO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0023O1LH0Ha1OO",
+    "year": "2005",
+    "qqSongId": 4962988,
+    "qqSongMid": "0023O1LH0Ha1OO",
+    "qqAlbumMid": "0032ezFm3F53yO",
+    "matchedTitle": "倒带 (Live)",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "周杰伦 2004 无与伦比 演唱会 Live CD",
+    "score": 11
   },
   "archive-248-d575a635": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000008gdqv4Nt2to.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003pfQqY27iNIl",
+    "year": "2022",
+    "qqSongId": 362337908,
+    "qqSongMid": "003pfQqY27iNIl",
+    "qqAlbumMid": "0008gdqv4Nt2to",
+    "matchedTitle": "Doopravdy (remix: Kasandra)",
+    "matchedArtist": "Tình yêu và",
+    "matchedAlbum": "Changes 热播",
+    "score": 13
   },
   "archive-249-607aa4a0": {
-    "status": "placeholder"
-  },
-  "archive-251-31084a40": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001mthIe2bX98G.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000Jkp874g0Ol7",
+    "year": "2016",
+    "qqSongId": 108771400,
+    "qqSongMid": "000Jkp874g0Ol7",
+    "qqAlbumMid": "001mthIe2bX98G",
+    "matchedTitle": "I Want To Believe",
+    "matchedArtist": "DJ MAXWELL",
+    "matchedAlbum": "TRUST NO ONE",
+    "score": 13
   },
   "archive-250-d3673468": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003Ow85E3pnoqi.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003xv4w313tZHV",
+    "year": "2012",
+    "qqSongId": 5177680,
+    "qqSongMid": "003xv4w313tZHV",
+    "qqAlbumMid": "003Ow85E3pnoqi",
+    "matchedTitle": "红尘客栈",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十二新作",
+    "score": 13
+  },
+  "archive-251-31084a40": {
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-252-fa15e1bf": {
-    "status": "placeholder"
-  },
-  "archive-254-f95f6f77": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003a39FR3GJoeu.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002YA4ge2aW4iQ",
+    "year": "2023",
+    "qqSongId": 418988640,
+    "qqSongMid": "002YA4ge2aW4iQ",
+    "qqAlbumMid": "003a39FR3GJoeu",
+    "matchedTitle": "Green Screen",
+    "matchedArtist": "Usagi Flap",
+    "matchedAlbum": "Blue Kenee",
+    "score": 10
   },
   "archive-253-0345692d": {
-    "status": "placeholder"
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-254-f95f6f77": {
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-255-00f9bc3f": {
-    "status": "placeholder"
-  },
-  "archive-259-14011365": {
-    "status": "placeholder"
-  },
-  "archive-257-f6065835": {
-    "status": "placeholder"
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-256-6d88cea5": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000MkMni19ClKG.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000U62Ay0ndxCh",
+    "year": "2003",
+    "qqSongId": 97777,
+    "qqSongMid": "000U62Ay0ndxCh",
+    "qqAlbumMid": "000MkMni19ClKG",
+    "matchedTitle": "同一种调调",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "叶惠美",
+    "score": 13
   },
-  "archive-260-5de5bb6b": {
-    "status": "placeholder"
+  "archive-257-f6065835": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000I5jJB3blWeN.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0020qX4u2JJRxK",
+    "year": "2001",
+    "qqSongId": 97745,
+    "qqSongMid": "0020qX4u2JJRxK",
+    "qqAlbumMid": "000I5jJB3blWeN",
+    "matchedTitle": "开不了口",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "范特西",
+    "score": 13
   },
   "archive-258-aafaa0b1": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000MkMni19ClKG.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002elTc93yuXu2",
+    "year": "2003",
+    "qqSongId": 5244390,
+    "qqSongMid": "002elTc93yuXu2",
+    "qqAlbumMid": "000MkMni19ClKG",
+    "matchedTitle": "你听得到",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "叶惠美",
+    "score": 13
   },
-  "archive-264-17d8a89e": {
-    "status": "placeholder"
+  "archive-259-14011365": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004MGitN0zEHpb.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002U3qIp3n7yke",
+    "year": "2002",
+    "qqSongId": 97765,
+    "qqSongMid": "002U3qIp3n7yke",
+    "qqAlbumMid": "004MGitN0zEHpb",
+    "matchedTitle": "分裂",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "八度空间",
+    "score": 13
+  },
+  "archive-260-5de5bb6b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000MkMni19ClKG.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001FSVRg08JLpi",
+    "year": "2003",
+    "qqSongId": 97778,
+    "qqSongMid": "001FSVRg08JLpi",
+    "qqAlbumMid": "000MkMni19ClKG",
+    "matchedTitle": "她的睫毛",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "叶惠美",
+    "score": 13
   },
   "archive-261-63122758": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001uqejs3d6EID.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001XPgTm3faHRb",
+    "year": "2014",
+    "qqSongId": 101787872,
+    "qqSongMid": "001XPgTm3faHRb",
+    "qqAlbumMid": "001uqejs3d6EID",
+    "matchedTitle": "美人鱼",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "哎呦，不错哦",
+    "score": 13
   },
   "archive-262-fba7b25a": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003RMaRI1iFoYd.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000eskGX0ijIFi",
+    "year": "2016",
+    "qqSongId": 107192080,
+    "qqSongMid": "000eskGX0ijIFi",
+    "qqAlbumMid": "003RMaRI1iFoYd",
+    "matchedTitle": "爱情废柴",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "周杰伦的床边故事",
+    "score": 13
   },
   "archive-263-e18ff11c": {
-    "status": "placeholder"
-  },
-  "archive-274-047043df": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/9e/35/ad/9e35ad1e-749e-75b6-0539-1e80cea1817b/JAY11.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8e/73/ea/8e73ea9a-9fa6-bd5e-26a5-965e4a1ce51d/mzaf_4647971212508521464.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%9E%AB/536009641?i=536009647&uo=4",
-    "year": "2005",
-    "appleTrackId": 536009647
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003RMaRI1iFoYd.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003OUlho2HcRHC",
+    "year": "2016",
+    "qqSongId": 107192078,
+    "qqSongMid": "003OUlho2HcRHC",
+    "qqAlbumMid": "003RMaRI1iFoYd",
+    "matchedTitle": "告白气球",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "周杰伦的床边故事",
+    "score": 13
   },
-  "archive-275-6def6271": {
+  "archive-264-17d8a89e": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/9e/35/ad/9e35ad1e-749e-75b6-0539-1e80cea1817b/JAY11.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/41/fd/0c/41fd0c9f-d41a-6227-3468-413405ea68cc/mzaf_16001321407593712643.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E9%BB%91%E8%89%B2%E6%AF%9B%E8%A1%A3/536009641?i=536009645&uo=4",
-    "year": "2005",
-    "appleTrackId": 536009645
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000042cH172YJ0mz.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000Zu3Ah1jb4gl",
+    "year": "2022",
+    "qqSongId": 361947419,
+    "qqSongMid": "000Zu3Ah1jb4gl",
+    "qqAlbumMid": "0042cH172YJ0mz",
+    "matchedTitle": "还在流浪",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "最伟大的作品",
+    "score": 13
+  },
+  "archive-265-073940b2": {
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "http://coverartarchive.org/release/4f0ee182-7255-424b-9be6-9a190036d835/34720755021-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/4f0ee182-7255-424b-9be6-9a190036d835",
+    "year": "",
+    "musicBrainzRecordingId": "01c14581-e425-4c86-8614-94bc5521f8f8",
+    "musicBrainzReleaseId": "4f0ee182-7255-424b-9be6-9a190036d835",
+    "matchedTitle": "最伟大的作品",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "最伟大的作品",
+    "score": 100
+  },
+  "archive-266-b62e398f": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000f01724fd7TH.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0017K7gL4WYnw2",
+    "year": "2000",
+    "qqSongId": 97759,
+    "qqSongMid": "0017K7gL4WYnw2",
+    "qqAlbumMid": "000f01724fd7TH",
+    "matchedTitle": "反方向的钟",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "Jay",
+    "score": 13
+  },
+  "archive-267-3ad557f4": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000f01724fd7TH.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002l8JN71d2Dxy",
+    "year": "2000",
+    "qqSongId": 97758,
+    "qqSongMid": "002l8JN71d2Dxy",
+    "qqAlbumMid": "000f01724fd7TH",
+    "matchedTitle": "龙卷风",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "Jay",
+    "score": 13
+  },
+  "archive-268-5dac92b8": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000I5jJB3blWeN.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000amRvH3wxv56",
+    "year": "2001",
+    "qqSongId": 97743,
+    "qqSongMid": "000amRvH3wxv56",
+    "qqAlbumMid": "000I5jJB3blWeN",
+    "matchedTitle": "安静",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "范特西",
+    "score": 13
+  },
+  "archive-269-fa130083": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003DFRzD192KKD.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003nEQHr3Ceet5",
+    "year": "2004",
+    "qqSongId": 102065753,
+    "qqSongMid": "003nEQHr3Ceet5",
+    "qqAlbumMid": "003DFRzD192KKD",
+    "matchedTitle": "园游会",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "七里香",
+    "score": 13
   },
   "archive-270-a3536e5f": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/29/c1/2d/29c12de6-54b4-f549-9d9f-07d8a04221ea/JAY.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/aa/79/db/aa79db76-0104-dfe8-22e4-141ec57ba697/mzaf_3931826197366023547.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E5%80%9F%E5%8F%A3/536114662?i=536115196&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003DFRzD192KKD.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002XWgfo0IKPOH",
     "year": "2004",
-    "appleTrackId": 536115196
+    "qqSongId": 102065757,
+    "qqSongMid": "002XWgfo0IKPOH",
+    "qqAlbumMid": "003DFRzD192KKD",
+    "matchedTitle": "借口",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "七里香",
+    "score": 13
   },
   "archive-271-e17d8394": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/29/c1/2d/29c12de6-54b4-f549-9d9f-07d8a04221ea/JAY.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/99/4e/e2/994ee285-7c0d-73ab-85b7-8d3899a17242/mzaf_12441330510018253101.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E4%B8%83%E9%87%8C%E9%A6%99/536114662?i=536115195&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003DFRzD192KKD.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004Z8Ihr0JIu5s",
     "year": "2004",
-    "appleTrackId": 536115195
+    "qqSongId": 102065756,
+    "qqSongMid": "004Z8Ihr0JIu5s",
+    "qqAlbumMid": "003DFRzD192KKD",
+    "matchedTitle": "七里香",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "七里香",
+    "score": 13
   },
-  "archive-266-b62e398f": {
-    "status": "placeholder"
+  "archive-272-033af79b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000024bjiL2aocxT.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003WtI8C0FMf3r",
+    "year": "2005",
+    "qqSongId": 718483,
+    "qqSongMid": "003WtI8C0FMf3r",
+    "qqAlbumMid": "0024bjiL2aocxT",
+    "matchedTitle": "麦芽糖",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十一月的萧邦",
+    "score": 13
   },
-  "archive-265-073940b2": {
-    "status": "placeholder"
+  "archive-273-2124e7c2": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000024bjiL2aocxT.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002fi7iG0VvUj2",
+    "year": "2005",
+    "qqSongId": 718482,
+    "qqSongMid": "002fi7iG0VvUj2",
+    "qqAlbumMid": "0024bjiL2aocxT",
+    "matchedTitle": "浪漫手机",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十一月的萧邦",
+    "score": 13
   },
-  "archive-267-3ad557f4": {
-    "status": "placeholder"
+  "archive-274-047043df": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000024bjiL2aocxT.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003KtYhg4frNXC",
+    "year": "2005",
+    "qqSongId": 718479,
+    "qqSongMid": "003KtYhg4frNXC",
+    "qqAlbumMid": "0024bjiL2aocxT",
+    "matchedTitle": "枫",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十一月的萧邦",
+    "score": 13
+  },
+  "archive-275-6def6271": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000024bjiL2aocxT.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003iY6cU4YG0xi",
+    "year": "2005",
+    "qqSongId": 718480,
+    "qqSongMid": "003iY6cU4YG0xi",
+    "qqAlbumMid": "0024bjiL2aocxT",
+    "matchedTitle": "黑色毛衣",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十一月的萧邦",
+    "score": 13
+  },
+  "archive-276-671da5ab": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000024bjiL2aocxT.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0027oMO61wWi55",
+    "year": "2005",
+    "qqSongId": 718475,
+    "qqSongMid": "0027oMO61wWi55",
+    "qqAlbumMid": "0024bjiL2aocxT",
+    "matchedTitle": "发如雪",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十一月的萧邦",
+    "score": 13
+  },
+  "archive-277-bd2a8464": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002jLGWe16Tf1H.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001L1lqm4UAdyo",
+    "year": "2006",
+    "qqSongId": 102066449,
+    "qqSongMid": "001L1lqm4UAdyo",
+    "qqAlbumMid": "002jLGWe16Tf1H",
+    "matchedTitle": "退后",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "依然范特西",
+    "score": 13
+  },
+  "archive-278-f6ff93b1": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002eFUFm2XYZ7z.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003ZrdgZ0UnjDl",
+    "year": "2007",
+    "qqSongId": 5177785,
+    "qqSongMid": "003ZrdgZ0UnjDl",
+    "qqAlbumMid": "002eFUFm2XYZ7z",
+    "matchedTitle": "最长的电影",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "我很忙",
+    "score": 13
+  },
+  "archive-279-b727a77b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002eFUFm2XYZ7z.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000xdZuV2LcQ19",
+    "year": "2007",
+    "qqSongId": 102340969,
+    "qqSongMid": "000xdZuV2LcQ19",
+    "qqAlbumMid": "002eFUFm2XYZ7z",
+    "matchedTitle": "甜甜的",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "我很忙",
+    "score": 13
+  },
+  "archive-280-5dcd42ae": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002eFUFm2XYZ7z.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001T3JAT15palI",
+    "year": "2007",
+    "qqSongId": 102700397,
+    "qqSongMid": "001T3JAT15palI",
+    "qqAlbumMid": "002eFUFm2XYZ7z",
+    "matchedTitle": "我不配",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "我很忙",
+    "score": 13
   },
   "archive-281-fe7997fb": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/b8/83/7f/b8837f2a-324a-f6ad-ff5a-0805e9210181/JAY.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e1/e9/94/e1e9945c-e0a8-d7fc-9b85-843cf785cecb/mzaf_5426248604184303369.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E8%92%B2%E5%85%AC%E8%8B%B1%E7%9A%84%E7%BA%A6%E5%AE%9A/536030690?i=536030697&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002eFUFm2XYZ7z.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004Yi5BD3ksoAN",
     "year": "2007",
-    "appleTrackId": 536030697
+    "qqSongId": 102340965,
+    "qqSongMid": "004Yi5BD3ksoAN",
+    "qqAlbumMid": "002eFUFm2XYZ7z",
+    "matchedTitle": "蒲公英的约定",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "我很忙",
+    "score": 13
   },
-  "archive-269-fa130083": {
-    "status": "placeholder"
+  "archive-282-ee305f3d": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002Neh8l0uciQZ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000sRQrz0aEDFp",
+    "year": "2008",
+    "qqSongId": 449203,
+    "qqSongMid": "000sRQrz0aEDFp",
+    "qqAlbumMid": "002Neh8l0uciQZ",
+    "matchedTitle": "时光机",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "魔杰座",
+    "score": 13
   },
-  "archive-268-5dac92b8": {
-    "status": "placeholder"
+  "archive-283-8428c913": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002Neh8l0uciQZ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/00128N3r2SYKMF",
+    "year": "2008",
+    "qqSongId": 449201,
+    "qqSongMid": "00128N3r2SYKMF",
+    "qqAlbumMid": "002Neh8l0uciQZ",
+    "matchedTitle": "兰亭序",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "魔杰座",
+    "score": 13
+  },
+  "archive-284-aa723be7": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002Neh8l0uciQZ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0042QMDR1VzSsx",
+    "year": "2008",
+    "qqSongId": 449200,
+    "qqSongMid": "0042QMDR1VzSsx",
+    "qqAlbumMid": "002Neh8l0uciQZ",
+    "matchedTitle": "说好的幸福呢",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "魔杰座",
+    "score": 13
+  },
+  "archive-285-99b14a06": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000bviBl4FjTpO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004JQ70v4Fddyj",
+    "year": "2010",
+    "qqSongId": 680287,
+    "qqSongMid": "004JQ70v4Fddyj",
+    "qqAlbumMid": "000bviBl4FjTpO",
+    "matchedTitle": "超人不会飞",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "跨时代",
+    "score": 13
   },
   "archive-286-a41072d9": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/53/2d/dd/532dddf0-87d7-b9eb-7d8b-4eb194c84252/asset.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b8/38/dd/b838dd8f-828b-9afc-ecaf-a889737c7d63/mzaf_843469504868868567.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E8%AF%B4%E4%BA%86%E5%86%8D%E8%A7%81/536247746?i=536248195&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000bviBl4FjTpO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/00265Jxe3JzXOJ",
     "year": "2010",
-    "appleTrackId": 536248195
+    "qqSongId": 680278,
+    "qqSongMid": "00265Jxe3JzXOJ",
+    "qqAlbumMid": "000bviBl4FjTpO",
+    "matchedTitle": "说了再见",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "跨时代",
+    "score": 13
   },
-  "archive-272-033af79b": {
-    "status": "placeholder"
+  "archive-287-577ffd88": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000bviBl4FjTpO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002RqWle4FvqRy",
+    "year": "2010",
+    "qqSongId": 680281,
+    "qqSongMid": "002RqWle4FvqRy",
+    "qqAlbumMid": "000bviBl4FjTpO",
+    "matchedTitle": "好久不见",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "跨时代",
+    "score": 13
   },
-  "archive-273-2124e7c2": {
-    "status": "placeholder"
+  "archive-288-0a800409": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000bviBl4FjTpO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003CxS6w14OQyM",
+    "year": "2010",
+    "qqSongId": 680285,
+    "qqSongMid": "003CxS6w14OQyM",
+    "qqAlbumMid": "000bviBl4FjTpO",
+    "matchedTitle": "爱的飞行日记",
+    "matchedArtist": "周杰伦 / 杨瑞代",
+    "matchedAlbum": "跨时代",
+    "score": 13
   },
-  "archive-276-671da5ab": {
-    "status": "placeholder"
+  "archive-289-7b9f7bba": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004MGitN0zEHpb.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002OKIox28ad9a",
+    "year": "2002",
+    "qqSongId": 97761,
+    "qqSongMid": "002OKIox28ad9a",
+    "qqAlbumMid": "004MGitN0zEHpb",
+    "matchedTitle": "半岛铁盒",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "八度空间",
+    "score": 13
   },
-  "archive-277-bd2a8464": {
-    "status": "placeholder"
-  },
-  "archive-280-5dcd42ae": {
-    "status": "placeholder"
-  },
-  "archive-278-f6ff93b1": {
-    "status": "placeholder"
-  },
-  "archive-282-ee305f3d": {
-    "status": "placeholder"
-  },
-  "archive-279-b727a77b": {
-    "status": "placeholder"
-  },
-  "archive-283-8428c913": {
-    "status": "placeholder"
-  },
-  "archive-284-aa723be7": {
-    "status": "placeholder"
-  },
-  "archive-285-99b14a06": {
-    "status": "placeholder"
+  "archive-290-ebabe499": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000bviBl4FjTpO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0022b7OX2STU86",
+    "year": "2010",
+    "qqSongId": 680284,
+    "qqSongMid": "0022b7OX2STU86",
+    "qqAlbumMid": "000bviBl4FjTpO",
+    "matchedTitle": "我落泪情绪零碎",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "跨时代",
+    "score": 13
   },
   "archive-291-5991ced4": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/96/c8/a1/96c8a1d8-8077-b8a7-8600-80b2abf1fe20/JAY.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ac/08/3b/ac083b72-cf28-41ed-0f63-e27dfd219c91/mzaf_15699907835436662532.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%9A%97%E5%8F%B7/536161722?i=536162080&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004MGitN0zEHpb.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000NQDjk4BA0W3",
     "year": "2002",
-    "appleTrackId": 536162080
+    "qqSongId": 97762,
+    "qqSongMid": "000NQDjk4BA0W3",
+    "qqAlbumMid": "004MGitN0zEHpb",
+    "matchedTitle": "暗号",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "八度空间",
+    "score": 13
   },
-  "archive-287-577ffd88": {
-    "status": "placeholder"
+  "archive-292-e8a1ea91": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000I5jJB3blWeN.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002usg9o4GTAKf",
+    "year": "2001",
+    "qqSongId": 97740,
+    "qqSongMid": "002usg9o4GTAKf",
+    "qqAlbumMid": "000I5jJB3blWeN",
+    "matchedTitle": "爱在西元前",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "范特西",
+    "score": 13
+  },
+  "archive-293-5bd44b2b": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003DFRzD192KKD.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001Bbywq2gicae",
+    "year": "2004",
+    "qqSongId": 102065750,
+    "qqSongMid": "001Bbywq2gicae",
+    "qqAlbumMid": "003DFRzD192KKD",
+    "matchedTitle": "搁浅",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "七里香",
+    "score": 13
+  },
+  "archive-294-a2fefddc": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003Ow85E3pnoqi.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002jkBM53MLB9Q",
+    "year": "2012",
+    "qqSongId": 3585890,
+    "qqSongMid": "002jkBM53MLB9Q",
+    "qqAlbumMid": "003Ow85E3pnoqi",
+    "matchedTitle": "大笨钟",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十二新作",
+    "score": 13
+  },
+  "archive-295-4dadd481": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-296-8c86817f": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000049r9ld2nCzaX.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002XispR4Wbz3L",
+    "year": "2022",
+    "qqSongId": 345328818,
+    "qqSongMid": "002XispR4Wbz3L",
+    "qqAlbumMid": "0049r9ld2nCzaX",
+    "matchedTitle": "这一生关于你的风景",
+    "matchedArtist": "弹棉花的小花",
+    "matchedAlbum": "这一生关于你的风景",
+    "score": 13
+  },
+  "archive-297-e17c6b9d": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000gTwDE3gj4DO.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0008y2Nk0IEH0p",
+    "year": "2011",
+    "qqSongId": 7122835,
+    "qqSongMid": "0008y2Nk0IEH0p",
+    "qqAlbumMid": "000gTwDE3gj4DO",
+    "matchedTitle": "想自由",
+    "matchedArtist": "林宥嘉",
+    "matchedAlbum": "美妙生活",
+    "score": 13
   },
   "archive-298-67373dc1": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/4b/55/95/4b5595a2-5d2c-38c7-8179-0a27e5ba58a1/00602488600859.rgb.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2e/06/64/2e066487-0ecc-e28a-7443-ce7372a2d4ff/mzaf_183616778003776525.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E6%B0%B4%E6%98%9F%E8%AE%B0/1443637757?i=1443638095&uo=4",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000016jBpl0vMqbb.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/00485V8K4InqbZ",
     "year": "2016",
-    "appleTrackId": 1443638095
+    "qqSongId": 109291468,
+    "qqSongMid": "00485V8K4InqbZ",
+    "qqAlbumMid": "0016jBpl0vMqbb",
+    "matchedTitle": "水星记",
+    "matchedArtist": "郭顶",
+    "matchedAlbum": "水星记",
+    "score": 10
   },
-  "archive-288-0a800409": {
-    "status": "placeholder"
+  "archive-299-106e85c5": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001rWGUJ3Gvypx.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003QVmW03PuYRw",
+    "year": "2016",
+    "qqSongId": 107784594,
+    "qqSongMid": "003QVmW03PuYRw",
+    "qqAlbumMid": "001rWGUJ3Gvypx",
+    "matchedTitle": "Closer",
+    "matchedArtist": "The Chainsmokers / Halsey",
+    "matchedAlbum": "Closer",
+    "score": 13
   },
-  "archive-289-7b9f7bba": {
-    "status": "placeholder"
+  "archive-300-245235c3": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004CvHyt4dW543.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002ulOzb02Xbdo",
+    "year": "2022",
+    "qqSongId": 350596811,
+    "qqSongMid": "002ulOzb02Xbdo",
+    "qqAlbumMid": "004CvHyt4dW543",
+    "matchedTitle": "小城夏天",
+    "matchedArtist": "LBI利比（时柏尘）",
+    "matchedAlbum": "小城夏天",
+    "score": 13
   },
-  "archive-290-ebabe499": {
-    "status": "placeholder"
+  "archive-301-8d9c5ca4": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000yO4ml3FGTLx.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002DS48N1pi7BQ",
+    "year": "2022",
+    "qqSongId": 361167875,
+    "qqSongMid": "002DS48N1pi7BQ",
+    "qqAlbumMid": "000yO4ml3FGTLx",
+    "matchedTitle": "喜劇",
+    "matchedArtist": "星野源 / DJ Jazzy Jeff / Kaidi Tatham",
+    "matchedAlbum": "喜劇 (feat. DJ Jazzy Jeff & Kaidi Tatham)",
+    "score": 10
+  },
+  "archive-302-0ac5ef80": {
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "http://coverartarchive.org/release/6cd2b02d-99d5-4228-b294-7817d05dd69a/37041034806-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/6cd2b02d-99d5-4228-b294-7817d05dd69a",
+    "year": "2021",
+    "musicBrainzRecordingId": "c4fcecb3-99de-4937-9bf0-dde2ccf0837b",
+    "musicBrainzReleaseId": "6cd2b02d-99d5-4228-b294-7817d05dd69a",
+    "matchedTitle": "死神",
+    "matchedArtist": "米津玄師",
+    "matchedAlbum": "Pale Blue",
+    "score": 100
+  },
+  "archive-303-4f0824a6": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001aC9dM35U6KB.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004aJoYT3ia7al",
+    "year": "2011",
+    "qqSongId": 1030353,
+    "qqSongMid": "004aJoYT3ia7al",
+    "qqAlbumMid": "001aC9dM35U6KB",
+    "matchedTitle": "Letting Go",
+    "matchedArtist": "蔡健雅",
+    "matchedAlbum": "说到爱",
+    "score": 13
   },
   "archive-304-48790727": {
     "status": "matched",
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/1b/63/9e/1b639e5b-f8ca-a6e1-8612-6396bc9ff0eb/4711448407424.jpg/600x600bb.jpg",
-    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/af/d8/da/afd8daa7-b2aa-fb44-b4e0-258ad25187f5/mzaf_18323630198043973445.plus.aac.p.m4a",
-    "listenUrl": "https://music.apple.com/cn/album/%E7%A8%BB%E9%A6%99/1624000713?i=1624001324&uo=4",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002Neh8l0uciQZ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003aAYrm3GE0Ac",
     "year": "2008",
-    "appleTrackId": 1624001324
-  },
-  "archive-293-5bd44b2b": {
-    "status": "placeholder"
-  },
-  "archive-295-4dadd481": {
-    "status": "placeholder"
-  },
-  "archive-294-a2fefddc": {
-    "status": "placeholder"
-  },
-  "archive-292-e8a1ea91": {
-    "status": "placeholder"
-  },
-  "archive-296-8c86817f": {
-    "status": "placeholder"
-  },
-  "archive-297-e17c6b9d": {
-    "status": "placeholder"
-  },
-  "archive-299-106e85c5": {
-    "status": "placeholder"
-  },
-  "archive-300-245235c3": {
-    "status": "placeholder"
-  },
-  "archive-301-8d9c5ca4": {
-    "status": "placeholder"
-  },
-  "archive-302-0ac5ef80": {
-    "status": "placeholder"
-  },
-  "archive-303-4f0824a6": {
-    "status": "placeholder"
+    "qqSongId": 449205,
+    "qqSongMid": "003aAYrm3GE0Ac",
+    "qqAlbumMid": "002Neh8l0uciQZ",
+    "matchedTitle": "稻香",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "魔杰座",
+    "score": 13
   },
   "archive-305-d19cb4e2": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002Neh8l0uciQZ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003cI52o4daJJL",
+    "year": "2008",
+    "qqSongId": 449198,
+    "qqSongMid": "003cI52o4daJJL",
+    "qqAlbumMid": "002Neh8l0uciQZ",
+    "matchedTitle": "花海",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "魔杰座",
+    "score": 13
   },
   "archive-306-80ca2cd9": {
-    "status": "placeholder"
-  },
-  "archive-309-00f623c4": {
-    "status": "placeholder"
-  },
-  "archive-311-58280c01": {
-    "status": "placeholder"
-  },
-  "archive-308-2cd6b59d": {
-    "status": "placeholder"
-  },
-  "archive-310-a28be3eb": {
-    "status": "placeholder"
-  },
-  "archive-312-bca4d8a5": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "high",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/ab/d6/b1/abd6b1ab-8ced-121a-21ea-5399bb37f536/5054197950636.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/9f/5b/42/9f5b426a-412b-7521-0675-212b1a1bf2c4/mzaf_7871027098730379402.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/jp/album/%E3%82%AB%E3%83%AF%E3%82%AD%E3%83%B2%E3%82%A2%E3%83%A1%E3%82%AF/1725802547?i=1725802551&uo=4",
+    "year": "2019",
+    "appleTrackId": 1725802551,
+    "matchedTitle": "カワキヲアメク",
+    "matchedArtist": "美波",
+    "matchedAlbum": "カワキヲアメク - EP",
+    "score": 10
   },
   "archive-307-a5150afe": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000bXwur3SISKP.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001p3V4c0PQdmd",
+    "year": "2017",
+    "qqSongId": 203636496,
+    "qqSongMid": "001p3V4c0PQdmd",
+    "qqAlbumMid": "000bXwur3SISKP",
+    "matchedTitle": "打上花火",
+    "matchedArtist": "Daoko / 米津玄師",
+    "matchedAlbum": "打上花火 (通常盤)",
+    "score": 10
+  },
+  "archive-308-2cd6b59d": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001vBOR71ZwXZl.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004fCsb53oath7",
+    "year": "2020",
+    "qqSongId": 282072067,
+    "qqSongMid": "004fCsb53oath7",
+    "qqAlbumMid": "001vBOR71ZwXZl",
+    "matchedTitle": "unravel (东京喰种钢琴版)",
+    "matchedArtist": "邱森",
+    "matchedAlbum": "老二次元钢琴专辑",
+    "score": 13
+  },
+  "archive-309-00f623c4": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-310-a28be3eb": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-311-58280c01": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003zyXMt0Whaim.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003eb8oy3oB8FG",
+    "year": "2015",
+    "qqSongId": 104787694,
+    "qqSongMid": "003eb8oy3oB8FG",
+    "qqAlbumMid": "003zyXMt0Whaim",
+    "matchedTitle": "for him.",
+    "matchedArtist": "Troye Sivan / Allday",
+    "matchedAlbum": "Blue Neighbourhood (Deluxe)",
+    "score": 11
+  },
+  "archive-312-bca4d8a5": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003sMyYb4HZAAz.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003MASv802hpJ7",
+    "year": "2009",
+    "qqSongId": 105413206,
+    "qqSongMid": "003MASv802hpJ7",
+    "qqAlbumMid": "003sMyYb4HZAAz",
+    "matchedTitle": "我们俩",
+    "matchedArtist": "郭顶",
+    "matchedAlbum": "微微",
+    "score": 13
   },
   "archive-313-ca8d61a9": {
-    "status": "placeholder"
-  },
-  "archive-324-754db9f2": {
-    "status": "ambiguous"
-  },
-  "archive-315-4f828719": {
-    "status": "placeholder"
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-314-f4bdb744": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M00000459X8Y1wfcQ7.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0014ahiq40MFQ5",
+    "year": "2017",
+    "qqSongId": 205127505,
+    "qqSongMid": "0014ahiq40MFQ5",
+    "qqAlbumMid": "00459X8Y1wfcQ7",
+    "matchedTitle": "All Falls Down",
+    "matchedArtist": "Alan Walker / Noah Cyrus / Digital Farm Animals / Juliander",
+    "matchedAlbum": "All Falls Down",
+    "score": 10
+  },
+  "archive-315-4f828719": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000chBQY44HBam.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0003JKfo3deNMR",
+    "year": "2017",
+    "qqSongId": 200732342,
+    "qqSongMid": "0003JKfo3deNMR",
+    "qqAlbumMid": "000chBQY44HBam",
+    "matchedTitle": "Perfect",
+    "matchedArtist": "Ed Sheeran",
+    "matchedAlbum": "÷ (Deluxe)",
+    "score": 13
   },
   "archive-316-bff5b7a9": {
-    "status": "placeholder"
-  },
-  "archive-unresolved-329": {
-    "status": "placeholder"
-  },
-  "archive-unresolved-330": {
-    "status": "placeholder"
-  },
-  "archive-unresolved-331": {
-    "status": "placeholder"
-  },
-  "archive-unresolved-332": {
-    "status": "placeholder"
-  },
-  "archive-unresolved-333": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "http://coverartarchive.org/release/9f6dbe07-48fe-4a73-922d-6687aa96035f/32170222043-500.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/9f6dbe07-48fe-4a73-922d-6687aa96035f",
+    "year": "2021",
+    "musicBrainzRecordingId": "36c96d66-49fd-4ce1-a6f1-637ab2266bbf",
+    "musicBrainzReleaseId": "9f6dbe07-48fe-4a73-922d-6687aa96035f",
+    "matchedTitle": "目及皆是你",
+    "matchedArtist": "小蓝背心",
+    "matchedAlbum": "目及皆是你",
+    "score": 100
   },
   "archive-317-8019dc7f": {
-    "status": "placeholder"
-  },
-  "archive-319-e7b72e28": {
-    "status": "placeholder"
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-318-699492dd": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000lrXyA0MlEEo.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004Uln1G2Aunqw",
+    "year": "2017",
+    "qqSongId": 205357640,
+    "qqSongMid": "004Uln1G2Aunqw",
+    "qqAlbumMid": "000lrXyA0MlEEo",
+    "matchedTitle": "春娇与志明",
+    "matchedArtist": "街道办GDC / 欧阳耀莹",
+    "matchedAlbum": "春娇与志明",
+    "score": 13
+  },
+  "archive-319-e7b72e28": {
+    "status": "placeholder",
+    "source": "resolver"
   },
   "archive-321-4af14d3d": {
-    "status": "placeholder"
-  },
-  "archive-323-2bf7e7a6": {
-    "status": "placeholder"
-  },
-  "archive-320-2877705f": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003Ow85E3pnoqi.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000oW8J53xPhZA",
+    "year": "2012",
+    "qqSongId": 3585884,
+    "qqSongMid": "000oW8J53xPhZA",
+    "qqAlbumMid": "003Ow85E3pnoqi",
+    "matchedTitle": "明明就",
+    "matchedArtist": "周杰伦",
+    "matchedAlbum": "十二新作",
+    "score": 13
   },
   "archive-322-fbc0c372": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004V9UWA27Q0Hw.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004UkzBC2TqjK4",
+    "year": "2021",
+    "qqSongId": 310637306,
+    "qqSongMid": "004UkzBC2TqjK4",
+    "qqAlbumMid": "004V9UWA27Q0Hw",
+    "matchedTitle": "不如",
+    "matchedArtist": "秦海清",
+    "matchedAlbum": "不如",
+    "score": 13
   },
-  "archive-327-6ab765ca": {
-    "status": "placeholder"
+  "archive-323-2bf7e7a6": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002sGwW60HSzKx.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001lRyJU068uBh",
+    "year": "2020",
+    "qqSongId": 274979812,
+    "qqSongMid": "001lRyJU068uBh",
+    "qqAlbumMid": "002sGwW60HSzKx",
+    "matchedTitle": "我想要",
+    "matchedArtist": "盖君炎",
+    "matchedAlbum": "我想要",
+    "score": 13
   },
-  "archive-328-8a40ed81": {
-    "status": "placeholder"
+  "archive-324-754db9f2": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000QeahL3pTfM6.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004QAI1D2nWSmH",
+    "year": "2020",
+    "qqSongId": 286209084,
+    "qqSongMid": "004QAI1D2nWSmH",
+    "qqAlbumMid": "000QeahL3pTfM6",
+    "matchedTitle": "我很好",
+    "matchedArtist": "刘大壮",
+    "matchedAlbum": "我很好",
+    "score": 13
   },
   "archive-325-27e6c7dc": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003Is5KW1hNDkI.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000B52E60vYsiO",
+    "year": "2020",
+    "qqSongId": 281935164,
+    "qqSongMid": "000B52E60vYsiO",
+    "qqAlbumMid": "003Is5KW1hNDkI",
+    "matchedTitle": "潮汐 (Natural)",
+    "matchedArtist": "傅梦彤",
+    "matchedAlbum": "潮汐 (Natural)",
+    "score": 13
   },
   "archive-326-9b95f3bc": {
-    "status": "placeholder"
+    "status": "matched",
+    "source": "musicbrainz",
+    "confidence": "high",
+    "cover": "http://coverartarchive.org/release/2b405800-7be5-4f15-8620-7b071e7291f3/12002031442.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://musicbrainz.org/release/2b405800-7be5-4f15-8620-7b071e7291f3",
+    "year": "2014",
+    "musicBrainzRecordingId": "a5493fec-faba-4581-8d72-f751081dcb6e",
+    "musicBrainzReleaseId": "2b405800-7be5-4f15-8620-7b071e7291f3",
+    "matchedTitle": "unravel",
+    "matchedArtist": "TK from 凛として時雨",
+    "matchedAlbum": "Fantastic Magic",
+    "score": 100
+  },
+  "archive-327-6ab765ca": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000pedmY14LFIR.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002a6S5B1YnxPU",
+    "year": "2021",
+    "qqSongId": 296936517,
+    "qqSongMid": "002a6S5B1YnxPU",
+    "qqAlbumMid": "000pedmY14LFIR",
+    "matchedTitle": "察觉",
+    "matchedArtist": "音格概念 / 逸霄",
+    "matchedAlbum": "察觉",
+    "score": 13
+  },
+  "archive-328-8a40ed81": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002gMEz44d5sFf.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002WcwVL2ypOuf",
+    "year": "2021",
+    "qqSongId": 305654666,
+    "qqSongMid": "002WcwVL2ypOuf",
+    "qqAlbumMid": "002gMEz44d5sFf",
+    "matchedTitle": "记忆停留",
+    "matchedArtist": "蓝心羽",
+    "matchedAlbum": "记忆停留",
+    "score": 13
+  },
+  "archive-unresolved-329": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-unresolved-330": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-unresolved-331": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-unresolved-332": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "archive-unresolved-333": {
+    "status": "placeholder",
+    "source": "resolver"
+  },
+  "anxiety": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002iVdkK1n0Y1V.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0001Ra2t3PXcZy",
+    "year": "2025",
+    "qqSongId": 565567381,
+    "qqSongMid": "0001Ra2t3PXcZy",
+    "qqAlbumMid": "002iVdkK1n0Y1V",
+    "matchedTitle": "Anxiety (Explicit)",
+    "matchedArtist": "Doechii",
+    "matchedAlbum": "Anxiety (Explicit)",
+    "score": 10
+  },
+  "glass": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002kIED92uw8L5.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001brxL63DYjSr",
+    "year": "2026",
+    "qqSongId": 666124541,
+    "qqSongMid": "001brxL63DYjSr",
+    "qqAlbumMid": "002kIED92uw8L5",
+    "matchedTitle": "玻璃",
+    "matchedArtist": "Gareth.T",
+    "matchedAlbum": "玻璃",
+    "score": 10
+  },
+  "regular-friends": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000002PjDkE14OUkV.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004FITZG2U6rAF",
+    "year": "1999",
+    "qqSongId": 4966546,
+    "qqSongMid": "004FITZG2U6rAF",
+    "qqAlbumMid": "002PjDkE14OUkV",
+    "matchedTitle": "普通朋友",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "I'm OK",
+    "score": 13
+  },
+  "engraved-name": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000004QG0W52P5GUq.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001YneOf1NGnlH",
+    "year": "2020",
+    "qqSongId": 316472364,
+    "qqSongMid": "001YneOf1NGnlH",
+    "qqAlbumMid": "004QG0W52P5GUq",
+    "matchedTitle": "刻在我心底的名字",
+    "matchedArtist": "卢广仲",
+    "matchedAlbum": "刻在我心底的名字",
+    "score": 10
+  },
+  "who-do-you-love": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003ofGzS3C23Ow.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0044lCLh0QK3am",
+    "year": "2005",
+    "qqSongId": 7211247,
+    "qqSongMid": "0044lCLh0QK3am",
+    "qqAlbumMid": "003ofGzS3C23Ow",
+    "matchedTitle": "爱我还是他",
+    "matchedArtist": "陶喆",
+    "matchedAlbum": "太平盛世",
+    "score": 13
+  },
+  "no-compromise": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001fi1zG0EjU2u.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000edAg12jLBrN",
+    "year": "2016",
+    "qqSongId": 102367085,
+    "qqSongMid": "000edAg12jLBrN",
+    "qqAlbumMid": "001fi1zG0EjU2u",
+    "matchedTitle": "不将就",
+    "matchedArtist": "李荣浩",
+    "matchedAlbum": "有理想",
+    "score": 13
+  },
+  "sun-earth": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003EvVVU4U7L6g.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/004eqKr11eJmcP",
+    "year": "2025",
+    "qqSongId": 604242265,
+    "qqSongMid": "004eqKr11eJmcP",
+    "qqAlbumMid": "003EvVVU4U7L6g",
+    "matchedTitle": "太阳与地球 (Sun & Earth)",
+    "matchedArtist": "卢广仲",
+    "matchedAlbum": "HeartBreakFast 伤心早餐店",
+    "score": 13
+  },
+  "expose": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000001Zk88l3MeuuZ.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/001CGcEY4E6w3o",
+    "year": "2015",
+    "qqSongId": 105419531,
+    "qqSongMid": "001CGcEY4E6w3o",
+    "qqAlbumMid": "001Zk88l3MeuuZ",
+    "matchedTitle": "拆穿",
+    "matchedArtist": "小霞",
+    "matchedAlbum": "小霞",
+    "score": 13
+  },
+  "mermaid": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "high",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000y5gq7449K9I.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/002ASCKm3ROw7t",
+    "year": "2004",
+    "qqSongId": 95292,
+    "qqSongMid": "002ASCKm3ROw7t",
+    "qqAlbumMid": "000y5gq7449K9I",
+    "matchedTitle": "美人鱼",
+    "matchedArtist": "林俊杰",
+    "matchedAlbum": "第二天堂",
+    "score": 10
+  },
+  "tenderness": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000042miPf28nzum.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003L6xyk0vvEeA",
+    "year": "2000",
+    "qqSongId": 5199848,
+    "qqSongMid": "003L6xyk0vvEeA",
+    "qqAlbumMid": "0042miPf28nzum",
+    "matchedTitle": "温柔",
+    "matchedArtist": "五月天",
+    "matchedAlbum": "爱情万岁",
+    "score": 13
+  },
+  "love-story-tv": {
+    "status": "matched",
+    "source": "qq",
+    "confidence": "exact",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000003B9bHD26W2cD.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0021b5Px16dwpH",
+    "year": "2021",
+    "qqSongId": 297979349,
+    "qqSongMid": "0021b5Px16dwpH",
+    "qqAlbumMid": "003B9bHD26W2cD",
+    "matchedTitle": "Love Story (Taylor's Version)",
+    "matchedArtist": "Taylor Swift",
+    "matchedAlbum": "Fearless (Taylor's Version)",
+    "score": 13
+  },
+  "kataomoi": {
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "exact",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/46/4a/84/464a843d-14cc-e5e2-a9d6-763eb558e104/4547366270358.jpg/600x600bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/22/c6/fb/22c6fb53-4fa7-2735-243a-b566fcd54b93/mzaf_5886088748348953599.plus.aac.p.m4a",
+    "listenUrl": "https://music.apple.com/hk/album/%E3%82%AB%E3%82%BF%E3%82%AA%E3%83%A2%E3%82%A4/1538258997?i=1538259004&uo=4",
+    "year": "2016",
+    "appleTrackId": 1538259004,
+    "matchedTitle": "カタオモイ",
+    "matchedArtist": "Aimer",
+    "matchedAlbum": "daydream",
+    "score": 13
   }
 }
