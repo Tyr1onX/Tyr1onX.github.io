@@ -6003,3 +6003,80 @@ process exit=0
 ```
 
 Therefore the offline causal limiter chain no longer contains a harness implementation of `sl << 10`, raw-sl publication, source arbitration, or bucket mutation. Those operations are executed by the original `.234` instructions/functions. Remaining synthetic scaffolding is limited to host-object lifecycle, local response input, and controlled entry/exit around the isolated original mid-function policy block. This still should not be described as a byte-for-byte execution of every unrelated instruction in the full `0x18026B530` completion routine.
+
+## 2026-09-02: single-process original offline limiter chain reaches NetGrid
+
+The upstream locatedownload proof and downstream dispatcher proof are now connected in one isolated process using the original `kernel.dll 3.0.20.234` implementation.
+
+New harness: `experiments/baidu-original-offline-limiter-chain-proof.cpp`.
+
+The controlled chain is:
+
+```text
+synthetic local locatedownload JSON (`sl=120`, `fsl=-1`)
+  -> original `0x1807554E0` handle_response
+  -> original return-item fields
+       +0xC8 = 120
+       +0xCC = -1
+  -> original `0x18023A0C0` return-item deep-copy
+  -> completion
+       +0xD8 = 120
+       +0xDC = -1
+  -> original `0x18026D4D6-0x18026D517` policy instructions
+       original SHL 10
+       original raw-sl publication
+       original source=2 set_sl
+  -> original global policy state
+       raw_sl = 120
+       CDN   = 122880 B/s, source=locatedownload
+       TOTAL = 122880 B/s, source=locatedownload
+       locatedownload_active = 1
+  -> original `0x180333300` cdn_speed_limit_dispatch
+  -> eight original EntityTask/NetGrid paths with nonzero synthetic FGIDs
+  -> original normal low-rate per-task floor
+       each NetGrid CDN token = 16384 B/s
+```
+
+A task count of eight is intentional because it makes the downstream result distinguishable from simply carrying the global rate through unchanged:
+
+```text
+122880 / 8 = 15360 B/s
+normal low-rate dispatcher branch -> upward floor to 16384 B/s
+```
+
+Clean reproduced output:
+
+```text
+before sl=0 fsl=0
+after sl=120 fsl=-1
+source return-item: sl@+C8=120 fsl@+CC=-1
+completion:         sl@+D8=120 fsl@+DC=-1
+original policy slice:
+    raw_sl=120
+    CDN raw=122880 src=2
+    TOTAL raw=122880 src=2
+    locatedownload_active=1
+
+dispatcher before:
+    global_cdn=122880
+    tasks=8
+    first NetGrid CDN=104857600
+
+dispatcher after:
+    task1=16384
+    task2=16384
+    task3=16384
+    task4=16384
+    task5=16384
+    task6=16384
+    task7=16384
+    task8=16384
+
+process exit=0
+```
+
+The same original process may raise and internally catch `boost::property_tree::ptree_bad_path` while optional business-config keys are absent from the deliberately minimal synthetic config. The final harness leaves those exceptions to the original handler and suppresses only the diagnostic VEH printing for this expected exception class; behavior and fallback/default handling are unchanged.
+
+Remaining scaffolding is host lifecycle rather than a rewritten limiter: synthetic HTTP response callbacks, legal empty container sentinels, a minimal NetGrid owner/control block, low original rate-meter samples, nonzero synthetic FGIDs, and the one-shot post-slice breakpoint used to leave the original mid-function policy block. No live Baidu process is touched and no network request is made.
+
+This is the strongest offline causal proof so far: the same original `.234` process now connects a locatedownload policy value from JSON all the way through global policy publication and the downstream original scheduler into per-task NetGrid CDN-token state. It is still not an end-to-end proof of real remote HTTP/CDN throughput and should not be described as a byte-for-byte execution of all unrelated task/URL/FGID code in the full completion routine.
