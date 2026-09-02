@@ -3656,3 +3656,86 @@ With no active download task, the current `.234` process reported five resident 
 ```
 
 No `122880 B/s` Qingluan bucket was present in the idle state. This gives a useful dynamic baseline: when a future ordinary download becomes active, a newly created or retuned Qingluan bucket near `122880 B/s` would strongly connect the live task to a non-zero `locatedownload.sl` around 120 KiB/s.
+
+### 29.17 Dynamic ordinary SELF sample selects the legacy execution stack
+
+A clean ordinary SELF download was created through the client's own BrowserEngine path from the current personal-netdisk file list. The sample was approximately 200 MB and used a dedicated local research directory. No limiter value, DLL, response, or process memory was modified.
+
+The client emitted real `onDownloadTaskProgress` events while the file grew. After the initial burst, reported speed converged tightly around the long-observed 120 KiB/s region:
+
+```text
+121323 B/s
+119995 B/s
+123433 B/s
+122986 B/s
+122618 B/s
+124308 B/s
+```
+
+At the same time `p2p_extend_info` continued to report:
+
+```text
+download_slow = false
+network_slow  = false
+firewall_ban  = false
+is_speedup    = 0
+```
+
+This also corrects an earlier status interpretation. The progress object carried `status="2"` while `finish_size` was actively increasing, so the previously recovered BrowserEngine enum must not be applied blindly to every DB/progress `status` field. Runtime progress and lifecycle events are the authoritative evidence for this layer.
+
+#### 29.17.1 Qingluan bucket state is invariant during this SELF transfer
+
+The read-only observer showed the exact same Qingluan bucket set in idle, running, and paused states:
+
+```text
+qingluan.TokenBucket = 0
+qingluan.AccumulateTokenBucket = 5
+
+4 x 524288 B/s       (512 KiB/s), timestamp = 49
+1 x 524288000 B/s    (500 MiB/s), timestamp = 51
+```
+
+A complete line-by-line diff of the Qingluan objects between paused and running snapshots was empty. No new task-level Qingluan bucket appeared, no rate changed, and the tiny timestamps remained unchanged even while tens of megabytes were transferred.
+
+This is strong runtime evidence that the statically recovered Qingluan `locatedownload.sl -> task token` stack is not the active execution limiter for this ordinary SELF sample.
+
+#### 29.17.2 Legacy bucket lifetime follows the download lifecycle
+
+A new dual-stack observer (`experiments/limiter-bucket-observer.cpp`) scans all four recovered RTTI/vtable types read-only:
+
+```text
+legacy TokenBucket                  RVA 0x133E1C8
+legacy AccumulateTokenBucket        RVA 0x133E1F8
+qingluan TokenBucket                RVA 0x13BD408
+qingluan AccumulateTokenBucket      RVA 0x13BD438
+```
+
+For a controlled pause -> resume snapshot pair:
+
+```text
+paused:
+  legacy.TokenBucket = 29
+  legacy.AccumulateTokenBucket = 86
+  qingluan.TokenBucket = 0
+  qingluan.AccumulateTokenBucket = 5
+
+running:
+  legacy.TokenBucket = 43
+  legacy.AccumulateTokenBucket = 89
+  qingluan.TokenBucket = 0
+  qingluan.AccumulateTokenBucket = 5
+```
+
+The running snapshot therefore contained 14 legacy `TokenBucket` objects and 3 legacy `AccumulateTokenBucket` objects that did not exist in the paused snapshot. One of the run-only accumulate buckets used a 16 KiB/s rate; the others were broad limits. The Qingluan set was bit-for-bit stable by textual object dump.
+
+Pausing through the official `pauseDownloadTask` IPC produced `error=1000001`, `status=3`, removed the task from `runningFilesMap`, and stopped progress after roughly 22.4 MB had been transferred. The task is intentionally left paused for follow-up observation.
+
+The most defensible current conclusion is therefore:
+
+```text
+kernel.dll 3.0.20.234 ordinary SELF sample
+    -> active legacy runtime bucket lifecycle
+    -> Qingluan limiter code remains present but its observed bucket set is idle/invariant
+```
+
+This materially strengthens the FILETIME/time-virtualization hypothesis for the currently selected ordinary SELF backend, because the recovered legacy limiter uses the FILETIME clock family. It does NOT yet prove which single legacy bucket or higher-level peer scheduler produces the final ~120 KiB/s plateau: no run-only bucket in this snapshot directly had `rate=122880`. The plateau may be produced by a higher policy/peer-allocation layer, a combination of per-peer gates, or a non-bucket server/CDN constraint before the legacy execution buckets.
