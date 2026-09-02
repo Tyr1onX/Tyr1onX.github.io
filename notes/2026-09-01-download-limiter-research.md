@@ -3603,3 +3603,41 @@ factor 10x -> 1193.73 KiB/s
 The result is almost perfectly linear. This reproduces the mechanism-level effect expected when a client-side token bucket uses a time API whose returned elapsed time is accelerated: the configured nominal rate remains 120 KiB/s, but the bucket refills approximately `time_factor` times faster in real time.
 
 This experiment supports the time-dilation explanation for OpenSpeedy-like behavior without modifying or bypassing a third-party service. Whether a particular live Baidu Netdisk task is affected still depends on which limiter stack is active, which clock it uses, and whether another server/global/peer gate becomes the next bottleneck.
+
+### 29.14 `fsl` participates in state/telemetry, while the task-token setter consumes the requested token directly
+
+A function at `0x180ECAA60` emits:
+
+```text
+no_sl=%1%|p2s_token=%2%|new_token=%3%|fsl=%4%|
+```
+
+Its control flow is useful for separating roles. The incoming requested token value is preserved as `new_token`; when the request is zero the function substitutes a very loose `0x1F400000` (500 MiB/s) fallback. It reads the current `no_sl` state, the current P2S token, and `fsl` for state/logging, then finally applies `new_token` to the task token bucket via the Qingluan bucket setter.
+
+Thus `fsl` is not the arithmetic source of the task-token rate in this setter. The concrete task-token rate still comes from the requested value (which the locatedownload path supplies from `sl << 10`). `fsl` participates in the surrounding speed-limit/no-speed-limit state machine.
+
+### 29.15 Three-gate Qingluan model and upstream saturation
+
+A second standalone experiment was added at `experiments/qingluan-limiter-model.cpp`. It models the recovered non-zero locatedownload `sl` behavior using three independent QPC-driven gates:
+
+```text
+p2s_peer_sl          = sl * 1024
+p2s_total_sl         = sl * 1024
+task_download_token  = sl * 1024
+```
+
+All three buckets see the same virtual-time factor. A separate upstream/CDN supply limit is applied in wall-clock time so the model can show the next bottleneck taking over.
+
+With `sl=120 KiB/s` and upstream supply limited to `4096 KiB/s`, approximately three-second samples produced:
+
+```text
+factor 1x  -> 118.55 KiB/s
+factor 2x  -> 238.26 KiB/s
+factor 5x  -> 595.84 KiB/s
+factor 10x -> 1192.75 KiB/s
+factor 50x -> 4074.02 KiB/s
+```
+
+The first four samples are nearly linear with the perceived QPC time factor. At 50x, the theoretical token refill is about 6 MiB/s, but observed throughput saturates near the configured 4 MiB/s upstream limit. This demonstrates the layered-limiter model: defeating or accelerating one client-side time-driven gate does not create bandwidth; another server/network/global gate becomes the bottleneck.
+
+This experiment is intentionally standalone and does not modify Baidu Netdisk or a live service limit.
