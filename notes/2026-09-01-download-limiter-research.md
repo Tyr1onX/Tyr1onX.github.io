@@ -4870,3 +4870,129 @@ What it intentionally does **not** prove:
 - It does not establish the final end-to-end throughput that a third-party service would deliver after its client-side gate stopped being the bottleneck; server/CDN/peer/application constraints could become limiting next.
 
 This is the strongest safe validation performed so far: the actual OpenSpeedy hook implementation was exercised against a self-owned reproduction using the exact live Baidu FILETIME bucket parameters.
+
+#### 29.17.27 Original Baidu `.234` AccumulateTokenBucket successfully rehosted
+
+The previous OpenSpeedy experiment used a source-level reproduction of the recovered refill formula. This section removes that remaining approximation: the standalone harness now loads the **original local Baidu `kernel.dll` 3.0.20.234** and directly executes its internal legacy `AccumulateTokenBucket` machine code.
+
+The exact binary under test remains:
+
+```text
+kernel.dll version = 3.0.20.234
+size               = 55,073,024 bytes
+SHA256             = 40EB35FCA9316FA2E24AACF18177747295D48B01F852AEA9372E2EDE13E1C5D6
+```
+
+Recovered original functions used by the harness:
+
+```text
+clock baseline init              0x1800E8200  (RVA 0xE8200)
+AccumulateTokenBucket ctor       0x1800E8370  (RVA 0xE8370)
+AccumulateTokenBucket::set       0x1800E83D0  (RVA 0xE83D0)
+FluxBucket::consume              0x1800E8220  (RVA 0xE8220)
+AccumulateTokenBucket::refill    0x1800E83F0  (RVA 0xE83F0)
+legacy relative-time helper      0x1800DDAD0  (RVA 0xDDAD0)
+```
+
+The original `AccumulateTokenBucket` vtable at preferred VA `0x18133E1F8` confirms slot `+0x18` points to the original refill routine `0x1800E83F0`, so calling `0x1800E8220` exercises the original virtual refill automatically.
+
+A plain `LoadLibrary(kernel.dll)` was initially insufficient: the constructor produced `last_timestamp=1`, revealing that the limiter clock depends on a host-initialized FILETIME baseline. The minimum required original initialization was recovered as `0x1800E8200`. Calling it establishes the same global relative-time baseline used by `0x1800DDAD0`.
+
+After that initialization, a standalone sanity check produced:
+
+```text
+wait 250 ms after clock init
+ctor -> last_timestamp = 250
+
+set(122880)
+wait ~1.01 s
+original refill -> tokens = 124108
+
+wait another ~0.513 s
+original refill -> tokens = 187145
+```
+
+This directly confirms that the original Baidu machine code is operational outside `baidunetdiskhost.exe` and follows the recovered FILETIME-derived refill behavior.
+
+The rehosted object also reproduces the real layout/defaults:
+
+```text
+vptr          -> original AccumulateTokenBucket vtable
+initial rate  = 524288000 B/s
+initial cap   = 524288000
+current token = 0
+divisor       = 1000
+accumulate cap= 2115584 bytes
+
+set(122880):
+rate          = 122880 B/s
+capacity      = 122880
+accumulate cap remains 2115584
+```
+
+This is no longer a source-level approximation of the limiter component; the component under test is the original `.234` implementation.
+
+#### 29.17.28 Binary-level causal proof: original Baidu bucket + official OpenSpeedy hook
+
+A second standalone harness was added:
+
+```text
+experiments/baidu-original-bucket-openspeedy-proof.cpp
+```
+
+It combines, in a self-owned process only:
+
+```text
+original Baidu kernel.dll 3.0.20.234 machine code
+  + original clock-baseline initialization
+  + original AccumulateTokenBucket ctor/set/consume/refill
+  + live rate = 122880 B/s
+  + live accumulate cap = 2115584 bytes
+  + official signed OpenSpeedy 3.3.8 speedpatch64.dll
+```
+
+No code is injected into `baidunetdiskhost.exe`, and no Baidu process memory or limiter state is modified.
+
+The official OpenSpeedy package used was again verified against the WinGet manifest:
+
+```text
+OpenSpeedy 3.3.8 portable signed ZIP
+SHA256 = 8B95AF6706C826D3E9BC53F8A97998B40ED0F526C03AA72263B81CC6FA411AAC
+```
+
+The harness initializes the original Baidu relative-time baseline, loads OpenSpeedy's official `speedpatch64.dll` into the harness itself, calls `SP_SetSpeed`, constructs the original Baidu bucket, and transfers 3 MiB exclusively through the original `FluxBucket::consume` routine. Every failed consume retries after `SwitchToThread`; the harness contains no replacement refill formula.
+
+Two independent clocks are measured:
+
+```text
+Baidu original 0x1800DDAD0 relative-time helper
+NtQuerySystemTime real-time reference (not hooked by this OpenSpeedy build)
+```
+
+Measured results:
+
+```text
+factor  Baidu-kernel elapsed  real elapsed  kernel/real  real throughput
+1x      25.776 s              25.776 s      1.000        119.18 KiB/s
+2x      25.697 s              12.849 s      2.000        239.08 KiB/s
+5x      25.627 s               5.125 s      5.000        599.41 KiB/s
+10x     26.293 s               2.629 s     10.001       1168.51 KiB/s
+```
+
+The 1x/2x/5x results are essentially the theoretical 120/240/600 KiB/s values. At 10x, polling/scheduling overhead becomes visible in wall-clock throughput, but the **original Baidu kernel time helper still observes a 10.001x time slope**. This distinction is important: the clock manipulation itself remains exact while CPU scheduling and retry overhead start to matter at high factors.
+
+The transferred 3 MiB exceeds the original bucket's ~2.1 MiB accumulation ceiling, so these results require sustained refill and cannot be explained by a one-time initial burst.
+
+This closes the limiter-component causal chain at binary level:
+
+```text
+official OpenSpeedy speedpatch64.dll
+    -> hooks GetSystemTimeAsFileTime inside the self-owned harness
+    -> original Baidu 0x1800B0680/0x1800DDAD0 time path observes N-times elapsed
+    -> original Baidu AccumulateTokenBucket::refill executes with that elapsed
+    -> original Baidu FluxBucket::consume releases data at approximately N * 122880 B/s
+```
+
+For the **legacy global AccumulateTokenBucket component**, the earlier source-model uncertainty is now removed: this test executes the same `.234` machine code, object layout, vtable, clock helper, rate, divisor and accumulation ceiling observed in the live Baidu process.
+
+The remaining non-equivalence is above/below this component, not inside it: the standalone harness does not reproduce the full Baidu network stack (`set_sl` arbitration, Peer, CDN dispatcher, EntityTask, NetGrid, HTTP/P2P/CDN server behavior). Therefore this is binary-level proof for the core limiter component, not a claim that a complete real Baidu download would necessarily scale by the same factor after another bottleneck becomes active.
