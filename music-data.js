@@ -1,9 +1,9 @@
 window.TYR1ONX_MUSIC = [
   {
     id: "sun-earth",
-    title: "太陽與地球",
-    artist: "盧廣仲",
-    album: "HeartBreakFast 傷心早餐店",
+    title: "太阳与地球",
+    artist: "卢广仲",
+    album: "HeartBreakFast 伤心早餐店",
     year: "2025",
     cover: "./assets/music/covers/sun-earth.svg",
     fallbackCover: "./assets/music/demo-01/cover.webp",
@@ -37,7 +37,7 @@ window.TYR1ONX_MUSIC = [
   },
   {
     id: "who-do-you-love",
-    title: "愛我還是他",
+    title: "爱我还是他",
     artist: "陶喆",
     album: "太平盛世",
     year: "2005",
@@ -61,8 +61,8 @@ window.TYR1ONX_MUSIC = [
   },
   {
     id: "no-compromise",
-    title: "不將就",
-    artist: "李榮浩",
+    title: "不将就",
+    artist: "李荣浩",
     album: "有理想",
     year: "2016",
     cover: "./assets/music/covers/no-compromise.svg",
@@ -74,7 +74,7 @@ window.TYR1ONX_MUSIC = [
   {
     id: "engraved-name",
     title: "刻在我心底的名字",
-    artist: "盧廣仲",
+    artist: "卢广仲",
     album: "刻在我心底的名字 - Single",
     year: "2020",
     cover: "./assets/music/covers/engraved-name.svg",
@@ -121,9 +121,9 @@ window.TYR1ONX_MUSIC = [
   },
   {
     id: "tenderness",
-    title: "溫柔",
+    title: "温柔",
     artist: "五月天",
-    album: "愛情萬歲",
+    album: "爱情万岁",
     year: "2000",
     cover: "./assets/music/covers/tenderness.svg",
     fallbackCover: "./assets/music/demo-02/cover.webp",
@@ -133,8 +133,8 @@ window.TYR1ONX_MUSIC = [
   },
   {
     id: "mermaid",
-    title: "美人魚",
-    artist: "林俊傑",
+    title: "美人鱼",
+    artist: "林俊杰",
     album: "第二天堂(江南)",
     year: "2004",
     cover: "./assets/music/covers/mermaid.svg",
