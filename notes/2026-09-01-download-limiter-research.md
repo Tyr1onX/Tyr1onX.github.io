@@ -3846,3 +3846,74 @@ NetGrid+0xD0 = 120
 ```
 
 When the override is inactive, instances with `+0xCC = 0` retain the broad `+0x90 = 100 MiB/s` CDN rate. Therefore the observed 16 KiB/s CDN token is a runtime override applied on top of the stored default, while the higher-level locatedownload `sl=120` is separately retained in NetGrid state and converted to the exact 120 KiB/s byte rate in the policy application path.
+
+#### 29.17.7 `sl` is `total_speed_limit`; `fsl` is `file_speed_limit`
+
+A separate policy-tree function at `0x180D245C0-0x180D25500` removes the remaining ambiguity in the short field names. At entry it stores its two integer arguments as:
+
+```text
+arg2 (EDX) -> local +0x220
+arg3 (R8D) -> local +0x224
+```
+
+The function emits the explicit log format:
+
+```text
+task_handle=%1%|file_speed_limit=%2%|total_speed_limit=%3%|
+```
+
+The formatter maps `%2` to local `+0x220` and `%3` to local `+0x224`. Later, the same function converts those integers to text and writes them into a property tree using the exact keys:
+
+```text
+local +0x220 (file_speed_limit)  -> "fsl"
+local +0x224 (total_speed_limit) -> "sl"
+```
+
+It also updates `no_speed_limit` according to whether these limits are present. Finally, `total_speed_limit` is shifted by 10 bits before being forwarded to the task-download token path:
+
+```asm
+mov    local_total_speed_limit, %edx
+shl    $0xa, %edx
+call   ...set_task_download_token...
+```
+
+Therefore the short protocol/policy names can now be stated directly:
+
+```text
+fsl = file_speed_limit
+sl  = total_speed_limit
+```
+
+The business-level operation appears in both legacy and Qingluan implementations, so object type still matters when identifying the active backend. The naming relationship itself, however, is explicit in this shared policy construction path.
+
+#### 29.17.8 `sl`/`fsl` are parsed from the locatedownload response
+
+The response parser at `0x1807554E0-0x18075D0D3` contains the operation strings `handle_response`, `locatedownload time info`, and `locate_download_finish`. It begins from HTTP response state (`response_data.size`, HTTP code, socket error, host) and parses the returned response tree.
+
+Within this locatedownload response handler, the client constructs the literal short key `"sl"`, looks it up in the parsed tree, converts the node value to an integer, and stores it at result-object offset `+0x1B0`. Immediately afterwards it repeats the same sequence for `"fsl"` and stores that integer at `+0x1B4`:
+
+```text
+response tree["sl"]  -> integer -> result +0x1B0
+response tree["fsl"] -> integer -> result +0x1B4
+```
+
+The same function later logs:
+
+```text
+sl=%1%|fsl=%2%|min_timeout=%3%|max_timeout=%4%|...
+```
+
+and its first two formatter arguments are precisely `result+0x1B0` and `result+0x1B4`. This establishes that these values originate in the locatedownload HTTP response parser rather than from a local hard-coded 120 constant.
+
+Combined with the previous runtime and policy evidence, the current ordinary SELF chain is now:
+
+```text
+locatedownload HTTP response
+    -> parse sl (= total_speed_limit)
+    -> observed sl = 120
+    -> client scales sl << 10
+    -> 122880 B/s
+    -> live transfer converges near 120 KiB/s
+```
+
+The separate `fsl` value is forwarded into the downstream CDN URL handling path (`on_cdn_return_urls`) and stored independently. A paused-state memory scan did not retain a trustworthy adjacent `sl=120/fsl=16` response object, so the observed 16 KiB/s NetGrid CDN override is deliberately NOT equated with `fsl` yet. That relationship remains a separate question.
