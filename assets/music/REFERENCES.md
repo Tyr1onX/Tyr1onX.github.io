@@ -16,4 +16,21 @@ Research completed before implementing Music v1. The goal was to study compositi
 
 ## Final synthesis
 
-Tyr1onX Music v1 uses the site's existing editorial shell, one cover-and-vinyl focal composition, slow CSS-only rotation, light record retreat during switching, simple previous/next controls, and small numeric collection navigation. It intentionally excludes playback, progress, volume, waveform/equalizer animation, tonearm interaction, glassmorphism, full-screen artwork gradients, Canvas/WebGL, and framework dependencies.
+Tyr1onX Music v1 established the site editorial shell, slow CSS-only vinyl rotation, simple previous/next controls, small numeric collection navigation, and a cover-plus-vinyl focal composition. It intentionally excluded progress, volume, waveform/equalizer animation, glassmorphism, full-screen artwork gradients, Canvas/WebGL, and framework dependencies.
+
+## Retro turntable visual pass
+
+A second research pass was completed before replacing the original half-exposed vinyl composition with a full turntable object.
+
+| Reference | URL | Used in this pass | Rejected in this pass |
+| --- | --- | --- | --- |
+| NetEase Cloud Music — early vinyl player discussion | https://sspai.com/post/33964 | Vinyl as the single memorable listening ritual; deliberate slow rotation | Full-screen player framing and app chrome |
+| NetEase Cloud Music v3 UI review | https://sspai.com/post/31493 | Flat, simplified tonearm and stronger focus on the record itself | Cover-derived blurred background and full transport bar |
+| MD Vinyl | https://apps.apple.com/us/app/md-vinyl-music-app/id1606306441 | Turntable hardware as the primary visual object; needle movement communicates playback | Direct needle scrubbing, widgets, subscription UI |
+| Vinyl Vue | https://github.com/Ventuss-OvO/Vinyl-Vue | Tonearm moving between rest and playing position; restrained retro hardware cues | Vinyl crackle, full player application and album browser |
+| Dribbble — Music Player | https://dribbble.com/shots/20509121-Music-Player | Minimal digital-turntable composition and soothing mechanical motion | Inverted/experimental playback motion that would distract from the archive |
+| Behance — Virtual Drive Turntable System | https://www.behance.net/gallery/31984881/Vinyl-Virtual-Drive-Turntable-System | Platter, pivot, tonearm, small hardware controls as a coherent physical silhouette | Heavy skeuomorphic texture, gold trim and realistic equipment UI |
+
+### v2 synthesis
+
+The turntable pass keeps Tyr1onX's existing editorial page shell and real music data, but turns the left visual into one coherent object: a muted deck, full-size platter and record, a CSS tonearm, a small status lamp, and the current album sleeve resting partly over the lower-left edge. The Apple preview's existing play/pause state only drives the tonearm and status lamp. No new player controls, blur backgrounds, audio effects, Canvas, WebGL, framework or data-layer changes are introduced.

@@ -63,6 +63,7 @@
   const setPreviewPlaying = (playing) => {
     previewToggle.setAttribute("aria-pressed", playing ? "true" : "false");
     previewLabel.textContent = playing ? "暂停试听" : "试听片段";
+    root.classList.toggle("is-preview-playing", playing);
   };
 
   const stopPreview = (clearSource = false) => {
