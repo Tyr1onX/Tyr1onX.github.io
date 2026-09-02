@@ -1252,3 +1252,56 @@ This upgrades the controlled causal evidence from an in-memory bucket loop to ac
 > In a self-owned process using the original signed Baidu TOTAL limiter machine code and the real `122880 B/s` policy state, end-to-end socket-to-file throughput scales approximately with the process-perceived time factor. This does not constitute a live Baidu-client injection or a production-network bypass test.
 
 Status: **VERIFIED (controlled end-to-end I/O)**. Live modification of the real Baidu process remains **NOT PERFORMED**.
+
+
+## 2026-09-02 external-Bridge injection control (self-owned target)
+
+A stronger process-level control was completed using the official OpenSpeedy 3.3.8 external injection architecture, but **only against a self-owned harness process**. The real `baidunetdiskhost.exe` was not injected or modified.
+
+Official package provenance was re-verified before the run:
+
+- `OpenSpeedy-3.3.8-portable-signed.zip` SHA256: `8B95AF6706C826D3E9BC53F8A97998B40ED0F526C03AA72263B81CC6FA411AAC`
+- `speedpatch64.dll` Authenticode: `Valid`
+- signer: `SignPath Foundation`
+
+The official `bridge64.exe` protocol/source confirms the external chain used by the UI: `INJECT <pid>`, `ENABLE <pid>`, `SETSPEED <factor>`, with the Bridge loading `speedpatch64.dll` into the selected process. The target in these experiments was `baidu-original-total-gate-network-proof.exe`, which loads the installed signed Baidu `kernel.dll`, reconstructs the real CDN/TOTAL policy state, receives real loopback TCP bytes, and writes/flushed them to disk.
+
+### Persistent-Bridge, factor preconfigured before target injection
+
+This is the cleanest process-level control because the Bridge remains alive, holds the shared speed state, sets the factor before the target receives `speedpatch64.dll`, and therefore avoids a mid-run 1x -> Nx clock-baseline transition.
+
+All runs started measurement from the same TOTAL residual (`18` bytes), transferred exactly `3145728` bytes, had identical client/server byte counts and payload hash `0x21dfb276d8bd0383`, and kept the Baidu policy unchanged at CDN `122880` source `locatedownload`, TOTAL `122880` source `CMS`.
+
+| preconfigured factor | FILETIME / real time | Baidu helper / real time | end-to-end throughput |
+| ---: | ---: | ---: | ---: |
+| `0.5x` | `0.500` | `0.500` | `59.57 KiB/s` |
+| `2x` | `2.000` | `2.000` | `239.23 KiB/s` |
+| `5x` | `4.999` | `4.999` | `599.65 KiB/s` |
+
+For comparison, the previously measured no-hook baseline was `119.14 KiB/s`, and externally injected `1x` was `119.15 KiB/s`.
+
+This is the strongest current controlled process-level causal result: the real OpenSpeedy Bridge injection chain, the original signed Baidu limiter machine code, real socket receive, and real file writes all participate in one end-to-end experiment, while the configured limiter rate is unchanged.
+
+### Mid-process factor changes are not perfectly linear
+
+A separate series injected the DLL into an already initialized target and then changed the shared factor from `1x` to another value. This exposed a distinct continuity issue:
+
+- `0.5x`: observed FILETIME/helper ratio about `0.526`, throughput `62.72 KiB/s`.
+- `2x`: repeated runs ranged from exact `2.000` to about `1.849`; final controlled run was `1.849`, throughput `220.99 KiB/s`.
+- `5x`: repeated network runs produced roughly `3.728` to `3.842`; a final comparison run was `3.807`, throughput `456.06 KiB/s`.
+
+Isolation probes show the OpenSpeedy factor itself is not capped at 5x:
+
+- externally injected minimal/idle clock probe at configured `5x`: direct `GetSystemTimeAsFileTime / NtQuerySystemTime = 5.000`.
+- same probe with the Baidu kernel loaded but idle: also `5.000`.
+- hammering the Baidu original TOTAL `refill`: direct FILETIME ratio about `3.085`.
+- hammering `GetSystemTimeAsFileTime` itself at very high frequency: about `7.33x`, even without loading the Baidu kernel.
+
+Therefore dynamic post-injection speed changes plus very high-frequency clock calls have their own OpenSpeedy timing-state nonlinearity. The preconfigured persistent-Bridge experiment avoids that transition and reproduces the intended factors almost exactly.
+
+Status:
+
+- **External Bridge injection into self-owned Baidu-kernel harness: VERIFIED.**
+- **Preconfigured 0.5x / 2x / 5x end-to-end scaling: VERIFIED.**
+- **Mid-process factor-change linearity: NOT VERIFIED; demonstrably non-linear under high-frequency calls.**
+- **Injection or time alteration of the real online `baidunetdiskhost.exe`: NOT PERFORMED.**
