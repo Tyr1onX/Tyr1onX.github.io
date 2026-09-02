@@ -3506,3 +3506,43 @@ ret
 ```
 
 Thus the locatedownload `min_sl` survives the typed return-item callback and is retained in downstream task/P2S state at `+0x140`. Its later behavioral use is the next item to trace.
+
+
+### 29.11 Return-item defaults and the `no_speed_limit` state
+
+The constructor used for the embedded Qingluan `LocatedownloadReturnItem` is `0x1810AECD0`. Its 16-byte policy block at `+0xD8` is initialized from constant `0x1813EF760`:
+
+```text
+raw: 00 00 00 00  ff ff ff ff  00 00 00 00  00 00 00 00
+```
+
+Interpreted as four signed 32-bit fields:
+
+```text
++0xD8  sl      = 0
++0xDC  fsl     = -1
++0xE0  min_sl  = 0
++0xE4  next    = 0
+```
+
+This rules out an important alternative explanation: the approximately 120 KiB/s value is not a built-in default in the Qingluan locatedownload return object. If this path is responsible for a live ~120 KiB/s cap, a non-zero value such as `sl=120` must have been supplied/parsed after construction.
+
+`notify_speed_limit` keeps both locatedownload values in task state and also updates a literal key named `no_speed_limit`. The relevant branch is equivalent to:
+
+```text
+if (fsl != 0 && sl != 0)
+    no_speed_limit = "0";
+else
+    no_speed_limit = "1";
+```
+
+Thus the constructor defaults:
+
+```text
+sl  = 0
+fsl = -1
+```
+
+produce `no_speed_limit = 1` because `sl` is zero. A non-zero `sl` combined with the normal non-zero `fsl` state produces `no_speed_limit = 0`.
+
+The evidence does not yet justify expanding the abbreviation `fsl` into a guessed full name. What is established is its control role: it participates in deciding whether the task state is marked as having no speed limit, while the actual task-token rate is derived from `sl`.
