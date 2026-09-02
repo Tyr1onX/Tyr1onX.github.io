@@ -5467,3 +5467,199 @@ Immediately before formatting `%1`, it executes:
 Therefore `EntityTask+0x24` is the binary 16-byte/128-bit FGID, and the externally logged/database form is its 32-character hexadecimal representation. This also matches the legacy `t_download_task` schema, where `fgid` is stored as `CHAR(32)`.
 
 The dispatcher-side identity predicate (`EntityTask` vfunc `+0x1B8`) checks whether this FGID is all zero. The multi-task rehost proved that nonzero FGIDs participate in the normal `122880 / N` CDN allocation path, while synthetic all-zero FGIDs trigger a different fallback/gate. The exact business meaning of the zero-FGID case remains separate from the now-closed field identity.
+
+## 2026-09-02: original dispatcher membership and speed-up strategy matrix
+
+A new self-owned rehost harness, `experiments/baidu-original-dispatcher-strategy-matrix.cpp`, extends the already-working original `.234` dispatcher reproduction across membership and speed-up strategy states. The harness does not alter a live Baidu process. It loads the local original `kernel.dll`, constructs the already-recovered original global policy state / EntityTask / NetGrid path in its own process, and records the value that the original dispatcher sends through `EntityTask::vfunc+0x50` before forwarding it into the original NetGrid implementation.
+
+### Exact `use_svip_download_strategy` predicate
+
+Function `0x1800C98B0` implements the predicate consumed by `cdn_speed_limit_dispatch` at `0x180333823`:
+
+```text
+strategy_valid
+&& (membership == SVIP || try_vip_active)
+&& ss_strategy != 0
+```
+
+The corresponding state fields are now named from independent code/log evidence:
+
+```text
+state + 0xAC8 = strategy_valid
+state + 0x91C = MembershipType (normal=1, vip=2, svip=3)
+state + 0x1C0 = try-VIP / normal-speed-up active flag
+state + 0xACC = ss_strategy
+```
+
+The dispatcher log literal reached when the predicate is true is exactly:
+
+```text
+use_svip_download_strategy
+```
+
+This makes the business purpose of the predicate explicit.
+
+### `state+0xA08` is `network.svip_cdn_limit_factor`
+
+The getter/setter pair is:
+
+```text
+0x1800C62D0 -> read  state+0xA08
+0x1800C62E0 -> write state+0xA08
+```
+
+The network-config application function `0x180329340-0x180329EC4` retrieves the key whose RIP-relative string is exactly:
+
+```text
+svip_cdn_limit_factor
+```
+
+and stores the parsed value through `0x1800C62E0`. In the isolated `.234` default state used by the harness:
+
+```text
+svip_cdn_limit_factor = 120
+```
+
+### Membership / strategy matrix at 8 participating tasks
+
+The global policy gates were held at the same values as the normal-user reproduction:
+
+```text
+CDN   sl = 122880 B/s
+TOTAL sl = 122880 B/s
+```
+
+With nonzero synthetic FGIDs and low aggregate global activity, representative original-dispatcher outputs were:
+
+```text
+normal, strategy invalid, no try-VIP:
+    16384 B/s per task
+
+vip, strategy invalid, no try-VIP:
+    16384 B/s per task
+
+svip, strategy invalid, no try-VIP:
+    ~419430 B/s per task
+
+normal + try-VIP active, strategy invalid:
+    ~419430 B/s per task
+
+normal + try-VIP + strategy_valid + ss_strategy=1:
+    15360 B/s per task
+
+svip + strategy_valid + ss_strategy=1:
+    15360 B/s per task
+```
+
+The first two cases remain on the normal low-rate branch proven by the earlier 6/7/8-task boundary experiment. At 8 tasks:
+
+```text
+122880 / 8 = 15360
+normal low-rate branch clamps this upward to 16384 B/s
+```
+
+The `use_svip_download_strategy` branch is different. When `0x1800C98B0` is true, the code reloads the current global CDN `sl` through `0x1800C3530`, then at `0x180333894-0x1803338BB` divides that value directly by `manager+0x58` (the participating EntityTask count) and stores the quotient into the working `set_cdn_speed_limit` value:
+
+```text
+set_cdn_speed_limit = global_cdn_sl / participating_task_count
+```
+
+No 16 KiB upward clamp is applied on this branch. Therefore:
+
+```text
+122880 / 8 = 15360 B/s
+```
+
+is emitted exactly. This is an important correction to any model that treats 16 KiB/s as an unconditional NetGrid/CDN minimum: it is the floor of the normal low-rate dispatcher branch, not a universal post-processing floor across every membership/speed-up strategy.
+
+### Adaptive SVIP / try-VIP branch and the 0.4 / 0.6 / 0.8 regions
+
+When the user is SVIP or try-VIP is active but the explicit `use_svip_download_strategy` predicate is not selected, the original dispatcher enters an adaptive budget calculation.
+
+At the start of the relevant calculation, the code forms a global aggregate speed from multiple lane statistics. A base rate is chosen as at least 4 MiB/s in the reproduced 8-task case. The dispatcher then compares the aggregate to fractions of that base using the three embedded constants:
+
+```text
+0.4
+0.6
+0.8
+```
+
+The machine code around `0x18033364D-0x18033379C` applies these scale factors to the remaining budget (`base - aggregate`):
+
+```text
+aggregate < 0.4 * base:
+    scaled_remaining = (base - aggregate) * 96
+
+0.4 * base <= aggregate < 0.6 * base:
+    scaled_remaining = (base - aggregate) * 60
+
+0.6 * base <= aggregate < 0.8 * base:
+    scaled_remaining = (base - aggregate) * 40
+
+aggregate >= 0.8 * base:
+    scaled_remaining = (base - aggregate) * 30
+```
+
+The result is divided by `svip_cdn_limit_factor`. Later, the common per-task division reads `manager+0x58` and divides the selected CDN budget by the participating task count.
+
+For the controlled low-load 8-task case, where the base resolves to 4 MiB/s and aggregate activity is near zero, the dominant formula is therefore approximately:
+
+```text
+per_task_cdn
+  ~= 96 * (4 MiB/s - aggregate)
+     / svip_cdn_limit_factor
+     / 8
+```
+
+With negligible aggregate activity this simplifies algebraically to:
+
+```text
+per_task_cdn ~= 48 MiB / svip_cdn_limit_factor
+```
+
+`48 MiB` here is **not** a stored configuration value; it is only the algebraic result of `96 * 4 MiB / 8` for this controlled eight-task boundary case.
+
+### Controlled `svip_cdn_limit_factor` matrix
+
+Only inside the self-owned harness, the factor field was varied while keeping the original dispatcher implementation and the rest of the controlled state unchanged. Representative outputs were:
+
+```text
+factor=25   -> about 2,010,865-2,013,265 B/s (~1.92 MiB/s)
+factor=50   -> 1,006,632 B/s
+factor=100  -> about 502,716 B/s
+factor=120  -> about 418,930-419,430 B/s
+factor=150  -> 335,144 B/s
+factor=200  -> 251,658 B/s
+```
+
+The small run-to-run differences come from the intentionally nonzero original rate-meter samples. The inverse relationship is clear and matches the low-load formula. At the default factor 120 and near-zero aggregate:
+
+```text
+(96 * 4 MiB) / 120 / 8
+= 419430.4 B/s
+```
+
+which is the ~419430 B/s value emitted by the original dispatcher.
+
+### Updated dispatcher model
+
+The original `.234` client therefore has at least three distinct CDN allocation behaviors relevant to the states reproduced here:
+
+```text
+normal / VIP low-rate branch:
+    remaining global CDN budget / participating tasks
+    -> upward clamp to 16 KiB/s
+
+SVIP / try-VIP adaptive branch:
+    remaining bandwidth
+    -> 0.4 / 0.6 / 0.8 regime multiplier
+    -> divide by svip_cdn_limit_factor
+    -> divide across participating tasks
+    -> later tier/guard logic
+
+explicit use_svip_download_strategy branch:
+    global CDN sl / participating tasks
+    -> no 16 KiB/s floor
+```
+
+This means the previously proven 16 KiB/s NetGrid value remains correct for the observed normal SELF task and normal low-rate scheduler state, but it must not be generalized to every membership or speed-up strategy.
