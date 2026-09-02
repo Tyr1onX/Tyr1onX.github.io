@@ -4342,3 +4342,101 @@ remote locatedownload response
 The adaptive CDN dispatcher and its 16 KiB/s per-EntityTask floor therefore sit *below* (or alongside downstream allocation under) a concrete 120 KiB/s global policy gate. The 16 KiB/s value remains important for distributing/filling CDN budget, but it is not required to explain the total observed plateau.
 
 This also explains why the earlier run-only object scan did not need to find a `NetGrid` bucket whose own rate was 122880 B/s: the exact 122880 B/s cap is installed in the global legacy bandwidth state before the per-task NetGrid allocation layer.
+
+#### 29.17.16 Read-only runtime snapshot confirms two independent 120 KiB/s global gates
+
+A read-only `ReadProcessMemory` snapshot was taken from the current `baidunetdiskhost.exe` process (PID 27188) without resuming the transfer or modifying memory.
+
+The current `kernel.dll` module base is:
+
+```text
+0x7FF97C170000
+```
+
+The global legacy bandwidth-policy object has preferred image VA `0x1817C0118`, so its runtime address is:
+
+```text
+0x7FF97D930118
+```
+
+The two embedded global rate states contain:
+
+```text
+CDN state at +0x00
+  +0x08 effective rate = 122880
+  +0x20 raw/requested rate = 122880
+  +0x30 source = 2
+
+TOTAL state at +0x70
+  +0x78 effective rate = 122880
+  +0x90 raw/requested rate = 122880
+  +0xA0 source = 1
+```
+
+Using the already recovered source table:
+
+```text
+0 = user_ctl
+1 = enable_cms_total_sl
+2 = locatedownload
+3 = p2psdk
+4 = application
+5 = default
+```
+
+this means the paused current process retains the following exact policy state:
+
+```text
+CDN global gate   = 122880 B/s, source = locatedownload
+TOTAL global gate = 122880 B/s, source = enable_cms_total_sl
+```
+
+This is stronger than the earlier static conclusion that locatedownload supplies both values at one point in time. `set_sl` performs source/priority arbitration, and the current runtime state shows that the TOTAL side has subsequently been selected from the CMS layer while the CDN side remains selected from locatedownload.
+
+Therefore the current ordinary SELF sample has two independent policy inputs converging on the same 120 KiB/s value.
+
+#### 29.17.17 CMS and P2P-SDK source calls into the same legacy `set_sl` arbitrator
+
+`0x1800C0BC0 -> 0x1800EF110` has only three relevant direct business callers in the current legacy path.
+
+The locatedownload caller was already identified at `0x18026D513` with source `2`.
+
+The function `0x1802AE6B0-0x1802B10BF` contains the other two source-specific calls.
+
+At `0x1802B0434-0x1802B044E`:
+
+```asm
+call 0x1800C2AA0
+mov  r8d, [rbp+0x288]
+mov  rcx, rax
+mov  edx, 0xFFFFFFFF
+mov  r9d, 1
+call 0x1800C0BC0
+```
+
+This is exactly:
+
+```text
+set_sl(
+    cdn_sl   = -1,                  // leave CDN side alone
+    total_sl = parsed_value,
+    src      = enable_cms_total_sl
+)
+```
+
+That behavior matches the live snapshot: source `1` owns the TOTAL gate but not the CDN gate.
+
+Later in the same function, at `0x1802B0DDB-0x1802B0DF6`:
+
+```asm
+call 0x1800C2AA0
+mov  r8d, [rbp+0x28C]
+mov  edx, [rbp+0x160]
+mov  rcx, rax
+mov  r9d, 3
+call 0x1800C0BC0
+```
+
+This is the alternative `p2psdk` source (`src=3`) feeding both sides of the same arbitration layer.
+
+The CMS TOTAL candidate at local `[rbp+0x288]` is not hard-coded. It is parsed as a signed integer from a string/config-tree node immediately before the `src=1` call. The exact config key is the next item to decode; the nearby key constructor uses a literal length of `0x11` bytes, which is compatible with `total_limit_speed` but this note does not call that proven until the RIP-relative literal itself is decoded.
