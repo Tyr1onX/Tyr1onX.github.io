@@ -1211,3 +1211,44 @@ locatedownload completion-state fsl -> exact task-config["fsl"] assignment:
 raw HTTP parser object +0x1B4 -> completion object +0xDC copy/conversion:
   NOT YET CLOSED instruction-for-instruction
 ```
+
+
+## 2026-09-02 controlled end-to-end network I/O A/B
+
+A stronger controlled test was added without modifying or injecting into `baidunetdiskhost.exe`.
+
+Harness:
+
+- `experiments/baidu-original-total-gate-network-proof.cpp`
+- loads the installed signed Baidu `kernel.dll` (`3.0.20.234`)
+- recreates the real policy state: CDN `122880` source `locatedownload`, TOTAL `122880` source `CMS`
+- seeds the original TOTAL `AccumulateTokenBucket` close to the observed paused residual (`18` bytes)
+- starts a loopback TCP sender
+- the receiver may call `recv()` only after the original Baidu TOTAL bucket authorizes the next 4096-byte chunk
+- received bytes are actually written to a temporary file and `FlushFileBuffers()` is called
+- real elapsed time is measured with `ntdll!NtQuerySystemTime`, outside the OpenSpeedy FILETIME virtualization path
+- every run transferred exactly `3145728` bytes; server/client byte counts matched and FNV-1a payload hash was identical (`0x21dfb276d8bd0383`)
+
+Official OpenSpeedy 3.3.8 portable-signed ZIP was re-downloaded and re-verified:
+
+- ZIP SHA256: `8B95AF6706C826D3E9BC53F8A97998B40ED0F526C03AA72263B81CC6FA411AAC`
+- `speedpatch64.dll` Authenticode: `Valid`
+- signer: `SignPath Foundation`
+
+Results at TOTAL `122880 B/s`:
+
+| condition | perceived/real time | real throughput |
+| --- | ---: | ---: |
+| no hook | `1.000` | `119.14 KiB/s` |
+| OpenSpeedy `0.5x` | `0.500` | `59.57 KiB/s` |
+| OpenSpeedy `1x` | `1.000` | `119.13 KiB/s` |
+| OpenSpeedy `2x` | `2.000` | `239.20 KiB/s` |
+| OpenSpeedy `5x` | `5.000` | `599.53 KiB/s` |
+
+The no-hook control and OpenSpeedy `1x` are effectively identical, excluding a material effect from merely loading the hook DLL. Both acceleration and deceleration directions scale with the process-perceived clock slope while the configured Baidu policy fields remain unchanged.
+
+This upgrades the controlled causal evidence from an in-memory bucket loop to actual Winsock receive + file-write I/O. The strongest supported statement is now:
+
+> In a self-owned process using the original signed Baidu TOTAL limiter machine code and the real `122880 B/s` policy state, end-to-end socket-to-file throughput scales approximately with the process-perceived time factor. This does not constitute a live Baidu-client injection or a production-network bypass test.
+
+Status: **VERIFIED (controlled end-to-end I/O)**. Live modification of the real Baidu process remains **NOT PERFORMED**.
