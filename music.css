@@ -93,11 +93,6 @@ html[data-theme="dark"] .music-feature {
   text-transform: uppercase;
 }
 
-.turntable-mark span + span {
-  color: color-mix(in srgb, var(--turntable-ink) 50%, transparent);
-  font-size: 7px;
-}
-
 .turntable-platter {
   position: absolute;
   z-index: 1;
@@ -137,12 +132,13 @@ html[data-theme="dark"] .music-feature {
     repeating-radial-gradient(circle at 50% 50%, #141414 0 2px, #1c1c1c 2.5px 3.5px);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.025);
   animation: music-vinyl-spin 24s linear infinite;
+  animation-play-state: paused;
   will-change: transform;
 }
 
 .vinyl-label {
   position: absolute;
-  inset: 36.5%;
+  inset: 31.5%;
   overflow: hidden;
   border-radius: 50%;
   background: var(--music-accent);
@@ -276,18 +272,104 @@ html[data-theme="dark"] .music-feature {
   letter-spacing: 0.08em;
 }
 
-.turntable-knob {
+.turntable-play-toggle {
   position: absolute;
-  z-index: 4;
-  right: 20.5%;
-  bottom: 7.2%;
-  width: 7.2%;
+  z-index: 7;
+  right: 18.7%;
+  bottom: 5.8%;
+  width: clamp(44px, 9%, 48px);
   aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--turntable-metal) 72%, #111);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--turntable-metal) 76%, #111);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 42% 38%, rgba(255,255,255,0.36) 0 9%, transparent 10%),
-    var(--turntable-metal);
+    radial-gradient(circle at 40% 34%, rgba(255,255,255,0.38) 0 8%, transparent 9%),
+    linear-gradient(145deg, var(--turntable-metal-light), var(--turntable-metal));
+  box-shadow:
+    inset 0 -2px 3px rgba(0,0,0,0.18),
+    0 1px 0 rgba(255,255,255,0.12);
+  color: #242220;
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 180ms ease, border-color 180ms ease;
+}
+
+.turntable-play-toggle:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--music-accent) 54%, var(--turntable-metal));
+}
+
+.turntable-play-toggle:active:not(:disabled) {
+  transform: translateY(1px) scale(0.97);
+}
+
+.turntable-play-toggle:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+.turntable-play-toggle:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
+.turntable-play-glyph {
+  position: relative;
+  width: 15px;
+  height: 15px;
+}
+
+.turntable-play-glyph::before {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  width: 0;
+  height: 0;
+  border-top: 5.5px solid transparent;
+  border-bottom: 5.5px solid transparent;
+  border-left: 8px solid currentColor;
+  content: "";
+}
+
+.turntable-play-glyph span,
+.turntable-play-glyph span::after {
+  display: none;
+  position: absolute;
+  top: 2px;
+  width: 3px;
+  height: 11px;
+  border-radius: 1px;
+  background: currentColor;
+  content: "";
+}
+
+.turntable-play-glyph span {
+  left: 3px;
+}
+
+.turntable-play-glyph span::after {
+  display: block;
+  left: 6px;
+  top: 0;
+}
+
+.music-feature[data-playback-state="playing"] .turntable-play-toggle {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.24),
+    0 0 0 1px color-mix(in srgb, var(--music-accent) 14%, transparent);
+}
+
+.music-feature[data-playback-state="playing"] .turntable-play-glyph::before {
+  display: none;
+}
+
+.music-feature[data-playback-state="playing"] .turntable-play-glyph span {
+  display: block;
+}
+
+.music-feature[data-playback-state="playing"] .vinyl-disc {
+  animation-play-state: running;
 }
 
 .music-sleeve {
@@ -295,7 +377,7 @@ html[data-theme="dark"] .music-feature {
   z-index: 8;
   left: 0;
   bottom: 0;
-  width: 30.5%;
+  width: 33.5%;
   aspect-ratio: 1;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -342,11 +424,11 @@ html[data-theme="dark"] .music-feature {
   letter-spacing: -0.07em;
 }
 
-.music-feature.is-preview-playing .tonearm-stick {
+.music-feature[data-playback-state="playing"] .tonearm-stick {
   transform: rotate(39deg);
 }
 
-.music-feature.is-preview-playing .turntable-status span {
+.music-feature[data-playback-state="playing"] .turntable-status span {
   background: var(--music-accent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--music-accent) 16%, transparent);
 }
@@ -623,7 +705,8 @@ html[data-theme="dark"] .music-feature {
   }
 
   .tonearm-stick,
-  .turntable-status span {
+  .turntable-status span,
+  .turntable-play-toggle {
     transition: none !important;
   }
 }

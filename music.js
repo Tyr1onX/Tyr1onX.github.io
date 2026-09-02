@@ -2,6 +2,7 @@
   const root = document.querySelector("[data-music-player]");
   const tracks = Array.isArray(window.TYR1ONX_MUSIC) ? window.TYR1ONX_MUSIC : [];
   let previews = {};
+  let previewCatalogReady = false;
   if (!root || !tracks.length) return;
 
   const stage = root.querySelector("[data-music-stage]");
@@ -19,20 +20,13 @@
   const live = root.querySelector("[data-music-live]");
   const prev = root.querySelector("[data-music-prev]");
   const next = root.querySelector("[data-music-next]");
+  const turntablePlay = root.querySelector("[data-turntable-play]");
+  const turntablePlayLabel = root.querySelector("[data-turntable-play-label]");
+
   const previewRow = document.createElement("div");
-  previewRow.className = "music-controls";
+  previewRow.className = "music-controls music-preview-links";
   previewRow.style.marginTop = "18px";
   previewRow.hidden = true;
-
-  const previewToggle = document.createElement("button");
-  previewToggle.type = "button";
-  previewToggle.className = "music-control";
-  previewToggle.setAttribute("aria-pressed", "false");
-  previewToggle.hidden = true;
-  const previewLabel = document.createElement("span");
-  previewLabel.className = "music-control-label";
-  previewLabel.textContent = "试听片段";
-  previewToggle.appendChild(previewLabel);
 
   const listenLink = document.createElement("a");
   listenLink.className = "music-control";
@@ -48,22 +42,66 @@
   previewStatus.className = "visually-hidden";
   previewStatus.setAttribute("aria-live", "polite");
 
-  previewRow.append(previewToggle, listenLink, previewStatus);
+  previewRow.append(listenLink, previewStatus);
   note.insertAdjacentElement("afterend", previewRow);
 
   const audio = new Audio();
   audio.preload = "none";
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const mediaSession = "mediaSession" in navigator ? navigator.mediaSession : null;
   let current = 0;
   let timer = 0;
 
   const pad = (value) => String(value).padStart(2, "0");
   const valueOrDash = (value) => value || "—";
 
-  const setPreviewPlaying = (playing) => {
-    previewToggle.setAttribute("aria-pressed", playing ? "true" : "false");
-    previewLabel.textContent = playing ? "暂停试听" : "试听片段";
-    root.classList.toggle("is-preview-playing", playing);
+  const setMediaPlaybackState = (state) => {
+    if (!mediaSession) return;
+    try {
+      mediaSession.playbackState = state;
+    } catch {}
+  };
+
+  const setPlaybackState = (state) => {
+    root.dataset.playbackState = state;
+    const playable = state === "paused" || state === "playing";
+    const playing = state === "playing";
+
+    turntablePlay.disabled = !playable;
+    const label = state === "loading"
+      ? "试听载入中"
+      : state === "unavailable"
+        ? "当前歌曲暂无试听"
+        : state === "switching"
+          ? "正在切换歌曲"
+          : playing
+            ? "暂停试听"
+            : "开始试听";
+    turntablePlay.setAttribute("aria-label", label);
+    turntablePlay.setAttribute("aria-pressed", playing ? "true" : "false");
+    turntablePlay.title = label;
+    turntablePlayLabel.textContent = label;
+
+    setMediaPlaybackState(playing ? "playing" : state === "paused" ? "paused" : "none");
+  };
+
+  const updateMediaSession = (track) => {
+    if (!mediaSession || !("MediaMetadata" in window)) return;
+    const artwork = [];
+    if (track.cover) {
+      artwork.push({ src: new URL(track.cover, document.baseURI).href });
+    }
+    if (track.fallbackCover) {
+      artwork.push({ src: new URL(track.fallbackCover, document.baseURI).href, type: "image/webp" });
+    }
+    try {
+      mediaSession.metadata = new MediaMetadata({
+        title: track.title || "未命名",
+        artist: track.artist || "Tyr1onX Music Archive",
+        album: track.album || "",
+        artwork
+      });
+    } catch {}
   };
 
   const stopPreview = (clearSource = false) => {
@@ -75,7 +113,21 @@
       audio.removeAttribute("src");
       audio.load();
     }
-    setPreviewPlaying(false);
+  };
+
+  const playCurrentPreview = async () => {
+    if (!audio.getAttribute("src")) {
+      previewStatus.textContent = "当前歌曲暂无试听。";
+      setPlaybackState("unavailable");
+      return;
+    }
+    previewStatus.textContent = "";
+    try {
+      await audio.play();
+    } catch {
+      previewStatus.textContent = "当前试听暂不可用。";
+      setPlaybackState("paused");
+    }
   };
 
   const configurePreview = (track) => {
@@ -86,14 +138,6 @@
     stopPreview(true);
     previewStatus.textContent = "";
 
-    if (previewUrl) {
-      audio.src = previewUrl;
-      audio.load();
-      previewToggle.hidden = false;
-    } else {
-      previewToggle.hidden = true;
-    }
-
     if (listenUrl) {
       listenLink.href = listenUrl;
       listenLink.hidden = false;
@@ -101,8 +145,21 @@
       listenLink.removeAttribute("href");
       listenLink.hidden = true;
     }
+    previewRow.hidden = !listenUrl;
 
-    previewRow.hidden = !previewUrl && !listenUrl;
+    if (!previewCatalogReady) {
+      setPlaybackState("loading");
+      return;
+    }
+
+    if (!previewUrl) {
+      setPlaybackState("unavailable");
+      return;
+    }
+
+    audio.src = previewUrl;
+    audio.load();
+    setPlaybackState("paused");
   };
 
   const preloadCover = (track) => {
@@ -164,6 +221,7 @@
 
     renderCover(track, index);
     configurePreview(track);
+    updateMediaSession(track);
     preloadCover(tracks[(index + 1) % tracks.length]);
 
     nav.querySelectorAll(".music-index-button").forEach((button, buttonIndex) => {
@@ -183,45 +241,68 @@
     if (normalized === current || stage.classList.contains("is-switching")) return;
     clearTimeout(timer);
     stopPreview(true);
+    setPlaybackState("switching");
     stage.classList.add("is-switching");
     const delay = reduceMotion.matches ? 40 : 180;
     timer = window.setTimeout(() => completeSwitch(normalized), delay);
   }
 
-  prev.addEventListener("click", () => switchTo(current - 1));
-  next.addEventListener("click", () => switchTo(current + 1));
-
-  previewToggle.addEventListener("click", async () => {
-    if (!audio.src) return;
-    previewStatus.textContent = "";
-    if (!audio.paused) {
+  turntablePlay.addEventListener("click", () => {
+    if (root.dataset.playbackState === "playing") {
       audio.pause();
       return;
     }
-    try {
-      await audio.play();
-    } catch {
-      previewStatus.textContent = "当前试听暂不可用。";
-      setPreviewPlaying(false);
+    if (root.dataset.playbackState === "paused") {
+      playCurrentPreview();
     }
   });
 
-  audio.addEventListener("play", () => setPreviewPlaying(true));
-  audio.addEventListener("pause", () => setPreviewPlaying(false));
-  audio.addEventListener("ended", () => setPreviewPlaying(false));
+  prev.addEventListener("click", () => switchTo(current - 1));
+  next.addEventListener("click", () => switchTo(current + 1));
+
+  audio.addEventListener("play", () => {
+    previewStatus.textContent = "";
+    setPlaybackState("playing");
+  });
+  audio.addEventListener("pause", () => {
+    if (root.dataset.playbackState !== "switching") setPlaybackState("paused");
+  });
+  audio.addEventListener("ended", () => {
+    try {
+      audio.currentTime = 0;
+    } catch {}
+    setPlaybackState("paused");
+  });
   audio.addEventListener("error", () => {
     if (!audio.getAttribute("src")) return;
     previewStatus.textContent = "当前试听暂不可用。";
-    setPreviewPlaying(false);
+    setPlaybackState("unavailable");
   });
+
+  if (mediaSession) {
+    const registerAction = (action, handler) => {
+      try {
+        mediaSession.setActionHandler(action, handler);
+      } catch {}
+    };
+    registerAction("play", playCurrentPreview);
+    registerAction("pause", () => audio.pause());
+    registerAction("stop", () => stopPreview(false));
+    registerAction("previoustrack", () => switchTo(current - 1));
+    registerAction("nexttrack", () => switchTo(current + 1));
+  }
 
   fetch("./assets/music/generated-previews.json", { cache: "no-store" })
     .then((response) => response.ok ? response.json() : {})
     .then((catalog) => {
       previews = catalog && typeof catalog === "object" ? catalog : {};
+      previewCatalogReady = true;
       configurePreview(tracks[current]);
     })
-    .catch(() => {});
+    .catch(() => {
+      previewCatalogReady = true;
+      configurePreview(tracks[current]);
+    });
 
   document.addEventListener("keydown", (event) => {
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
@@ -236,5 +317,6 @@
     }
   });
 
+  setPlaybackState("loading");
   render(0);
 })();

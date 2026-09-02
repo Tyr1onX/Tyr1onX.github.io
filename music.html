@@ -10,10 +10,10 @@
   <title>音乐 — Tyr1onX</title>
   <script>(()=>{let t=null;try{t=localStorage.getItem('tyr1onx-theme')}catch{}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})();</script>
   <link rel="stylesheet" href="./wiki.css?v=9" />
-  <link rel="stylesheet" href="./music.css?v=3" />
+  <link rel="stylesheet" href="./music.css?v=4" />
   <script src="./wiki.js?v=9" defer></script>
   <script src="./music-data.js?v=3" defer></script>
-  <script src="./music.js?v=4" defer></script>
+  <script src="./music.js?v=5" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
@@ -52,16 +52,19 @@
         </header>
         <section class="music-feature" data-music-player aria-label="音乐收藏唱片机">
           <div class="music-stage" data-music-stage>
-            <div class="turntable-deck" aria-hidden="true">
-              <div class="turntable-mark"><span>Tyr1onX</span><span>33⅓</span></div>
-              <div class="turntable-platter"></div>
-              <div class="vinyl-carrier"><div class="vinyl-disc"><div class="vinyl-label"><img data-vinyl-label alt="" decoding="async" /></div></div></div>
-              <div class="tonearm-assembly">
+            <div class="turntable-deck">
+              <div class="turntable-mark" aria-hidden="true"><span>Tyr1onX</span></div>
+              <div class="turntable-platter" aria-hidden="true"></div>
+              <div class="vinyl-carrier" aria-hidden="true"><div class="vinyl-disc"><div class="vinyl-label"><img data-vinyl-label alt="" decoding="async" /></div></div></div>
+              <div class="tonearm-assembly" aria-hidden="true">
                 <div class="tonearm-pivot"><span></span></div>
                 <div class="tonearm-stick"><span class="tonearm-head"></span></div>
               </div>
-              <div class="turntable-status"><span></span><small>PLAY</small></div>
-              <div class="turntable-knob"></div>
+              <div class="turntable-status" aria-hidden="true"><span></span><small>PLAY</small></div>
+              <button class="turntable-play-toggle" type="button" data-turntable-play disabled aria-label="试听载入中">
+                <span class="turntable-play-glyph" aria-hidden="true"><span></span></span>
+                <span class="visually-hidden" data-turntable-play-label>试听载入中</span>
+              </button>
             </div>
             <div class="music-sleeve">
               <img class="music-cover-image" data-music-cover hidden alt="" decoding="async" />
