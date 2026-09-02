@@ -449,3 +449,112 @@ process read bytes delta = 0
 `legacy-live-task-gate-observer.cpp` was also extended to report target-process read/write/other byte deltas during future running captures, giving another independent activity measure alongside BrowserEngine progress and sparse-file allocation.
 
 The desktop Electron window exposes only a top-level Chromium Pane through Windows UI Automation and no named internal buttons/list items. Therefore no coordinate-blind or hidden-IPC resume action was attempted; future automatic capture can wait for a normal UI resume without modifying the client.
+
+## 2026-09-02 Level 6.5 binding-gate causal replay
+
+The evidence chain was tightened further by targeting only the exact gate identified as binding in the real Level 6 running capture: the legacy global TOTAL `AccumulateTokenBucket` selected from CMS at 122880 B/s.
+
+### Binary provenance reverified
+
+The live/current original Baidu binary was rehashed and signature-checked immediately before this replay:
+
+```text
+path           = C:\Users\30593\AppData\Roaming\baidu\BaiduNetdisk\kernel.dll
+FileVersion    = 3.0.20.234
+ProductVersion = 3.0.20.234
+Length         = 55073024
+SHA256         = 40EB35FCA9316FA2E24AACF18177747295D48B01F852AEA9372E2EDE13E1C5D6
+Authenticode   = Valid
+Signer         = Beijing Duyou Science and Technology Co.,Ltd.
+```
+
+The OpenSpeedy input was freshly downloaded through the WinGet manifest again:
+
+```text
+OpenSpeedy 3.3.8 portable signed ZIP
+SHA256 = 8B95AF6706C826D3E9BC53F8A97998B40ED0F526C03AA72263B81CC6FA411AAC
+speedpatch64.dll Authenticode = Valid
+Signer = SignPath Foundation
+```
+
+### TOTAL-only original-machine-code replay
+
+A focused harness was added:
+
+```text
+experiments/baidu-original-total-gate-openspeedy-proof.cpp
+```
+
+It executes only in a self-owned process. It loads the original signed `.234` `kernel.dll`, then calls the original routines:
+
+```text
+clock init
+-> global state accessor
+-> reset
+-> set_sl(122880,122880,2)      locatedownload
+-> set_sl(-1,122880,1)          CMS TOTAL override
+-> original TOTAL refill
+-> original TOTAL consume
+```
+
+The resulting policy fingerprint exactly matches the real Level 6 task:
+
+```text
+CDN   raw=122880 source=2
+TOTAL raw=122880 source=1
+locatedownload_active=1
+```
+
+Before measurement, the harness uses the original `consume` implementation to reduce the TOTAL token balance to the exact paused residual observed in the real process:
+
+```text
+seed_token = 18 bytes
+```
+
+The target transfer is 3 MiB, larger than the previously recovered accumulation cap, so the result requires sustained refill rather than a one-time burst.
+
+Measured results:
+
+```text
+factor  seed   kernel/real  real throughput
+1x      18 B   1.000        119.14 KiB/s
+2x      18 B   2.000        239.23 KiB/s
+5x      18 B   5.000        599.53 KiB/s
+```
+
+Normalized throughput per unit of perceived-time factor is:
+
+```text
+1x -> 119.14 KiB/s per factor
+2x -> 119.62 KiB/s per factor
+5x -> 119.91 KiB/s per factor
+```
+
+The scaling error is below one percent across these factors.
+
+This is stronger than the earlier generic bucket and dual-gate tests because it targets the exact original gate that the real running capture showed to be binding. The non-injection causal chain is now:
+
+```text
+REAL PROCESS, read-only:
+  official transfer ~124 kB/s
+  -> TOTAL = 122880 B/s, source=CMS
+  -> TOTAL token near depletion for 99.6% of samples
+  -> broad task gate has abundant tokens
+  -> pause freezes TOTAL at 18 bytes and removes NetGrid
+
+SELF-OWNED REPLAY, original signed binary:
+  exact CDN/TOTAL source fingerprint
+  -> exact TOTAL rate = 122880 B/s
+  -> exact seed residual = 18 bytes
+  -> original TOTAL refill/consume
+  -> perceived time 1x/2x/5x
+  -> throughput 119.14/239.23/599.53 KiB/s
+```
+
+### Evidence grade
+
+- Level 6: real running binding bottleneck identified read-only: **VERIFIED**.
+- Level 6.5: the exact identified binding gate replayed with original signed machine code and shown causally time-dependent: **VERIFIED**.
+- Level 7: alter the real Baidu process clock and observe production-network throughput: **NOT PERFORMED**.
+
+The Level 6.5 result is the strongest non-injection proof obtained so far. It does not claim that the production process itself was time-modified; it demonstrates that the real process's identified binding component has the measured causal behavior when the same original component is replayed outside the production process.
