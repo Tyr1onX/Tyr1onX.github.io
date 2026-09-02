@@ -3964,3 +3964,83 @@ local CDN scheduler -> per-CDN execution limit with explicit 16 KiB/s floor
 ```
 
 The relationship between response `fsl` and the live 16 KiB/s scheduler result remains deliberately unclaimed.
+
+#### 29.17.10 CDN dispatcher -> EntityTask -> NetGrid -> CDN token bucket is now closed
+
+The remaining indirection after `cdn_speed_limit_dispatch` can now be identified completely.
+
+The dispatcher iterates a task list whose node layout contains the task pointer at `node+0x10`. The task object's virtual-call pattern matches the primary `EntityTask` vtable at `0x1813500C8` across many independent slots, not just one method:
+
+```text
+scheduler slot   EntityTask primary vtable target
++0x08            0x1802820D0
++0x50            0x1802AE170
++0x78            0x1802A6BC0
++0x98            0x1802A93E0
++0xA8            0x1800F0950
++0xB0            0x1802A8480
++0x1D8           0x1802A69D0
++0x1E0           0x1802A6AC0
++0x1F8           0x1802A8510
+```
+
+This establishes that the object receiving the dispatcher-computed rate is the legacy `EntityTask`.
+
+The `EntityTask` method at vtable `+0x50`, `0x1802AE170`, is a pure forwarding bridge:
+
+```asm
+mov    0x108(%rcx), %rcx
+ test   %rcx, %rcx
+ je     return
+ mov    (%rcx), %rax
+ mov    0x158(%rax), %rax
+ jmp    *%rax
+```
+
+It does not modify `EDX`, so the CDN rate argument is forwarded unchanged to `(EntityTask+0x108)->vfunc+0x158`.
+
+The type of `EntityTask+0x108` is now also proven statically. In the EntityTask initialization function `0x180286E70-0x180287F76`, the code first checks that `this+0x108` is null, allocates exactly `0x2A8` bytes, and calls constructor `0x1801A7E20` on the new object. That constructor writes the four `NetGrid` RTTI/vtable pointers directly into the object, beginning with the primary NetGrid vtable:
+
+```asm
+lea    0x18134E208, %rax
+mov    %rax, 0x00(%rcx)
+lea    0x18134E528, %rax
+mov    %rax, 0x08(%rcx)
+lea    0x18134E588, %rax
+mov    %rax, 0x10(%rcx)
+lea    0x18134E6E8, %rax
+mov    %rax, 0x18(%rcx)
+```
+
+The same constructor then initializes the three legacy `AccumulateTokenBucket` members at `NetGrid+0x30`, `+0x60`, and `+0x90`, exactly matching the previously recovered NetGrid layout.
+
+After construction, EntityTask initialization calls `0x1802A8320` with:
+
+```text
+RCX = &EntityTask+0x108
+RDX = new NetGrid
+```
+
+That helper builds the lifetime/control block, then stores the new object pointer and control block into the target pair:
+
+```text
+EntityTask+0x108 = NetGrid*
+EntityTask+0x110 = lifetime/control block
+```
+
+Therefore the scheduler bridge is now exact:
+
+```text
+cdn_speed_limit_dispatch
+    computes local+0x128
+        (16 KiB/s floor in the observed low-rate branch)
+    -> EntityTask::vfunc+0x50(rate)
+    -> EntityTask+0x108 = NetGrid
+    -> NetGrid::vfunc+0x158(rate)
+    -> 0x1801B7C20 set_cdn_download_token(rate)
+    -> NetGrid+0x90 legacy AccumulateTokenBucket::set_rate(rate)
+```
+
+This closes the origin and execution path of the live 16384 B/s NetGrid CDN token without relying on a guessed vtable slot or runtime proximity correlation.
+
+The next unresolved architectural question is composition: locatedownload supplies `sl=120` (122880 B/s total policy), while the local dispatcher may assign an individual NetGrid CDN token of 16384 B/s. The number/scope of simultaneously active EntityTask/NetGrid instances or peer lanes must be established before claiming how those local 16 KiB/s limits sum to the observed ~120 KiB/s task rate.
