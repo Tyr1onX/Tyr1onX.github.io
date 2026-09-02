@@ -17,6 +17,10 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+env:
+  DESIGN_BUILD_CACHE_VERSION: v2
+  DESIGN_DEPS_CACHE_VERSION: v1
+
 jobs:
   deploy:
     environment:
@@ -27,21 +31,63 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup Node
+      # assets/design is generated and intentionally not committed. The source hash
+      # only includes real Design Library inputs; generated node_modules must never
+      # participate in the key or restore/save would calculate different keys.
+      - name: Restore built design library
+        id: design_build_cache
+        uses: actions/cache/restore@v4
+        with:
+          path: assets/design
+          key: design-build-${{ env.DESIGN_BUILD_CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('design-ui/package-lock.json', 'design-ui/package.json', 'design-ui/tsconfig.json', 'design-ui/vite.config.ts', 'design-ui/src/**', 'design-ui/components/**', 'design-ui/public/**') }}
+
+      - name: Setup Node for design rebuild
+        if: steps.design_build_cache.outputs.cache-hit != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: design-ui/package-lock.json
 
+      # npm's download cache alone did not avoid a ~16 minute npm ci on hosted runners.
+      # Cache the installed dependency tree as well, keyed strictly to the lockfile.
+      - name: Restore design dependencies
+        if: steps.design_build_cache.outputs.cache-hit != 'true'
+        id: design_deps_cache
+        uses: actions/cache/restore@v4
+        with:
+          path: design-ui/node_modules
+          key: design-deps-${{ env.DESIGN_DEPS_CACHE_VERSION }}-${{ runner.os }}-node22-${{ hashFiles('design-ui/package-lock.json') }}
+
       - name: Install design library dependencies
-        run: npm ci --prefix design-ui --no-audit --no-fund --ignore-scripts
+        if: steps.design_build_cache.outputs.cache-hit != 'true' && steps.design_deps_cache.outputs.cache-hit != 'true'
+        run: npm ci --prefix design-ui --no-audit --no-fund --ignore-scripts --prefer-offline
+
+      - name: Save design dependencies
+        if: steps.design_build_cache.outputs.cache-hit != 'true' && steps.design_deps_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: design-ui/node_modules
+          key: design-deps-${{ env.DESIGN_DEPS_CACHE_VERSION }}-${{ runner.os }}-node22-${{ hashFiles('design-ui/package-lock.json') }}
 
       - name: Build design library
+        if: steps.design_build_cache.outputs.cache-hit != 'true'
         run: npm run build --prefix design-ui
 
+      - name: Save built design library
+        if: steps.design_build_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: assets/design
+          key: design-build-${{ env.DESIGN_BUILD_CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('design-ui/package-lock.json', 'design-ui/package.json', 'design-ui/tsconfig.json', 'design-ui/vite.config.ts', 'design-ui/src/**', 'design-ui/components/**', 'design-ui/public/**') }}
+
       - name: Remove design build dependencies
+        if: steps.design_build_cache.outputs.cache-hit != 'true'
         run: rm -rf design-ui/node_modules design-ui/tsconfig.tsbuildinfo
+
+      - name: Reuse cached design library
+        if: steps.design_build_cache.outputs.cache-hit == 'true'
+        run: echo "Design Library cache hit; skipped Node setup, npm ci and Vite build."
 
       - name: Prepare music artwork and previews
         run: python scripts/generate-music-assets.py

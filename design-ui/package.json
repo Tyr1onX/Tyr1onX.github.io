@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "check:preview": "node smoke/check-preview-layout.mjs",
+    "check:runtime": "node smoke/check-runtime-performance.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

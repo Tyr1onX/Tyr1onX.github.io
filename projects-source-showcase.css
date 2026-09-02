@@ -1,0 +1,27 @@
+.work-gallery-slide--source {
+  display: block;
+  background: #f4f6f8;
+}
+
+.work-gallery-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #f4f6f8;
+  pointer-events: none;
+}
+
+html[data-theme="dark"] .work-gallery-slide--source,
+html[data-theme="dark"] .work-gallery-frame {
+  background: #f4f6f8;
+}
+
+@media (max-width: 620px) {
+  .work-gallery-frame {
+    width: 133.333%;
+    height: 100%;
+    transform: scale(.75);
+    transform-origin: top left;
+  }
+}

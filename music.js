@@ -51,6 +51,7 @@
   const mediaSession = "mediaSession" in navigator ? navigator.mediaSession : null;
   let current = 0;
   let timer = 0;
+  const coverPreloads = new Set();
 
   const pad = (value) => String(value).padStart(2, "0");
   const valueOrDash = (value) => value || "—";
@@ -163,10 +164,16 @@
   };
 
   const preloadCover = (track) => {
-    if (!track || !track.cover) return;
+    if (!track || !track.cover || coverPreloads.has(track.cover)) return;
+    coverPreloads.add(track.cover);
     const image = new Image();
+    image.decoding = "async";
+    image.fetchPriority = "low";
     image.src = track.cover;
   };
+
+  coverImage.fetchPriority = "high";
+  vinylLabelImage.fetchPriority = "low";
 
   const renderCover = (track, index) => {
     coverIndex.textContent = pad(index + 1);
@@ -222,6 +229,7 @@
     renderCover(track, index);
     configurePreview(track);
     updateMediaSession(track);
+    preloadCover(tracks[(index - 1 + tracks.length) % tracks.length]);
     preloadCover(tracks[(index + 1) % tracks.length]);
 
     nav.querySelectorAll(".music-index-button").forEach((button, buttonIndex) => {
@@ -292,7 +300,7 @@
     registerAction("nexttrack", () => switchTo(current + 1));
   }
 
-  fetch("./assets/music/generated-previews.json", { cache: "no-store" })
+  fetch("./assets/music/generated-previews.json")
     .then((response) => response.ok ? response.json() : {})
     .then((catalog) => {
       previews = catalog && typeof catalog === "object" ? catalog : {};
@@ -303,6 +311,12 @@
       previewCatalogReady = true;
       configurePreview(tracks[current]);
     });
+
+  const syncVisualVisibility = () => {
+    root.dataset.visualPaused = document.hidden ? "true" : "false";
+  };
+  document.addEventListener("visibilitychange", syncVisualVisibility);
+  syncVisualVisibility();
 
   document.addEventListener("keydown", (event) => {
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;

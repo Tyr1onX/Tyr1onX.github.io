@@ -1,184 +1,178 @@
-/* Final compatibility pass for the compact Keke showcase. */
+/* Real-product screenshot presentation for the Keke case study. */
 
-/* Keep the project identity compact: icon + title, no repeated kicker. */
-.keke-kicker {
-  display: none;
-}
-
-.keke-summary h1 {
+.keke-title-row {
   display: flex;
   align-items: center;
   gap: 18px;
 }
 
-.keke-summary h1::before {
+.keke-title-row h1 {
+  margin: 0;
+}
+
+.keke-title-row .keke-transition-target {
   width: 68px;
   height: 68px;
   flex: 0 0 auto;
-  content: "";
   border-radius: 20px;
-  background: url("./assets/keke-icon-source.png") center / cover no-repeat;
   box-shadow: 0 18px 44px rgba(68, 79, 108, 0.12);
 }
 
-/* Version and platform are enough for the compact summary. */
-.keke-meta div:nth-child(n + 3) {
-  display: none;
+.keke-version-line {
+  margin: 20px 0 0;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.76rem;
+  line-height: 1.6;
 }
 
-/* The project identity already lives in the left summary. */
-.overview-stage {
-  grid-template-columns: 1fr;
+.keke-beta-note {
+  margin: 8px 0 0;
+  color: var(--quiet);
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+
+.product-viewer-stage--screenshots {
+  min-height: 0;
+  padding: clamp(14px, 2vw, 22px);
+  background: color-mix(in srgb, var(--bg) 94%, var(--keke-cool) 6%);
+}
+
+.product-viewer-stage--screenshots .product-viewer-panel {
+  min-height: 0;
+}
+
+.real-product-shot {
+  margin: 0;
+}
+
+.real-product-shot > a {
+  display: block;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--line) 88%, transparent);
+  border-radius: 16px;
+  background: #111;
+  box-shadow: 0 22px 64px rgba(28, 35, 53, 0.12);
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.real-product-shot > a:hover {
+  border-color: color-mix(in srgb, var(--keke-cool) 46%, var(--line));
+  transform: translateY(-1px);
+  box-shadow: 0 28px 72px rgba(28, 35, 53, 0.16);
+}
+
+.real-product-shot > a:focus-visible {
+  outline: 2px solid var(--keke-cool);
+  outline-offset: 3px;
+}
+
+.real-product-shot picture,
+.real-product-shot img {
+  display: block;
+  width: 100%;
+}
+
+.real-product-shot img {
+  height: auto;
+  object-fit: contain;
+}
+
+#panel-desktop .real-product-shot > a {
+  width: min(100%, 920px);
+  margin-inline: auto;
+}
+
+#panel-screenshot .real-product-shot picture {
+  display: grid;
   place-items: center;
 }
 
-.overview-mark {
-  display: none;
+#panel-screenshot .real-product-shot img {
+  width: auto;
+  max-width: 100%;
+  max-height: min(78vh, 900px);
 }
 
-/* Fit all seven days inside the preview instead of clipping the last columns. */
-.settings-window {
-  width: 100%;
-  grid-template-columns: minmax(128px, 150px) minmax(0, 1fr);
+.real-product-shot figcaption {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.32fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: baseline;
+  padding: 14px 2px 2px;
 }
 
-.settings-sidebar {
-  padding: 16px 10px;
+.real-product-shot figcaption strong {
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 650;
 }
 
-.settings-brand {
-  gap: 8px;
-  padding: 2px 6px 16px;
+.real-product-shot figcaption span {
+  color: var(--quiet);
+  font-size: 0.75rem;
+  line-height: 1.65;
 }
 
-.settings-schedule-picker {
-  padding: 9px 10px;
-}
-
-.settings-menu {
-  margin-top: 14px;
-}
-
-.settings-menu span {
-  padding: 8px 10px;
-}
-
-.settings-content {
-  padding: 18px;
-}
-
-.settings-heading {
-  margin-bottom: 16px;
-}
-
-.week-grid {
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 5px;
-}
-
-.week-column {
-  padding: 6px;
-}
-
-.week-course {
-  padding: 6px;
-}
-
-.week-course strong {
-  font-size: 0.56rem;
-}
-
-.week-course small {
-  font-size: 0.49rem;
-}
-
-@media (max-width: 820px) {
-  .product-viewer-stage {
-    overflow: hidden;
-  }
-
-  .settings-window {
+@media (max-width: 940px) {
+  .keke-showcase {
     grid-template-columns: 1fr;
-    overflow: hidden;
   }
 
-  .settings-sidebar {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 12px;
-    align-items: center;
-    border-right: 0;
-    border-bottom: 1px solid #e2e5eb;
-    padding: 12px;
+  .keke-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .product-viewer-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
-  .settings-brand {
-    padding: 0;
-  }
-
-  .settings-schedule-picker {
-    display: none;
-  }
-
-  .settings-menu {
-    display: flex;
-    gap: 4px;
-    min-width: 0;
-    margin: 0;
+  .product-viewer-tabs {
+    width: 100%;
     overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 2px;
     scrollbar-width: none;
   }
 
-  .settings-menu::-webkit-scrollbar {
+  .product-viewer-tabs::-webkit-scrollbar {
     display: none;
   }
 
-  .settings-menu span {
+  .product-viewer-tab {
     flex: 0 0 auto;
-    white-space: nowrap;
   }
 
-  .settings-content {
-    padding: 14px;
+  .product-viewer-caption {
+    line-height: 1.5;
   }
 
-  .week-grid {
-    grid-template-columns: repeat(7, minmax(68px, 1fr));
-    max-width: 100%;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-
-  .import-window {
-    width: 100%;
-    min-width: 0;
+  .real-product-shot figcaption {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 }
 
 @media (max-width: 560px) {
-  .keke-summary h1 {
+  .keke-title-row {
     gap: 14px;
   }
 
-  .keke-summary h1::before {
+  .keke-title-row .keke-transition-target {
     width: 58px;
     height: 58px;
     border-radius: 17px;
   }
 
-  .settings-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 10px;
+  .product-viewer-stage--screenshots {
+    padding: 10px;
   }
 
-  .import-summary-demo {
-    grid-template-columns: 1fr;
-  }
-
-  .import-course-demo article {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
+  .real-product-shot > a {
+    border-radius: 11px;
   }
 }

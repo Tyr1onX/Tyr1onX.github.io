@@ -12,6 +12,8 @@
 
 .game-entry {
   padding: 0 0 48px;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 520px;
 }
 
 .game-entry + .game-entry {

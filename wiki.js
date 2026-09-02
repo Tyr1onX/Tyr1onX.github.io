@@ -45,6 +45,37 @@
     button.addEventListener('click', () => applySidebar(root.dataset.sidebar === 'expanded' ? 'collapsed' : 'expanded', true));
   });
 
+  const prefetchedPages = new Set();
+  const navigationSelector = '.sidebar-nav a, .mobile-nav a, .context-brand';
+
+  function prefetchNavigationTarget(anchor) {
+    if (!(anchor instanceof HTMLAnchorElement)) return;
+    let url;
+    try { url = new URL(anchor.href, location.href); } catch { return; }
+    if (url.origin !== location.origin) return;
+    if (url.pathname === location.pathname && url.search === location.search) return;
+    url.hash = '';
+    const key = url.href;
+    if (prefetchedPages.has(key)) return;
+    prefetchedPages.add(key);
+
+    const hint = document.createElement('link');
+    hint.rel = 'prefetch';
+    hint.href = key;
+    hint.as = 'document';
+    hint.fetchPriority = 'low';
+    document.head.appendChild(hint);
+  }
+
+  const handleNavigationIntent = (event) => {
+    const target = event.target instanceof Element ? event.target.closest(navigationSelector) : null;
+    if (target) prefetchNavigationTarget(target);
+  };
+
+  document.addEventListener('pointerover', handleNavigationIntent, { passive: true });
+  document.addEventListener('focusin', handleNavigationIntent);
+  document.addEventListener('touchstart', handleNavigationIntent, { passive: true });
+
   applyTheme(root.dataset.theme);
   applySidebar(readSidebarState());
 

@@ -6,7 +6,7 @@ This repository contains visual components sourced from or adapted from public u
 
 - **原版源码 / source**: public upstream source is available and the component implementation is preserved; gallery wrappers or local demo data may differ.
 - **最小适配 / adapted**: public upstream source is available, but a small runtime/environment change is required to keep previews isolated, self-contained, or compatible with Vite.
-- **复刻待核对 / reproduction**: the 21st visual is known, but a complete trustworthy public upstream source has not been verified or the original runtime stack is intentionally not imported.
+- **独立复刻 / reproduction**: public reference behavior is known, but a complete trustworthy upstream implementation is unavailable or intentionally not imported; the local implementation is explicitly independent and does not claim source fidelity.
 
 ## Verified source-based components
 
@@ -38,7 +38,7 @@ This repository contains visual components sourced from or adapted from public u
 - Card Stack: adapted from Ruixen UI's public implementation; fan geometry, drag behavior, and spring motion are retained, with Next.js `Link` replaced by a normal anchor for Vite compatibility.
 - Animated Glow Card: adapted from EaseMize's public glow-card treatment into a self-contained component that does not require the upstream page stylesheet.
 
-## Reproduction pending verification / intentionally lightweight
+## Independent reproductions / intentionally different runtime
 
 - Handwriting Text: independent Vite-friendly reproduction of Moazzam's 21st.dev Handwriting Text reference. The public page exposes the behavior, usage API, MIT license label, and preview, while the full `Component.tsx` implementation is member-locked. This repository therefore does not claim source fidelity: it recreates the trace-then-fill word cycle with Framer Motion, local system handwriting fonts, configurable timing, and reduced-motion handling.
 - Oceanic Currents: the 21st shader preview is the visual reference, but no complete trustworthy public upstream source matching that specific preset has been verified. The current implementation is an independent zero-dependency WebGL reproduction and must remain marked `reproduction` until a source is found.
@@ -69,20 +69,20 @@ This batch was selected from 28 reviewed 21st.dev candidates. The selection reco
   - 21st.dev: https://21st.dev/@serafimcloud/components/tooltip-icon-button
   - Dependencies: `lucide-react` in the demo.
   - Fidelity: **reproduction**. Public 21st usage/API and side variants are preserved; the inventory implementation uses a self-contained accessible tooltip surface instead of claiming access to the member-gated source.
-  - License: not declared on the inspected 21st.dev page.
+  - License: MIT (listed on the current 21st.dev component page).
 
 - **Tabs · With Line — Origin UI**
   - 21st.dev: https://21st.dev/originui/tabs
   - Original source: https://github.com/shadcn/originui
   - Dependencies: `@radix-ui/react-tabs`.
-  - Fidelity: **adapted**. It preserves the Origin UI thin-line active-state pattern and Radix tab semantics while exposing the example as reusable item data for gallery isolation.
+  - Fidelity: **adapted**. The public Origin UI with-line trigger geometry, full-width active underline, neutral tab list and centered content treatment are preserved with Radix primitives.
   - License: MIT (Origin UI repository).
 
 - **Accordion · Table w/ Chevron — Origin UI**
   - 21st.dev: https://21st.dev/community/components/originui/accordion/table-w-chevron
   - Original source: https://github.com/shadcn/originui
   - Dependencies: `@radix-ui/react-accordion`, `lucide-react`.
-  - Fidelity: **adapted**. Border stacking, compact row treatment, chevron state and Radix behavior are retained; copy/demo text is localized to the inventory preview.
+  - Fidelity: **adapted**. The public four-row example, default-open third item, heading, border stacking, spacing, chevron state and Radix behavior are retained.
   - License: MIT (Origin UI repository; also listed on the 21st.dev component page).
 
 - **Copy Code Button — Le Thanh / minhxthanh**
@@ -102,8 +102,8 @@ This batch was selected from 28 reviewed 21st.dev candidates. The selection reco
   - 21st.dev: https://21st.dev/@serafimcloud/components/status-badge
   - Original source reference listed by 21st.dev: https://blocks.tremor.so
   - Dependencies: `class-variance-authority`, `react-icons` in the gallery reproduction (21st lists `@remixicon/react` + CVA).
-  - Fidelity: **reproduction**. The split status-pill composition and success/error semantics are retained without claiming source fidelity.
-  - License: the inspected 21st.dev page does not declare one for this component; source attribution is retained.
+  - Fidelity: **adapted**. Badge 8 is now matched to the public Tremor/21st structure: neutral outlined pill, colored leading status icon, divider, trailing context icon/text; only token names and icon package are adapted to the gallery.
+  - License: MIT (listed on 21st.dev; Tremor source reference retained).
 
 - **Breadcrumb · Chevron — Origin UI**
   - 21st.dev: https://21st.dev/community/components/originui/breadcrumb/with-chevron-right

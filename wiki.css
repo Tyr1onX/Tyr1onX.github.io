@@ -66,7 +66,6 @@ body {
   line-height: 1.72;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  transition: background-color 150ms ease, color 150ms ease;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -124,7 +123,6 @@ html[data-theme="dark"] .identity-pattern {
   width: min(calc(100% - 56px), 1480px);
   min-height: calc(100vh - var(--identity-strip-height));
   margin: 0 auto;
-  transition: grid-template-columns 160ms ease, gap 160ms ease;
 }
 
 .sidebar {
@@ -365,6 +363,7 @@ html[data-sidebar="expanded"] .sidebar-copy { display: block; }
 .archive-page .page-heading { margin-bottom: 24px; }
 .archive-list { width: min(100%, 900px); }
 .archive-year + .archive-year { margin-top: 34px; }
+.archive-year { content-visibility: auto; contain-intrinsic-size: auto 280px; }
 .archive-year h2 {
   margin: 0 0 8px;
   font-size: 26px;
@@ -731,6 +730,11 @@ html[data-theme="dark"] .context-header {
 }
 
 @media (max-width: 860px) {
+  .context-header {
+    -webkit-backdrop-filter: blur(8px) saturate(1.03);
+    backdrop-filter: blur(8px) saturate(1.03);
+  }
+
   .context-header-shell {
     justify-content: space-between;
     gap: 18px;
@@ -774,6 +778,11 @@ html[data-theme="dark"] .context-header {
 @media (max-width: 380px) {
   .context-header-shell,
   .context-mobile-nav { width: min(100% - 26px, 380px); }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .context-header { background: color-mix(in srgb, var(--bg) 96%, transparent); }
+  html[data-theme="dark"] .context-header { background: color-mix(in srgb, var(--bg) 97%, transparent); }
 }
 
 @media (prefers-reduced-motion: reduce) {

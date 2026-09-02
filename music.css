@@ -372,6 +372,10 @@ html[data-theme="dark"] .music-feature {
   animation-play-state: running;
 }
 
+.music-feature[data-visual-paused="true"] .vinyl-disc {
+  animation-play-state: paused !important;
+}
+
 .music-sleeve {
   position: absolute;
   z-index: 8;

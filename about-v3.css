@@ -40,11 +40,12 @@ html[data-theme="dark"] .about-v3-avatar {
 }
 
 .about-v3-lead {
-  max-width: 520px;
+  max-width: none;
   margin: 7px 0 0;
   color: var(--secondary);
   font-size: 16.5px;
   line-height: 1.72;
+  text-wrap: balance;
 }
 
 .about-v3-status {
@@ -304,13 +305,6 @@ html[data-theme="dark"] .about-v3-day[data-level="4"] { background: #9bb3ca; }
   line-height: 1.6;
 }
 
-.about-v3-contact-intro {
-  max-width: 690px;
-  margin: 0 0 10px;
-  color: var(--secondary);
-  font-size: 15.5px;
-  line-height: 1.72;
-}
 
 .about-v3-page .prose-links {
   margin-top: 0;
@@ -452,9 +446,6 @@ html[data-theme="dark"] .about-v3-day[data-level="4"] { background: #9bb3ca; }
     font-size: 8.5px;
   }
 
-  .about-v3-contact-intro {
-    font-size: 15px;
-  }
 }
 
 @media (max-width: 380px) {

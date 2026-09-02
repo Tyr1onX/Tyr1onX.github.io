@@ -1,0 +1,133 @@
+.projects-heading {
+  margin-bottom: 30px !important;
+}
+
+.work-showcase--compact {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.work-screenshot--first {
+  margin-top: 0;
+}
+
+.work-summary {
+  width: min(100%, 920px);
+  margin: 24px auto 0;
+}
+
+.work-summary-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.work-summary-title h2 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 40px);
+  font-weight: 560;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.work-summary-subtitle {
+  margin: 7px 0 0;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.01em;
+}
+
+.work-summary-period {
+  flex: 0 0 auto;
+  padding-top: 7px;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.work-summary-description {
+  max-width: 760px;
+  margin: 18px 0 0;
+  color: var(--secondary);
+  font-size: 15.5px;
+  line-height: 1.75;
+}
+
+.work-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 17px;
+}
+
+.work-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 520;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.work-links a::after {
+  width: 0;
+  height: 1px;
+  content: "";
+  background: currentColor;
+  transition: width 150ms ease;
+}
+
+.work-links a:hover::after {
+  width: 12px;
+}
+
+.work-links a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 620px) {
+  .projects-heading {
+    margin-bottom: 22px !important;
+  }
+
+  .work-summary {
+    margin-top: 18px;
+  }
+
+  .work-summary-title {
+    gap: 14px;
+  }
+
+  .work-summary-title h2 {
+    font-size: 30px;
+  }
+
+  .work-summary-period {
+    padding-top: 5px;
+    font-size: 10.5px;
+  }
+
+  .work-summary-description {
+    margin-top: 14px;
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+
+  .work-links {
+    gap: 14px;
+    margin-top: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-links a::after {
+    transition: none !important;
+  }
+}

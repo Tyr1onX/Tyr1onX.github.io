@@ -2,26 +2,111 @@ import React, {
   Component,
   Suspense,
   lazy,
+  memo,
+  useDeferredValue,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type KeyboardEvent,
-  type MouseEvent,
+  type ComponentType,
+  type CSSProperties,
   type ReactNode,
 } from "react";
 import { getComponentSource } from "./component-sources";
 import {
   categoryLabels,
-  fidelityLabels,
   items,
-  priorityTags,
   type Category,
-  type Fidelity,
   type GalleryItem,
 } from "./gallery-data";
 
 type DetailTab = "preview" | "code";
+type DemoModule = { default: ComponentType };
+type VisibilityCallback = (visible: boolean) => void;
+
+const PRELOAD_MARGIN = "1500px 0px";
+const MEDIUM_PRELOAD_MARGIN = "900px 0px";
+const MOUNT_MARGIN = "560px 0px";
+const MAX_PRELOAD_CONCURRENCY = 2;
+const PRELOAD_BATCH_GAP = 3000;
+const demoModuleCache = new Map<string, Promise<DemoModule>>();
+const queuedPreloads = new Set<string>();
+const preloadQueue: GalleryItem[] = [];
+let activePreloads = 0;
+let preloadDrainScheduled = false;
+
+function loadDemoModule(item: GalleryItem) {
+  const cached = demoModuleCache.get(item.id);
+  if (cached) return cached;
+  const promise = item.loadDemo();
+  demoModuleCache.set(item.id, promise);
+  return promise;
+}
+
+function schedulePreloadDrain() {
+  if (preloadDrainScheduled || !preloadQueue.length || document.hidden) return;
+  preloadDrainScheduled = true;
+  const run = () => {
+    preloadDrainScheduled = false;
+    while (activePreloads < MAX_PRELOAD_CONCURRENCY && preloadQueue.length && !document.hidden) {
+      const item = preloadQueue.shift();
+      if (!item) break;
+      queuedPreloads.delete(item.id);
+      activePreloads += 1;
+      void loadDemoModule(item).finally(() => {
+        activePreloads -= 1;
+        if (activePreloads === 0 && preloadQueue.length && !document.hidden) {
+          globalThis.setTimeout(schedulePreloadDrain, PRELOAD_BATCH_GAP);
+        }
+      });
+    }
+  };
+  const requestIdle = (window as Window & { requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number }).requestIdleCallback;
+  if (requestIdle) requestIdle(run, { timeout: 900 });
+  else globalThis.setTimeout(run, 120);
+}
+
+function queueDemoPreload(item: GalleryItem) {
+  if (item.heavy || demoModuleCache.has(item.id) || queuedPreloads.has(item.id)) return;
+  queuedPreloads.add(item.id);
+  preloadQueue.push(item);
+  schedulePreloadDrain();
+}
+
+type ObserverBucket = {
+  observer: IntersectionObserver;
+  callbacks: Map<Element, VisibilityCallback>;
+};
+const observerBuckets = new Map<string, ObserverBucket>();
+
+function observeWithMargin(element: Element, rootMargin: string, callback: VisibilityCallback) {
+  if (!("IntersectionObserver" in window)) {
+    callback(true);
+    return () => {};
+  }
+  let bucket = observerBuckets.get(rootMargin);
+  if (!bucket) {
+    const callbacks = new Map<Element, VisibilityCallback>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => callbacks.get(entry.target)?.(entry.isIntersecting));
+    }, { rootMargin });
+    bucket = { observer, callbacks };
+    observerBuckets.set(rootMargin, bucket);
+  }
+  bucket.callbacks.set(element, callback);
+  bucket.observer.observe(element);
+  return () => {
+    bucket?.observer.unobserve(element);
+    bucket?.callbacks.delete(element);
+  };
+}
+
+function previewStyle(item: GalleryItem) {
+  return {
+    "--preview-min-height": `${item.previewHeight ?? 300}px`,
+    "--preview-min-width": `${item.previewMinWidth ?? 0}px`,
+  } as CSSProperties;
+}
 
 class PreviewBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -41,9 +126,10 @@ function PreviewLoading() {
 }
 
 function DemoSurface({ item, className = "" }: { item: GalleryItem; className?: string }) {
-  const Demo = useMemo(() => lazy(item.loadDemo), [item]);
+  const Demo = useMemo(() => lazy(() => loadDemoModule(item)), [item]);
+  const style = previewStyle(item);
   return (
-    <div className={`design-demo-surface ${className}`}>
+    <div className={`design-demo-surface ${className}`} data-preview-tone={item.previewTone ?? "inherit"} style={style}>
       <PreviewBoundary>
         <Suspense fallback={<PreviewLoading />}>
           <Demo />
@@ -53,67 +139,65 @@ function DemoSurface({ item, className = "" }: { item: GalleryItem; className?: 
   );
 }
 
-function LazyPreview({ item }: { item: GalleryItem }) {
+const LazyPreview = memo(function LazyPreview({ item, pageVisible }: { item: GalleryItem; pageVisible: boolean }) {
   const hostRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const [nearViewport, setNearViewport] = useState(false);
+  const [activated, setActivated] = useState(false);
 
   useEffect(() => {
-    if (item.heavy || mounted) return;
     const host = hostRef.current;
     if (!host) return;
-    if (!("IntersectionObserver" in window)) {
-      setMounted(true);
-      return;
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setMounted(true);
-        observer.disconnect();
-      },
-      { rootMargin: "280px 0px" },
-    );
-    observer.observe(host);
-    return () => observer.disconnect();
-  }, [item.heavy, mounted]);
+    return observeWithMargin(host, MOUNT_MARGIN, setNearViewport);
+  }, [item.id]);
+
+  useEffect(() => {
+    if (item.heavy || !pageVisible) return;
+    const host = hostRef.current;
+    if (!host) return;
+    const preloadMargin = item.runtimeWeight === "light" ? PRELOAD_MARGIN : MEDIUM_PRELOAD_MARGIN;
+    return observeWithMargin(host, preloadMargin, (near) => {
+      if (near) queueDemoPreload(item);
+    });
+  }, [item, pageVisible]);
+
+  const shouldMount = pageVisible && nearViewport && (!item.heavy || activated);
+  const showHeavyButton = item.heavy && !activated;
 
   return (
-    <div className="design-card-preview" ref={hostRef}>
-      {item.heavy && !mounted ? (
+    <div
+      className="design-card-preview"
+      ref={hostRef}
+      style={previewStyle(item)}
+      data-preview-mounted={shouldMount ? "true" : "false"}
+      data-preview-activated={activated ? "true" : "false"}
+    >
+      {showHeavyButton ? (
         <button
           className="design-heavy-load"
           type="button"
-          onClick={(event) => {
-            event.stopPropagation();
-            setMounted(true);
+          onClick={() => {
+            setActivated(true);
+            setNearViewport(true);
+            void loadDemoModule(item);
           }}
         >
           <span>重型预览</span>
           点击加载
         </button>
-      ) : mounted ? (
+      ) : shouldMount ? (
         <DemoSurface item={item} />
       ) : (
         <div className="design-preview-idle"><span>{item.name}</span></div>
       )}
     </div>
   );
-}
-
-function FidelityMark({ fidelity, withText = false }: { fidelity: Fidelity; withText?: boolean }) {
-  return (
-    <span className={`design-fidelity design-fidelity-${fidelity}`} title={fidelityLabels[fidelity]}>
-      <i aria-hidden="true" />
-      {withText ? fidelityLabels[fidelity] : null}
-    </span>
-  );
-}
+});
 
 export default function App() {
   const [category, setCategory] = useState<Category | "all">("all");
-  const [tag, setTag] = useState("all");
-  const [fidelity, setFidelity] = useState<Fidelity | "all">("all");
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+  const [pageVisible, setPageVisible] = useState(() => !document.hidden);
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [detailTab, setDetailTab] = useState<DetailTab>("preview");
   const [sourceText, setSourceText] = useState("");
@@ -130,21 +214,24 @@ export default function App() {
     return result;
   }, []);
 
-  const filterTags = useMemo(() => {
-    const existing = new Set(items.flatMap((item) => item.tags));
-    return priorityTags.filter((name) => existing.has(name));
-  }, []);
-
   const filtered = useMemo(() => {
-    const keyword = query.trim().toLowerCase();
+    const keyword = deferredQuery.trim().toLowerCase();
     return items.filter((item) => {
       if (category !== "all" && item.category !== category) return false;
-      if (tag !== "all" && !item.tags.includes(tag)) return false;
-      if (fidelity !== "all" && item.fidelity !== fidelity) return false;
       if (!keyword) return true;
       return [item.name, item.author, item.source, ...item.tags, ...item.dependencies].some((value) => value.toLowerCase().includes(keyword));
     });
-  }, [category, fidelity, query, tag]);
+  }, [category, deferredQuery]);
+
+  useEffect(() => {
+    const syncVisibility = () => {
+      const visible = !document.hidden;
+      setPageVisible(visible);
+      if (visible) schedulePreloadDrain();
+    };
+    document.addEventListener("visibilitychange", syncVisibility);
+    return () => document.removeEventListener("visibilitychange", syncVisibility);
+  }, []);
 
   useEffect(() => {
     if (!selectedItem) return;
@@ -219,17 +306,7 @@ export default function App() {
     window.setTimeout(() => setCopied(false), 1500);
   }
 
-  function handleCardKeyDown(event: KeyboardEvent<HTMLElement>, item: GalleryItem) {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    event.preventDefault();
-    openItem(item, event.currentTarget);
-  }
 
-  function handleCardClick(event: MouseEvent<HTMLElement>, item: GalleryItem) {
-    const target = event.target as HTMLElement;
-    if (target.closest("button,a,input")) return;
-    openItem(item, event.currentTarget);
-  }
 
   return (
     <div className="design-library-app">
@@ -249,61 +326,33 @@ export default function App() {
         </div>
 
         <div className="design-filter-tools">
-          <div className="design-tag-filter" aria-label="按标签筛选">
-            <span className="design-filter-label">Tag</span>
-            <button type="button" aria-pressed={tag === "all"} onClick={() => setTag("all")}>全部</button>
-            {filterTags.map((name) => (
-              <button key={name} type="button" aria-pressed={tag === name} onClick={() => setTag(name)}>{name}</button>
-            ))}
-          </div>
-
           <label className="design-search">
             <span className="sr-only">搜索组件</span>
             <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.25"/><path d="m10.2 10.2 3.05 3.05"/></svg>
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索名称、作者或 Tag" />
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索组件或作者" />
             {query ? <button type="button" onClick={() => setQuery("")} aria-label="清除搜索">×</button> : null}
           </label>
         </div>
-
-        <div className="design-fidelity-filter" aria-label="按还原程度筛选">
-          {(Object.keys(fidelityLabels) as Array<Fidelity | "all">).map((key) => (
-            <button key={key} type="button" aria-pressed={fidelity === key} onClick={() => setFidelity(key)}>
-              {key === "all" ? null : <FidelityMark fidelity={key} />}
-              {fidelityLabels[key]}
-            </button>
-          ))}
-          <span className="design-result-count">{filtered.length} / {items.length}</span>
-        </div>
       </section>
-
-      <p className="design-provenance-note">
-        初始库存迁自 <a href="https://github.com/Tyr1onX/ui" target="_blank" rel="noreferrer">Tyr1onX/ui ↗</a>；新增库存继续保留第三方作者、21st.dev 链接、上游来源与 fidelity。
-        <a href="https://github.com/Tyr1onX/Tyr1onX.github.io/blob/main/design-ui/THIRD_PARTY_COMPONENTS.md" target="_blank" rel="noreferrer">来源说明 ↗</a>
-      </p>
 
       <section className="design-component-grid" aria-label="UI 组件列表">
         {filtered.map((item) => (
           <article
             key={item.id}
             className="design-component-card"
-            role="button"
-            tabIndex={0}
-            aria-label={`查看 ${item.name} 组件详情`}
-            onClick={(event) => handleCardClick(event, item)}
-            onKeyDown={(event) => handleCardKeyDown(event, item)}
+            data-component={item.id}
+            data-wide={item.previewWide ? "true" : "false"}
           >
-            <LazyPreview item={item} />
             <div className="design-card-body">
               <div className="design-card-title-row">
                 <div className="design-card-identity">
                   <h2>{item.name}</h2>
                   <p>@{item.author}</p>
                 </div>
-                <FidelityMark fidelity={item.fidelity} />
               </div>
-              <div className="design-card-tags">{item.tags.map((name) => <span key={name}>{name}</span>)}</div>
               <button className="design-detail-link" type="button" onClick={(event) => openItem(item, event.currentTarget)}>查看详情 <span aria-hidden="true">→</span></button>
             </div>
+            <LazyPreview item={item} pageVisible={pageVisible} />
           </article>
         ))}
       </section>
@@ -317,7 +366,6 @@ export default function App() {
               <div>
                 <div className="design-modal-title-line">
                   <h2 id="design-modal-title">{selectedItem.name}</h2>
-                  <FidelityMark fidelity={selectedItem.fidelity} withText />
                 </div>
                 <p>@{selectedItem.author}</p>
               </div>
@@ -332,22 +380,20 @@ export default function App() {
               <div className="design-modal-links">
                 <button type="button" onClick={() => void copySelectedSource()} disabled={sourceLoading}>{copied ? "已复制" : sourceLoading ? "读取中…" : "Copy source"}</button>
                 <a href={`https://github.com/Tyr1onX/Tyr1onX.github.io/blob/main/design-ui/${selectedItem.source}`} target="_blank" rel="noreferrer">库存源码 ↗</a>
-                <a href={selectedItem.original} target="_blank" rel="noreferrer">21st.dev ↗</a>
-                {selectedItem.originalSource ? <a href={selectedItem.originalSource} target="_blank" rel="noreferrer">Original source ↗</a> : null}
+                <a href={selectedItem.original} target="_blank" rel="noreferrer">{selectedItem.originalLabel ?? (selectedItem.original.includes("21st.dev") ? "21st.dev" : "原始演示")} ↗</a>
+                {selectedItem.originalSource ? <a href={selectedItem.originalSource} target="_blank" rel="noreferrer">上游源码 ↗</a> : null}
               </div>
             </div>
 
             <div className="design-modal-meta">
               <span>{categoryLabels[selectedItem.category]}</span>
-              <span>visual: {selectedItem.visualWeight}</span>
-              <span>runtime: {selectedItem.runtimeWeight}</span>
-              {selectedItem.dependencies.length ? <span>deps: {selectedItem.dependencies.join(", ")}</span> : <span>deps: none</span>}
-              {selectedItem.tags.map((name) => <em key={name}>{name}</em>)}
+              {selectedItem.dependencies.length ? <span>依赖：{selectedItem.dependencies.join(", ")}</span> : <span>无额外依赖</span>}
+              {selectedItem.license ? <span>{selectedItem.license}</span> : null}
               <code>{selectedItem.source}</code>
             </div>
 
             {detailTab === "preview" ? (
-              <div className="design-modal-preview"><DemoSurface item={selectedItem} className="design-demo-modal" /></div>
+              <div className="design-modal-preview">{pageVisible ? <DemoSurface item={selectedItem} className="design-demo-modal" /> : <div className="design-preview-idle"><span>预览已暂停</span></div>}</div>
             ) : (
               <div className="design-modal-code">
                 <div className="design-code-head"><span>{selectedItem.source}</span><button type="button" onClick={() => void copySelectedSource()}>{copied ? "已复制" : "复制"}</button></div>

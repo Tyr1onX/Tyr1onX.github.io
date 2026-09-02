@@ -1,0 +1,363 @@
+/* Crisp HTML/CSS rendering of the real Keke desktop widget.
+   Visual tokens and component geometry are adapted from desktop-course-widget/src/style.css
+   and src/time-flow.css so the portfolio hero stays sharp at every device pixel ratio. */
+
+.keke-live-stage {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(82% 66% at 2% 100%, rgba(6, 55, 184, .96) 0 25%, rgba(0, 119, 244, .86) 39%, transparent 62%),
+    radial-gradient(70% 62% at 95% 5%, rgba(255, 255, 255, .42) 0 14%, rgba(93, 204, 242, .42) 37%, transparent 67%),
+    radial-gradient(58% 50% at 55% 45%, rgba(251, 230, 166, .80) 0 23%, rgba(151, 209, 229, .42) 48%, transparent 70%),
+    linear-gradient(138deg, #058fe1 0%, #85cee9 26%, #e7deb6 49%, #63b9e8 68%, #0768ed 84%, #052eb6 100%);
+}
+
+.keke-live-stage::before,
+.keke-live-stage::after {
+  position: absolute;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.keke-live-stage::before {
+  width: 118%;
+  height: 72%;
+  right: -36%;
+  top: 1%;
+  border-radius: 50%;
+  border: clamp(2px, .28vw, 4px) solid rgba(235, 246, 255, .88);
+  background: linear-gradient(155deg, rgba(114, 217, 236, .22), rgba(14, 94, 231, .54));
+  box-shadow:
+    inset 0 0 70px rgba(255, 255, 255, .22),
+    0 0 42px rgba(42, 139, 239, .18);
+  transform: rotate(-31deg);
+}
+
+.keke-live-stage::after {
+  width: 105%;
+  height: 34%;
+  left: -23%;
+  bottom: -21%;
+  border-radius: 50%;
+  border-top: clamp(2px, .28vw, 4px) solid rgba(242, 248, 255, .88);
+  background: linear-gradient(180deg, rgba(6, 126, 244, .22), rgba(5, 42, 184, .82));
+  transform: rotate(-19deg);
+}
+
+.keke-live-widget-shell {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 360px;
+  transform: translate(-50%, -50%) scale(1.08);
+  transform-origin: center;
+  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI Variable", "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.keke-live-widget {
+  --widget-scale: 1;
+  --identity-accent: #2f7eef;
+  --identity-accent-rgb: 47, 126, 239;
+  --ambient-accent-rgb: 110, 155, 208;
+  --progress-start: #4d8fe8;
+  --progress-end: #72a7f5;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 360px;
+  padding: 20px;
+  border-radius: 22px;
+  color: #17283b;
+  background: rgba(248, 252, 255, .73);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .62),
+    0 22px 60px rgba(19, 62, 128, .10);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.keke-live-widget::before {
+  position: absolute;
+  z-index: -1;
+  inset: -42% -28% auto;
+  height: 76%;
+  border-radius: 50%;
+  content: "";
+  background: radial-gradient(circle, rgba(var(--ambient-accent-rgb), .065), transparent 68%);
+}
+
+.keke-live-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.keke-live-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.keke-live-title {
+  margin: 0 0 3px;
+  color: #17283b;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.25;
+  letter-spacing: -.02em;
+}
+
+.keke-live-today {
+  margin-bottom: 3px;
+  padding: 1px 4px;
+  border-radius: 5px;
+  color: var(--identity-accent);
+  background: rgba(var(--identity-accent-rgb), .09);
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.25;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+
+.keke-live-date-line {
+  margin: 0;
+  color: #4f6680;
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.keke-live-now {
+  flex: 0 0 auto;
+  color: #17283b;
+  font-family: "Segoe UI Variable", "Segoe UI", sans-serif;
+  font-size: 17px;
+  font-weight: 680;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.03em;
+}
+
+.keke-live-focus {
+  position: relative;
+  margin-top: 16px;
+  padding: 14px 14px 13px;
+  border-radius: 12px;
+  background: linear-gradient(115deg, rgba(var(--identity-accent-rgb), .075), rgba(var(--identity-accent-rgb), .022));
+  box-shadow: inset 3px 0 0 rgba(var(--identity-accent-rgb), .82);
+}
+
+.keke-live-focus-kicker,
+.keke-live-section-label,
+.keke-live-countdown {
+  color: var(--identity-accent);
+}
+
+.keke-live-focus-kicker,
+.keke-live-section-label {
+  margin: 0 0 5px;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .04em;
+}
+
+.keke-live-focus h3 {
+  margin: 0;
+  color: #17283b;
+  font-size: 20px;
+  font-weight: 750;
+  line-height: 1.25;
+  letter-spacing: -.025em;
+}
+
+.keke-live-course-time {
+  margin: 8px 0 1px;
+  color: #17283b;
+  font-family: "Segoe UI Variable", "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 680;
+  font-variant-numeric: tabular-nums;
+}
+
+.keke-live-location {
+  margin: 0;
+  color: #49647e;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.keke-live-countdown {
+  margin: 10px 0 0;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.keke-live-flow {
+  display: grid;
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.keke-live-flow-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #526d87;
+  font-size: 10px;
+  font-weight: 680;
+  font-variant-numeric: tabular-nums;
+}
+
+.keke-live-flow-track {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(var(--identity-accent-rgb), .12);
+}
+
+.keke-live-flow-track > span {
+  display: block;
+  width: 3%;
+  min-width: 7px;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--progress-start), var(--progress-end));
+  box-shadow: 0 0 8px rgba(var(--identity-accent-rgb), .12);
+}
+
+.keke-live-following {
+  margin-top: 17px;
+}
+
+.keke-live-timeline {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.keke-live-timeline::before {
+  position: absolute;
+  top: 9px;
+  bottom: 9px;
+  left: 43px;
+  width: 1px;
+  content: "";
+  background: rgba(87, 117, 145, .32);
+}
+
+.keke-live-timeline li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 35px 1fr;
+  gap: 15px;
+  align-items: start;
+}
+
+.keke-live-timeline li::after {
+  position: absolute;
+  top: 5px;
+  left: 40px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  content: "";
+  background: var(--identity-accent);
+  box-shadow: 0 0 0 3px rgba(var(--identity-accent-rgb), .10);
+}
+
+.keke-live-timeline time {
+  color: #526d87;
+  font-family: "Segoe UI Variable", "Segoe UI", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.keke-live-timeline strong,
+.keke-live-timeline small {
+  display: block;
+}
+
+.keke-live-timeline strong {
+  color: #17283b;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.34;
+}
+
+.keke-live-timeline small {
+  margin-top: 2px;
+  color: #536f88;
+  font-size: 11px;
+  line-height: 1.38;
+}
+
+.keke-live-week-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(79, 102, 128, .16);
+  color: #657a91;
+  font-size: 10.5px;
+  font-weight: 620;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.keke-live-week-meta span:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+html[data-theme="dark"] .keke-live-stage {
+  filter: brightness(.80) saturate(.88);
+}
+
+html[data-theme="dark"] .keke-live-widget {
+  filter: brightness(1.16) saturate(1.05);
+}
+
+@media (max-width: 860px) {
+  .keke-live-widget-shell {
+    transform: translate(-50%, -50%) scale(.90);
+  }
+}
+
+@media (max-width: 620px) {
+  .keke-live-widget-shell {
+    transform: translate(-50%, -50%) scale(.72);
+  }
+}
+
+@media (max-width: 390px) {
+  .keke-live-widget-shell {
+    transform: translate(-50%, -50%) scale(.60);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .keke-live-widget {
+    background: #edf6ff;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}

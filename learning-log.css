@@ -58,6 +58,11 @@
   margin-top: 42px;
 }
 
+.learning-month {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 360px;
+}
+
 .learning-month > h3 {
   margin: 0 0 4px 132px;
   color: var(--secondary);

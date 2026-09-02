@@ -2,20 +2,15 @@ import { HandwritingText } from "../../components/text/handwriting-text";
 
 export function HandwritingTextDemo() {
   return (
-    <div className="flex h-[276px] items-center justify-center bg-[#f6f6f6] px-6">
-      <div className="max-w-[430px] text-center">
-        <div className="text-[10px] font-semibold tracking-[.2em] text-black/35">HANDWRITING TEXT</div>
-        <h2 className="mt-4 text-[34px] font-bold leading-[1.05] tracking-[-.045em] text-zinc-950">
-          Make the interface feel
-          <br />
-          <HandwritingText
-            words={["personal.", "alive.", "memorable.", "like yours."]}
-            className="text-emerald-700"
-            height="1.12em"
-          />
-        </h2>
-        <p className="mt-5 text-[11px] text-black/45">Trace first, then let the ink settle.</p>
-      </div>
+    <div className="flex min-h-[360px] w-full flex-col items-center justify-center gap-10 bg-[#fafafa] px-6 text-zinc-900 dark:bg-[#18181b] dark:text-zinc-50">
+      <h1 className="max-w-2xl text-center text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+        Know where the crowd
+        <br />
+        is going to break
+        <br />
+        <HandwritingText words={["live.", "predictive.", "measurable.", "on every phone."]} className="text-emerald-700 dark:text-emerald-400" height="1.15em" />
+      </h1>
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">Each word is traced letter by letter, then inked in.</p>
     </div>
   );
 }
