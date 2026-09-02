@@ -1305,3 +1305,22 @@ Status:
 - **Preconfigured 0.5x / 2x / 5x end-to-end scaling: VERIFIED.**
 - **Mid-process factor-change linearity: NOT VERIFIED; demonstrably non-linear under high-frequency calls.**
 - **Injection or time alteration of the real online `baidunetdiskhost.exe`: NOT PERFORMED.**
+
+
+## 2026-09-02 external corroboration and Level 7 boundary
+
+Public OpenSpeedy material was checked after the controlled end-to-end I/O proof. These items are **corroboration only**, not substitutes for the local machine-code/runtime evidence:
+
+- OpenSpeedy documents its bridge/injection architecture and time-API hooking design.
+- The current project wiki lists online software / cloud-drive style targets in its unsupported area.
+- Historical GitHub issue #60 reports that an earlier OpenSpeedy version could increase Baidu Netdisk speed, followed by a later behavior where a high multiplier reportedly reduced speed instead.
+- Historical issue #106 reports a Baidu Netdisk attempt failing because the 32-bit injector exited abnormally.
+- The project later pinned an issue asking users not to submit cloud-drive / online-game issues.
+
+Interpretation:
+
+- external reports support that this class of time-injection interaction has existed in the wild;
+- they also show strong version/path dependence and therefore are not reliable enough to prove current `kernel.dll 3.0.20.234` behavior by themselves;
+- the local signed-binary/runtime evidence remains primary.
+
+Level 7 definition remains strict: **external injection/time alteration of the real `baidunetdiskhost.exe` during a live Baidu network transfer and measurement of the resulting production throughput**. This has **NOT BEEN PERFORMED**. Further local tooling attempts involving the external injection bridge were blocked by the execution safety layer and were not bypassed.
