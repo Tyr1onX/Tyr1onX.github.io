@@ -678,23 +678,30 @@ a.simple-item:hover .simple-title > span { transform: translateX(2px); }
 }
 
 
-/* Persistent site identity + current-page context for primary wiki pages. */
+/* Soft persistent site shell for primary wiki pages. */
 .context-header {
   position: sticky;
   z-index: 60;
   top: var(--identity-strip-height);
   border-bottom: 1px solid var(--line);
+  border-bottom-color: color-mix(in srgb, var(--line) 66%, transparent);
   background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  -webkit-backdrop-filter: blur(10px) saturate(1.04);
+  backdrop-filter: blur(10px) saturate(1.04);
+}
+
+html[data-theme="dark"] .context-header {
+  border-bottom-color: color-mix(in srgb, var(--line) 74%, transparent);
+  background: color-mix(in srgb, var(--bg) 87%, transparent);
 }
 
 .context-header-shell {
-  display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-  gap: var(--shell-gap);
+  display: flex;
   width: min(calc(100% - 56px), 1480px);
   min-height: var(--context-header-height);
+  align-items: center;
   margin: 0 auto;
-  transition: grid-template-columns 160ms ease, gap 160ms ease;
 }
 
 .context-identity {
@@ -706,28 +713,6 @@ a.simple-item:hover .simple-title > span { transform: translateX(2px); }
   min-height: var(--context-header-height);
   align-items: center;
   gap: 6px;
-}
-
-.context-page {
-  min-width: 0;
-}
-
-.context-page-inner {
-  display: flex;
-  width: min(100%, 940px);
-  min-height: var(--context-header-height);
-  align-items: center;
-  margin: 0 auto;
-}
-
-.context-title {
-  overflow: hidden;
-  color: var(--secondary);
-  font-size: 13.5px;
-  font-weight: 550;
-  line-height: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .context-theme-toggle,
@@ -745,14 +730,10 @@ a.simple-item:hover .simple-title > span { transform: translateX(2px); }
   padding-top: 24px;
 }
 
-@media (min-width: 861px) and (max-width: 1180px) {
-  html:not([data-sidebar="expanded"]) .context-page-inner { padding-left: 54px; }
-}
-
 @media (max-width: 860px) {
   .context-header-shell {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 18px;
     width: min(100% - 36px, 760px);
     min-height: 48px;
   }
@@ -768,19 +749,6 @@ a.simple-item:hover .simple-title > span { transform: translateX(2px); }
   }
 
   .context-sidebar-toggle { display: none; }
-
-  .context-page-inner {
-    width: 100%;
-    min-height: 48px;
-    justify-content: flex-end;
-    margin: 0;
-    padding: 0;
-  }
-
-  .context-title {
-    max-width: 100%;
-    font-size: 12.5px;
-  }
 
   .context-theme-toggle {
     display: flex;
