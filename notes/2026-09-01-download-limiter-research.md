@@ -3546,3 +3546,36 @@ fsl = -1
 produce `no_speed_limit = 1` because `sl` is zero. A non-zero `sl` combined with the normal non-zero `fsl` state produces `no_speed_limit = 0`.
 
 The evidence does not yet justify expanding the abbreviation `fsl` into a guessed full name. What is established is its control role: it participates in deciding whether the task state is marked as having no speed limit, while the actual task-token rate is derived from `sl`.
+
+### 29.12 P2P-switch fields and the separate 120 KiB/s fallback
+
+The `on_query_p2p_switch` response handlers at `0x18036B220` and `0x18036C330` parse four independent P2P-control integers into a configuration/result object:
+
+```text
++0x438 = spup_peer
++0x43C = p2pu_percent
++0x440 = spup_percent
++0x444 = basic_speed
+```
+
+The nearby diagnostic format is explicit:
+
+```text
+get p2p switch|spup_peer=%1%|p2pu_percent=%2%|spup_percent=%3%|basic_speed=%4%
+```
+
+These handlers do not directly call the already-identified Qingluan P2S limiter functions (`set_speed_limit`, `notify_speed_limit`, or the task-token setter). This supports treating P2P-switch policy and locatedownload `sl` as separate inputs/layers rather than assuming a single shared formula.
+
+A second important observation is that the exact constant `122880 B/s = 120 KiB/s` appears in several code locations. In particular, `0x18036C330` contains `mov esi, 0x1E000` in missing/alternate parsing branches, and other constructors initialize long-lived fields to the same value. This demonstrates that 120 KiB/s also exists as a client-side fallback/base value in another policy path.
+
+However, current evidence does **not** justify saying that this one constant alone causes the observed live cap. The Qingluan locatedownload path separately defaults `sl` to zero and consumes a non-zero remote `sl` directly. The most accurate current model is therefore layered:
+
+```text
+P2P-switch policy: spup_peer / p2pu_percent / spup_percent / basic_speed
+    may contain a 120 KiB/s local fallback/base value
+
+Qingluan P2S policy: locatedownload sl / fsl / min_sl
+    sl -> p2s_peer_sl + p2s_total_sl + task token rate
+```
+
+A live dynamic sample is still required to determine which layer wins for a specific ordinary download task.
