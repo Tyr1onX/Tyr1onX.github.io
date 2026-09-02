@@ -198,3 +198,98 @@ This is stronger than the prior dual-global-gate proof: time dilation now demons
 - Level 6 (real running task: show CDN/TOTAL token pressure continuously while official task rate stays around 120 KiB/s): **PARTIAL / NOT YET VERIFIED**.
 
 Historical running evidence remains strong: the same real task produced official progress rates of 119,995-124,308 B/s, only legacy runtime bucket objects appeared during running, and Qingluan stayed invariant. The remaining decisive capture is a running-state sample of the image-resident global CDN/TOTAL token/timestamp fields with the new observer. Programmatic UI resume is intentionally not bypassed after the earlier execution-layer block; the task must be resumed through the normal client UI before that final read-only sample can be collected.
+
+## 2026-09-02 Level 6 real-running binding proof
+
+The user resumed the existing task through the normal Baidu Netdisk UI. No programmatic click bypass, process injection, memory write, limiter write, or time hook was used against the real Baidu process.
+
+Although BrowserEngine's aggregate `totalCount`/`hasPaused` fields remained stale, the task-specific runtime fields were authoritative and showed active execution:
+
+```text
+task id      = 1788314213
+native id    = b9583c2d733809b9349644679acc6d4a
+status       = 2
+rate         > 0
+finish_size  continuously increasing
+```
+
+A running object correlation reconfirmed the lifecycle edge that was null while paused:
+
+```text
+legacy EntityTask 0x4f23090
+  -> EntityTask+0x108 = 0x1031a360
+  -> RTTI .?AVNetGrid@@
+```
+
+The same task's other retained legacy EntityTask shell remained without a NetGrid. Qingluan download EntityTask and NetGrid control-block live counts remained zero, so the running task still selects the legacy execution stack.
+
+### Synchronized UI-rate + token-pressure sample
+
+A 20-second synchronized capture sampled the official BrowserEngine task state 78 times while simultaneously observing the real legacy task/global buckets with `ReadProcessMemory` only.
+
+Official task-rate samples:
+
+```text
+positive samples = 78 / 78
+status           = 2 for every sample
+min rate         = 122764 B/s
+max rate         = 126223 B/s
+average rate     = 124370 B/s
+median rate      = 124425 B/s
+```
+
+During the same window, the real global TOTAL bucket remained configured as:
+
+```text
+rate   = 122880 B/s
+source = 1 (enable_cms_total_sl)
+```
+
+Its token/timestamp state repeatedly advanced and was rapidly consumed. Representative cycles showed a refill-side residual near 100-120 KiB followed almost immediately by a residual of only a few KiB.
+
+The adjacent broad task-download bucket was active but stayed near full at its 500 MiB/s rate. The per-NetGrid CDN bucket at 16 KiB/s existed but its token/timestamp remained invariant in the real running path.
+
+### Quantified binding-pressure sample
+
+A second 15-second read-only capture produced 482 samples:
+
+```text
+GLOBAL TOTAL rate              = 122880 B/s
+GLOBAL TOTAL token min         = 699 bytes
+GLOBAL TOTAL token max         = 122384 bytes
+GLOBAL TOTAL token changes     = 23
+GLOBAL TOTAL token < 16 KiB    = 480 / 482 samples (99.6%)
+GLOBAL TOTAL token > 100 KiB   = 2 / 482 samples
+
+TASK DOWNLOAD rate             = 524288000 B/s (500 MiB/s)
+TASK DOWNLOAD token range      = 524156928 .. 524288000 bytes
+
+TASK CDN rate                  = 16384 B/s
+TASK CDN token                 = 0 for all 482 samples
+TASK CDN timestamp changes     = 0
+```
+
+This distinguishes the actual real-task bottleneck from merely configured rate states:
+
+- the 500 MiB/s task-download gate has abundant tokens and is not binding;
+- the 16 KiB/s NetGrid CDN allocation exists but is not consumed on this real transfer path, so it is not the binding data gate for this sample;
+- the 122880 B/s global TOTAL `AccumulateTokenBucket` is live, its timestamp advances with transfer activity, and its token balance is near-depleted for 99.6% of the high-frequency samples while the official task rate stays tightly around 120 KiB/s.
+
+The earlier static/runtime work already bound this legacy `AccumulateTokenBucket` implementation's refill path to `GetSystemTimeAsFileTime`. Therefore the real ordinary SELF task now has a read-only binding-bottleneck chain:
+
+```text
+real locatedownload / CMS policy
+  -> real TOTAL rate = 122880 B/s
+  -> legacy AccumulateTokenBucket
+  -> FILETIME-derived refill
+  -> live token balance continuously consumed near exhaustion
+  -> official BrowserEngine task rate ~122.8-126.2 kB/s
+```
+
+### Evidence grade update
+
+- Level 5 (full original-chain offline replay under time dilation): **VERIFIED**.
+- Level 6 (real running task binding bottleneck identified read-only): **VERIFIED**.
+- Level 7 (alter real Baidu process time perception and observe end-to-end production throughput change): **NOT PERFORMED / NOT REQUIRED for the non-injection proof**.
+
+Important correction to the earlier working model: the original dispatcher -> EntityTask -> NetGrid 16 KiB/s gate is real and its offline time-dilation response is valid, but this real ordinary SELF transfer did not consume that bucket. The real binding gate observed for this sample is the CMS-selected global TOTAL 122880 B/s legacy bucket.
