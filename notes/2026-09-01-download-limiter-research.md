@@ -3739,3 +3739,28 @@ kernel.dll 3.0.20.234 ordinary SELF sample
 ```
 
 This materially strengthens the FILETIME/time-virtualization hypothesis for the currently selected ordinary SELF backend, because the recovered legacy limiter uses the FILETIME clock family. It does NOT yet prove which single legacy bucket or higher-level peer scheduler produces the final ~120 KiB/s plateau: no run-only bucket in this snapshot directly had `rate=122880`. The plateau may be produced by a higher policy/peer-allocation layer, a combination of per-peer gates, or a non-bucket server/CDN constraint before the legacy execution buckets.
+
+#### 29.17.3 The run-only three-bucket owner is `NetGrid`
+
+RTTI recovery on the owner that embeds the three run-only legacy `AccumulateTokenBucket` objects identifies the class as `NetGrid` (`.?AVNetGrid@@`). Its constructor initializes three legacy accumulate buckets at offsets `+0x30`, `+0x60`, and `+0x90`.
+
+The constructor reads `network.max_task_upload_speed` with a 100 MiB/s default and `network.max_task_download_speed` with a 500 MiB/s default. The initialization sequence maps the buckets as follows:
+
+```text
+NetGrid +0x30  task upload token     default 100 MiB/s
+NetGrid +0x60  task download token   default 500 MiB/s
+NetGrid +0x90  CDN download token    default 100 MiB/s
+```
+
+The third mapping is not inferred from offset alone. The method that writes `NetGrid+0x90` logs the literal operation name `set_cdn_download_token` and the value as `cdn_token=%1%`. The method resides at `0x1801B7C20` and ultimately calls legacy `AccumulateTokenBucket::set_rate` at `0x1800E83D0`.
+
+For the ordinary SELF runtime sample, the task-download bucket remained broad while the CDN bucket was observed at only 16 KiB/s:
+
+```text
+NetGrid task download token : 524288000 B/s  (500 MiB/s)
+NetGrid CDN download token  :     16384 B/s  (16 KiB/s)
+```
+
+This explains why a single `122880 B/s` total bucket was not present in the run-only set. A plausible model is that the final ~120 KiB/s plateau is composed above/beside the per-NetGrid CDN token through multiple active HTTP/CDN peers or another scheduler layer. That composition is not yet proven; the next step is to trace the virtual callers of `set_cdn_download_token` and recover how the 16 KiB/s argument is produced.
+
+The `set_cdn_download_token` function is present as a virtual method in the primary `NetGrid` vtable. Static byte-pattern scanning for the corresponding vtable slot found two candidate indirect-call sites, with the short function around `0x1801B8DD0-0x1801B8E51` selected as the first target for follow-up because it is small enough to recover completely without broad disassembly scans.
