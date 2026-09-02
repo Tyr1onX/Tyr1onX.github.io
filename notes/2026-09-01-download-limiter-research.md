@@ -4719,3 +4719,63 @@ when both values are positive. This prevents a non-user policy call from install
 Finally, source `2` (`locatedownload`) sets a dedicated state flag at `state+0x1C1`. The exact downstream meaning of that flag is not yet named, so it is recorded only as a locatedownload-active marker rather than given a stronger semantic label.
 
 The remaining question for this arbitration layer is the release/fallback path: when a higher-priority source such as CMS becomes disabled or invalid, determine how its ownership is relinquished and whether the code immediately restores a lower-priority stored candidate or waits for that source to publish again.
+
+#### 29.17.24 `rest set sl` is a whole-policy reset, not a CMS-only release
+
+The literal `rest set sl|cdn_sl=%1%|cdn_src=%2%|total_sl=%3%|total_src=%4%|` resolves to function `0x1800EE960-0x1800EF0C2`.
+
+This function resets the complete legacy speed-policy state rather than releasing only one source. At entry it writes broad defaults into several embedded buckets and sets the corresponding source fields back to `5 = default`.
+
+For the relevant global gates it performs the equivalent of:
+
+```text
+CDN bucket rate   <- 0x80000 (512 KiB/s default in this reset path)
+CDN source        <- default (5)
+TOTAL bucket rate <- 0x80000
+TOTAL source      <- default (5)
+```
+
+It also restores several later rate states to much larger defaults (`0x1F400000`) and resets their source fields to `default`.
+
+Two direct callers were recovered:
+
+1. `0x1800C4060-0x1800C4261`: when a stored session/identity-like numeric key at `this+0x8E8` changes from a previous nonzero value, the whole speed policy is reset before storing the new key.
+2. `0x1800C5E00-0x1800C6248`: this path parses membership strings including `normal`, `vip`, and `svip`; when the derived membership class changes from the previous value, it calls the same whole-policy reset.
+
+Therefore membership/session transitions rebuild the limiter state from defaults and then allow the normal policy sources to republish their candidates. This is separate from ordinary CMS config refresh.
+
+#### 29.17.25 Disabling CMS total-limit has a consistency guard rather than blindly clearing the limiter
+
+`handle_config_data` initializes `total_limit_enable` to zero, parses the optional `total_limit_enable` field, and then branches around the `src=1` `set_sl` call.
+
+When `total_limit_enable != 0`, the CMS candidate is directly submitted:
+
+```text
+set_sl(cdn_sl=-1, total_sl=total_limit_speed, src=enable_cms_total_sl)
+```
+
+When `total_limit_enable == 0`, the handler does not simply set TOTAL to zero/unlimited. It first reads:
+
+```text
+current CDN effective rate = 0x1800C3530(global_state)
+locatedownload-active flag = 0x1800C3570(global_state)
+```
+
+`0x1800C3570 -> 0x1800F1E40` is a trivial getter for `global_state+0x1C1`. This byte is set to `1` by `set_sl` when source `2=locatedownload` is processed, so it can now be named a locatedownload-active marker.
+
+The disabled-CMS branch compares the configured CMS total-limit candidate with the current CDN constraint and checks the locatedownload-active marker. In the narrow case where locatedownload is active and the CMS candidate would fall below the current CDN rate, it substitutes the current CDN rate before submitting a CMS TOTAL candidate. Otherwise it skips the CMS update.
+
+This is a policy-consistency guard: the CMS TOTAL layer is prevented from creating a contradictory TOTAL ceiling below an already active locatedownload CDN ceiling.
+
+A read-only runtime snapshot of the current paused process confirms:
+
+```text
+locatedownload-active (+0x1C1) = 1
+auxiliary flag       (+0x1C0) = 0
+CDN source                    = 2 (locatedownload)
+TOTAL source                  = 1 (enable_cms_total_sl)
+CDN raw rate                  = 122880 B/s
+TOTAL raw rate                = 122880 B/s
+```
+
+The exact meaning of `+0x1C0` remains unnamed; unlike `+0x1C1`, it is not assigned a semantic label without tracing its writers.
