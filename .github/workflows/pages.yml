@@ -92,6 +92,12 @@ jobs:
       - name: Prepare music artwork and previews
         run: python scripts/generate-music-assets.py
 
+      - name: Build unified music archive
+        run: python scripts/build-music-library.py
+
+      - name: Check music archive
+        run: python scripts/check-music-archive.py
+
       - name: Refresh About profile stats
         env:
           GH_TOKEN: ${{ github.token }}

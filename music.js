@@ -1,9 +1,13 @@
 (() => {
   const root = document.querySelector("[data-music-player]");
-  const tracks = Array.isArray(window.TYR1ONX_MUSIC) ? window.TYR1ONX_MUSIC : [];
+  const featuredTracks = Array.isArray(window.TYR1ONX_MUSIC) ? window.TYR1ONX_MUSIC : [];
+  const libraryTracks = Array.isArray(window.TYR1ONX_MUSIC_LIBRARY) ? window.TYR1ONX_MUSIC_LIBRARY : featuredTracks;
+  const archiveRoot = document.querySelector("[data-music-archive]");
+  const archiveGrid = archiveRoot?.querySelector("[data-music-grid]") || null;
+  const archiveCount = archiveRoot?.querySelector("[data-archive-count]") || null;
   let previews = {};
   let previewCatalogReady = false;
-  if (!root || !tracks.length) return;
+  if (!root || !featuredTracks.length) return;
 
   const stage = root.querySelector("[data-music-stage]");
   const coverImage = root.querySelector("[data-music-cover]");
@@ -25,7 +29,6 @@
 
   const previewRow = document.createElement("div");
   previewRow.className = "music-controls music-preview-links";
-  previewRow.style.marginTop = "18px";
   previewRow.hidden = true;
 
   const listenLink = document.createElement("a");
@@ -35,7 +38,7 @@
   listenLink.hidden = true;
   const listenLabel = document.createElement("span");
   listenLabel.className = "music-control-label";
-  listenLabel.textContent = "Apple Music ↗";
+  listenLabel.textContent = "Listen ↗";
   listenLink.appendChild(listenLabel);
 
   const previewStatus = document.createElement("span");
@@ -49,11 +52,18 @@
   audio.preload = "none";
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const mediaSession = "mediaSession" in navigator ? navigator.mediaSession : null;
-  let current = 0;
+  const trackById = new Map(libraryTracks.map((track) => [track.id, track]));
+  const libraryIndexById = new Map(libraryTracks.map((track, index) => [track.id, index]));
+  const featuredIndexById = new Map(featuredTracks.map((track, index) => [track.id, index]));
+  let activeTrack = featuredTracks[0];
+  let activeCollection = featuredTracks;
+  let activeCollectionIndex = 0;
   let timer = 0;
+  let archiveActiveButton = null;
+  const archiveButtonById = new Map();
   const coverPreloads = new Set();
 
-  const pad = (value) => String(value).padStart(2, "0");
+  const pad = (value, width = 2) => String(value).padStart(width, "0");
   const valueOrDash = (value) => value || "—";
 
   const setMediaPlaybackState = (state) => {
@@ -133,8 +143,8 @@
 
   const configurePreview = (track) => {
     const generated = previews[track.id] || {};
-    const previewUrl = generated.previewUrl || "";
-    const listenUrl = generated.listenUrl || track.listenUrl || "";
+    const previewUrl = track.previewUrl || generated.previewUrl || "";
+    const listenUrl = track.listenUrl || generated.listenUrl || "";
 
     stopPreview(true);
     previewStatus.textContent = "";
@@ -148,7 +158,7 @@
     }
     previewRow.hidden = !listenUrl;
 
-    if (!previewCatalogReady) {
+    if (!previewCatalogReady && !track.previewUrl) {
       setPlaybackState("loading");
       return;
     }
@@ -175,8 +185,8 @@
   coverImage.fetchPriority = "high";
   vinylLabelImage.fetchPriority = "low";
 
-  const renderCover = (track, index) => {
-    coverIndex.textContent = pad(index + 1);
+  const renderCover = (track, index, width = 3) => {
+    coverIndex.textContent = pad(index + 1, width);
     if (!track.cover) {
       coverImage.removeAttribute("src");
       coverImage.alt = "";
@@ -198,27 +208,34 @@
     coverImage.onerror = useFallback;
     vinylLabelImage.onerror = useFallback;
     coverImage.src = track.cover;
-    coverImage.alt = `${track.title || `收藏位 ${pad(index + 1)}`} 的专辑封面`;
+    coverImage.alt = `${track.title || `收藏位 ${index + 1}`} 的专辑封面`;
     coverImage.hidden = false;
     placeholder.hidden = true;
     vinylLabelImage.src = track.cover;
   };
 
-  tracks.forEach((track, index) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "music-index-button";
-    button.textContent = pad(index + 1);
-    button.setAttribute("aria-label", `切换到 ${track.title || `收藏位 ${pad(index + 1)}`}`);
-    button.addEventListener("click", () => switchTo(index));
-    nav.appendChild(button);
-  });
+  const updateArchiveSelection = (track) => {
+    if (!archiveGrid) return;
+    if (archiveActiveButton) {
+      archiveActiveButton.removeAttribute("aria-current");
+      archiveActiveButton = null;
+    }
+    const button = archiveButtonById.get(track.id);
+    if (button) {
+      button.setAttribute("aria-current", "true");
+      archiveActiveButton = button;
+    }
+  };
 
-  const render = (index, announce = false) => {
-    const track = tracks[index];
-    current = index;
+  const render = (track, announce = false) => {
+    activeTrack = track;
+    const libraryIndex = libraryIndexById.get(track.id) ?? 0;
     root.style.setProperty("--music-accent", track.accent || "#8a6f5b");
-    position.textContent = `${pad(index + 1)} / ${pad(tracks.length)}`;
+
+    const featuredIndex = featuredIndexById.get(track.id);
+    position.textContent = featuredIndex === undefined
+      ? `ARCHIVE ${pad(libraryIndex + 1, 3)} / ${pad(libraryTracks.length, 3)}`
+      : `${pad(featuredIndex + 1)} / ${pad(featuredTracks.length)}`;
     title.textContent = track.title || "未命名";
     artist.textContent = valueOrDash(track.artist);
     album.textContent = valueOrDash(track.album);
@@ -226,33 +243,119 @@
     note.textContent = track.note || "";
     note.hidden = !track.note;
 
-    renderCover(track, index);
+    renderCover(
+      track,
+      featuredIndex === undefined ? libraryIndex : featuredIndex,
+      featuredIndex === undefined ? 3 : 2
+    );
     configurePreview(track);
     updateMediaSession(track);
-    preloadCover(tracks[(index - 1 + tracks.length) % tracks.length]);
-    preloadCover(tracks[(index + 1) % tracks.length]);
+    updateArchiveSelection(track);
 
-    nav.querySelectorAll(".music-index-button").forEach((button, buttonIndex) => {
-      button.setAttribute("aria-current", buttonIndex === index ? "true" : "false");
+    const previousTrack = activeCollection[(activeCollectionIndex - 1 + activeCollection.length) % activeCollection.length];
+    const nextTrack = activeCollection[(activeCollectionIndex + 1) % activeCollection.length];
+    preloadCover(previousTrack);
+    preloadCover(nextTrack);
+
+    nav.querySelectorAll(".music-index-button").forEach((button) => {
+      button.setAttribute("aria-current", button.dataset.trackId === track.id ? "true" : "false");
     });
 
-    if (announce) live.textContent = `已切换到 ${track.title || `收藏位 ${pad(index + 1)}`}`;
+    if (announce) live.textContent = `已切换到 ${track.title || `收藏位 ${libraryIndex + 1}`}`;
   };
 
-  const completeSwitch = (index) => {
-    render(index, true);
+  const completeSwitch = (track, collection, index) => {
+    activeCollection = collection;
+    activeCollectionIndex = index;
+    render(track, true);
     stage.classList.remove("is-switching");
   };
 
-  function switchTo(index) {
-    const normalized = (index + tracks.length) % tracks.length;
-    if (normalized === current || stage.classList.contains("is-switching")) return;
+  const switchTo = (track, collection = activeCollection, index = collection.indexOf(track)) => {
+    if (!track || stage.classList.contains("is-switching")) return;
+    if (track.id === activeTrack.id) {
+      activeCollection = collection;
+      activeCollectionIndex = Math.max(0, index);
+      updateArchiveSelection(track);
+      return;
+    }
     clearTimeout(timer);
     stopPreview(true);
     setPlaybackState("switching");
     stage.classList.add("is-switching");
     const delay = reduceMotion.matches ? 40 : 180;
-    timer = window.setTimeout(() => completeSwitch(normalized), delay);
+    timer = window.setTimeout(() => completeSwitch(track, collection, Math.max(0, index)), delay);
+  };
+
+  featuredTracks.forEach((track, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "music-index-button";
+    button.dataset.trackId = track.id;
+    button.textContent = pad(index + 1);
+    button.setAttribute("aria-label", `切换到 ${track.title}`);
+    button.addEventListener("click", () => switchTo(track, featuredTracks, index));
+    nav.appendChild(button);
+  });
+
+  const createArchiveItem = (track, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "music-archive-item";
+    button.dataset.trackId = track.id;
+    button.setAttribute("aria-label", track.artist ? `${track.title} — ${track.artist}` : track.title);
+
+    const artwork = document.createElement("span");
+    artwork.className = "music-archive-artwork";
+
+    if (track.cover) {
+      const image = document.createElement("img");
+      image.src = track.cover;
+      image.alt = "";
+      image.loading = "lazy";
+      image.decoding = "async";
+      image.width = 600;
+      image.height = 600;
+      artwork.appendChild(image);
+    } else {
+      const fallback = document.createElement("span");
+      fallback.className = "music-archive-placeholder";
+      fallback.setAttribute("aria-hidden", "true");
+      const brand = document.createElement("span");
+      brand.textContent = "Tyr1onX";
+      const slot = document.createElement("strong");
+      slot.textContent = `ARCHIVE ${pad(index + 1, 3)}`;
+      fallback.append(brand, slot);
+      artwork.appendChild(fallback);
+    }
+
+    const overlay = document.createElement("span");
+    overlay.className = "music-archive-overlay";
+    overlay.setAttribute("aria-hidden", "true");
+    const itemTitle = document.createElement("strong");
+    itemTitle.textContent = track.title;
+    const itemArtist = document.createElement("span");
+    itemArtist.textContent = track.artist || "Tyr1onX Music Archive";
+    overlay.append(itemTitle, itemArtist);
+
+    button.append(artwork, overlay);
+    archiveButtonById.set(track.id, button);
+    return button;
+  };
+
+  if (archiveGrid) {
+    const fragment = document.createDocumentFragment();
+    libraryTracks.forEach((track, index) => fragment.appendChild(createArchiveItem(track, index)));
+    archiveGrid.appendChild(fragment);
+    archiveGrid.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-track-id]");
+      if (!(button instanceof HTMLButtonElement) || !archiveGrid.contains(button)) return;
+      const track = trackById.get(button.dataset.trackId);
+      if (!track) return;
+      const index = libraryIndexById.get(track.id) ?? 0;
+      switchTo(track, libraryTracks, index);
+    });
+    if (archiveCount) archiveCount.textContent = String(libraryTracks.length);
   }
 
   turntablePlay.addEventListener("click", () => {
@@ -265,8 +368,14 @@
     }
   });
 
-  prev.addEventListener("click", () => switchTo(current - 1));
-  next.addEventListener("click", () => switchTo(current + 1));
+  prev.addEventListener("click", () => {
+    const index = (activeCollectionIndex - 1 + activeCollection.length) % activeCollection.length;
+    switchTo(activeCollection[index], activeCollection, index);
+  });
+  next.addEventListener("click", () => {
+    const index = (activeCollectionIndex + 1) % activeCollection.length;
+    switchTo(activeCollection[index], activeCollection, index);
+  });
 
   audio.addEventListener("play", () => {
     previewStatus.textContent = "";
@@ -296,20 +405,20 @@
     registerAction("play", playCurrentPreview);
     registerAction("pause", () => audio.pause());
     registerAction("stop", () => stopPreview(false));
-    registerAction("previoustrack", () => switchTo(current - 1));
-    registerAction("nexttrack", () => switchTo(current + 1));
+    registerAction("previoustrack", () => prev.click());
+    registerAction("nexttrack", () => next.click());
   }
 
-  fetch("./assets/music/generated-previews.json")
+  fetch("./assets/music/generated-previews.json?v=2")
     .then((response) => response.ok ? response.json() : {})
     .then((catalog) => {
       previews = catalog && typeof catalog === "object" ? catalog : {};
       previewCatalogReady = true;
-      configurePreview(tracks[current]);
+      configurePreview(activeTrack);
     })
     .catch(() => {
       previewCatalogReady = true;
-      configurePreview(tracks[current]);
+      configurePreview(activeTrack);
     });
 
   const syncVisualVisibility = () => {
@@ -321,16 +430,19 @@
   document.addEventListener("keydown", (event) => {
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
     const target = event.target;
-    if (target instanceof HTMLElement && ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName)) return;
+    if (target instanceof HTMLElement && (
+      ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName)
+      || target.closest(".music-archive-grid")
+    )) return;
     if (event.key === "ArrowLeft") {
       event.preventDefault();
-      switchTo(current - 1);
+      prev.click();
     } else if (event.key === "ArrowRight") {
       event.preventDefault();
-      switchTo(current + 1);
+      next.click();
     }
   });
 
   setPlaybackState("loading");
-  render(0);
+  render(activeTrack);
 })();
