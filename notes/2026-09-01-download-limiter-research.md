@@ -3579,3 +3579,27 @@ Qingluan P2S policy: locatedownload sl / fsl / min_sl
 ```
 
 A live dynamic sample is still required to determine which layer wins for a specific ordinary download task.
+
+### 29.13 Minimal reproduction: time dilation multiplies a QPC token-bucket rate
+
+A local standalone experiment was added at `experiments/token-bucket-timewarp-demo.cpp`. It does not interact with Baidu Netdisk. It implements a 120 KiB/s token bucket whose refill clock comes from `QueryPerformanceCounter`, then multiplies only the elapsed time observed by the limiter.
+
+The core model is:
+
+```text
+perceived_dt = real_dt * time_factor
+tokens += perceived_dt * 120 KiB/s
+```
+
+Measured over approximately three wall-clock seconds:
+
+```text
+factor 1x  -> 118.06 KiB/s
+factor 2x  -> 237.67 KiB/s
+factor 5x  -> 596.95 KiB/s
+factor 10x -> 1193.73 KiB/s
+```
+
+The result is almost perfectly linear. This reproduces the mechanism-level effect expected when a client-side token bucket uses a time API whose returned elapsed time is accelerated: the configured nominal rate remains 120 KiB/s, but the bucket refills approximately `time_factor` times faster in real time.
+
+This experiment supports the time-dilation explanation for OpenSpeedy-like behavior without modifying or bypassing a third-party service. Whether a particular live Baidu Netdisk task is affected still depends on which limiter stack is active, which clock it uses, and whether another server/global/peer gate becomes the next bottleneck.
