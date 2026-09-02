@@ -4146,3 +4146,94 @@ remote/local higher-level target (`sl`)
 This is also consistent with the 0.8 / 1.3 hysteresis already recovered in `choose_http_server_peer_for_one_task`: connection-count changes are deliberately damped rather than oscillating on every small speed fluctuation.
 
 The remaining high-value edge is now narrower: trace the local `sl` scalar consumed by `cdn_speed_limit_dispatch` back to the locatedownload/CMS application path, so the current legacy chain can be written end-to-end without relying only on matching value/name semantics.
+
+#### 29.17.13 `manager+0x58` is the actual dispatcher list count
+
+The `start_task` insertion path provides an instruction-level confirmation for the divisor used by `cdn_speed_limit_dispatch`.
+
+After allocating the list node and storing the `EntityTask*` at node `+0x10` plus its lifetime/control object at node `+0x18`, the code executes:
+
+```asm
+add qword ptr [dispatcher_manager+0x58], 1
+```
+
+It then links the node into the list rooted at manager `+0x50`.
+
+Therefore `manager+0x58` is not merely inferred from MSVC list layout: it is the real current element count of the same `EntityTask` list iterated by the CDN dispatcher. The low-rate calculation really divides the remaining policy budget across the currently registered dispatcher tasks.
+
+#### 29.17.14 The dispatcher `sl` state lives in legacy `Peer`
+
+The object referenced through dispatcher manager `+0x250` has now been identified through MSVC RTTI.
+
+Its primary vtable is:
+
+```text
+0x181383C58
+```
+
+The corresponding CompleteObjectLocator points to:
+
+```text
+.?AVPeer@@
+```
+
+So the shared object used by the dispatcher speed getters and `sl` getter is the legacy `Peer` object, not an anonymous telemetry structure.
+
+The `sl` path is:
+
+```text
+0x1800C3530
+    -> 0x1800F0830
+    -> 0x1800E8280
+```
+
+and ultimately reads the `+0x08` field of an embedded rate-state object at `Peer+0xE0`.
+
+That embedded state has at least the following relevant fields:
+
+```text
++0x08 = effective rate
++0x20 = raw/requested rate
+```
+
+Its setter is `0x1800E82E0`:
+
+```asm
+mov [rcx+0x20], edx       ; preserve requested/raw rate
+cmp edx, 0x4000
+mov eax, 0x4000
+cmova eax, edx
+mov [rcx+0x08], eax       ; effective = max(raw, 16384)
+```
+
+Thus the same 16 KiB/s lower bound exists inside the `Peer` rate-state itself.
+
+The primary `Peer` vtable exposes the live update methods:
+
+```text
+vtable +0x80 -> 0x180A342C0
+    if rate != 0:
+        setter(Peer+0xE0, rate)
+
+vtable +0x88 -> 0x180A342E0
+    if rate != 0:
+        setter(Peer+0x108, rate)
+```
+
+The second adjacent state at `Peer+0x108` uses the same rate-state implementation.
+
+The `Peer` constructor (`0x180A330E0`) initializes both embedded rate states and sets their default requested/effective rate to `0x06400000`, i.e. 104,857,600 B/s = 100 MiB/s. Therefore the observed ~120 KiB/s policy is not the compile-time/default Peer rate; it must be installed later by a runtime policy path.
+
+This narrows the remaining legacy data-flow edge to:
+
+```text
+locatedownload/CMS `sl=120`
+        -> convert to byte rate (`120 << 10` = 122880 B/s)
+        -> [runtime wrapper/callback still to identify]
+        -> Peer::vfunc+0x80 / Peer+0xE0 rate-state
+        -> cdn_speed_limit_dispatch
+        -> EntityTask::vfunc+0x50
+        -> NetGrid CDN token bucket
+```
+
+A first scan for the trivial pattern `shl 10` immediately followed by an indirect call through vtable `+0x80/+0x88` found no hit. This suggests the value crosses at least one stored field, helper/wrapper, callback, or delayed policy-application stage rather than being passed directly from the locatedownload parser into the Peer setter.
