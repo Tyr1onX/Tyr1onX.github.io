@@ -51,6 +51,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: python scripts/generate-profile-stats.py
 
+      - name: Version shared stylesheet
+        shell: bash
+        run: |
+          WIKI_VERSION="$(sha256sum wiki.css | cut -c1-12)"
+          for file in ./*.html; do
+            sed -i -E "s#\./wiki\.css\?v=[0-9A-Za-z._-]+#./wiki.css?v=${WIKI_VERSION}#g" "$file"
+          done
+          echo "wiki.css version: ${WIKI_VERSION}"
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
