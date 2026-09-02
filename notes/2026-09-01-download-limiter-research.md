@@ -3353,3 +3353,52 @@ remote locatedownload response
 ```
 
 This is the strongest static evidence so far that the Qingluan download path consumes the locatedownload `sl` policy as the task-download token rate.
+
+
+### 29.8 Non-zero `sl` is used directly; zero takes a permissive fallback
+
+The Qingluan `handle_locatedownload_finish` helper at `0x181044E20` shows the first local arbitration applied to the returned `sl` field.
+
+It reads the locatedownload value and immediately converts the unit:
+
+```asm
+mov eax, [return_item + 0xD8]   ; sl, KiB/s
+shl eax, 0xA                    ; sl * 1024 -> B/s
+```
+
+For two local speed-limit categories, a non-zero `sl` replaces the defaults without an intermediate downward clamp:
+
+```asm
+r14d = 0x1F400000              ; 524,288,000 B/s = 500 MiB/s
+if (sl != 0) r14d = sl << 10
+
+edi  = 0x06400000              ; 104,857,600 B/s = 100 MiB/s
+if (sl != 0) edi = sl << 10
+```
+
+These values are then sent to `set_speed_limit` (`0x180B92DA0`) under category ids `3` and `4`.
+
+After that, the original locatedownload values are still forwarded unchanged in their KiB/s form:
+
+```asm
+mov r8d, [return_item + 0xD8]   ; raw sl
+mov edx, [return_item + 0xDC]   ; raw fsl
+call 0x180ECAA20                ; notify_speed_limit facade
+```
+
+The facade reaches `0x180D245C0`, where `sl` is again converted with `<< 10` before updating the Qingluan task-download token bucket.
+
+The important semantic distinction is therefore:
+
+```text
+sl != 0:
+    locatedownload sl is treated as a concrete cap
+    -> local category limits = sl * 1024
+    -> task token rate       = sl * 1024
+
+sl == 0:
+    the two category limits use permissive 100 MiB/s / 500 MiB/s defaults
+    while raw sl=0 is still propagated into the task-speed notification path
+```
+
+No local reduction of a non-zero `sl` has been observed between the Qingluan locatedownload parser and the task-token update. The remaining arbitration can still occur in other global/user/peer/token layers, so this does not imply that `sl` is the only possible bottleneck.
