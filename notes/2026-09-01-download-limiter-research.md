@@ -5126,3 +5126,98 @@ and the only external perturbation is the official OpenSpeedy `GetSystemTimeAsFi
 The measured 1x/2x/5x values match the theoretical 120/240/600 KiB/s almost exactly. Thus the **legacy global limiter subsystem through `set_sl` and the dual CDN/TOTAL gates** has now been reproduced at binary level outside `baidunetdiskhost.exe`.
 
 The remaining gap to a full-client equivalence is now downstream/upstream of this subsystem: Peer/CDN adaptive dispatch, EntityTask/NetGrid scheduling, actual HTTP/P2P transport, and remote server/CDN behavior are not part of this standalone proof.
+
+#### 29.17.31 Original NetGrid independently rehosted
+
+The Level-3 downstream path was extended into the original `NetGrid` implementation.
+
+`NetGrid` constructor `0x1801A7E20` takes:
+
+```text
+RCX = NetGrid* this
+RDX = pointer to a two-qword shared/lifetime pair
+```
+
+The constructor copies that pair into `NetGrid+0x240/+0x248`. A zero-valued but valid 16-byte pair is sufficient for an isolated self-owned rehost because the constructor checks the control-block pointer before attempting a reference-count increment.
+
+The constructor's 16-byte default block at preferred VA `0x18134E1F0` decodes exactly to:
+
+```text
++0xC0 = 0x1F400000 = 524288000 B/s (500 MiB/s)
++0xC4 = 0x06400000 = 104857600 B/s (100 MiB/s)
++0xC8 = 0x06400000 = 104857600 B/s (100 MiB/s)
++0xCC = 0xFFFFFFFF
+```
+
+A new standalone probe executes the original constructor and original `set_cdn_download_token` method:
+
+```text
+experiments/baidu-original-netgrid-probe.cpp
+```
+
+Observed original state:
+
+```text
+after ctor:
+  task-upload bucket   = 104857600 B/s
+  task-download bucket = 524288000 B/s
+  CDN bucket           = 104857600 B/s
+  C0/C4/C8             = 500/100/100 MiB/s defaults
+  CC                    = 0xFFFFFFFF
+  owner/control pair    = null/null in the isolated harness
+
+after set_cdn_download_token(16384):
+  CDN bucket = 16384 B/s
+  other two buckets unchanged
+
+after set_cdn_download_token(32768):
+  CDN bucket = 32768 B/s
+```
+
+This reproduces the same 16 KiB/s override state observed in the live task-specific NetGrid objects without reconstructing the bucket algorithm or writing its fields manually.
+
+#### 29.17.32 Original EntityTask -> NetGrid forwarding bridge rehosted
+
+The next downstream indirection was also executed directly.
+
+The original `EntityTask` primary vtable is at preferred VA `0x1813500C8`. Slot `+0x50` resolves to the already recovered bridge `0x1802AE170`:
+
+```text
+EntityTask::vfunc+0x50(rate):
+    NetGrid* ng = this->member_0x108;
+    if (!ng) return;
+    tailcall ng->vfunc+0x158(rate);
+```
+
+A minimal isolated EntityTask object needs only:
+
+```text
++0x00 = original EntityTask primary vtable
++0x108 = pointer to an original rehosted NetGrid object
+```
+
+The probe:
+
+```text
+experiments/baidu-original-entity-netgrid-bridge-probe.cpp
+```
+
+calls the bridge **through the original EntityTask vtable slot**, not by calling the NetGrid setter directly. Results:
+
+```text
+initial NetGrid CDN bucket = 104857600 B/s
+EntityTask vfunc+0x50(16384) -> NetGrid CDN bucket = 16384 B/s
+EntityTask vfunc+0x50(32768) -> NetGrid CDN bucket = 32768 B/s
+```
+
+Therefore the downstream execution chain is now experimentally rehosted at binary level through:
+
+```text
+original EntityTask vtable +0x50
+    -> original EntityTask forwarding machine code
+    -> original NetGrid vtable +0x158
+    -> original NetGrid set_cdn_download_token
+    -> original legacy AccumulateTokenBucket::set
+```
+
+The remaining Level-3 component is the upstream `cdn_speed_limit_dispatch` calculation and its task-list/Peer inputs.
