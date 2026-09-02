@@ -293,3 +293,63 @@ real locatedownload / CMS policy
 - Level 7 (alter real Baidu process time perception and observe end-to-end production throughput change): **NOT PERFORMED / NOT REQUIRED for the non-injection proof**.
 
 Important correction to the earlier working model: the original dispatcher -> EntityTask -> NetGrid 16 KiB/s gate is real and its offline time-dilation response is valid, but this real ordinary SELF transfer did not consume that bucket. The real binding gate observed for this sample is the CMS-selected global TOTAL 122880 B/s legacy bucket.
+
+## 2026-09-02 repeated lifecycle contrast after Level 6
+
+After the Level 6 running capture, the same task subsequently returned to the normal paused state. This produced a clean within-task contrast without changing any limiter or clock state.
+
+Three attempted 15-second repeat-running windows all observed the task already paused:
+
+```text
+status=3
+positive rate samples=0
+finish_size delta=0
+local file-size delta=0
+live EntityTask/NetGrid not found
+```
+
+This is the exact inverse of the immediately preceding running state, where native task `b9583c2d733809b9349644679acc6d4a` had:
+
+```text
+legacy EntityTask 0x4f23090
+  -> NetGrid 0x1031a360
+  -> RTTI .?AVNetGrid@@
+```
+
+A dedicated 10-second / 20-ms read-only global-gate sample in the new paused state produced 321 samples:
+
+```text
+CDN   rate=122880 B/s, source=locatedownload
+      token=0, timestamp unchanged
+
+TOTAL rate=122880 B/s, source=enable_cms_total_sl
+      token=18 bytes for every sample
+      timestamp unchanged
+
+cdn_ts_changes=0
+cdn_token_changes=0
+total_ts_changes=0
+total_token_changes=0
+process read_bytes_delta=0
+```
+
+The TOTAL bucket therefore transitioned from the running signature:
+
+```text
+rate=122880 B/s
+99.6% of samples below 16 KiB
+repeated timestamp/token updates
+real BrowserEngine task rate ~124 kB/s
+```
+
+to the paused signature:
+
+```text
+same configured rate/source
+18 residual bytes
+zero timestamp/token updates
+zero transfer growth
+NetGrid execution object removed
+```
+
+This strengthens the Level 6 interpretation: the observed TOTAL-bucket activity is coupled to the actual lifecycle of the same real transfer, rather than being unrelated background activity in the global policy object.
