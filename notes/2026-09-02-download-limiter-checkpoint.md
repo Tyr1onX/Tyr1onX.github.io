@@ -1108,27 +1108,81 @@ This resolves why the 16.3 MB task can still record 28 download-token calls whil
 
 The `get_download_token` calls recovered in this path target `0x1800E8220`, the **legacy** `AccumulateTokenBucket::consume` routine. Earlier research text that labeled the `owner+0xE0` token path as Qingluan conflated two limiter families and is stale. The live ordinary SELF transfer independently showed Qingluan bucket objects remaining invariant while legacy bucket objects followed task lifecycle. Current checkpoint conclusions use the legacy classification for this path.
 
-### Remaining data-flow boundary
+### Locatedownload completion `fsl` -> task-config `"fsl"`: VERIFIED
 
-Both ends are now statically established:
+The previously missing completion-state assignment path is now recovered directly from the original machine code.
 
-```text
-locatedownload parser:
-  parses literal key "fsl"
-  stores parsed integer in the response/state object
-
-get_download_token:
-  reads literal task-config key "fsl"
-  uses zero/nonzero to decide whether to consume the global singleton bucket
-```
-
-The intermediate C++ response/config-copy layer has not yet been recovered instruction-for-instruction from the parser's response field to the exact task-config map entry. The 35-event natural population is strongly consistent with that propagation, but this final assignment hop remains:
+The function `0x1810422C0-0x1810446FA` contains the literal operation name `handle_locatedownload_finish`. In its success path it forwards the locatedownload completion object to `0x181044E20`:
 
 ```text
-STRONGLY CORRELATED / FINAL DATA-FLOW HOP PENDING
+0x181043C56  mov rcx, r13
+0x181043C59  mov rdx, [rbp+0x238]       ; locatedownload completion/result object
+0x181043C60  call 0x181044E20
 ```
 
-It should not be upgraded to a fully closed data-flow proof until that copy/update path is identified directly.
+`0x181044E20` immediately preserves that second argument as `r15`, then later applies its speed-limit fields:
+
+```text
+0x181044E4E  mov r15, rdx
+...
+0x181044F5B  mov r8d, [r15+0xD8]        ; total_speed_limit / sl
+0x181044F62  mov edx, [r15+0xDC]        ; file_speed_limit / fsl
+0x181044F69  mov rcx, rsi                ; task policy/config owner
+0x181044F6C  call 0x180ECAA20
+```
+
+This field interpretation is independently corroborated by the `cdn_urls_finish` path, whose log formatter uses the same completion-layout semantics `+0xD8 = sl` and `+0xDC = fsl`.
+
+`0x180ECAA20` is a thunk to `0x180D245C0`, whose literal operation name is `notify_speed_limit`. Its own log format is:
+
+```text
+task_handle=%1%|file_speed_limit=%2%|total_speed_limit=%3%|
+```
+
+The function retains `EDX=file_speed_limit` and `R8D=total_speed_limit`, then updates the task config map at `config+0x128`. In that same function the original code constructs and updates the literal keys:
+
+```text
+"fsl"
+"sl"
+"no_speed_limit"
+```
+
+The read side used by `get_download_token` is the same config family:
+
+```text
+0x180ECAA40
+  -> config object
+  -> 0x180D244D0
+  -> lookup config+0x128["fsl"]
+  -> default -1
+```
+
+Therefore the directly recovered completion-state chain is now:
+
+```text
+handle_locatedownload_finish result
+    +0xD8 = sl
+    +0xDC = fsl
+        |
+        v
+0x181044E20
+        |
+        v
+notify_speed_limit (0x180D245C0)
+        |
+        +--> config+0x128["sl"]
+        +--> config+0x128["fsl"]
+        |
+        v
+get_download_token
+        |
+        +--> reads config+0x128["fsl"]
+        +--> fsl==0 skips the identified global singleton consume
+```
+
+This part is **VERIFIED** and no longer depends only on runtime correlation.
+
+A narrower parser-object copy detail remains if strict HTTP-parser-to-completion-object closure is required. The raw locatedownload parser independently parses literal `"fsl"` and stores it at its response object `+0x1B4`; the exact internal C++ copy/conversion from that parser response field to the later completion object's `+0xDC` has not yet been recovered instruction-for-instruction. This does not weaken the verified completion-state-to-execution assignment above, but the strict parser-object copy hop remains separately marked pending rather than inferred from matching field semantics alone.
 
 ### Revised small-file evidence grade
 
@@ -1151,6 +1205,9 @@ fsl=0 special population vs fsl=-1 ordinary population:
 get_download_token fsl==0 skip of one global singleton consume:
   VERIFIED statically
 
-locatedownload response fsl -> exact task-config["fsl"] assignment hop:
-  NOT YET CLOSED; strongly correlated
+locatedownload completion-state fsl -> exact task-config["fsl"] assignment:
+  VERIFIED statically
+
+raw HTTP parser object +0x1B4 -> completion object +0xDC copy/conversion:
+  NOT YET CLOSED instruction-for-instruction
 ```
