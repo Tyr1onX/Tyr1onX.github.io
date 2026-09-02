@@ -3234,3 +3234,122 @@ locatedownload response
   -> notify_speed_limit
   -> Qingluan task download AccumulateTokenBucket
 ```
+
+
+### 29.7 Correction: the Qingluan locatedownload path has its own parser and an embedded `LocatedownloadReturnItem`
+
+A later RTTI pass exposed an important scope correction. The binary contains both an older/non-namespaced locatedownload stack and a Qingluan-specific stack. Therefore the earlier parser at `0x1807554e0` must not be used as direct evidence for Qingluan object layout.
+
+The Qingluan type can be identified explicitly through RTTI:
+
+```text
+qingluan::download::LocatedownloadServer
+qingluan::download::LocatedownloadReturnItem
+qingluan::download::P2SUrlManager
+```
+
+For `qingluan::download::LocatedownloadServer`:
+
+```text
+TypeDescriptor  0x1817BC980
+COL             0x1813EF790
+vtable          0x1813EF778
+constructor     0x1810AE130
+```
+
+The constructor shows that this object is large and that `+0x1B0` belongs to string-like storage in this class. This rules out the previous temptation to interpret every `+0x1B0` seen in the binary as a speed field.
+
+The Qingluan-specific locatedownload response parser is `0x1810C5B00-0x1810C6204`. It receives the server object as `RCX` and parses the response fields directly into it:
+
+```text
+"sl"      -> server + 0x470
+"fsl"     -> server + 0x474
+"min_sl"  -> server + 0x478
+```
+
+Concrete stores include:
+
+```asm
+0x1810C5BC6  mov [rcx + 0x470], eax   ; sl
+0x1810C5C9D  mov [rcx + 0x474], eax   ; fsl
+0x1810C61A1  mov [r14 + 0x478], eax   ; min_sl / next policy field
+```
+
+The caller `0x1810B9DA0-0x1810B9F9E` makes the structure relationship explicit. After calling the parser at `0x1810B9EDF`, it does:
+
+```asm
+lea  rdx, [server + 0x398]
+lea  rcx, [local_return_item]
+call 0x18105E5E0
+```
+
+`server + 0x398` is therefore an embedded `LocatedownloadReturnItem`. The offset arithmetic closes the gap exactly:
+
+```text
+0x470 - 0x398 = 0xD8
+0x474 - 0x398 = 0xDC
+0x478 - 0x398 = 0xE0
+```
+
+So the Qingluan parser is not translating one speed-layout into another. It is writing directly into fields of an embedded return object:
+
+```text
+LocatedownloadServer + 0x398 = LocatedownloadReturnItem
+LocatedownloadReturnItem + 0xD8 = sl
+LocatedownloadReturnItem + 0xDC = fsl
+LocatedownloadReturnItem + 0xE0 = next speed-policy field
+```
+
+The return-item copy routine `0x18105E5E0-0x18105E9B0` confirms the layout is preserved. In particular:
+
+```asm
+movups 0xD8(source), xmm0
+movups xmm0, 0xD8(destination)
+```
+
+That 16-byte copy carries the `sl/fsl` block and the following policy fields unchanged.
+
+The typed callback chain is also recoverable from RTTI. The binary contains a concrete:
+
+```text
+std::_Func_impl_no_alloc<
+  binder(P2SUrlManager member taking LocatedownloadReturnItem and int64),
+  void(LocatedownloadReturnItem)
+>
+```
+
+Its vtable is `0x1813EE4E8`; `_Do_call` is `0x18105E520`. The binder creation site `0x18103B020-0x18103B2A3` stores the member-function target:
+
+```asm
+0x18103B224  lea rax, [0x181042020]
+0x18103B22B  mov [function_object + 0x08], rax
+```
+
+`0x181042020` is the P2SUrlManager locatedownload completion member. It carries the typed `LocatedownloadReturnItem` into the later asynchronous handler `0x1810422C0` (`handle_locatedownload_finish`). That handler eventually passes the same return-item pointer to `0x181044E20`, where:
+
+```asm
+mov r15, rdx
+mov eax, [r15 + 0xD8]   ; sl
+shl eax, 10             ; KiB/s -> B/s
+...
+mov r8d, [r15 + 0xD8]   ; sl
+mov edx, [r15 + 0xDC]   ; fsl
+call 0x180ECAA20         ; notify_speed_limit facade
+```
+
+This produces a Qingluan-only, type-consistent chain without relying on the older locatedownload parser:
+
+```text
+remote locatedownload response
+  -> qingluan::download::LocatedownloadServer parser
+  -> embedded LocatedownloadReturnItem.sl/fsl
+  -> std::function<void(LocatedownloadReturnItem)>
+  -> P2SUrlManager locatedownload completion
+  -> handle_locatedownload_finish
+  -> notify_speed_limit(sl, fsl)
+  -> sl << 10
+  -> set_task_download_token
+  -> qingluan::common::AccumulateTokenBucket
+```
+
+This is the strongest static evidence so far that the Qingluan download path consumes the locatedownload `sl` policy as the task-download token rate.
