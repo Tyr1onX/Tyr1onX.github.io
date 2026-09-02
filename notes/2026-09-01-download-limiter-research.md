@@ -3641,3 +3641,18 @@ factor 50x -> 4074.02 KiB/s
 The first four samples are nearly linear with the perceived QPC time factor. At 50x, the theoretical token refill is about 6 MiB/s, but observed throughput saturates near the configured 4 MiB/s upstream limit. This demonstrates the layered-limiter model: defeating or accelerating one client-side time-driven gate does not create bandwidth; another server/network/global gate becomes the bottleneck.
 
 This experiment is intentionally standalone and does not modify Baidu Netdisk or a live service limit.
+
+### 29.16 Read-only Qingluan bucket observer
+
+A low-overhead read-only observer was added at `experiments/qingluan-bucket-observer.cpp`. It locates the `baidunetdiskhost.exe` process that actually loaded `kernel.dll`, computes the live address of the `.234` Qingluan `AccumulateTokenBucket` vtable from the recovered RVA, and scans only committed `MEM_PRIVATE` regions with `ReadProcessMemory`.
+
+It does not modify the target process. For each matching object it reports the recovered fields `rate`, `tokens`, `last timestamp`, and denominator.
+
+With no active download task, the current `.234` process reported five resident Qingluan accumulate buckets:
+
+```text
+4 x rate = 524288 B/s       = 512 KiB/s
+1 x rate = 524288000 B/s    = 500 MiB/s
+```
+
+No `122880 B/s` Qingluan bucket was present in the idle state. This gives a useful dynamic baseline: when a future ordinary download becomes active, a newly created or retuned Qingluan bucket near `122880 B/s` would strongly connect the live task to a non-zero `locatedownload.sl` around 120 KiB/s.
