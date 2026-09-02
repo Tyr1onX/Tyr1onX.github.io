@@ -3402,3 +3402,107 @@ sl == 0:
 ```
 
 No local reduction of a non-zero `sl` has been observed between the Qingluan locatedownload parser and the task-token update. The remaining arbitration can still occur in other global/user/peer/token layers, so this does not imply that `sl` is the only possible bottleneck.
+
+
+### 29.9 `sl` simultaneously programs Qingluan P2S total and peer limits
+
+The category argument passed into `set_speed_limit` (`0x180B92DA0`) is not opaque. The function indexes a static name table at `0x1817A0ED0`:
+
+```text
+0 = user_total_ctl
+1 = p2p_total_sl
+2 = p2p_peer_sl
+3 = p2s_total_sl
+4 = p2s_peer_sl
+5 = application_total_ctl
+6 = application_peer_ctl
+7 = default_total_ctl
+```
+
+Its own log template is explicit:
+
+```text
+set sl|sl=%1%|speed_limit_type=%2%|current_peer_sl_type=%3%|current_peer_sl=%4%|current_total_sl_type=%5%|current_total_sl=%6%|
+```
+
+This lets the two calls from `handle_locatedownload_finish` be named exactly:
+
+```text
+category 4 -> p2s_peer_sl
+category 3 -> p2s_total_sl
+```
+
+Therefore, when locatedownload returns a non-zero `sl`, the same converted value is applied to both P2S scopes:
+
+```text
+p2s_peer_sl  = sl * 1024
+p2s_total_sl = sl * 1024
+```
+
+When `sl == 0`, the caller substitutes permissive defaults before these two calls:
+
+```text
+p2s_peer_sl  = 100 MiB/s
+p2s_total_sl = 500 MiB/s
+```
+
+The tail of `set_speed_limit` also exposes the limiter's two-bucket arbitration layout. It uses bit mask `0x2B`, whose set bits are categories `{0,1,3,5}` — exactly the total-limit sources:
+
+```text
+user_total_ctl
+p2p_total_sl
+p2s_total_sl
+application_total_ctl
+```
+
+These update the winning total source field at `SpeedLimitor + 0xA0` and program the bucket at:
+
+```text
+SpeedLimitor + 0x70 = total bucket
+```
+
+The peer categories `{2,4,6}` update the winning peer source at `SpeedLimitor + 0x30` and program the bucket beginning at the object base:
+
+```text
+SpeedLimitor + 0x00 = peer bucket
+```
+
+Both branches call the same Qingluan bucket-rate setter `0x180D01E20`.
+
+This is a direct implementation match for the earlier source-priority model: User / P2P / P2S / Application / Default are not merely labels in the binary; `set_speed_limit` actively records the winning source separately for peer and total scope and updates the corresponding token bucket.
+
+### 29.10 `LocatedownloadReturnItem + 0xE0` is `min_sl`
+
+The Qingluan locatedownload response parser constructs the literal key `min_sl` and stores its parsed integer at:
+
+```asm
+mov [server + 0x478], eax
+```
+
+Because `server + 0x398` is the embedded `LocatedownloadReturnItem`:
+
+```text
+0x478 - 0x398 = 0xE0
+```
+
+so the field can be named precisely:
+
+```text
+LocatedownloadReturnItem + 0xE0 = min_sl
+```
+
+The P2SUrlManager completion path later forwards this field separately:
+
+```asm
+mov edx, [return_item + 0xE0]
+call 0x180ECAA50
+```
+
+`0x180ECAA50` is a trivial setter:
+
+```asm
+mov [object + 0x140], edx
+ret
+```
+
+Thus the locatedownload `min_sl` survives the typed return-item callback and is retained in downstream task/P2S state at `+0x140`. Its later behavioral use is the next item to trace.
