@@ -11,10 +11,10 @@
   <script>(()=>{let t=null;try{t=localStorage.getItem('tyr1onx-theme')}catch{}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})();</script>
   <link rel="stylesheet" href="./wiki.css?v=12" />
   <link rel="stylesheet" href="./projects-showcase.css?v=3" />
-  <link rel="stylesheet" href="./keke-live-widget.css?v=2" />
   <link rel="stylesheet" href="./projects-compact.css?v=1" />
+  <link rel="stylesheet" href="./projects-source-showcase.css?v=1" />
   <script src="./wiki.js?v=10" defer></script>
-  <script src="./projects-carousel.js?v=1" defer></script>
+  <script src="./projects-carousel.js?v=2" defer></script>
 </head>
 <body class="has-context-header">
   <a class="skip-link" href="#main">跳到主要内容</a>
@@ -29,129 +29,32 @@
     </div>
     <div class="context-mobile-nav"><nav class="mobile-nav" aria-label="主要导航"><a href="./">首页</a><a href="./notes.html">归档</a><a href="./projects.html" aria-current="page">作品</a><a href="./design.html">设计</a><a href="./games.html">游戏</a><a href="./music.html">音乐</a><a href="./learning.html">学习</a><a href="./about.html">关于</a></nav></div>
   </header>
-
   <div class="wiki-shell">
     <aside class="sidebar" aria-label="个人网站导航">
       <nav class="sidebar-nav" id="desktop-navigation" aria-label="主要导航">
-        <a href="./">首页</a>
-        <a href="./notes.html">归档</a>
-        <a href="./projects.html" aria-current="page">作品</a>
-        <a href="./design.html">设计</a>
-        <a href="./games.html">游戏</a>
-        <a href="./music.html">音乐</a>
-        <a href="./learning.html">学习</a>
-        <a href="./about.html">关于</a>
+        <a href="./">首页</a><a href="./notes.html">归档</a><a href="./projects.html" aria-current="page">作品</a><a href="./design.html">设计</a><a href="./games.html">游戏</a><a href="./music.html">音乐</a><a href="./learning.html">学习</a><a href="./about.html">关于</a>
       </nav>
-      <div class="sidebar-bottom">
-        <div class="sidebar-links">
-          <a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener"><span>GitHub</span><span aria-hidden="true">↗</span></a>
-          <a href="mailto:yit38331@gmail.com"><span>邮箱</span><span aria-hidden="true">↗</span></a>
-        </div>
-        <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题"><span class="theme-icon-stack" aria-hidden="true"><svg class="theme-icon theme-icon-sun" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.4"/><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 16 16"><path d="M12.55 10.55A5.1 5.1 0 0 1 5.45 3.45a5.1 5.1 0 1 0 7.1 7.1Z"/></svg></span><span class="theme-label">主题</span></button>
-        <div class="sidebar-copy">© <span data-current-year>2026</span> Tyr1onX</div>
-      </div>
+      <div class="sidebar-bottom"><div class="sidebar-links"><a href="https://github.com/Tyr1onX" target="_blank" rel="noreferrer noopener"><span>GitHub</span><span aria-hidden="true">↗</span></a><a href="mailto:yit38331@gmail.com"><span>邮箱</span><span aria-hidden="true">↗</span></a></div><button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题"><span class="theme-icon-stack" aria-hidden="true"><svg class="theme-icon theme-icon-sun" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.4"/><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 16 16"><path d="M12.55 10.55A5.1 5.1 0 0 1 5.45 3.45a5.1 5.1 0 1 0 7.1 7.1Z"/></svg></span><span class="theme-label">主题</span></button><div class="sidebar-copy">© <span data-current-year>2026</span> Tyr1onX</div></div>
     </aside>
-
     <main class="main" id="main">
       <div class="content projects-page">
-        <header class="page-heading projects-heading">
-          <h1>作品</h1>
-        </header>
-
+        <header class="page-heading projects-heading"><h1>作品</h1></header>
         <article class="work-showcase work-showcase--compact" aria-labelledby="keke-title">
           <figure class="work-screenshot work-screenshot--first">
             <div class="work-gallery" data-work-gallery tabindex="0" aria-label="课刻界面预览，可使用左右方向键或下方圆点切换">
-              <div class="work-gallery-stage">
-                <div class="work-gallery-slide is-active" data-gallery-slide aria-hidden="false">
-                  <div class="keke-live-stage" role="img" aria-label="课刻桌面 Widget：9月21日星期一，第3教学周，正在上通信与网络课程">
-                    <div class="keke-live-widget-shell" aria-hidden="true">
-                      <article class="keke-live-widget">
-                        <header class="keke-live-header">
-                          <div>
-                            <div class="keke-live-title-row">
-                              <h3 class="keke-live-title">9月21日课表</h3>
-                              <span class="keke-live-today">今日</span>
-                            </div>
-                            <p class="keke-live-date-line">星期一 · 第3教学周</p>
-                          </div>
-                          <time class="keke-live-now">08:03</time>
-                        </header>
-
-                        <section class="keke-live-focus">
-                          <p class="keke-live-focus-kicker">正在上课</p>
-                          <h3>通信与网络[03]</h3>
-                          <p class="keke-live-course-time">08:00–09:40</p>
-                          <p class="keke-live-location">南湖-第1教学楼-四阶</p>
-                          <p class="keke-live-countdown">还剩 1 小时 37 分钟</p>
-                          <div class="keke-live-flow">
-                            <div class="keke-live-flow-meta"><span>时间进度</span><span>3%</span></div>
-                            <div class="keke-live-flow-track"><span></span></div>
-                          </div>
-                        </section>
-
-                        <section class="keke-live-following">
-                          <p class="keke-live-section-label">后续课程</p>
-                          <ol class="keke-live-timeline">
-                            <li>
-                              <time>10:00</time>
-                              <span><strong>信息论[04]</strong><small>南湖-第1教学楼-四阶</small></span>
-                            </li>
-                          </ol>
-                        </section>
-
-                        <footer class="keke-live-week-meta">
-                          <span>教学周 3 / 17</span>
-                          <span>9月21日 – 9月27日</span>
-                        </footer>
-                      </article>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="work-gallery-slide work-gallery-slide--image" data-gallery-slide aria-hidden="true">
-                  <img class="work-gallery-shot" src="./assets/keke/week-editor.png" alt="课刻完整周课表编辑界面" loading="lazy" decoding="async" />
-                </div>
-
-                <div class="work-gallery-slide work-gallery-slide--image" data-gallery-slide aria-hidden="true">
-                  <img class="work-gallery-shot" src="./assets/keke/schedule-management.png" alt="课刻作息与课程管理界面" loading="lazy" decoding="async" />
-                </div>
-
-                <div class="work-gallery-slide work-gallery-slide--image" data-gallery-slide aria-hidden="true">
-                  <img class="work-gallery-shot" src="./assets/keke/screenshot-import-review.png" alt="课刻截图识别导入复核界面" loading="lazy" decoding="async" />
-                </div>
-              </div>
-
-              <div class="work-gallery-nav" role="tablist" aria-label="切换课刻界面预览">
-                <button class="work-gallery-dot is-active" type="button" data-gallery-dot role="tab" aria-selected="true" aria-label="桌面 Widget" tabindex="0"></button>
-                <button class="work-gallery-dot" type="button" data-gallery-dot role="tab" aria-selected="false" aria-label="周课表编辑" tabindex="-1"></button>
-                <button class="work-gallery-dot" type="button" data-gallery-dot role="tab" aria-selected="false" aria-label="作息管理" tabindex="-1"></button>
-                <button class="work-gallery-dot" type="button" data-gallery-dot role="tab" aria-selected="false" aria-label="截图导入" tabindex="-1"></button>
-              </div>
+              <div class="work-gallery-stage" aria-live="polite"></div>
+              <div class="work-gallery-nav" role="tablist" aria-label="切换课刻界面预览"></div>
             </div>
           </figure>
-
           <div class="work-summary">
-            <div class="work-summary-title">
-              <div>
-                <h2 id="keke-title">课刻</h2>
-                <p class="work-summary-subtitle">Desktop Course Widget</p>
-              </div>
-              <span class="work-summary-period">2026 — 至今</span>
-            </div>
-
+            <div class="work-summary-title"><div><h2 id="keke-title">课刻</h2><p class="work-summary-subtitle">Desktop Course Widget</p></div><span class="work-summary-period">2026 — 至今</span></div>
             <p class="work-summary-description">本地优先的 Windows 桌面课表。把当前课程、下一节课和今天剩余安排留在桌面；支持 Excel 导入，Beta 版支持课表截图识别与导入前复核。</p>
-
-            <nav class="work-links" aria-label="课刻项目入口">
-              <a href="./keke.html">查看产品</a>
-              <a href="https://github.com/Tyr1onX/desktop-course-widget/releases/latest" target="_blank" rel="noreferrer noopener">下载 <span aria-hidden="true">↗</span></a>
-              <a href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer noopener">GitHub <span aria-hidden="true">↗</span></a>
-            </nav>
+            <nav class="work-links" aria-label="课刻项目入口"><a href="./keke.html">查看产品</a><a href="https://github.com/Tyr1onX/desktop-course-widget/releases/latest" target="_blank" rel="noreferrer noopener">下载 <span aria-hidden="true">↗</span></a><a href="https://github.com/Tyr1onX/desktop-course-widget" target="_blank" rel="noreferrer noopener">GitHub <span aria-hidden="true">↗</span></a></nav>
           </div>
         </article>
       </div>
     </main>
   </div>
-
   <footer class="mobile-footer">© <span data-current-year>2026</span> Tyr1onX</footer>
 </body>
 </html>
