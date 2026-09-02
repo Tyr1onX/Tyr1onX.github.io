@@ -104,3 +104,17 @@
 - legacy/original 与 qingluan 在真实下载任务中的精确职责边界。
 
 因此当前结论应保持为：**已经非常强地证明客户端内部存在由 `sl=120` 驱动的 122880 B/s Token Bucket 限速链，但还不能把整条真实网络下载速度归因于单一客户端 gate。**
+
+## 2026-09-02 full offline chain status
+
+The previously untracked `experiments/baidu-original-offline-limiter-openspeedy-proof.cpp` has now been recovered and made buildable. It remains a self-owned/rehosted experiment only: it loads the local `kernel.dll` into the harness process and does not inject into or modify the running Baidu Netdisk host.
+
+The harness connects the already recovered components in one process:
+
+`locateDownload sl=120 → original policy slice → global CDN/TOTAL state → original dispatcher → EntityTask/NetGrid task gate → original bucket refill/consume`
+
+The build blocker was only a local variable-name collision between a list sentinel and the later byte counter; after renaming the sentinel, `g++ -std=c++17 -O2 -Wall -Wextra` succeeds (with only existing FARPROC cast warnings).
+
+The OpenSpeedy portion of this full-chain harness has **not** been rerun in this session because the previously used official `speedpatch64.dll` package is no longer present in the currently searched local paths. Existing archived results remain stronger than a pure model: the official OpenSpeedy hook has already produced approximately linear 1x/2x/5x scaling against both a source-level FILETIME bucket reproduction and the original Baidu `.234` bucket/dual-global-gate machine code in a self-owned harness.
+
+This does not upgrade the claim to a real Baidu download speedup: no time hook has been installed into `baidunetdiskhost.exe`, and no end-to-end production-network A/B has been performed.
