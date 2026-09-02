@@ -4779,3 +4779,94 @@ TOTAL raw rate                = 122880 B/s
 ```
 
 The exact meaning of `+0x1C0` remains unnamed; unlike `+0x1C1`, it is not assigned a semantic label without tracing its writers.
+
+#### 29.17.26 End-to-end causal proof with the official OpenSpeedy hook on a self-owned FILETIME bucket harness
+
+To validate the time-dilation hypothesis without modifying or injecting into BaiduNetdisk, a standalone self-owned harness was added:
+
+`	ext
+experiments/openspeedy-filetime-proof.cpp
+`
+
+The harness intentionally reproduces the live Baidu legacy global gate parameters recovered from the paused .234 process:
+
+`	ext
+rate             = 122880 B/s (120 KiB/s)
+accumulate cap   = 2115584 bytes
+time source       = GetSystemTimeAsFileTime
+refill            = elapsed_ms * rate / 1000
+target transfer   = 3145728 bytes (3 MiB)
+`
+
+The 3 MiB target is larger than the ~2.1 MiB burst capacity, so completing the run requires sustained refill rather than a single time-jump burst.
+
+The experiment used the official OpenSpeedy 3.3.8 signed portable package obtained through the WinGet manifest. The downloaded ZIP was verified before extraction:
+
+`	ext
+OpenSpeedy 3.3.8 portable signed ZIP
+SHA256 = 8B95AF6706C826D3E9BC53F8A97998B40ED0F526C03AA72263B81CC6FA411AAC
+`
+
+The OpenSpeedy source snapshot inspected for this test was:
+
+`	ext
+cf41e57dd9f5f46a8e69fe6fa248072a566909b7
+`
+
+No cross-process injection was used. The harness loads speedpatch64.dll into **itself** with LoadLibrary, then calls the exported SP_SetSpeed(double) function. This is important: the experiment tests the real OpenSpeedy hook implementation while avoiding any modification of BaiduNetdisk or another third-party process.
+
+To avoid circular timing measurements, two clocks are sampled inside the harness:
+
+`	ext
+GetSystemTimeAsFileTime -> deliberately hooked by official speedpatch64.dll
+NtQuerySystemTime       -> not hooked by this OpenSpeedy build; used as real-time reference
+`
+
+The harness does not call Sleep in the limiter loop. It yields with SwitchToThread, so the measured throughput increase is not an artifact of OpenSpeedy shortening sleeps.
+
+Measured results:
+
+`	ext
+factor  hooked FILETIME elapsed   real NtQuerySystemTime elapsed   FILETIME/real   real throughput
+1x      25.782 s                  25.782 s                         1.000           119.15 KiB/s
+2x      25.688 s                  12.844 s                         2.000           239.18 KiB/s
+5x      25.626 s                   5.125 s                         5.000           599.41 KiB/s
+10x     25.620 s                   2.562 s                        10.000          1199.06 KiB/s
+`
+
+Theoretical real throughput for a 120 KiB/s refill gate under continuous perceived-time scaling is:
+
+`	ext
+1x   120 KiB/s
+2x   240 KiB/s
+5x   600 KiB/s
+10x 1200 KiB/s
+`
+
+The measured values are within roughly one percent of this prediction.
+
+This is now direct causal evidence for the mechanism itself:
+
+`	ext
+official OpenSpeedy speedpatch64.dll
+  -> hooks GetSystemTimeAsFileTime
+  -> returned elapsed time scales by factor N
+  -> a FILETIME-driven AccumulateTokenBucket refills at ~N * configured rate
+  -> real throughput through that gate rises from ~120 KiB/s to ~N*120 KiB/s
+`
+
+The test also distinguishes continuous time dilation from a one-shot clock jump: each run transfers more than the bucket's burst capacity while maintaining the predicted N-fold real throughput, so the result cannot be explained by one initial bucket fill.
+
+What this experiment proves:
+
+1. The published OpenSpeedy hook, not merely a hand-written simulation, changes GetSystemTimeAsFileTime at exactly the factor requested.
+2. The same rate/cap/refill model recovered from Baidu's live legacy buckets responds linearly to that hook.
+3. The causal chain 	ime slope -> elapsed -> refill -> throughput is experimentally demonstrated.
+
+What it intentionally does **not** prove:
+
+- OpenSpeedy was not injected into aidunetdiskhost.exe.
+- No Baidu limiter value or process memory was modified.
+- It does not establish the final end-to-end throughput that a third-party service would deliver after its client-side gate stopped being the bottleneck; server/CDN/peer/application constraints could become limiting next.
+
+This is the strongest safe validation performed so far: the actual OpenSpeedy hook implementation was exercised against a self-owned reproduction using the exact live Baidu FILETIME bucket parameters.
