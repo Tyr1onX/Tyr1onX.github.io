@@ -66,12 +66,21 @@ int main(int argc,char**argv){
     const std::uintptr_t policy=host.kernelBase+kGlobalPolicyRva;
     const std::uintptr_t cdn=policy+0x00;
     const std::uintptr_t total=policy+0x70;
+    std::uint32_t connectionCap=0, connectionPrimary=0, connectionSecondary=0, connectionMode=0;
+    if(!readv(h,policy+0x760,connectionCap) || !readv(h,policy+0x748,connectionPrimary) ||
+       !readv(h,policy+0x74C,connectionSecondary) || !readv(h,policy+0xD00,connectionMode)){
+        std::cerr<<"failed to read connection policy fields\n"; CloseHandle(h); return 4;
+    }
 
     std::cout<<"mode=read-only pid="<<host.pid
              <<" kernel_base=0x"<<std::hex<<host.kernelBase
              <<" policy=0x"<<policy<<std::dec
              <<" interval_ms="<<intervalMs
-             <<" duration_s="<<durationSec<<"\n";
+             <<" duration_s="<<durationSec
+             <<" connection_cap="<<connectionCap
+             <<" connection_primary="<<connectionPrimary
+             <<" connection_secondary="<<connectionSecondary
+             <<" connection_mode="<<connectionMode<<"\n";
 
     GateSnapshot prevC{},prevT{}; bool havePrev=false;
     std::uint64_t cdnTsChanges=0,totalTsChanges=0,cdnTokenChanges=0,totalTokenChanges=0,printed=0;

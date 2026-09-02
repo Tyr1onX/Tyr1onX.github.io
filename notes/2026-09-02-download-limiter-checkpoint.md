@@ -904,7 +904,7 @@ Nearby kernel records explicitly identify this as:
 small file download|target_cdn_count=12
 ```
 
-The task is below the kernel's observed 100 MiB small-file threshold and finishes almost immediately. Task-info records show the active transfer completing in approximately:
+The task is below the kernel's statically recovered 20 MiB small-file threshold and finishes almost immediately. Task-info records show the active transfer completing in approximately:
 
 ```text
 2.77864 s
@@ -997,3 +997,160 @@ TOTAL=204800 observed event:
 ```
 
 This improves the research by both adding stronger natural evidence and narrowing the claim boundary where the logs do not support a valid comparison.
+
+
+## Small-file / `fsl=0` fast path: static branch and natural-log closure
+
+A dedicated read-only analyzer was added at `experiments/small-file-fast-path-analyzer.py`. It consumes only closed XOR-encoded `BaiduYunKernel` logs and skips the active writer. No download is created and no policy/process state is modified.
+
+### Static small-file branch
+
+The original `kernel.dll` 3.0.20.234 `choose_http_server_peer_for_connect` machine code around `0x1801D7701` performs:
+
+```text
+size = task->vfunc(+0x118)
+if size <= 0x1400000:                  # 20 MiB
+    candidate = floor(size / 0x80000) + 1
+    candidate = min(candidate, global_connection_cap)
+    if current_http_count < candidate:
+        enter "small file download" branch
+```
+
+Therefore the branch-local hard cutoff is **20 MiB**, not the previously inferred 100 MiB. The earlier `threshold=104857600` log field belongs to another peer-selection/policy condition and must not be used as the small-file cutoff.
+
+### Current live connection cap is exactly 12
+
+`0x1800C2AA0` returns the image-global policy object at RVA `0x17C0118`. The getter `0x1800C36F0` returns the 32-bit field at `policy+0x760`, which is the cap used by the small-file candidate calculation.
+
+`experiments/legacy-global-gate-lifecycle-observer.cpp` now reads these fields through `PROCESS_QUERY_INFORMATION | PROCESS_VM_READ` only. On the current real `.234` core host:
+
+```text
+pid                  = 27188
+kernel_base          = 0x7ff97c170000
+policy               = 0x7ff97d930118
+connection_cap       = 12
+connection_primary   = 12
+connection_secondary = 24
+connection_mode      = 0
+```
+
+The 16,263,587-byte sample therefore computes:
+
+```text
+floor(16263587 / 524288) + 1 = 32
+min(32, live_connection_cap=12) = 12
+```
+
+and the real log reports `target_cdn_count=12`. This closes the connection-count branch across original machine code, current read-only live state, and historical runtime logs.
+
+### Natural `fsl` population
+
+Across the currently readable 50 rolled logs (one active writer skipped), the analyzer reconstructs 35 locatedownload completions:
+
+```text
+sl=120, fsl=-1 : 33
+sl=120, fsl=0  :  1
+sl=200, fsl=0  :  1
+```
+
+All 33 `fsl!=0` tasks with known file size are ordinary larger transfers:
+
+```text
+known sizes = 33
+minimum     = 66,710,136 B
+median      = 301,255,465 B
+maximum     = 520,727,195 B
+<= 20 MiB   = 0
+```
+
+The only two `fsl=0` tasks are both inside the recovered small-file branch:
+
+```text
+93 B:
+  sl=200, fsl=0
+  candidate_before_cap=1
+  observed target=1
+  peer_flow=93 B
+  peer_token_calls=1
+
+16,263,587 B:
+  sl=120, fsl=0
+  candidate_before_cap=32
+  observed target=12
+  peer_objects=12
+  peer_flow=16,263,587 B
+  peer_token_calls=28
+  max_peer_live_ms=2781
+```
+
+The second sample's peer flow sums exactly to the complete file size, so the high-rate episode is not a telemetry-size mismatch.
+
+### `get_download_token` explicitly treats raw `fsl=0` differently
+
+The original `get_download_token` path at `0x18109B280-0x18109C9A8` calls the task-config getter `0x180ECAA40`, which reads the literal key `"fsl"` with a default of `-1`.
+
+The relevant original control flow is equivalent to:
+
+```text
+fsl = task_config["fsl"]
+
+if fsl != 0:
+    global_result = global_singleton_bucket.consume(requested)
+else:
+    global_result = requested
+```
+
+Other task/embedded/peer token gates still participate, so `fsl=0` must **not** be described as a universal no-limit flag. The precise statement is that `fsl=0` skips this specific global singleton token-bucket consume inside `get_download_token`.
+
+This resolves why the 16.3 MB task can still record 28 download-token calls while finishing far above the ordinary TOTAL steady rate: token acquisition remains active, but one normally participating global consume is explicitly bypassed for the raw `fsl=0` state.
+
+### Limiter-family terminology correction
+
+The `get_download_token` calls recovered in this path target `0x1800E8220`, the **legacy** `AccumulateTokenBucket::consume` routine. Earlier research text that labeled the `owner+0xE0` token path as Qingluan conflated two limiter families and is stale. The live ordinary SELF transfer independently showed Qingluan bucket objects remaining invariant while legacy bucket objects followed task lifecycle. Current checkpoint conclusions use the legacy classification for this path.
+
+### Remaining data-flow boundary
+
+Both ends are now statically established:
+
+```text
+locatedownload parser:
+  parses literal key "fsl"
+  stores parsed integer in the response/state object
+
+get_download_token:
+  reads literal task-config key "fsl"
+  uses zero/nonzero to decide whether to consume the global singleton bucket
+```
+
+The intermediate C++ response/config-copy layer has not yet been recovered instruction-for-instruction from the parser's response field to the exact task-config map entry. The 35-event natural population is strongly consistent with that propagation, but this final assignment hop remains:
+
+```text
+STRONGLY CORRELATED / FINAL DATA-FLOW HOP PENDING
+```
+
+It should not be upgraded to a fully closed data-flow proof until that copy/update path is identified directly.
+
+### Revised small-file evidence grade
+
+```text
+20 MiB small-file cutoff:
+  VERIFIED statically
+
+per-512-KiB candidate formula:
+  VERIFIED statically
+
+live global connection cap = 12:
+  VERIFIED read-only in the current .234 process
+
+16.3 MB candidate 32 -> cap 12 -> observed 12 HTTP target:
+  VERIFIED across static code + live state + runtime log
+
+fsl=0 special population vs fsl=-1 ordinary population:
+  VERIFIED in current rolled-log sample
+
+get_download_token fsl==0 skip of one global singleton consume:
+  VERIFIED statically
+
+locatedownload response fsl -> exact task-config["fsl"] assignment hop:
+  NOT YET CLOSED; strongly correlated
+```
