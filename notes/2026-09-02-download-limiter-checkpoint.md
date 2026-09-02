@@ -51,6 +51,42 @@
 
 后者目前是更值得验证的架构假设。
 
+## 2026-09-02 真实 paused 任务对象关联
+
+本轮在 `kernel.dll 3.0.20.234`（SHA-256 `40EB35FCA9316FA2E24AACF18177747295D48B01F852AEA9372E2EDE13E1C5D6`）对应的真实 `baidunetdiskhost.exe` 中做了只读观测。目标进程仅以 `PROCESS_QUERY_INFORMATION | PROCESS_VM_READ` 打开，没有向百度网盘进程写内存。
+
+当前客户端恰好保留一个已暂停下载任务：
+
+- UI / `transmission.db` task id：`1788314213`
+- batch id：`38ce56ad2d655d626b49e4a5243aae8d`
+- 文件：`1.项目总览.mp4`
+- size：`200307093 B`
+- complete：`22413312 B`
+- status：`3`（客户端当前计入 paused）
+- `download_file.reserved5`：`b9583c2d733809b9349644679acc6d4a|`
+
+`reserved5` 中的 16-byte id 与真实进程中 legacy `EntityTask` 的 `+0x24` task id 精确一致，因此已经建立：
+
+`UI/DB task 1788314213 → batch 38ce... → native id b9583c... → legacy EntityTask`
+
+当前进程中同一个 `b9583c...` 出现在两个 `EntityTask` 实例（本次地址 `0x4d46450` / `0x4f23090`）；两者在 paused 状态的 `+0x108/+0x110` NetGrid 关联均为 null。两个实例的精确角色仍待运行态对照，不把它们直接解释成“两个下载任务”。
+
+同时，RTTI 对 bucket 所属对象给出了更强的类型证据：
+
+- `0x524fb0 / 0x524fe8 / 0x525020 / 0x525058` 四个 `AccumulateTokenBucket` 连续内嵌在同一个 `std::_Ref_count_obj2<qingluan::download::SpeedLimitor>` 对象中；当前 rate 均为 `524288 B/s`（512 KiB/s），paused 采样期间 token/timestamp 不变化。
+- `0x53d710` 的高 rate bucket 属于 `std::_Ref_count_obj2<qingluan::upload::SpeedLimitor>`，因此不能混入下载链分析。
+- 从同版本 DLL 的 MSVC RTTI 恢复出 `std::_Ref_count_obj2<qingluan::download::EntityTask>` vtable RVA `0x1399AC8` 与 `std::_Ref_count_obj2<qingluan::download::NetGrid>` vtable RVA `0x13BDC28`；paused 状态下两者在可读 private heap 中均为 0 个 live control block。
+
+这组 paused baseline 更支持一个分层模型：上层 legacy `EntityTask` 仍保留任务身份，而 qingluan 的执行 `EntityTask/NetGrid` 可在暂停时被销毁或卸载；共享 `download::SpeedLimitor` 则继续常驻。这个解释仍需要同一任务恢复运行后的对象出现/绑定证据才能升级为结论。
+
+另外，对 native id `b9583c...` 做二进制只读扫描时，在进程 private memory 中发现 18 个副本，其中包括两个 legacy `EntityTask +0x24` 以及若干 peer/strategy 相关区域。这说明该 16-byte id 会沿 native 执行链传播，但尚未把每个副本都归属到具体 qingluan 类型。
+
+### 本轮生命周期验证状态
+
+已完成并归档 **paused baseline**。尝试通过本机 Electron CDP 自动触发正常“恢复”操作时，执行层拒绝了该 UI 写操作；本轮没有绕过这一限制，也没有通过内存/API 注入改变下载状态。因此“恢复 → 再暂停 → 结束”三个阶段尚未采到，不能写成已验证。
+
+新增 `experiments/qingluan-task-bucket-correlator.cpp` 用于后续在相同任务状态切换前后重复执行，只读比较：legacy EntityTask、NetGrid 指针、qingluan EntityTask/NetGrid control block、SpeedLimitor buckets 与 native task id 的变化。
+
 ## 当前最有价值的下一步
 
 不再继续堆新的“改 rate”探针。优先做只读关联验证：
