@@ -5719,3 +5719,76 @@ All four original-dispatcher outputs match the recovered integer formulas. The a
 ```
 
 The test remains isolated: it changes only fields in the harness-owned copy/state initialized inside the standalone process. No live Baidu Netdisk process, account policy, network request, or service-side limiter is modified.
+
+
+### `history_global_max_download_speed` and the 4 MiB / 12 MiB base floor
+
+The rate-meter helper used at `0x1803333C4` is now identified more precisely. `0x1800C0930` adjusts the global policy-state pointer by `+0x348` and jumps to `0x1800BE640`; that method returns the rate-meter field at `+0x38`. The original rate-meter update code raises `+0x38` only when the newly calculated rate exceeds the previous value. It is therefore the meter's historical/rolling maximum field, matching the formatter label already recovered from the dispatcher log:
+
+```text
+history_global_max_download_speed
+```
+
+At dispatcher entry, the original code forms a minimum base in `R12` and then selects:
+
+```text
+global_max_download_speed
+  = max(history_global_max_download_speed, base_floor)
+```
+
+The ordinary base floor is:
+
+```text
+4 MiB/s = 0x400000
+```
+
+There is one explicit small-task SVIP exception. The flag getter `0x1800C9980` reads `state+0xAD4`; its only direct setter is `0x1800C9970`, called from the locatedownload completion path. That path sets the byte to 1 when the membership/speed-up eligibility checks pass and the returned locatedownload `sl` is positive, and clears it when that limit is non-positive. The conservative name used here is therefore `locatedownload speed-limit active flag`.
+
+At `0x18033338D-0x1803333A9`, the dispatcher implements:
+
+```text
+base_floor = 4 MiB
+
+if membership == SVIP
+   and locatedownload-speed-limit-active == false
+   and participating_task_count < 3:
+       base_floor = 12 MiB
+```
+
+The 12 MiB value is generated arithmetically as 4 MiB OR an extra 8 MiB bit; it is not inferred from the later output.
+
+A controlled original-dispatcher run with `svip_cdn_limit_factor=120`, negligible aggregate speed, `strategy_valid=0`, and the locatedownload-active byte left false gave:
+
+```text
+1 participating SVIP task:
+    observed = 10,062,329 B/s
+    expected ~= (12 MiB - 5,000) * 96 / 120 / 1
+             = 10,062,329.6 B/s
+
+2 participating SVIP tasks:
+    observed = 5,031,164 B/s each
+    expected ~= (12 MiB - 5,000) * 96 / 120 / 2
+             = 5,031,164.8 B/s
+
+3 participating SVIP tasks:
+    observed = 1,118,481 B/s each
+    expected = 4 MiB * 96 / 120 / 3
+             = 1,118,481.07 B/s
+
+4 participating SVIP tasks:
+    observed = 838,860 B/s each
+    expected = 4 MiB * 96 / 120 / 4
+             = 838,860.8 B/s
+```
+
+The discontinuity between 2 and 3 tasks is therefore an experimentally reproduced property of the original dispatcher and exactly matches the recovered `task_count < 3` branch.
+
+Together with the four adaptive multiplier experiments, the main low-load SVIP budget input can now be stated as:
+
+```text
+base = max(history_global_max_download_speed,
+           12 MiB if the special <3-task SVIP condition holds,
+           otherwise 4 MiB)
+```
+
+The subsequent adaptive multiplier, `svip_cdn_limit_factor`, participating-task division, and later tier/guard logic then determine the actual per-EntityTask CDN token.
