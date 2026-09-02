@@ -776,3 +776,224 @@ fresh CMS config retained in real process
 ```
 
 This substantially strengthens Level 6/6.5 without modifying the production Baidu process clock or limiter state.
+
+## 2026-09-02 rolled-kernel-log reconstruction + natural-policy A/B boundary
+
+The next research pass searched for a natural, non-modified `TOTAL=204800` comparison state. This produced both a stronger natural A/B for the CDN dimension and an important negative result for the TOTAL dimension.
+
+### The real kernel log store was located read-only
+
+Sysinternals Handle was used only to enumerate open handles for `baidunetdiskhost.exe`. The current host has an open kernel log under:
+
+```text
+%APPDATA%\BaiduYunKernel\Data\BaiduKernel_*.log
+```
+
+The actively written file is opened in a mode that prevents ordinary readers from opening it. Its handle was not closed, duplicated for reading, or otherwise disturbed. Instead, the many already-rolled log files in the same directory were analyzed.
+
+The rolled 8 MiB logs use a simple byte-wise transform:
+
+```text
+plaintext_byte = stored_byte XOR 0x8A
+```
+
+For example, decoding the beginning of a rolled log yields normal records such as:
+
+```text
+|2026-09-02T03:04:33... {Task} update_temp_normal_peer ...
+```
+
+A reusable read-only analyzer was added:
+
+```text
+experiments/kernel-log-policy-analyzer.py
+```
+
+It:
+
+- scans closed `BaiduKernel_*.log` files;
+- skips the currently locked writer file without touching it;
+- decodes each file with XOR `0x8A`;
+- reconstructs CMS raw config -> computed compatibility result -> submitted `set_sl` events;
+- parses `report_download_common` telemetry;
+- groups long-run throughput by TOTAL and CDN policy;
+- identifies non-122880 exceptional records and nearby small-file fast-path logs;
+- can emit either human-readable output or JSON.
+
+Current run:
+
+```text
+files_scanned = 50
+files_skipped = 1  (the current active writer)
+CMS_EVENTS    = 34
+TELEMETRY     = 21
+```
+
+### Real CMS compatibility branch is repeated 34 times
+
+Across all 34 reconstructed CMS config events in the closed logs, the raw server-side input is the same:
+
+```text
+total_limit_enable = 0
+total_limit_speed  = 81920
+```
+
+The observed runtime compatibility matrix is:
+
+```text
+raw enable  raw speed  current CDN  computed TOTAL  submitted TOTAL  count
+0           81920      122880       122880          122880           33
+0           81920      204800       204800          204800            1
+```
+
+This is a real-runtime quasi-experiment for the previously recovered `handle_config_data` branch. With identical CMS input, the output follows the currently active locatedownload CDN constraint.
+
+The unique 204800 event occurred at:
+
+```text
+2026-09-02T09:48:18.343337
+```
+
+The same decoded log contains, in order:
+
+```text
+raw CMS:
+  total_limit_enable=0
+  total_limit_speed=81920
+
+current locatedownload CDN before compatibility handling:
+  204800 B/s
+
+CMS compatibility result:
+  cms_max_speed=204800
+  total_limit_enable=0
+  total_max_speed=204800
+
+submitted policy:
+  set sl|cdn_sl=-1|total_sl=204800|src=enable_cms_total_sl
+```
+
+At `09:49:59.134673`, a subsequent task receives the exact same raw CMS `0/81920` input, but current locatedownload CDN is then 122880 B/s. The same branch emits:
+
+```text
+cms_max_speed=122880
+total_max_speed=122880
+set sl|cdn_sl=-1|total_sl=122880|src=enable_cms_total_sl
+```
+
+This is stronger than the earlier static inference: the same raw CMS input was observed producing two different TOTAL candidates solely as the current locatedownload CDN context changed.
+
+### The natural TOTAL=204800 sample is not a valid steady-state throughput A/B
+
+The rolled logs contain only one `download_common` record whose reported TOTAL is 204800:
+
+```text
+duration        = 8 s
+download_flux   = 16263587 bytes
+average_speed   = 2032948 B/s
+TOTAL           = 204800 B/s
+CDN             = 122880 B/s
+file_size       = 16263587 bytes
+max_active_http = 12
+speed_up_flag   = 0
+```
+
+Nearby kernel records explicitly identify this as:
+
+```text
+small file download|target_cdn_count=12
+```
+
+The task is below the kernel's observed 100 MiB small-file threshold and finishes almost immediately. Task-info records show the active transfer completing in approximately:
+
+```text
+2.77864 s
+```
+
+The CMS TOTAL=204800 policy remains resident until the next CMS recomputation about:
+
+```text
+100.791336 s
+```
+
+later, but there is no active transfer for most of that interval. Therefore it would be incorrect to present this as a ~100-second 204800 throughput test.
+
+The ~2 MB/s short-file result is also ~9.93x the nominal 204800 B/s policy rate and far above the ordinary long-transfer steady-state behavior. It is a separate small-file/high-concurrency startup path, not a valid steady-state TOTAL A/B observation.
+
+Evidence grade for natural TOTAL A/B therefore remains:
+
+```text
+TOTAL=122880 steady state: abundant long-run evidence
+TOTAL=204800 steady state: NOT OBSERVED
+```
+
+This is recorded as a negative result rather than forcing an invalid comparison.
+
+### A fair natural CDN A/B exists under the same TOTAL=122880 ceiling
+
+The closed logs do provide a useful natural A/B with TOTAL held constant at 122880 while locatedownload CDN differs.
+
+Using only `download_common` records with duration >= 600 seconds:
+
+```text
+TOTAL = 122880 B/s
+```
+
+Group A:
+
+```text
+CDN              = 122880 B/s
+records          = 7
+combined duration= 17432 s
+combined flux    = 2141578085 bytes
+weighted speed   = 122853.26 B/s
+speed / TOTAL    = 99.9782%
+reported range   = 122322 .. 123510 B/s
+```
+
+Group B:
+
+```text
+CDN              = 204800 B/s
+records          = 2
+combined duration= 1921 s
+combined flux    = 234007935 bytes
+weighted speed   = 121815.69 B/s
+speed / TOTAL    = 99.1339%
+reported range   = 119910 .. 122862 B/s
+```
+
+Raising the CDN policy from 122880 to 204800 B/s (+66.7%) does not raise long-run aggregate throughput. Both groups remain approximately pinned to the unchanged TOTAL=122880 ceiling, with the difference between them well within ordinary runtime/network variance.
+
+This is a substantially cleaner natural-policy comparison than the transient TOTAL=204800 small-file event and independently reinforces the Level 6 conclusion that the CMS TOTAL layer is the steady aggregate bottleneck in these ordinary long-transfer states.
+
+### Short-run exceptions have two distinct classes
+
+Among the decoded telemetry, records whose average exceeds the reported TOTAL by more than 20% separate into two mechanisms:
+
+1. ordinary large-file startup windows under TOTAL=122880, with ~1.28-1.81x short-run averages and excess data consistent with the recovered accumulation capacity;
+2. the unique 16.3 MB small-file fast-path record under transient TOTAL=204800, with 12 active HTTP peers and ~9.93x average/TOTAL ratio.
+
+The second class should not be modeled as a normal token-bucket accumulation burst. It is an execution-path exception associated with the kernel's explicit small-file download branch.
+
+### Revised natural-policy evidence status
+
+```text
+CMS compatibility branch, real runtime repeated A/B:
+  VERIFIED (34 events; 33x 122880 context, 1x 204800 context)
+
+TOTAL=122880 long-run binding behavior:
+  VERIFIED
+
+CDN 122880 vs 204800 while TOTAL remains 122880:
+  VERIFIED natural A/B; long-run throughput stays near TOTAL
+
+TOTAL 122880 vs 204800 steady-state throughput:
+  NOT AVAILABLE from current natural logs
+
+TOTAL=204800 observed event:
+  VERIFIED as a real transient policy state, but unsuitable for steady-state A/B
+  because the only active task is an explicit small-file fast path.
+```
+
+This improves the research by both adding stronger natural evidence and narrowing the claim boundary where the logs do not support a valid comparison.
