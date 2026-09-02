@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
     int ssStrategy = argc > 5 ? std::atoi(argv[5]) : 0;
     int tryVip = argc > 6 ? std::atoi(argv[6]) : 0;
     int factorOverride = argc > 7 ? std::atoi(argv[7]) : -1;
+    int globalSampleBytes = argc > 8 ? std::atoi(argv[8]) : 64;
     if (taskCount < 1 || taskCount > 32) return 5;
 
     HMODULE m = LoadLibraryA(argv[1]);
@@ -68,6 +69,11 @@ int main(int argc, char** argv) {
     auto allTaskGate = (AllTaskGateFn)(b + 0x3485B0);
     auto setStrategyValid = (void(__fastcall*)(void*,int32_t))(b + 0xC98F0);
     auto setSsStrategy = (void(__fastcall*)(void*,int32_t))(b + 0xC9920);
+    auto globalRate0 = (StatsRateFn)(b + 0xC3800);
+    auto globalRate1 = (StatsRateFn)(b + 0xC37F0);
+    auto globalRate2 = (StatsRateFn)(b + 0xC3820);
+    auto globalRate3 = (StatsRateFn)(b + 0xC3810);
+    auto globalRate4 = (StatsRateFn)(b + 0xC3840);
 
     init();
     auto state = (unsigned char*)getState();
@@ -81,7 +87,7 @@ int main(int argc, char** argv) {
     if (factorOverride >= 0) std::memcpy(state + 0xA08, &factorOverride, 4);
 
     const size_t globalStats[] = {0x398,0x488,0x4D8,0x528,0x578,0x5C8,0x618,0x668};
-    for (auto o : globalStats) { statsCtor(state + o); statsAdd(state + o, 64); }
+    for (auto o : globalStats) { statsCtor(state + o); statsAdd(state + o, (uint64_t)globalSampleBytes); }
 
     auto owner = zalloc(0x200);
     auto ovt = zalloc(0x100);
@@ -127,7 +133,7 @@ int main(int argc, char** argv) {
     }
 
     Sleep(100);
-    for (auto o : globalStats) statsAdd(state + o, 64);
+    for (auto o : globalStats) statsAdd(state + o, (uint64_t)globalSampleBytes);
     for (auto& t : tasks) {
         statsAdd(t.ent + 0x70, 512);
         for (auto o : taskStats) statsAdd(t.agg + o, 512);
@@ -147,7 +153,7 @@ int main(int argc, char** argv) {
     w64(mgr, 0x58, (uint64_t)taskCount);
     w64(mgr, 0x250, (uint64_t)(uintptr_t)state);
     std::cout << "tasks=" << taskCount << " membership=" << u32(state,0x91C) << " strategy_valid=" << (unsigned)*(state+0xAC8) << " ss_strategy=" << u32(state,0xACC) << " try_vip=" << (unsigned)*(state+0x1C0)
-              << " svip_factor=" << u32(state,0xA08) << " global_cdn=" << u32(state,0x20)
+              << " svip_factor=" << u32(state,0xA08) << " global_sample_bytes=" << globalSampleBytes << " global_aggregate=" << (uint64_t)globalRate0(state)+globalRate1(state)+globalRate2(state)+globalRate3(state)+globalRate4(state) << " global_cdn=" << u32(state,0x20)
               << " global_total=" << u32(state,0x90)
               << " before=" << u32(tasks.front().ng,0xB0) << "\n";
     auto vt0=(uint64_t*)*(uint64_t*)tasks.front().ent; auto status1b8=(uint8_t(__fastcall*)(void*))vt0[0x1B8/8];

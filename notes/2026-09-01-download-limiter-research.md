@@ -5663,3 +5663,59 @@ explicit use_svip_download_strategy branch:
 ```
 
 This means the previously proven 16 KiB/s NetGrid value remains correct for the observed normal SELF task and normal low-rate scheduler state, but it must not be generalized to every membership or speed-up strategy.
+
+
+### Dynamic proof of all four adaptive multiplier regions
+
+The strategy-matrix harness was extended with an optional `globalSampleBytes` input. It still uses the original `.234` rate-meter constructor/update/getter routines; the extra argument only changes how many synthetic bytes are submitted to the self-owned global rate meters before the original dispatcher runs. The harness also reads the exact five global lane-rate getters summed at the dispatcher entry, so each test records the actual `aggregate` value seen by the original machine code.
+
+With the default `svip_cdn_limit_factor=120`, the first two regions already matched the recovered equations directly. For example:
+
+```text
+base      = 4,194,304 B/s
+aggregate = 2,365,000 B/s   (~56.4% of base)
+
+(4,194,304 - 2,365,000) * 60 / 120 / 8
+= 114331.5
+
+original dispatcher output = 114331 B/s per task
+```
+
+Above 0.6 of the base, the default factor can make the raw result small enough to be hidden by a later intermediate 512 KiB total-budget guard. To expose the underlying multiplier without replacing any dispatcher code, only the self-owned harness copy of `svip_cdn_limit_factor` was temporarily set to 10. Four controlled runs then produced:
+
+```text
+base = 4,194,304 B/s
+task_count = 8
+factor = 10
+
+aggregate = 1,550,000  (< 0.4 * base)
+expected  = (4,194,304 - 1,550,000) * 96 / 10 / 8
+          = 3,173,164.8
+observed  = 3,173,164 B/s per task
+
+aggregate = 2,310,000  (0.4-0.6 * base)
+expected  = (4,194,304 - 2,310,000) * 60 / 10 / 8
+          = 1,413,228
+observed  = 1,413,228 B/s per task
+
+aggregate = 2,785,000  (0.6-0.8 * base)
+expected  = (4,194,304 - 2,785,000) * 40 / 10 / 8
+          = 704,652
+observed  = 704,652 B/s per task
+
+aggregate = 3,370,000  (> 0.8 * base)
+expected  = (4,194,304 - 3,370,000) * 30 / 10 / 8
+          = 309,114
+observed  = 309,114 B/s per task
+```
+
+All four original-dispatcher outputs match the recovered integer formulas. The adaptive regions can therefore be promoted from static interpretation to experimental binary-level behavior:
+
+```text
+< 0.4 * base        -> multiplier 96
+0.4 .. <0.6 * base -> multiplier 60
+0.6 .. <0.8 * base -> multiplier 40
+>= 0.8 * base       -> multiplier 30
+```
+
+The test remains isolated: it changes only fields in the harness-owned copy/state initialized inside the standalone process. No live Baidu Netdisk process, account policy, network request, or service-side limiter is modified.
