@@ -8,10 +8,11 @@
   --hover: rgba(0, 0, 0, 0.025);
   --accent: #315b8a;
   --focus: #315b8a;
-  --pattern-a: rgba(92, 119, 139, 0.5);
-  --pattern-b: rgba(145, 119, 101, 0.42);
-  --pattern-c: rgba(96, 132, 116, 0.44);
-  --pattern-d: rgba(126, 115, 142, 0.38);
+  --pattern-a: rgba(70, 101, 126, 0.78);
+  --pattern-b: rgba(149, 109, 82, 0.72);
+  --pattern-c: rgba(75, 128, 103, 0.72);
+  --pattern-d: rgba(122, 96, 151, 0.68);
+  --identity-strip-height: 8px;
   --sidebar-collapsed: 44px;
   --sidebar-expanded: 188px;
   --sidebar-width: var(--sidebar-collapsed);
@@ -30,10 +31,10 @@ html[data-theme="dark"] {
   --hover: rgba(255, 255, 255, 0.035);
   --accent: #9ab6d8;
   --focus: #a9c2df;
-  --pattern-a: rgba(142, 169, 189, 0.5);
-  --pattern-b: rgba(183, 153, 132, 0.44);
-  --pattern-c: rgba(134, 169, 153, 0.46);
-  --pattern-d: rgba(164, 148, 181, 0.42);
+  --pattern-a: rgba(142, 169, 189, 0.74);
+  --pattern-b: rgba(183, 153, 132, 0.68);
+  --pattern-c: rgba(134, 169, 153, 0.7);
+  --pattern-d: rgba(164, 148, 181, 0.66);
 }
 
 html[data-sidebar="expanded"] {
@@ -56,6 +57,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  padding-top: var(--identity-strip-height);
   background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
@@ -85,23 +87,33 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .skip-link:focus { transform: translateY(0); }
 
 .identity-pattern {
+  position: fixed;
+  z-index: 80;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 6px;
+  height: var(--identity-strip-height);
+  pointer-events: none;
   background-color: var(--bg);
   background-image:
-    radial-gradient(circle at 8px 3px, var(--pattern-a) 0 1px, transparent 1.15px),
+    radial-gradient(circle at 8px 4px, var(--pattern-a) 0 1.15px, transparent 1.35px),
     repeating-linear-gradient(116deg,
-      transparent 0 11px,
-      var(--pattern-a) 11px 14px,
-      transparent 14px 25px,
-      var(--pattern-b) 25px 28px,
-      transparent 28px 40px,
-      var(--pattern-c) 40px 43px,
-      transparent 43px 55px,
-      var(--pattern-d) 55px 57px,
-      transparent 57px 70px);
-  background-size: 31px 6px, auto 6px;
-  opacity: 0.62;
+      transparent 0 7px,
+      var(--pattern-a) 7px 12px,
+      transparent 12px 18px,
+      var(--pattern-b) 18px 23px,
+      transparent 23px 29px,
+      var(--pattern-c) 29px 34px,
+      transparent 34px 40px,
+      var(--pattern-d) 40px 45px,
+      transparent 45px 52px);
+  background-size: 27px 8px, auto 8px;
+  box-shadow: 0 1px 0 rgba(23, 23, 23, 0.08);
+  opacity: 0.9;
+}
+
+html[data-theme="dark"] .identity-pattern {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .wiki-shell {
@@ -109,16 +121,16 @@ a, button { -webkit-tap-highlight-color: transparent; }
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   gap: var(--shell-gap);
   width: min(calc(100% - 56px), 1480px);
-  min-height: 100vh;
+  min-height: calc(100vh - var(--identity-strip-height));
   margin: 0 auto;
   transition: grid-template-columns 160ms ease, gap 160ms ease;
 }
 
 .sidebar {
   position: sticky;
-  top: 0;
+  top: var(--identity-strip-height);
   display: flex;
-  height: 100vh;
+  height: calc(100vh - var(--identity-strip-height));
   min-width: 0;
   flex-direction: column;
   overflow: visible;
@@ -175,7 +187,6 @@ a, button { -webkit-tap-highlight-color: transparent; }
 html:not([data-sidebar="expanded"]) .sidebar-toggle:hover .sidebar-arrow { transform: translateX(1.5px); }
 html[data-sidebar="expanded"] .sidebar-arrow { transform: rotate(180deg); }
 html[data-sidebar="expanded"] .sidebar-toggle:hover .sidebar-arrow { transform: rotate(180deg) translateX(1.5px); }
-
 
 .sidebar-nav {
   display: none;
@@ -589,7 +600,7 @@ a.simple-item:hover .simple-title > span { transform: translateX(2px); }
   .mobile-header {
     position: sticky;
     z-index: 30;
-    top: 0;
+    top: var(--identity-strip-height);
     display: block;
     border-bottom: 1px solid var(--line);
     background: var(--bg);
