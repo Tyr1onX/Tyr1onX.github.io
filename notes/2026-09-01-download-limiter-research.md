@@ -3034,3 +3034,33 @@ spup_peer / p2pu_percent / spup_percent / basic_speed
 ```
 
 The next priority is therefore to recover the owner of the bucket returned by `0x1801b7fa0`, find every path that changes its refill rate/capacity, and test whether any of those inputs originate from the four-field P2P switch block.
+
+
+### 28.8 The threshold bucket is embedded at owner + 0xE0
+
+The accessor at `0x1801b7fa0` is exact:
+
+```asm
+lea rax, [rcx+0xE0]
+ret
+```
+
+Therefore the bucket used by the P2S/CDN threshold logic is an embedded subobject at:
+
+```text
+network/task policy owner + 0xE0
+```
+
+The same owner also contains another independent bucket at `+0x90`. Function `0x1801b7c20-0x1801b7e67` updates that `+0x90` bucket through `AccumulateTokenBucket::set` (`0x1800e83d0`). Nearby scalar policy fields include `+0xC8`, `+0xCC`, `+0xD0`, `+0xD4`, and `+0xD8`.
+
+This means the owner is not a thin wrapper around a single limiter. It is a composite task/network state object that contains multiple bucket instances plus peer-selection policy state.
+
+The immediate next data-flow question is now narrower:
+
+```text
+P2P switch four-field block
+        -> ?
+        -> owner + 0xE0 bucket rate/capacity
+        -> download_threshold_speed
+        -> P2S/CDN peer-selection hysteresis
+```
