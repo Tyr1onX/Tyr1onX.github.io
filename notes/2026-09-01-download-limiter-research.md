@@ -3186,3 +3186,51 @@ sl (KiB/s)
 ```
 
 This establishes `sl` as a concrete locatedownload policy/result value that directly feeds the Qingluan task-download token limiter. What remains unresolved is whether `sl` is parsed directly from the remote response or locally derived/overridden before the result object is delivered.
+
+
+### 29.6 `sl` and `fsl` are parsed in the locatedownload response handler
+
+The function `0x1807554e0-0x18075d0d3` is positively identified as a locatedownload response-processing path by its own strings, including:
+
+```text
+locatedownload time info|local_time=%1%|server_time=%2%
+locate_download_finish|rank=%1%|is_encrypt=%2%|url=%3%
+sl=%1%|fsl=%2%|min_timeout=%3%|max_timeout=%4%|max_continuous_failure=%5%|bak_rank_slice_num=%6%|restrict_ratio=%7%|enterprise_p2p_open=%8%
+```
+
+Within this same parser, the key `sl` is processed and the resulting integer is stored at:
+
+```asm
+mov eax, <parsed sl>
+mov [result_state + 0x1B0], eax
+```
+
+The immediately following `fsl` parse stores:
+
+```asm
+mov eax, <parsed fsl>
+mov [result_state + 0x1B4], eax
+```
+
+Concrete locations:
+
+```text
+0x180758c87...0x180758d02  -> parse `sl`  -> +0x1B0
+0x180758d60...0x180758dd5  -> parse `fsl` -> +0x1B4
+```
+
+The later grouped log reads this same consecutive state block in `sl, fsl, ...` order.
+
+This proves that `sl/fsl` originate in the locatedownload response-processing layer rather than being invented at the final Qingluan task-token setter. There is still an intermediate representation boundary between the parser-state offsets `+0x1B0/+0x1B4` and the downstream completion-result offsets `+0xD8/+0xDC`; the exact conversion function remains to be named. Semantically, however, both sides identify the fields as the same `sl/fsl` pair.
+
+The current evidence therefore supports:
+
+```text
+locatedownload response
+  -> parse sl / fsl
+  -> locatedownload parser state
+  -> completion/result representation
+  -> sl / fsl
+  -> notify_speed_limit
+  -> Qingluan task download AccumulateTokenBucket
+```
