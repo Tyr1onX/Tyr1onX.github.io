@@ -5792,3 +5792,34 @@ base = max(history_global_max_download_speed,
 ```
 
 The subsequent adaptive multiplier, `svip_cdn_limit_factor`, participating-task division, and later tier/guard logic then determine the actual per-EntityTask CDN token.
+
+## 2026-09-02: original legacy locatedownload scalar parser rehosted
+
+Level-4 replay now has an original-code proof below the HTTP-response wrapper.
+
+Using a synthetic, local-only JSON response and the original `kernel.dll 3.0.20.234` machine code, the isolated harness now executes:
+
+- JSON/input stream construction: `0x1800C2AC0`
+- property-tree parse: `0x1800C2C70`
+- path lookup: `0x180056C10`
+- scalar conversion-interface factory: `0x18112E0B0`
+- integer conversion used by legacy locatedownload: `0x180117590`
+
+Synthetic input:
+
+```json
+{"sl":120,"fsl":-1}
+```
+
+Observed original-code output:
+
+```text
+sl   node text='120' -> 120
+fsl  node text='-1'  -> -1
+```
+
+This is the same integer conversion function called by `handle_response` immediately before stores to result `+0x1B0` (`sl`) and `+0x1B4` (`fsl`).
+
+An ABI correction was also established. The stack storage at handler local `+0x5F0` is reused. An earlier cloned ptree object is destroyed by `0x1800B2C40`; before scalar conversion the handler calls `0x18112E0B0(1)` and stores the returned conversion-interface pointer at local `+0x5F8`, exactly the `context+0x08` pointer dereferenced by `0x180117590`. Treating the prior ptree clone itself as the conversion context is therefore incorrect.
+
+No Baidu process was modified and no network request was made; all input was synthetic inside an isolated test process loading the original `.234` DLL.
