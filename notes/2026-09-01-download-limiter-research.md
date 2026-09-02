@@ -5887,3 +5887,32 @@ process exit=0
 ```
 
 This closes the gap left by the earlier scalar-parser proof: the values are now produced by the complete original `handle_response`, not by directly invoking the scalar conversion function. The response wrapper/config dependencies required for the handler were also satisfied using original `.234` helpers in the isolated process.
+
+## 2026-09-02: synthetic locatedownload response reaches original global gates
+
+A combined isolated proof now connects the complete original legacy response handler to the already-rehosted original global speed-policy state.
+
+Pipeline:
+
+```text
+synthetic local locatedownload JSON
+  -> original 0x1807554E0 handle_response
+  -> result sl = 120
+  -> recovered completion conversion sl << 10
+  -> original raw-sl setter 0x1800C9990
+  -> original policy entry 0x1800C0BC0, source=2 (locatedownload)
+  -> original CDN/TOTAL AccumulateTokenBucket state
+```
+
+Observed output:
+
+```text
+after handler: sl=120 fsl=-1
+policy raw_sl=120
+CDN   raw=122880 source=2
+TOTAL raw=122880 source=2
+locatedownload_active=1
+process exit=0
+```
+
+This is deliberately described as an end-to-end offline causal proof rather than a byte-for-byte rehost of the whole `0x18026B530` completion routine. That completion routine performs substantial unrelated task/URL/FGID lifecycle work. The only harness glue in the limiter path is the exact recovered `sl << 10` conversion visible at `0x18026D4D6-0x18026D4ED`; parsing, source arbitration, state mutation and both global bucket implementations are original `.234` code.
