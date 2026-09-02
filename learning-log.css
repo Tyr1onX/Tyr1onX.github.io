@@ -1,0 +1,292 @@
+.learning-page {
+  width: min(100%, 900px);
+}
+
+.learning-page .page-heading {
+  margin-bottom: 30px;
+}
+
+.learning-page .page-heading p {
+  max-width: 660px;
+}
+
+.learning-current {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 20px;
+  align-items: baseline;
+  width: min(100%, 760px);
+  padding: 16px 0 18px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.learning-current h2,
+.learning-log-head h2,
+.learning-repo-label {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.learning-current p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  color: var(--text);
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+.learning-current span:not(:last-child)::after {
+  margin-left: 10px;
+  color: var(--faint);
+  content: "·";
+}
+
+.learning-log {
+  margin-top: 46px;
+}
+
+.learning-log-head {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 20px;
+  align-items: baseline;
+  width: min(100%, 760px);
+  margin-bottom: 28px;
+}
+
+.learning-log-head p {
+  margin: 0;
+  color: var(--secondary);
+  font-size: 14.5px;
+  line-height: 1.65;
+}
+
+.learning-year + .learning-year {
+  margin-top: 58px;
+}
+
+.learning-year > h3 {
+  margin: 0 0 24px;
+  font-size: 31px;
+  font-weight: 520;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.learning-month + .learning-month {
+  margin-top: 42px;
+}
+
+.learning-month > h4 {
+  margin: 0 0 4px 132px;
+  color: var(--secondary);
+  font-size: 17px;
+  font-weight: 540;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+}
+
+.learning-days {
+  border-top: 1px solid var(--line);
+}
+
+.learning-day {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 20px;
+  padding: 20px 0 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.learning-date {
+  display: block;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+.learning-date-day {
+  display: inline-block;
+  min-width: 2ch;
+}
+
+.learning-date-mobile {
+  display: none;
+}
+
+.learning-day-entries {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.learning-entry {
+  max-width: 690px;
+}
+
+.learning-area {
+  margin: 0 0 2px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.015em;
+}
+
+.learning-entry h5 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 560;
+  line-height: 1.45;
+  letter-spacing: -0.018em;
+}
+
+.learning-summary {
+  max-width: 650px;
+  margin: 5px 0 0;
+  color: var(--secondary);
+  font-size: 15.5px;
+  line-height: 1.72;
+}
+
+.learning-repo {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 20px;
+  align-items: baseline;
+  width: min(100%, 760px);
+  margin-top: 46px;
+  padding-top: 17px;
+  border-top: 1px solid var(--line);
+}
+
+.learning-repo a {
+  display: inline-flex;
+  width: max-content;
+  min-height: 34px;
+  align-items: center;
+  gap: 7px;
+  color: var(--secondary);
+  font-size: 14px;
+  transition: color 120ms ease;
+}
+
+.learning-repo a:hover {
+  color: var(--text);
+}
+
+.learning-empty {
+  margin: 0;
+  color: var(--secondary);
+  font-size: 15px;
+}
+
+.learning-repo a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 860px) {
+  .learning-page {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .learning-page .page-heading {
+    margin-bottom: 24px;
+  }
+
+  .learning-current,
+  .learning-log-head,
+  .learning-repo {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .learning-current {
+    padding: 13px 0 15px;
+  }
+
+  .learning-current p {
+    gap: 3px 8px;
+    font-size: 15px;
+  }
+
+  .learning-current span:not(:last-child)::after {
+    margin-left: 8px;
+  }
+
+  .learning-log {
+    margin-top: 36px;
+  }
+
+  .learning-log-head {
+    margin-bottom: 23px;
+  }
+
+  .learning-year > h3 {
+    margin-bottom: 20px;
+    font-size: 27px;
+  }
+
+  .learning-month + .learning-month {
+    margin-top: 36px;
+  }
+
+  .learning-month > h4 {
+    margin: 0 0 7px;
+    font-size: 16px;
+  }
+
+  .learning-day {
+    grid-template-columns: 1fr;
+    gap: 11px;
+    padding: 17px 0 19px;
+  }
+
+  .learning-date-day {
+    display: none;
+  }
+
+  .learning-date-mobile {
+    display: inline;
+    color: var(--faint);
+    font-size: 11.5px;
+    letter-spacing: 0.035em;
+  }
+
+  .learning-day-entries {
+    gap: 20px;
+  }
+
+  .learning-entry h5 {
+    font-size: 17px;
+  }
+
+  .learning-summary {
+    margin-top: 4px;
+    font-size: 15.25px;
+    line-height: 1.68;
+  }
+
+  .learning-repo {
+    margin-top: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .learning-repo a {
+    transition: none;
+  }
+}
