@@ -3144,3 +3144,45 @@ locatedownload result + 0xD8   (KiB/s)
 This is the strongest static evidence so far that the `.234` ordinary download control path feeds a Qingluan task token from locatedownload policy/result state.
 
 The remaining question is the provenance of `locatedownload_result + 0xD8`: direct response field, locally decoded limit, P2P-switch override, or a combination. The next target is `decode_speed_limit` and the locatedownload response parser.
+
+
+### 29.5 Locatedownload result fields `sl` and `fsl` are mapped exactly
+
+The locatedownload/CDN completion path `0x18026b530-0x18026ea9d` emits:
+
+```text
+|cdn_urls_finish|fid=%8%|handle=%9%|urls=%1%|err=%2%|sl=%3%|pcs_error=%4%|error_msg=%5%|consume_time=%6%|fsl=%7%
+```
+
+The formatter arguments are built in this exact order:
+
+```text
+%1  result + 0x18   -> urls
+%2  result + 0x128  -> err
+%3  result + 0xD8   -> sl
+%4  result + 0x140  -> pcs_error
+%5  result + 0x148  -> error_msg
+%6  local elapsed   -> consume_time
+%7  result + 0xDC   -> fsl
+%8  fid
+%9  handle
+```
+
+Therefore the previously recovered task-token input can now be named precisely:
+
+```text
+locatedownload_result + 0xD8 = sl
+locatedownload_result + 0xDC = fsl
+```
+
+Combined with the downstream path:
+
+```text
+sl (KiB/s)
+  -> set_speed_limit(sl * 1024)
+  -> notify_speed_limit(..., sl)
+  -> set_task_download_token(sl * 1024)
+  -> owner + 0xE0 qingluan::common::AccumulateTokenBucket
+```
+
+This establishes `sl` as a concrete locatedownload policy/result value that directly feeds the Qingluan task-download token limiter. What remains unresolved is whether `sl` is parsed directly from the remote response or locally derived/overridden before the result object is delivered.
