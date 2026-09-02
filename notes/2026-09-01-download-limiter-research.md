@@ -5318,3 +5318,97 @@ after dispatcher:
 ```
 
 Therefore the complete single-task downstream allocation path is now experimentally rehosted using the original Baidu `.234` implementation. The next isolated check is multi-task allocation: use the same original lifecycle with enough EntityTask entries to determine whether the statically recovered 16 KiB/s per-task floor is emitted by the original dispatcher when `122880 / task_count` falls below 16384 B/s.
+
+#### 29.17.34 Multi-task rehost closes the 16 KiB/s CDN floor
+
+A first multi-task harness initially produced a misleading result: 7, 8, and 10 synthetic EntityTask entries all received the full `122880 B/s` CDN token. Static control flow showed the division branch was present, so the discrepancy was traced rather than treated as contradictory evidence.
+
+Two lifecycle details explain the result.
+
+First, the real periodic caller `0x18032A100` maintains `manager+0x218` as a dispatch-cycle counter. Approximately every four seconds it performs:
+
+```text
+manager+0x218 += 1
+cdn_speed_limit_dispatch(manager)
+```
+
+This counter is used by one adaptive scheduler regime. Directly invoking the dispatcher omits that caller-side lifecycle step, although it is not the decisive factor in the mode used by the final boundary experiment.
+
+Second, and decisively, EntityTask vtable slot `+0x1B8` (`0x1802AB250`) tests a 16-byte field at `EntityTask+0x24` through `0x1800D54B0`:
+
+```text
+all 16 bytes zero     -> true
+any byte nonzero      -> false
+```
+
+The real EntityTask constructors initialize this field through the original 16-byte helpers. For example, `0x18027F5F0` calls `0x1800D52A0(EntityTask+0x24, input)` and another constructor at `0x1802808F0` either zeroes the field or copies a 16-byte source depending on its input state. The exact business meaning is not assigned beyond `16-byte task identity/hash-like state` without stronger semantic evidence.
+
+`cdn_speed_limit_dispatch` calls helper `0x1803485B0` after computing the low-rate candidate. That helper iterates all tasks. For each task it combines:
+
+```text
+three task-rate statistics
+EntityTask::vfunc+0x1B8 (16-byte identity/state is zero)
+```
+
+The zero-initialized synthetic EntityTasks therefore made the helper return true, and the dispatcher intentionally replaced the low-rate candidate with the full global CDN `sl`. This explains the earlier all-122880 result.
+
+The corrected harness now initializes each EntityTask identity with the original `0x1800D52A0` copy helper using deterministic self-owned test bytes. No user data or live Baidu task is used. With nonzero identities and active task statistics:
+
+```text
+all_task_gate = 0
+```
+
+and the original dispatcher preserves the low-rate candidate.
+
+A final boundary experiment reduced only the synthetic **global aggregate statistics** while keeping each task's own statistics in the active range. The global CDN and TOTAL gates remained exactly:
+
+```text
+CDN   = 122880 B/s
+TOTAL = 122880 B/s
+```
+
+The original `.234` dispatcher then emitted:
+
+```text
+6 participating tasks:
+  each CDN token = 20480 B/s
+  122880 / 6     = 20480
+
+7 participating tasks:
+  each CDN token = 17554 B/s
+  floor(122880/7)= 17554
+
+8 participating tasks:
+  mathematical share = 15360 B/s
+  emitted CDN token   = 16384 B/s
+```
+
+Every value was captured by a self-owned EntityTask vtable copy whose `+0x50` slot only records the argument and immediately forwards to the original `0x1802AE170` implementation. The original NetGrid bucket subsequently contains the same rate.
+
+This closes the static `0x4000` branch experimentally:
+
+```text
+candidate = remaining CDN budget / participating task count
+candidate = max(candidate, 0x4000)
+0x4000    = 16384 B/s = 16 KiB/s
+```
+
+In the controlled boundary case where other global consumption is effectively negligible, this reduces to:
+
+```text
+candidate = max(122880 / task_count, 16384)
+```
+
+The observed 6/7/8-task sequence (`20480`, `17554`, `16384`) proves that 16 KiB/s is a scheduler floor, not a second independent account-level cap and not a TokenBucket minimum-capacity artifact.
+
+The important architectural distinction is now experimentally supported:
+
+```text
+122880 B/s (120 KiB/s)
+    = global policy/CDN ceiling in this normal-user state
+
+16384 B/s (16 KiB/s)
+    = downstream per-task CDN allocation floor inside cdn_speed_limit_dispatch
+```
+
+The remaining semantic work is to name the exact business meaning of the task participation/identity state and the scheduler modes around `global_state+0x91C` / `+0x1C0`; the arithmetic and downstream machine-code behavior are now closed.
