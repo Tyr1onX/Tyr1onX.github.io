@@ -4651,3 +4651,71 @@ qingluan::download::CmsConfigServer
 The legacy `handle_config_data` path that parses `total_limit_speed` / `total_limit_enable` also handles membership, strategy version, TTL and P2S speed policy and emits `cms time|...` logs. Together these artifacts establish that `enable_cms_total_sl` is part of a genuine CMS remote-configuration subsystem rather than a purely local user setting.
 
 Static presence of the endpoint alone does not prove that a particular request was emitted at the instant of the snapshot. The stronger per-session fact remains the live arbitrator state: TOTAL source is currently `enable_cms_total_sl` with rate 122880 B/s.
+
+#### 29.17.23 `set_sl` uses a fixed source-priority ordering
+
+The tail of `0x1800EF110` now makes the source arbitration rule explicit for positive speed-limit candidates.
+
+For the CDN side:
+
+```asm
+cmp  [state+0x30], incoming_source
+jl   skip_cdn_update
+...
+mov  [state+0x30], incoming_source
+call AccumulateTokenBucket::set_rate
+```
+
+For the TOTAL side:
+
+```asm
+cmp  [state+0xA0], incoming_source
+jl   skip_total_update
+...
+mov  [state+0xA0], incoming_source
+call AccumulateTokenBucket::set_rate
+```
+
+Therefore a positive incoming candidate is allowed to replace the current source only when:
+
+```text
+current_source >= incoming_source
+```
+
+Lower enum numbers have higher priority. With the recovered source table, the ordering is:
+
+```text
+0  user_ctl              highest priority
+1  enable_cms_total_sl
+2  locatedownload
+3  p2psdk
+4  application
+5  default               lowest priority
+```
+
+This exactly explains the current live state:
+
+```text
+locatedownload (2) can initially install TOTAL=122880
+CMS (1) can later replace source 2 with TOTAL=122880
+locatedownload (2) cannot subsequently displace an active CMS source 1
+```
+
+The same ordering is independently maintained for CDN (`state+0x30`) and TOTAL (`state+0xA0`). This is why the current process can simultaneously hold:
+
+```text
+CDN   source = 2 locatedownload
+TOTAL source = 1 enable_cms_total_sl
+```
+
+There is also a normalization rule for non-user sources. Near `0x1800EFC08`, when `source != 0` and the TOTAL candidate is positive, the function ensures:
+
+```text
+total_sl = max(total_sl, cdn_sl)
+```
+
+when both values are positive. This prevents a non-user policy call from installing a positive TOTAL ceiling below its positive CDN ceiling.
+
+Finally, source `2` (`locatedownload`) sets a dedicated state flag at `state+0x1C1`. The exact downstream meaning of that flag is not yet named, so it is recorded only as a locatedownload-active marker rather than given a stronger semantic label.
+
+The remaining question for this arbitration layer is the release/fallback path: when a higher-priority source such as CMS becomes disabled or invalid, determine how its ownership is relinquished and whether the code immediately restores a lower-priority stored candidate or waits for that source to publish again.
