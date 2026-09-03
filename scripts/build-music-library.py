@@ -681,6 +681,11 @@ def build_library(raw: list[dict], existing: list[dict]) -> tuple[list[dict], li
 def cached_identity_matches(track: dict, item: dict) -> bool:
     if item.get("status") != "matched":
         return True
+    if item.get("manualVerified"):
+        return (
+            nfkc(str(item.get("requestedTitle", ""))) == nfkc(str(track.get("title", "")))
+            and nfkc(str(item.get("requestedArtist", ""))) == nfkc(str(track.get("artist", "")))
+        )
     title = str(item.get("matchedTitle", ""))
     artist = str(item.get("matchedArtist", ""))
     if not title or not artist:
