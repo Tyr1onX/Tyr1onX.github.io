@@ -512,8 +512,22 @@
     "score": 10
   },
   "archive-035-6bfc9418": {
-    "status": "placeholder",
-    "source": "resolver"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "user-approved",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000024apN31OIe7K.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/003DMpXb112ONw",
+    "year": "",
+    "qqSongMid": "003DMpXb112ONw",
+    "qqAlbumMid": "0024apN31OIe7K",
+    "matchedTitle": "我的美丽",
+    "matchedArtist": "小霞",
+    "matchedAlbum": "小霞 2.0",
+    "manualVerified": true,
+    "artworkOnly": true,
+    "requestedTitle": "我的美丽",
+    "requestedArtist": "费宇清"
   },
   "archive-036-72ab544c": {
     "status": "matched",
@@ -530,18 +544,6 @@
     "matchedArtist": "张震岳",
     "matchedAlbum": "秘密基地",
     "score": 13
-  },
-  "archive-037-454686bd": {
-    "status": "placeholder",
-    "source": "resolver",
-    "confidence": "none",
-    "cover": "",
-    "previewUrl": "",
-    "listenUrl": "",
-    "year": "",
-    "matchedTitle": "",
-    "matchedArtist": "",
-    "matchedAlbum": ""
   },
   "regular-friends": {
     "status": "matched",
@@ -608,8 +610,21 @@
     "score": 13
   },
   "archive-042-598a441f": {
-    "status": "placeholder",
-    "source": "resolver"
+    "status": "matched",
+    "source": "itunes",
+    "confidence": "user-approved",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/69/93/c4/6993c425-9006-68c6-1497-01b650aae5c0/luoshengmen.jpg/600x600bb.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://music.apple.com/cn/album/%E7%BD%97%E7%94%9F%E9%97%A8-follow/1691820339?i=1691820340&uo=4",
+    "year": "2020",
+    "itunesTrackId": 1691820340,
+    "matchedTitle": "罗生门(Follow)",
+    "matchedArtist": "梨冻紧 & Wiz_H张子豪",
+    "matchedAlbum": "罗生门(Follow) - Single",
+    "manualVerified": true,
+    "artworkOnly": true,
+    "requestedTitle": "又到了昕罗生门的季节#罗生门",
+    "requestedArtist": "思"
   },
   "archive-043-78c982fe": {
     "status": "matched",
@@ -944,10 +959,6 @@
     "matchedAlbum": "星茶会 - Single",
     "score": 11
   },
-  "archive-066-43af252a": {
-    "status": "placeholder",
-    "source": "resolver"
-  },
   "archive-067-859113ba": {
     "status": "matched",
     "source": "itunes",
@@ -961,10 +972,6 @@
     "matchedArtist": "S087",
     "matchedAlbum": "Flying Bird (Ins.) - Single",
     "score": 11
-  },
-  "archive-068-60f8dad7": {
-    "status": "placeholder",
-    "source": "resolver"
   },
   "archive-069-04b5b91b": {
     "status": "matched",
@@ -983,8 +990,22 @@
     "score": 13
   },
   "archive-070-0201010e": {
-    "status": "placeholder",
-    "source": "resolver"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "user-approved",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000033R2xQ2I0Uyf.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000lD3pv0heA53",
+    "year": "2014",
+    "qqSongMid": "000lD3pv0heA53",
+    "qqAlbumMid": "0033R2xQ2I0Uyf",
+    "matchedTitle": "新地球",
+    "matchedArtist": "林俊杰",
+    "matchedAlbum": "新地球",
+    "manualVerified": true,
+    "artworkOnly": true,
+    "requestedTitle": "新地球",
+    "requestedArtist": "精彩轩迪"
   },
   "mermaid": {
     "status": "matched",
@@ -1314,10 +1335,6 @@
     "matchedArtist": "蔡依林",
     "matchedAlbum": "看我72变",
     "score": 13
-  },
-  "archive-093-318de6cc": {
-    "status": "placeholder",
-    "source": "resolver"
   },
   "archive-094-ed5ac6c0": {
     "status": "matched",
@@ -1924,8 +1941,22 @@
     "score": 13
   },
   "archive-135-acdd6c61": {
-    "status": "placeholder",
-    "source": "resolver"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "user-approved",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M0000009ExGx4cyyqU.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/0022oe6z3b3oGD",
+    "year": "",
+    "qqSongMid": "0022oe6z3b3oGD",
+    "qqAlbumMid": "0009ExGx4cyyqU",
+    "matchedTitle": "晚安",
+    "matchedArtist": "颜人中",
+    "matchedAlbum": "晚安",
+    "manualVerified": true,
+    "artworkOnly": true,
+    "requestedTitle": "晚安",
+    "requestedArtist": ""
   },
   "archive-136-1913fa05": {
     "status": "matched",
@@ -3006,10 +3037,6 @@
     "matchedAlbum": "Race of a Thousand Camels",
     "score": 13
   },
-  "archive-207-dd736067": {
-    "status": "placeholder",
-    "source": "resolver"
-  },
   "archive-208-1ab2e47a": {
     "status": "matched",
     "source": "qq",
@@ -3091,8 +3118,22 @@
     "score": 13
   },
   "archive-213-73178aa2": {
-    "status": "placeholder",
-    "source": "resolver"
+    "status": "matched",
+    "source": "qq",
+    "confidence": "user-approved",
+    "cover": "https://y.gtimg.cn/music/photo_new/T002R500x500M000000jcKFG0sQrD0.jpg",
+    "previewUrl": "",
+    "listenUrl": "https://y.qq.com/n/ryqq/songDetail/000rh0dE2TyUic",
+    "year": "2010",
+    "qqSongMid": "000rh0dE2TyUic",
+    "qqAlbumMid": "000jcKFG0sQrD0",
+    "matchedTitle": "雨爱",
+    "matchedArtist": "杨丞琳",
+    "matchedAlbum": "雨爱",
+    "manualVerified": true,
+    "artworkOnly": true,
+    "requestedTitle": "雨爱(氛围版)",
+    "requestedArtist": ""
   },
   "archive-049-a7ffba2b": {
     "status": "matched",
@@ -4409,10 +4450,6 @@
     "matchedAlbum": "十二新作",
     "score": 13
   },
-  "archive-295-4dadd481": {
-    "status": "placeholder",
-    "source": "resolver"
-  },
   "archive-296-8c86817f": {
     "status": "matched",
     "source": "qq",
@@ -4618,14 +4655,6 @@
     "matchedAlbum": "老二次元钢琴专辑",
     "score": 13
   },
-  "archive-309-00f623c4": {
-    "status": "placeholder",
-    "source": "resolver"
-  },
-  "archive-310-a28be3eb": {
-    "status": "placeholder",
-    "source": "resolver"
-  },
   "archive-311-58280c01": {
     "status": "matched",
     "source": "qq",
@@ -4721,10 +4750,6 @@
     "matchedArtist": "小蓝背心",
     "matchedAlbum": "目及皆是你",
     "score": 100
-  },
-  "archive-317-8019dc7f": {
-    "status": "placeholder",
-    "source": "resolver"
   },
   "archive-318-699492dd": {
     "status": "matched",
@@ -4885,25 +4910,5 @@
     "matchedArtist": "蓝心羽",
     "matchedAlbum": "记忆停留",
     "score": 13
-  },
-  "archive-unresolved-329": {
-    "status": "placeholder",
-    "source": "resolver"
-  },
-  "archive-unresolved-330": {
-    "status": "placeholder",
-    "source": "resolver"
-  },
-  "archive-unresolved-331": {
-    "status": "placeholder",
-    "source": "resolver"
-  },
-  "archive-unresolved-332": {
-    "status": "placeholder",
-    "source": "resolver"
-  },
-  "archive-unresolved-333": {
-    "status": "placeholder",
-    "source": "resolver"
   }
 }
