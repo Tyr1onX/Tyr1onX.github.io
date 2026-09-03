@@ -67,6 +67,17 @@ ARCHIVE_EXCLUDED_UNRESOLVED_TITLES = {
     "QQ 收藏未可靠识别 5",
 }
 
+# User-confirmed canonical identity corrections for the published Archive. RAW stays
+# immutable; these overrides affect grouping/display identity only.
+ARCHIVE_IDENTITY_OVERRIDES = {
+    ("qishui", 35): {"title": "我的美丽", "artist": "小霞"},
+    ("netease", 29): {"title": "我的美丽", "artist": "小霞"},
+    ("qishui", 42): {"title": "罗生门(Follow)", "artist": "梨冻紧 / Wiz_H张子豪"},
+    ("qishui", 71): {"title": "新地球", "artist": "林俊杰"},
+    ("netease", 47): {"title": "晚安", "artist": "颜人中"},
+    ("qq", 55): {"title": "雨爱", "artist": "杨丞琳"},
+}
+
 def nfkc(value: str) -> str:
     return unicodedata.normalize("NFKC", value or "").strip()
 
@@ -130,6 +141,19 @@ def canonical_artist(artist: str) -> str:
     return normalize_artist(artist)
 
 
+def published_row(row: dict) -> dict:
+    item = dict(row)
+    item["_rawTitle"] = row.get("title", "")
+    item["_rawArtist"] = row.get("artist", "")
+    item["_rawAlbum"] = row.get("album", "")
+    source_order = row.get("sourceOrder")
+    if source_order is not None:
+        override = ARCHIVE_IDENTITY_OVERRIDES.get((str(row.get("source", "")), int(source_order)))
+        if override:
+            item.update(override)
+    return item
+
+
 def dedupe_key(row: dict) -> str:
     """The only canonical identity rule: normalized title + normalized artist."""
     if row.get("unresolved"):
@@ -152,7 +176,8 @@ def make_groups(raw: list[dict]) -> tuple[list[list[dict]], list[dict]]:
     grouped: dict[str, list[tuple[int, dict]]] = defaultdict(list)
     merge_events: list[dict] = []
     first_by_key: dict[str, dict] = {}
-    for index, row in enumerate(raw):
+    for index, raw_row in enumerate(raw):
+        row = published_row(raw_row)
         key = dedupe_key(row)
         grouped[key].append((index, row))
         first = first_by_key.get(key)
@@ -188,9 +213,9 @@ def pick_text(rows: list[dict], field: str) -> str:
 def source_entry(row: dict) -> dict:
     return {
         "platform": row.get("source", ""),
-        "rawTitle": row.get("title", ""),
-        "rawArtist": row.get("artist", ""),
-        "rawAlbum": row.get("album", ""),
+        "rawTitle": row.get("_rawTitle", row.get("title", "")),
+        "rawArtist": row.get("_rawArtist", row.get("artist", "")),
+        "rawAlbum": row.get("_rawAlbum", row.get("album", "")),
         "sourceIndex": row.get("sourceOrder"),
         "confidence": row.get("confidence", ""),
         "unresolved": bool(row.get("unresolved")),

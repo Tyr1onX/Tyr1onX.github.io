@@ -525,9 +525,9 @@
     "matchedArtist": "小霞",
     "matchedAlbum": "小霞 2.0",
     "manualVerified": true,
-    "artworkOnly": true,
+    "artworkOnly": false,
     "requestedTitle": "我的美丽",
-    "requestedArtist": "费宇清"
+    "requestedArtist": "小霞"
   },
   "archive-036-72ab544c": {
     "status": "matched",
@@ -622,9 +622,9 @@
     "matchedArtist": "梨冻紧 & Wiz_H张子豪",
     "matchedAlbum": "罗生门(Follow) - Single",
     "manualVerified": true,
-    "artworkOnly": true,
-    "requestedTitle": "又到了昕罗生门的季节#罗生门",
-    "requestedArtist": "思"
+    "artworkOnly": false,
+    "requestedTitle": "罗生门(Follow)",
+    "requestedArtist": "梨冻紧 / Wiz_H张子豪"
   },
   "archive-043-78c982fe": {
     "status": "matched",
@@ -1003,9 +1003,9 @@
     "matchedArtist": "林俊杰",
     "matchedAlbum": "新地球",
     "manualVerified": true,
-    "artworkOnly": true,
+    "artworkOnly": false,
     "requestedTitle": "新地球",
-    "requestedArtist": "精彩轩迪"
+    "requestedArtist": "林俊杰"
   },
   "mermaid": {
     "status": "matched",
@@ -1954,9 +1954,9 @@
     "matchedArtist": "颜人中",
     "matchedAlbum": "晚安",
     "manualVerified": true,
-    "artworkOnly": true,
+    "artworkOnly": false,
     "requestedTitle": "晚安",
-    "requestedArtist": ""
+    "requestedArtist": "颜人中"
   },
   "archive-136-1913fa05": {
     "status": "matched",
