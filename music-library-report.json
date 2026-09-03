@@ -8,19 +8,19 @@
   "qqRecognized": 193,
   "qqUnresolved": 5,
   "beforeUnique": 333,
-  "afterUnique": 311,
-  "unique": 311,
-  "newlyMerged": 8,
-  "mergedDuplicates": 69,
+  "afterUnique": 310,
+  "unique": 310,
+  "newlyMerged": 9,
+  "mergedDuplicates": 70,
   "excludedTracks": 14,
   "excludedSourceEntries": 14,
   "crossPlatformGroups": {
     "qq+netease": 9,
-    "qq+qishui": 14,
+    "qq+qishui": 15,
     "netease+qishui": 11,
     "qq+netease+qishui": 10
   },
-  "highConfidenceMergeEvents": 69,
+  "highConfidenceMergeEvents": 70,
   "reviewCandidates": 0,
   "featured": 12,
   "sourceEntries": 380,
@@ -30,18 +30,18 @@
     "ambiguous": 21
   },
   "artworkAfter": {
-    "matched": 311,
+    "matched": 310,
     "placeholder": 0,
     "ambiguous": 0
   },
-  "artworkMatched": 311,
+  "artworkMatched": 310,
   "artworkPlaceholder": 0,
   "artworkAmbiguous": 0,
   "artworkSources": {
     "itunes": 25,
     "musicbrainz": 11,
     "netease": 31,
-    "qq": 244
+    "qq": 243
   },
   "previewAvailable": 24,
   "mergeEvents": [
@@ -1052,6 +1052,28 @@
         "rawAlbum": "OK",
         "sourceIndex": 52,
         "confidence": "high",
+        "unresolved": false
+      },
+      "reason": "same normalized title + normalized artist",
+      "confidence": "direct-rule"
+    },
+    {
+      "candidateA": {
+        "platform": "qishui",
+        "rawTitle": "雨爱",
+        "rawArtist": "杨丞琳",
+        "rawAlbum": "雨爱",
+        "sourceIndex": 56,
+        "confidence": "high",
+        "unresolved": false
+      },
+      "candidateB": {
+        "platform": "qq",
+        "rawTitle": "雨爱（氛围版）",
+        "rawArtist": "",
+        "rawAlbum": "",
+        "sourceIndex": 55,
+        "confidence": "medium",
         "unresolved": false
       },
       "reason": "same normalized title + normalized artist",

@@ -65,7 +65,7 @@ def main() -> int:
     assert report["excludedSourceEntries"] == 14
     assert report["newlyMerged"] == 333 - report["excludedTracks"] - len(library)
     assert report["mergedDuplicates"] == 394 - report["excludedSourceEntries"] - len(library)
-    assert len(library) == 311
+    assert len(library) == 310
     assert len({track["id"] for track in library}) == len(library)
     assert sum(1 for track in library if track.get("unresolved")) == 0
 
@@ -120,22 +120,33 @@ def main() -> int:
 
     artwork_total = sum(report[key] for key in ("artworkMatched", "artworkPlaceholder", "artworkAmbiguous"))
     assert artwork_total == len(library), (artwork_total, len(library))
-    assert report["artworkMatched"] == 311
+    assert report["artworkMatched"] == 310
     assert report["artworkPlaceholder"] == 0
     assert report["artworkAmbiguous"] == 0
     assert sum(report.get("artworkSources", {}).values()) == len(library)
 
-    approved = {
-        "archive-035-6bfc9418": "小霞",
-        "archive-042-598a441f": "梨冻紧 & Wiz_H张子豪",
-        "archive-070-0201010e": "林俊杰",
-        "archive-135-acdd6c61": "颜人中",
-        "archive-213-73178aa2": "杨丞琳",
+    corrected = {
+        "archive-035-6bfc9418": ("我的美丽", "小霞", "小霞"),
+        "archive-042-598a441f": ("罗生门(Follow)", "梨冻紧 / Wiz_H张子豪", "梨冻紧 & Wiz_H张子豪"),
+        "archive-070-0201010e": ("新地球", "林俊杰", "林俊杰"),
+        "archive-135-acdd6c61": ("晚安", "颜人中", "颜人中"),
+        "archive-056-c460b757": ("雨爱", "杨丞琳", "杨丞琳"),
     }
     by_id = {track["id"]: track for track in library}
-    for track_id, matched_artist in approved.items():
-        assert by_id[track_id]["artworkStatus"] == "matched"
-        assert by_id[track_id]["artworkMatch"]["matchedArtist"] == matched_artist
+    for track_id, (title, artist, matched_artist) in corrected.items():
+        track = by_id[track_id]
+        assert track["title"] == title
+        assert track["artist"] == artist
+        assert track["normalizedTitle"] == builder.normalize_title(title)
+        assert track["normalizedArtist"] == builder.normalize_artist(artist)
+        assert track["artworkStatus"] == "matched"
+        assert track["artworkMatch"]["matchedArtist"] == matched_artist
+
+    rain = by_id["archive-056-c460b757"]
+    assert set(rain.get("sources", [])) == {"qishui", "qq"}
+    assert rain.get("sourceOrders", {}).get("qishui") == [56]
+    assert rain.get("sourceOrders", {}).get("qq") == [55]
+    assert all("氛围版" not in track.get("title", "") for track in library)
 
     print(
         "music archive ok:",
