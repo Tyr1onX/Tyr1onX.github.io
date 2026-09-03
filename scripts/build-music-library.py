@@ -46,6 +46,27 @@ FEATURED = [
 
 SOURCE_ORDER = {"qishui": 0, "netease": 1, "qq": 2}
 
+# User-curated removals: keep RAW evidence immutable, but omit these rows from the
+# published Archive. Source keys make the exclusion stable across rebuilds.
+ARCHIVE_EXCLUDED_SOURCE_KEYS = {
+    ("qishui", 37),
+    ("qishui", 67),
+    ("qishui", 69),
+    ("qishui", 94),
+    ("qq", 47),
+    ("qq", 155),
+    ("qq", 171),
+    ("qq", 172),
+    ("qq", 181),
+}
+ARCHIVE_EXCLUDED_UNRESOLVED_TITLES = {
+    "QQ 收藏未可靠识别 1",
+    "QQ 收藏未可靠识别 2",
+    "QQ 收藏未可靠识别 3",
+    "QQ 收藏未可靠识别 4",
+    "QQ 收藏未可靠识别 5",
+}
+
 def nfkc(value: str) -> str:
     return unicodedata.normalize("NFKC", value or "").strip()
 
@@ -681,6 +702,11 @@ def build_library(raw: list[dict], existing: list[dict]) -> tuple[list[dict], li
 def cached_identity_matches(track: dict, item: dict) -> bool:
     if item.get("status") != "matched":
         return True
+    if item.get("manualVerified"):
+        return (
+            nfkc(str(item.get("requestedTitle", ""))) == nfkc(str(track.get("title", "")))
+            and nfkc(str(item.get("requestedArtist", ""))) == nfkc(str(track.get("artist", "")))
+        )
     title = str(item.get("matchedTitle", ""))
     artist = str(item.get("matchedArtist", ""))
     if not title or not artist:
@@ -749,6 +775,21 @@ def resolve_artwork(library: list[dict], workers: int = 10, refresh: bool = Fals
     return cache
 
 
+def archive_track_excluded(track: dict) -> bool:
+    for entry in track.get("sourceEntries", []):
+        platform = str(entry.get("platform", ""))
+        source_index = entry.get("sourceIndex")
+        if source_index is not None and (platform, int(source_index)) in ARCHIVE_EXCLUDED_SOURCE_KEYS:
+            return True
+        if (
+            source_index is None
+            and bool(entry.get("unresolved"))
+            and str(entry.get("rawTitle", "")) in ARCHIVE_EXCLUDED_UNRESOLVED_TITLES
+        ):
+            return True
+    return False
+
+
 def apply_cache(library: list[dict], cache: dict[str, dict]) -> None:
     for track in library:
         item = cache.get(track["id"], {})
@@ -758,7 +799,7 @@ def apply_cache(library: list[dict], cache: dict[str, dict]) -> None:
             track["previewUrl"] = item.get("previewUrl", "") or track.get("previewUrl", "")
             track["listenUrl"] = item.get("listenUrl", "") or track.get("listenUrl", "")
             track["year"] = item.get("year", "")
-            if item.get("matchedAlbum"):
+            if item.get("matchedAlbum") and not item.get("artworkOnly"):
                 track["album"] = item["matchedAlbum"]
         track["artworkStatus"] = status
         track["artworkMatch"] = {
@@ -800,6 +841,7 @@ def write_outputs(
     merge_events: list[dict],
     reviews: list[dict],
     before: dict,
+    excluded_tracks: list[dict],
 ) -> dict:
     # RAW is deliberately not rewritten: it remains the immutable evidence layer.
     clean_library = []
@@ -821,6 +863,8 @@ def write_outputs(
     preview_ids.update(track_id for track_id, item in generated_previews.items() if item.get("previewUrl"))
 
     before_unique = int(before.get("beforeUnique", before.get("unique", 333)))
+    excluded_track_count = len(excluded_tracks)
+    excluded_source_entries = sum(len(track.get("sourceEntries", [])) for track in excluded_tracks)
     before_art = before.get("artworkBefore") or {
         "matched": int(before.get("artworkMatched", 52)),
         "placeholder": int(before.get("artworkPlaceholder", 260)),
@@ -843,8 +887,10 @@ def write_outputs(
         "beforeUnique": before_unique,
         "afterUnique": len(clean_library),
         "unique": len(clean_library),
-        "newlyMerged": before_unique - len(clean_library),
-        "mergedDuplicates": len(raw) - len(clean_library),
+        "newlyMerged": before_unique - excluded_track_count - len(clean_library),
+        "mergedDuplicates": len(raw) - excluded_source_entries - len(clean_library),
+        "excludedTracks": excluded_track_count,
+        "excludedSourceEntries": excluded_source_entries,
         "crossPlatformGroups": source_combo_stats(clean_library),
         "highConfidenceMergeEvents": len(merge_events),
         "reviewCandidates": len(reviews),
@@ -888,6 +934,8 @@ def main() -> int:
     before = baseline_report()
     existing = load_existing_library()
     library, merge_events, reviews = build_library(raw, existing)
+    excluded_tracks = [track for track in library if archive_track_excluded(track)]
+    library = [track for track in library if not archive_track_excluded(track)]
 
     if args.resolve_artwork or args.refresh_artwork:
         cache = resolve_artwork(
@@ -902,7 +950,7 @@ def main() -> int:
             cache = {}
         cache = migrate_cache(cache, library)
     apply_cache(library, cache)
-    report = write_outputs(raw, library, merge_events, reviews, before)
+    report = write_outputs(raw, library, merge_events, reviews, before, excluded_tracks)
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
 

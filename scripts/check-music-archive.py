@@ -61,10 +61,13 @@ def main() -> int:
     assert len(library) == report["unique"]
     assert report["beforeUnique"] == 333
     assert report["afterUnique"] == len(library)
-    assert report["newlyMerged"] == 333 - len(library)
-    assert report["mergedDuplicates"] == 394 - len(library)
+    assert report["excludedTracks"] == 14
+    assert report["excludedSourceEntries"] == 14
+    assert report["newlyMerged"] == 333 - report["excludedTracks"] - len(library)
+    assert report["mergedDuplicates"] == 394 - report["excludedSourceEntries"] - len(library)
+    assert len(library) == 311
     assert len({track["id"] for track in library}) == len(library)
-    assert sum(1 for track in library if track.get("unresolved")) == 5
+    assert sum(1 for track in library if track.get("unresolved")) == 0
 
     # Canonical identity invariant: no duplicate normalizedTitle + normalizedArtist.
     identity_keys = []
@@ -79,11 +82,25 @@ def main() -> int:
     duplicates = [key for key, count in Counter(identity_keys).items() if count > 1]
     assert not duplicates, duplicates
 
-    # Every RAW row is retained exactly once in sourceEntries.
+    # RAW remains immutable; user-curated removals are omitted from the published Archive.
+    def raw_is_excluded(row: dict) -> bool:
+        source = str(row.get("source", ""))
+        source_order = row.get("sourceOrder")
+        if source_order is not None and (source, int(source_order)) in builder.ARCHIVE_EXCLUDED_SOURCE_KEYS:
+            return True
+        return (
+            source_order is None
+            and bool(row.get("unresolved"))
+            and str(row.get("title", "")) in builder.ARCHIVE_EXCLUDED_UNRESOLVED_TITLES
+        )
+
+    visible_raw = [row for row in raw if not raw_is_excluded(row)]
+    excluded_raw = [row for row in raw if raw_is_excluded(row)]
     entries = [entry for track in library for entry in track.get("sourceEntries", [])]
-    assert len(entries) == 394, len(entries)
-    assert Counter(map(raw_key, raw)) == Counter(map(entry_key, entries))
-    assert report["sourceEntries"] == 394
+    assert len(excluded_raw) == 14, len(excluded_raw)
+    assert len(entries) == 380, len(entries)
+    assert Counter(map(raw_key, visible_raw)) == Counter(map(entry_key, entries))
+    assert report["sourceEntries"] == 380
 
     featured = sorted((track for track in library if track.get("featured")), key=lambda track: track.get("featuredOrder") or 0)
     assert len(featured) == 12
@@ -103,15 +120,31 @@ def main() -> int:
 
     artwork_total = sum(report[key] for key in ("artworkMatched", "artworkPlaceholder", "artworkAmbiguous"))
     assert artwork_total == len(library), (artwork_total, len(library))
+    assert report["artworkMatched"] == 311
+    assert report["artworkPlaceholder"] == 0
+    assert report["artworkAmbiguous"] == 0
     assert sum(report.get("artworkSources", {}).values()) == len(library)
+
+    approved = {
+        "archive-035-6bfc9418": "小霞",
+        "archive-042-598a441f": "梨冻紧 & Wiz_H张子豪",
+        "archive-070-0201010e": "林俊杰",
+        "archive-135-acdd6c61": "颜人中",
+        "archive-213-73178aa2": "杨丞琳",
+    }
+    by_id = {track["id"]: track for track in library}
+    for track_id, matched_artist in approved.items():
+        assert by_id[track_id]["artworkStatus"] == "matched"
+        assert by_id[track_id]["artworkMatch"]["matchedArtist"] == matched_artist
 
     print(
         "music archive ok:",
         f"raw={len(raw)}",
         f"unique={len(library)}",
-        f"merged={len(raw) - len(library)}",
+        f"merged={report['mergedDuplicates']}",
+        f"excluded={report['excludedTracks']}",
         f"featured={len(featured)}",
-        "source_entries=394",
+        f"source_entries={report['sourceEntries']}",
         "canonical_duplicate_keys=0",
         f"artwork_matched={report['artworkMatched']}",
         f"placeholder={report['artworkPlaceholder']}",
