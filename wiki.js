@@ -160,12 +160,24 @@
   }
 
   function renderNoteLists() {
+    const showAll = new URLSearchParams(location.search).get('view') === 'all';
+
+    document.querySelectorAll('[data-note-view-toggle]').forEach((link) => {
+      if (!(link instanceof HTMLAnchorElement)) return;
+      link.href = showAll ? './' : './?view=all';
+      link.textContent = showAll ? '只看技术文章' : '查看全部文章';
+    });
+
     document.querySelectorAll('[data-note-list]').forEach((container) => {
-      if (!notes.length) {
+      const visibleNotes = container.dataset.noteListFilter === 'technical' && !showAll
+        ? notes.filter((note) => note.kind === 'work')
+        : notes;
+
+      if (!visibleNotes.length) {
         container.innerHTML = '<p class="note-list-empty">这里暂时还没有文字。</p>';
         return;
       }
-      container.innerHTML = notes.map((note) => `
+      container.innerHTML = visibleNotes.map((note) => `
         <a class="note-list-item" href="${noteUrl(note)}">
           <time datetime="${escapeHtml(note.datetime || '')}">${escapeHtml(note.date || '')}</time>
           <div class="note-list-copy">
