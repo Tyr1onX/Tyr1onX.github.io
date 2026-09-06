@@ -1,5 +1,14 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-09-06-no-way-to-settle-at-once",
+    date: "2026.09.06",
+    datetime: "2026-09-06T11:28:00+08:00",
+    title: "有些事情，没有办法一次性结清",
+    category: "关系与自省",
+    excerpt: "真正的负责，不是把错误一次性结清，而是承认、等待，并在下一次做出不同的选择。",
+    contentUrl: "./notes/2026-09-06-no-way-to-settle-at-once.md",
+  },
+  {
     id: "2026-09-02-baidu-download-limiter",
     date: "2026.09.02",
     datetime: "2026-09-02T22:54:00+08:00",
