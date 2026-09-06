@@ -1,5 +1,3 @@
-export { AuroraBackground } from "./aurora-background";
-export type { AuroraBackgroundProps } from "./aurora-background";
 export { Component as LiquidGlass } from "./liquid-glass";
 export { OceanicCurrents, ShaderBackground } from "./oceanic-currents";
 export type { OceanicCurrentsProps } from "./oceanic-currents";
