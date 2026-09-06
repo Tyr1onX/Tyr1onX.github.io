@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Tyr1onX 的文章：学习、技术和偶尔留下来的文字。" />
+  <meta name="description" content="Tyr1onX 的博客：技术、学习和偶尔留下来的文字。" />
   <meta name="theme-color" content="#fafafa" />
   <meta name="color-scheme" content="light dark" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Tyr1onX · 文章" />
-  <meta property="og:description" content="学习、技术和偶尔留下来的文字。" />
+  <meta property="og:title" content="Tyr1onX · 博客" />
+  <meta property="og:description" content="技术、学习和偶尔留下来的文字。" />
   <meta property="og:url" content="https://tyr1onx.github.io/" />
   <link rel="canonical" href="https://tyr1onx.github.io/" />
   <link rel="icon" href="./favicon.svg?v=2" type="image/svg+xml" />
-  <title>文章 — Tyr1onX</title>
+  <title>博客 — Tyr1onX</title>
   <script>
     (() => {
       let theme = null;
@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="./wiki.css?v=12" />
   <script src="./notes-data.js" defer></script>
   <script src="./notes-2026.js?v=2" defer></script>
-  <script src="./wiki.js?v=10" defer></script>
+  <script src="./wiki.js?v=11" defer></script>
 </head>
 <body class="has-context-header">
   <a class="skip-link" href="#main">跳到主要内容</a>
@@ -66,9 +66,12 @@
     <main class="main" id="main">
       <div class="content">
         <header class="page-heading">
-          <h1>文章</h1>
+          <h1>博客</h1>
+          <nav class="simple-links" aria-label="文章范围">
+            <a href="./?view=all" data-note-view-toggle>查看全部文章</a>
+          </nav>
         </header>
-        <section class="note-list" data-note-list aria-label="全部文字" aria-live="polite">
+        <section class="note-list" data-note-list data-note-list-filter="technical" aria-label="文章列表" aria-live="polite">
           <p class="note-list-empty">正在读取文字……</p>
         </section>
       </div>
