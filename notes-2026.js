@@ -1,5 +1,14 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-09-12-stop-treating-silence-as-an-ending",
+    date: "2026.09.12",
+    datetime: "2026-09-12T07:52:00+08:00",
+    title: "不再把沉默解释成结束",
+    category: "关系与自省",
+    excerpt: "信任不是确定一个人永远不会离开，而是不再因为害怕失去，就急着抓住一个人。",
+    contentUrl: "./notes/2026-09-12-stop-treating-silence-as-an-ending.md",
+  },
+  {
     id: "2026-09-06-no-way-to-settle-at-once",
     date: "2026.09.06",
     datetime: "2026-09-06T11:28:00+08:00",
