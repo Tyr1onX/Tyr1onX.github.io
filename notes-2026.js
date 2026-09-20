@@ -1,5 +1,14 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-09-20-team-management-reflection",
+    date: "2026.09.20",
+    datetime: "2026-09-20T08:39:00+08:00",
+    title: "从一次团队管理复盘里，我学到了什么",
+    category: "团队与管理",
+    excerpt: "很多所谓的态度问题，也许首先是信息没有传递完整。",
+    contentUrl: "./notes/2026-09-20-team-management-reflection.md",
+  },
+  {
     id: "2026-09-12-stop-treating-silence-as-an-ending",
     date: "2026.09.12",
     datetime: "2026-09-12T07:52:00+08:00",
