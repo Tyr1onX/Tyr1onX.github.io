@@ -1,5 +1,14 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-09-21-building-organizational-assets",
+    date: "2026.09.21",
+    datetime: "2026-09-21T17:39:00+08:00",
+    title: "我想给这个团队留下点什么",
+    category: "团队与管理",
+    excerpt: "人可以离开，但经验不能归零。真正成熟的组织，应该把个人经验慢慢变成团队共同拥有的能力。",
+    contentUrl: "./notes/2026-09-21-building-organizational-assets.md",
+  },
+  {
     id: "2026-09-20-team-management-reflection",
     date: "2026.09.20",
     datetime: "2026-09-20T08:39:00+08:00",
