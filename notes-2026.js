@@ -1,5 +1,23 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-09-22-self-love-is-alignment",
+    date: "2026.09.22",
+    datetime: "2026-09-22T09:48:00+08:00",
+    title: "真正的自爱，是想的、说的、做的是一件事",
+    category: "关系与自省",
+    excerpt: "不欺骗自己的感受，不违背自己的价值，也不让自己的行为长期背叛自己。",
+    contentUrl: "./notes/2026-09-22-self-love-is-alignment.md",
+  },
+  {
+    id: "2026-09-21-allow-reality-to-differ",
+    date: "2026.09.21",
+    datetime: "2026-09-21T18:44:00+08:00",
+    title: "允许事情不是我想要的样子",
+    category: "关系与自省",
+    excerpt: "我可以遗憾，可以难过，可以争取，但不必要求现实服从我的剧本。",
+    contentUrl: "./notes/2026-09-21-allow-reality-to-differ.md",
+  },
+  {
     id: "2026-09-21-building-organizational-assets",
     date: "2026.09.21",
     datetime: "2026-09-21T17:39:00+08:00",
