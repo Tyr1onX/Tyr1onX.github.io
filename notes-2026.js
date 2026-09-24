@@ -1,5 +1,14 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-09-24-seven-days-facts-and-stories",
+    date: "2026.09.24",
+    datetime: "2026-09-24T08:10:00+08:00",
+    title: "七天之后，我开始把事实和故事分开",
+    category: "成长与自省",
+    excerpt: "这一周，我没有变成一个永远理性的人，只是开始在事实、解释、情绪和行动之间多留一点间隙。",
+    contentUrl: "./notes/2026-09-24-seven-days-facts-and-stories.md",
+  },
+  {
     id: "2026-09-22-self-love-is-alignment",
     date: "2026.09.22",
     datetime: "2026-09-22T09:48:00+08:00",
