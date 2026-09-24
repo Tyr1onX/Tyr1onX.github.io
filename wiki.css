@@ -793,3 +793,35 @@ html[data-theme="dark"] .context-header {
   .signature-trace { display: none; }
   .signature-ink { opacity: 0.82 !important; animation: none !important; }
 }
+
+
+/* Qibai mascot: quietly perched on the site header. */
+.context-identity {
+  padding-left: 72px;
+}
+
+.context-identity::before {
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 62px;
+  aspect-ratio: 1000 / 930;
+  background: url("./header-mascot.svg") center / contain no-repeat;
+  content: "";
+  pointer-events: none;
+}
+
+html[data-theme="dark"] .context-identity::before {
+  filter: invert(1);
+}
+
+@media (max-width: 860px) {
+  .context-identity {
+    padding-left: 58px;
+  }
+
+  .context-identity::before {
+    bottom: -5px;
+    width: 52px;
+  }
+}
