@@ -11,6 +11,12 @@
   margin-top: 0;
 }
 
+.work-showcase--compact + .work-showcase--compact {
+  margin-top: 72px;
+  padding-top: 56px;
+  border-top: 1px solid var(--line);
+}
+
 .work-summary {
   width: min(100%, 920px);
   margin: 24px auto 0;
@@ -93,6 +99,11 @@
 }
 
 @media (max-width: 620px) {
+  .work-showcase--compact + .work-showcase--compact {
+    margin-top: 52px;
+    padding-top: 40px;
+  }
+
   .projects-heading {
     margin-bottom: 22px !important;
   }
