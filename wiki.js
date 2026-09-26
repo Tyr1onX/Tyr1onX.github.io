@@ -237,6 +237,25 @@
     return paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('');
   }
 
+
+  function applyNoteLayout(note) {
+    const escapeMode = note?.layout === 'escape';
+    document.body.classList.toggle('escape-note', escapeMode);
+
+    document.querySelector('.escape-mascot')?.remove();
+    if (!escapeMode) return;
+
+    const articleShell = document.querySelector('.article');
+    if (!articleShell) return;
+
+    const mascot = document.createElement('img');
+    mascot.className = 'escape-mascot';
+    mascot.src = './header-mascot.svg';
+    mascot.alt = '';
+    mascot.setAttribute('aria-hidden', 'true');
+    articleShell.prepend(mascot);
+  }
+
   async function renderArticle() {
     const article = document.querySelector('[data-note-article]');
     if (!article) return;
@@ -248,6 +267,8 @@
       article.innerHTML = '<p class="loading-copy">这里暂时没有可读取的文字。</p>';
       return;
     }
+
+    applyNoteLayout(note);
 
     document.title = `${note.title} — Tyr1onX`;
     document.querySelector('meta[name="description"]')?.setAttribute('content', note.excerpt || 'Tyr1onX 留下来的一段文字。');
