@@ -21,7 +21,7 @@
       const saved = localStorage.getItem('tyr1onx-sidebar-v2');
       if (saved === 'expanded' || saved === 'collapsed') return saved;
     } catch {}
-    return 'collapsed';
+    return 'expanded';
   }
 
   function applySidebar(state, persist = false) {
