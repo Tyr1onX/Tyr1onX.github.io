@@ -825,3 +825,147 @@ html[data-theme="dark"] .context-identity::before {
     width: 52px;
   }
 }
+
+/* A single note can step outside the site shell: a quiet page for a brief escape. */
+body.escape-note {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.escape-note .identity-pattern,
+.escape-note .sidebar,
+.escape-note .mobile-header,
+.escape-note .mobile-footer,
+.escape-note .article-nav {
+  display: none !important;
+}
+
+.escape-note .wiki-shell {
+  display: block;
+  width: min(calc(100% - 48px), 1120px);
+  min-height: 100vh;
+  margin: 0 auto;
+}
+
+.escape-note .main {
+  display: block;
+  padding: 0;
+}
+
+.escape-note .article {
+  position: relative;
+  width: min(100%, 760px);
+  margin: 0 auto;
+  padding: clamp(76px, 10vh, 116px) 0 120px;
+}
+
+.escape-note .article-back {
+  margin-bottom: 34px;
+  color: var(--faint);
+}
+
+.escape-note .article-header {
+  margin-bottom: 38px;
+}
+
+.escape-note .article-header time {
+  opacity: 0.72;
+}
+
+.escape-note .article-header h1 {
+  font-size: clamp(38px, 5.4vw, 58px);
+  font-weight: 520;
+  line-height: 1.16;
+  letter-spacing: -0.05em;
+}
+
+.escape-note .article-body {
+  font-size: 18px;
+  line-height: 2;
+}
+
+.escape-note .article-body p {
+  margin-bottom: 1.55em;
+}
+
+.escape-note .article-body blockquote {
+  margin: 2.2em 0;
+  padding-left: 20px;
+  border-left-color: color-mix(in srgb, var(--text) 22%, transparent);
+  color: var(--secondary);
+  font-size: 1.03em;
+}
+
+.escape-note .article-body hr {
+  width: 42px;
+  margin: 3.5em 0;
+  background: color-mix(in srgb, var(--text) 18%, transparent);
+}
+
+.escape-mascot {
+  position: absolute;
+  left: -188px;
+  top: 148px;
+  width: 126px;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+  user-select: none;
+}
+
+html[data-theme="dark"] .escape-mascot {
+  filter: invert(1);
+}
+
+@media (max-width: 1080px) {
+  .escape-mascot {
+    left: -126px;
+    width: 92px;
+  }
+}
+
+@media (max-width: 880px) {
+  .escape-note .wiki-shell {
+    width: min(100% - 40px, 760px);
+  }
+
+  .escape-mascot {
+    position: static;
+    display: block;
+    width: 76px;
+    margin: 0 0 16px -4px;
+  }
+
+  .escape-note .article {
+    padding-top: 52px;
+  }
+}
+
+@media (max-width: 560px) {
+  .escape-note .wiki-shell {
+    width: min(100% - 30px, 560px);
+  }
+
+  .escape-note .article {
+    padding: 38px 0 82px;
+  }
+
+  .escape-note .article-back {
+    margin-bottom: 25px;
+  }
+
+  .escape-note .article-header {
+    margin-bottom: 30px;
+  }
+
+  .escape-note .article-header h1 {
+    font-size: 34px;
+    line-height: 1.22;
+  }
+
+  .escape-note .article-body {
+    font-size: 16.75px;
+    line-height: 1.95;
+  }
+}
+
