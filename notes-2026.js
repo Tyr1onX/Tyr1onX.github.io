@@ -1,5 +1,15 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-09-26-brief-escape",
+    date: "2026.09.26",
+    datetime: "2026-09-26T21:50:00+08:00",
+    title: "短暂世界的逃离",
+    category: "生活与自省",
+    excerpt: "我不能等到以后才去过想象中的生活。真正重要的是，方向盘始终在自己手里。",
+    layout: "escape",
+    contentUrl: "./notes/2026-09-26-brief-escape.md",
+  },
+  {
     id: "2026-09-26-step-back-and-see",
     date: "2026.09.26",
     datetime: "2026-09-26T12:20:00+08:00",
