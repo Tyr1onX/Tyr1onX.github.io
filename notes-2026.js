@@ -1,5 +1,14 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-10-16-firm-on-work-not-on-people",
+    date: "2026.10.16",
+    datetime: "2026-10-16T10:14:00+08:00",
+    title: "对事有锋芒，对人不轻慢",
+    category: "成长与自省",
+    excerpt: "我发现，自己给予一个人的耐心，有时不仅取决于他做了什么，也取决于我原本怎么看待他。我希望对事情保持要求，却不因此轻视他人。",
+    contentUrl: "./notes/2026-10-16-firm-on-work-not-on-people.md",
+  },
+  {
     id: "2026-10-16-stardew-intel-arc-code43",
     date: "2026.10.16",
     datetime: "2026-10-16T08:05:00+08:00",
