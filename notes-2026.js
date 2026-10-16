@@ -1,5 +1,14 @@
 window.TYR1ONX_NOTES = [
   {
+    id: "2026-10-16-stardew-intel-arc-code43",
+    date: "2026.10.16",
+    datetime: "2026-10-16T08:05:00+08:00",
+    title: "《星露谷物语》打不开：从 OpenGL 报错追到显卡 Code 43",
+    kind: "work",
+    excerpt: "9 份崩溃日志指向 OpenGL 初始化失败，Intel Arc 报 Code 43；一次最小修复后，游戏恢复正常启动。",
+    contentUrl: "./notes/2026-10-16-stardew-intel-arc-code43.md",
+  },
+  {
     id: "2026-09-29-wish-for-longing",
     date: "2026.09.29",
     datetime: "2026-09-29T06:38:00+08:00",
