@@ -142,3 +142,67 @@
     transition: none !important;
   }
 }
+
+/* Project identity covers (not product screenshots). */
+.work-gallery-slide--cover {
+  display: grid;
+  place-items: center;
+  padding: clamp(24px, 5vw, 56px);
+  text-align: center;
+}
+
+.work-gallery-slide--tarsgo {
+  background: #101516;
+  color: #fff;
+}
+
+.work-gallery-slide--base {
+  background: #f2f0eb;
+  color: #1b1a18;
+}
+
+.project-cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 2vw, 20px);
+  width: 100%;
+}
+
+.project-cover-logo {
+  display: block;
+  width: min(72%, 440px);
+  max-height: 148px;
+  object-fit: contain;
+}
+
+.project-cover-logo--base {
+  width: 64px;
+  height: 64px;
+}
+
+.project-cover-title {
+  font-size: clamp(36px, 7vw, 70px);
+  font-weight: 620;
+  line-height: 1.05;
+  letter-spacing: -.055em;
+}
+
+.project-cover p {
+  margin: 0;
+  font-size: clamp(14px, 2vw, 19px);
+  line-height: 1.4;
+}
+
+.project-cover span {
+  color: inherit;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  opacity: .65;
+}
+
+@media (max-width: 620px) {
+  .project-cover-logo--base { width: 48px; height: 48px; }
+  .project-cover span { font-size: 9px; }
+}
